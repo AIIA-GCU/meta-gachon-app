@@ -8,7 +8,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "메타가천",
+      title: "메타-가천",
       home: LoginPage(),
     );
   }
