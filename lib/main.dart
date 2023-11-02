@@ -1,5 +1,13 @@
-import 'package:flutter/material.dart';
+///
+/// 메타가천 메인 파일
+/// - 앱 초기화
+/// - 메인 레이아웃
+///
 
+import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/variable.dart';
+
+// 앱 실행 및 초기화
 void main() => runApp(App());
 
 class App extends StatelessWidget {
@@ -9,144 +17,70 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "메타가천",
-      home: LoginPage(),
-    );
-  }
-}
-
-// 로그인 페이지
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final formKey = GlobalKey<FormState>();
-
-  String id = "";
-  String pw = "";
-  List<String> error = ["ID/PW를 입력하세요", "존재하지 않는 ID 입니다", "PW가 틀렸습니다"];
-
-  int valid = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: Center(
-                child: Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.black)),
-                    child: Form(
-                      key: formKey,
-                      child: Column(children: [
-                        // ID
-                        renderTextFormField(
-                            label: "ID",
-                            onSave: (val) => id = val!,
-                            validator: (val) =>
-                                val!.isEmpty ? "ID를 입력하세요" : null),
-                        // PW
-                        renderTextFormField(
-                            label: "PW",
-                            onSave: (val) => pw = val!,
-                            validator: (val) =>
-                                val!.isEmpty ? "PW를 입력하세요" : null),
-                        // 로그인
-                        ElevatedButton(
-                          onPressed: () {
-                            // 수정 필요
-                            if (formKey.currentState?.validate() == true) {
-                              print("valid");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Info(
-                                          name: "",
-                                          stu_number: "",
-                                          depart: "")));
-                            } else
-                              print("not valid");
-                          },
-                          child: Text("로그인"),
-                        ),
-                        // 오류 상황
-                        Text(error[valid])
-                      ]),
-                    )))));
-  }
-
-  renderTextFormField(
-      {required String label,
-      required void Function(String?)? onSave,
-      required String? Function(String?)? validator}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.w700)),
-        TextFormField(
-          onSaved: onSave,
-          validator: validator,
-          obscureText: label == "PW" ? true : false,
-        )
-      ]),
-    );
-  }
-}
-
-// 정보 페이지
-class Info extends StatelessWidget {
-  const Info(
-      {super.key,
-      required this.name,
-      required this.stu_number,
-      required this.depart});
-
-  final String name;
-  final String stu_number;
-  final String depart;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Container(
-              width: 300,
-              height: 400,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.black)),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // 이름
-                    Row(children: [
-                      Text('이름', style: TextStyle(fontWeight: FontWeight.w700)),
-                      SizedBox(width: 10),
-                      Text(name)
-                    ]),
-                    SizedBox(height: 10),
-                    // 학번
-                    Row(children: [
-                      Text('학번', style: TextStyle(fontWeight: FontWeight.w700)),
-                      SizedBox(width: 10),
-                      Text(name)
-                    ]),
-                    SizedBox(height: 10),
-                    // 학과
-                    Row(children: [
-                      Text('학과', style: TextStyle(fontWeight: FontWeight.w700)),
-                      SizedBox(width: 10),
-                      Text(name)
-                    ])
-                  ])),
+      theme: ThemeData(
+        scaffoldBackgroundColor: MGcolor.base7,
+        appBarTheme: AppBarTheme(
+          backgroundColor: MGcolor.base7,
+          elevation: 0,
+          foregroundColor: MGcolor.base4,
+          toolbarHeight: 56
         ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedLabelStyle: TextStyle(color: MGcolor.base2, fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko'),
+          selectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_active),
+          unselectedLabelStyle: TextStyle(color: MGcolor.base2, fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko'),
+          unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_inactive),
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+        )
       ),
+      home: MainFrame(),
+    );
+  }
+}
+
+
+class MainFrame extends StatefulWidget {
+  const MainFrame({super.key});
+
+  @override
+  State<MainFrame> createState() => _MainFrameState();
+}
+class _MainFrameState extends State<MainFrame> {
+
+  int currentPageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Icon(MGLogo.logo_typo_hori, size: 24),
+        actions: [
+          GestureDetector(
+            onTap: () {},
+            child: Icon(AppinIcon.not, size: 24),
+          ),
+          SizedBox(width: 16,)
+        ],
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: Text(currentPageIndex.toString()),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPageIndex,
+        onTap: (int index) {
+          setState(() => currentPageIndex = index);
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(AppinIcon.home), label: "홈"),
+          BottomNavigationBarItem(icon: Icon(AppinIcon.res), label: "예약"),
+          BottomNavigationBarItem(icon: Icon(AppinIcon.cert), label: "인증"),
+          BottomNavigationBarItem(icon: Icon(AppinIcon.my), label: "마이")
+        ]
+      )
     );
   }
 }
