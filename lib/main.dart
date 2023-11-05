@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/page/reservation.dart';
 
 // 앱 실행 및 초기화
 void main() => runApp(App());
@@ -36,7 +37,8 @@ class App extends StatelessWidget {
           showUnselectedLabels: true,
         )
       ),
-      home: MainFrame(),
+      /*home: MainFrame(),*/
+      home: Reservation(), ///그냥 바로 "예약하기"창으로 이동
     );
   }
 }
