@@ -84,17 +84,17 @@ class AppinIcon {
 class ImgPath {
   ImgPath._();
 
-  static const String lv_warning = "asssts/images/warning.png";
-  static const String lv_caution = "asssts/images/caution.png";
-  static const String lv_default = "asssts/images/default.png";
-  static const String lv_good = "asssts/images/good.png";
-  static const String lv_vip = "asssts/images/vip.png";
+  static const String lv_warning = "assets/images/warning.png";
+  static const String lv_caution = "assets/images/caution.png";
+  static const String lv_default = "assets/images/default.png";
+  static const String lv_good = "assets/images/good.png";
+  static const String lv_vip = "assets/images/vip.png";
 
-  static const String home_img1 = "asssts/images/home_img1.png";
-  static const String home_img2 = "asssts/images/home_img2.png";
-  static const String home_img3 = "asssts/images/home_img3.png";
-  static const String home_img4 = "asssts/images/home_img4.png";
-  static const String home_img5 = "asssts/images/home_img5.png";
+  static const String home_img1 = "assets/images/home_img1.png";
+  static const String home_img2 = "assets/images/home_img2.png";
+  static const String home_img3 = "assets/images/home_img3.png";
+  static const String home_img4 = "assets/images/home_img4.png";
+  static const String home_img5 = "assets/images/home_img5.png";
 }
 
 ///
