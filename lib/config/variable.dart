@@ -30,11 +30,12 @@ class MGcolor {
 
   static const Color btn_active = Color(0xFF1762DB);
   static const Color btn_inactive = Color(0xFFE3EDFD);
+  static const Color btn_active_sec = Color(0xFF0063D1);
 }
 
 ///
 /// 텍스트 스타일
-/// - 크기(size), 가중치(weight), 종류(family)
+/// - 크기(size), 가중치(weight), 종류(family), *색상(Color)
 ///
 class KR {
   KR._();
@@ -44,8 +45,13 @@ class KR {
   static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w700, fontFamily: 'Ko');
   static const TextStyle subtitle2 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static const TextStyle subtitle3 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  // static const TextStyle subtitle4 = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Ko'); // added
+  // static const TextStyle subtitle5 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');// added
   static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  // static const TextStyle parag3 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGcolor.base3); //added
+  // static const TextStyle parag4 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGcolor.btn_active); //added
+  // static const TextStyle parag5 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGcolor.base7); //added
   static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static const TextStyle label2 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
 }

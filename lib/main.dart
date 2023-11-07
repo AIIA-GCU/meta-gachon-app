@@ -6,10 +6,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/%20reservation.dart';
 import 'package:mata_gachon/page/First.dart';
 import 'package:mata_gachon/page/Second.dart';
-import 'package:mata_gachon/page/certificatepage/admissionPage.dart';
+import 'package:mata_gachon/page/certificatepage/admission_page.dart';
+
+import 'page/reservationPage/reservationPage.dart';
 
 // 앱 실행 및 초기화
 void main() => runApp(App());
@@ -17,9 +18,11 @@ void main() => runApp(App());
 class App extends StatelessWidget {
   const App({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "메타가천",
       theme: ThemeData(
           scaffoldBackgroundColor: MGcolor.base7,
@@ -62,7 +65,12 @@ class MainFrame extends StatefulWidget {
 
 class _MainFrameState extends State<MainFrame> {
   int currentPageIndex = 0;
-  final List<Widget> _children = [First(),Reservation(),admissionPage(), Fourth()];
+  final List<Widget> _children = [
+    First(),
+    ReservationPage(),
+    CertificationPage(),
+    Fourth()
+  ];
 
   void onTap(int index) {
     pageController.jumpToPage(index);
@@ -73,6 +81,7 @@ class _MainFrameState extends State<MainFrame> {
       currentPageIndex = index;
     });
   }
+
   final pageController = PageController();
 
   @override
@@ -95,6 +104,10 @@ class _MainFrameState extends State<MainFrame> {
           onPageChanged: onPageChanged,
           children: _children,
           physics: NeverScrollableScrollPhysics(), // No sliding
+        ),
+        bottomSheet: Container(
+          color: MGcolor.base6,
+          height: 1,
         ),
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,

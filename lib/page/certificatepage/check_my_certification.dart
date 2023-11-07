@@ -7,19 +7,16 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:mata_gachon/page/certificatepage/admissionPage.dart';
-import 'package:mata_gachon/page/certificatepage/checkmyadm.dart';
+import 'package:mata_gachon/page/certificatepage/admission_page.dart';
 
-import '../../main.dart';
-
-class myAdmission extends StatefulWidget {
-  const myAdmission({super.key});
+class MyCertification extends StatefulWidget {
+  const MyCertification({super.key});
 
   @override
-  State<myAdmission> createState() => _myAdmissionState();
+  State<MyCertification> createState() => _MyCertificationState();
 }
 
-class _myAdmissionState extends State<myAdmission> {
+class _MyCertificationState extends State<MyCertification> {
 
   bool isExist = false;
 
@@ -100,7 +97,7 @@ class _myAdmissionState extends State<myAdmission> {
                           pageBuilder: (context, animation,
                               secondaryAnimation) =>
                           // (DetailScreen은 Stateless나 Stateful 위젯으로된 화면임)
-                          admissionPage(),
+                          CertificationPage(),
                           // 이것을 true로 하면 dialog로 취급한다.
                           // 기본값은 false
                           fullscreenDialog: false,

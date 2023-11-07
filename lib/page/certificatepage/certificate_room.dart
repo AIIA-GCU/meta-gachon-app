@@ -7,19 +7,15 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:mata_gachon/page/certificatepage/checkmyadm.dart';
 
-import 'admissionPage.dart';
-
-
-class doAdmission extends StatefulWidget {
-  const doAdmission({super.key});
+class Certificate extends StatefulWidget {
+  const Certificate({super.key});
 
   @override
-  State<doAdmission> createState() => _doAdmissionState();
+  State<Certificate> createState() => _CertificateState();
 }
 
-class _doAdmissionState extends State<doAdmission> {
+class _CertificateState extends State<Certificate> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -117,7 +113,7 @@ class _MainFrameState extends State<MainFrame> {
                           pageBuilder: (context, animation,
                                   secondaryAnimation) =>
                               // (DetailScreen은 Stateless나 Stateful 위젯으로된 화면임)
-                          admissionPage(),
+                          Certificate(),
                           // 이것을 true로 하면 dialog로 취급한다.
                           // 기본값은 false
                           fullscreenDialog: false,
