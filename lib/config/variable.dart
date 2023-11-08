@@ -41,9 +41,10 @@ class KR {
 
   static const TextStyle title1 = TextStyle(fontSize: 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w700, fontFamily: 'Ko');
+  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static const TextStyle subtitle2 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle3 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static const TextStyle subtitle3 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static const TextStyle subtitle4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');

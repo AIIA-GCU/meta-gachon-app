@@ -9,9 +9,8 @@ import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/%20reservation.dart';
 import 'package:mata_gachon/page/First.dart';
 import 'package:mata_gachon/page/Second.dart';
-import 'package:mata_gachon/page/certificatepage/admissionPage.dart';
+import 'package:mata_gachon/page/certificate_page/admission_page.dart';
 
-// 앱 실행 및 초기화
 void main() => runApp(App());
 
 class App extends StatelessWidget {
@@ -27,7 +26,8 @@ class App extends StatelessWidget {
               backgroundColor: MGcolor.base7,
               elevation: 0,
               foregroundColor: MGcolor.base4,
-              toolbarHeight: 56),
+              toolbarHeight: 56
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
@@ -35,19 +35,19 @@ class App extends StatelessWidget {
                 color: MGcolor.base2,
                 fontSize: 11,
                 fontWeight: FontWeight.w400,
-                fontFamily: 'Ko'),
-            selectedIconTheme:
-                IconThemeData(size: 24, color: MGcolor.btn_active),
+                fontFamily: 'Ko'
+            ),
+            selectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_active),
             unselectedLabelStyle: TextStyle(
                 color: MGcolor.base2,
                 fontSize: 11,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'Ko'),
-            unselectedIconTheme:
-                IconThemeData(size: 24, color: MGcolor.btn_inactive),
+            unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_inactive),
             showSelectedLabels: true,
             showUnselectedLabels: true,
-          )),
+          ),
+      ),
       home: MainFrame(),
     );
   }
@@ -59,21 +59,33 @@ class MainFrame extends StatefulWidget {
   @override
   State<MainFrame> createState() => _MainFrameState();
 }
-
 class _MainFrameState extends State<MainFrame> {
+
+  /**
+   * 페이지 이동 관련
+   *
+   * 1. variables
+   *  - currentPageIndex: 현재 Page 인덱스
+   *  - _children: 페이지 List
+   *  - pageController: 페이지 controller
+   *
+   * 2. functions
+   *  - onTap:
+   *      BottomNavigationBar의 아이템을 눌렀을 때 실행되는 함수
+   *      페이지가 애니메이션 없이 바뀜
+   *  - onPageChanged:
+   *      rebuild되는 함수
+   */
   int currentPageIndex = 0;
-  final List<Widget> _children = [First(),Reservation(),admissionPage(), Fourth()];
+  final List<Widget> _children = [First(),Reservation(),CertificationPage(), Fourth()];
+  final pageController = PageController();
 
   void onTap(int index) {
     pageController.jumpToPage(index);
   }
-
   void onPageChanged(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
+    setState(() => currentPageIndex = index);
   }
-  final pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +97,7 @@ class _MainFrameState extends State<MainFrame> {
               onTap: () {},
               child: Icon(AppinIcon.not, size: 24),
             ),
-            SizedBox(
-              width: 16,
-            )
+            SizedBox(width: 16)
           ],
         ),
         body: PageView(
@@ -105,6 +115,8 @@ class _MainFrameState extends State<MainFrame> {
               BottomNavigationBarItem(icon: Icon(AppinIcon.res), label: "예약"),
               BottomNavigationBarItem(icon: Icon(AppinIcon.cert), label: "인증"),
               BottomNavigationBarItem(icon: Icon(AppinIcon.my), label: "마이")
-            ]));
+            ]
+        )
+    );
   }
 }
