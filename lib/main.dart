@@ -6,9 +6,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/page/splash.dart';
 
 // 앱 실행 및 초기화
-void main() => runApp(App());
+void main(){
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home:SPLASH(),
+  ));
+}
 
 class App extends StatelessWidget {
   const App({super.key});
