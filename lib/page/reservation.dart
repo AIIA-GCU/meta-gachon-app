@@ -17,20 +17,33 @@ class Reservation extends StatefulWidget {
 
 class _ReservationState extends State<Reservation> {
 
-  ///캘린더 설정
+  ///캘린더 초기설정
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  ///dropdown menu items
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
+  ///강의실 드롭다운메뉴 아이템들(선택지들)
+  final List<String> rooms = [
+    '402 - 1',
+    '402 - 2',
+    '402 - 3',
+    '402 - 4',
+    '402 - 5',
   ];
+  ///시간 드롭다운메뉴 아이템들
+  final List<String> times = [];
+  _ReservationState() {
+    for(int i = 6; i <= 22; i++) {
+      times.add("${i.toString().padLeft(2, '0')}:00");
+    }
+  }
 
-  String? selectedValue;
+  ///유저가 선택한 저장변수들
+  String? selectedRoom;
+  String? selectedEnter;
+  String? selectedExit;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +65,7 @@ class _ReservationState extends State<Reservation> {
         child: Column(
           //여기
           children: [
-            ///강의실
+            ///강의실 선택란
             Container(
               height: 52,
               width: double.infinity,
@@ -83,124 +96,16 @@ class _ReservationState extends State<Reservation> {
                   Positioned(
                     left: 64,
                     top: 0,
-                    child: SizedBox(
-                      width: 120,
-                      height: 32,
-                      child: DropdownButtonFormField2<String>(
-                        alignment: Alignment.center,
-
-                        isExpanded: true,
-
-                        decoration: InputDecoration(
-
-                          // Add Horizontal padding using menuItemStyleData.padding so it matches
-                          // the menu padding when button's width is not specified.
-                          contentPadding: EdgeInsets.all(0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(width: 0, color: Color(0xFF1762DB)),
-                          ),
-                          // Add more decoration..
-                        ),
-                        hint: Text(
-                          '선택',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        items: items
-                            .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Container(
-                            width: 120,
-                            height: 24,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 37,
-                                  top: 4,
-                                  child: Text(
-                                    item,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Color(0xFF7C7C7C),
-                                      fontSize: 14,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0,
-                                      letterSpacing: -0.32,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 4,
-                                  top: 24,
-                                  child: Container(
-                                    width: 112,
-                                    decoration: ShapeDecoration(
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                          width: 1,
-                                          strokeAlign: BorderSide.strokeAlignCenter,
-                                          color: Color(0xFFDDDDDD),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ))
-                            .toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select gender.';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          //Do something when selected item is changed.
-                        },
-                        onSaved: (value) {
-                          selectedValue = value.toString();
-                        },
-                        buttonStyleData: ButtonStyleData(
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white, // 배경 색상
-                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
-                            border: Border.all(
-                              color: Color(0xFF1762DB), // 테두리 색상
-                              width: 1, // 테두리 두께
-                            ),
-                          ),
-                          padding: EdgeInsets.only(right: 0),
-                        ),
-                        iconStyleData:  IconStyleData(
-                          iconSize: 0,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          decoration: BoxDecoration(
-                            color: Color(0xFFEDEEF1), // 배경 색상
-                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x19000000), // 그림자 색상
-                                blurRadius: 4, // 흐림 정도
-                                offset: Offset(0, 2), // 그림자 위치
-                                spreadRadius: 0, // 그림자 범위
-                              ),
-                            ],
-                          ),
-                          elevation: 0,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: EdgeInsets.all(4),
-                          height: 24,
-                        ),
-                      ),
-                    ),
+                    child: CustomDropdownMenu(
+                      hint: "선택",
+                      items: rooms,
+                      onChanged: (value){
+                        setState(() {
+                          selectedRoom = value;
+                        });
+                      },
+                      selectedItem: selectedRoom,
+                    )
                   ),
                 ],
               ),
@@ -425,48 +330,26 @@ class _ReservationState extends State<Reservation> {
                   top: 0,
                   child: Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          top: 5, // 위쪽
-                          bottom: 0, // 아래쪽
-                          left: 37, // 왼쪽
-                          right: 37,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: MGcolor.brand_orig, // 테두리 색상
-                            width: 1.0, // 테두리 두께
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        width: 120,
-                        height: 32,
-                        child: Text(
-                          "00 : 00",
-                          style: KR.parag2,
-                        ),
+                      CustomDropdownMenu(
+                        hint: "입실",
+                        items: times,
+                        onChanged: (value){
+                          setState(() {
+                            selectedEnter = value;
+                          });
+                        },
+                        selectedItem: selectedEnter,
                       ),
                       Container(width: 22, child: Center(child: Text("~"))),
-                      Container(
-                        padding: EdgeInsets.only(
-                          top: 5, // 위쪽
-                          bottom: 0, // 아래쪽
-                          left: 37, // 왼쪽
-                          right: 37,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: MGcolor.brand_orig, // 테두리 색상
-                            width: 1.0, // 테두리 두께
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        width: 120,
-                        height: 32,
-                        child: Text(
-                          "00 : 00",
-                          style: KR.parag2,
-                        ),
+                      CustomDropdownMenu(
+                        hint: "퇴실",
+                        items: times,
+                        onChanged: (value){
+                          setState(() {
+                            selectedExit = value;
+                          });
+                        },
+                        selectedItem: selectedExit,
                       ),
                     ],
                   ),
@@ -560,5 +443,220 @@ class _ReservationState extends State<Reservation> {
         ),
       ),
     );
+  }
+}
+
+
+class CustomDropdownMenu extends StatelessWidget {
+  final String hint;
+  final List<String> items;
+  final String? selectedItem;
+  final Function(String?) onChanged;
+
+  const CustomDropdownMenu({
+    Key? key,
+    required this.hint,
+    required this.items,
+    required this.onChanged,
+    this.selectedItem,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 120,
+      height: 32,
+      ///드롭다운메뉴 위젯
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          alignment: Alignment.center,
+          isExpanded: true,
+          hint: Text(
+            hint,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          items: _addDividersAfterItems(items),
+          value: selectedItem,
+          onChanged: onChanged,
+          ///드롭버튼(선택된 항목)
+          buttonStyleData: ButtonStyleData(
+            padding: EdgeInsets.all(0),
+            height: 40,
+            width: 140,
+            decoration: BoxDecoration(
+              color: Colors.white, // 배경 색상
+              borderRadius: BorderRadius.circular(4), // 모서리 둥글기
+              border: Border.all(
+                color: Color(0xFF1762DB), // 테두리 색상
+                width: 1, // 테두리 두께
+              ),
+            ),
+          ),
+          ///드롭아이콘
+          iconStyleData: IconStyleData(
+            iconSize: 0,//아이콘 표시x
+          ),
+          ///메뉴창,
+          dropdownStyleData: DropdownStyleData(
+              offset: Offset(0,-4),//위치조정
+              padding: EdgeInsets.all(0),
+              maxHeight: 85,//최대크기
+              elevation: 0,//그림자 없앰
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x19000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                      spreadRadius: 0,
+                    )
+                  ],
+                color: Colors.white.withOpacity(0.9)//배경투명도
+              )
+          ),
+          ///메뉴들(선택지들)
+          menuItemStyleData: MenuItemStyleData(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            customHeights: _getCustomItemsHeights(items),
+          ),
+        ),
+      ),
+      /*DropdownButtonFormField2<String>(
+                        alignment: Alignment.center,
+
+                        isExpanded: true,
+
+                        decoration: InputDecoration(
+
+                          // Add Horizontal padding using menuItemStyleData.padding so it matches
+                          // the menu padding when button's width is not specified.
+                          contentPadding: EdgeInsets.all(0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(width: 0, color: Color(0xFF1762DB)),
+                          ),
+                          // Add more decoration..
+                        ),
+                        hint: Text(
+                          '선택',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        items: _addDividersAfterItems(items),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select gender.';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          //Do something when selected item is changed.
+
+                          print("change");
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                          print("save");
+                        },
+                        ///드롭 전 기본박스 디자인인가?
+                        buttonStyleData: ButtonStyleData(
+                          height: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white, // 배경 색상
+                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
+                            border: Border.all(
+                              color: Color(0xFF1762DB), // 테두리 색상
+                              width: 1, // 테두리 두께
+                            ),
+                          ),
+                          padding: EdgeInsets.only(right: 0),
+                        ),
+                        ///드롭 버튼 아이콘
+                        iconStyleData:  IconStyleData(
+                          iconSize: 0,
+                        ),
+                        ///드롭다운 메뉴창 디자인인가?
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 85,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFEDEEF1), // 배경 색상
+                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x19000000), // 그림자 색상
+                                blurRadius: 4, // 흐림 정도
+                                offset: Offset(0, 2), // 그림자 위치
+                                spreadRadius: 0, // 그림자 범위
+                              ),
+                            ],
+                          ),
+                          elevation: 0,
+                        ),
+                        ///드롭다운 메뉴창 안에 아이템들 디자인인가?
+                        menuItemStyleData: MenuItemStyleData(
+                          customHeights: _getCustomItemsHeights(),
+                          padding: EdgeInsets.all(4),
+                          height: 24,
+                        ),
+                      ),*/
+    );
+  }
+
+  ///드롭다운메뉴창에 아이템(선택지)을 넣어주는 메소드입니다. 리턴값은 아이템이 각각 위젯형태로 들어간 리스트입니다.
+  List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
+    final List<DropdownMenuItem<String>> menuItems = [];
+    ///아이템 개수만큼 반복합니다.
+    for (final String item in inItems) {
+      menuItems.addAll(
+        [
+          ///위젯형태의 아이템(선택지) 넣기
+          DropdownMenuItem<String>(
+              value: item,
+              child: Center(
+                child: Text(
+                  item,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: (item == selectedItem) ? Colors.black : Color(0xFF7C7C7C),
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                    letterSpacing: -0.32,
+                  ),
+                ),
+              )
+          ),
+          //If it's last item, we will not add Divider after it.
+          ///아이템 하나마다 끝에 divider 넣기
+          if (item != inItems.last)
+            const DropdownMenuItem<String>(
+              enabled: false,
+              child: Divider(
+                color: Color(0xFFDDDDDD),
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+
+  ///드롭다운메뉴창에 item(선택지)의 크기를 지정해주는 메소드입니다.
+  List<double> _getCustomItemsHeights(List<String> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      ///짝수 인덱스(0,2,4, ...)에 아이템이 있겠죠?
+      if (i.isEven) {
+        itemsHeights.add(24);
+      }
+      ///홀수 인덱스에 divider가 있겠죠?
+      if (i.isOdd) {
+        itemsHeights.add(1);
+      }
+    }
+    return itemsHeights;
   }
 }
