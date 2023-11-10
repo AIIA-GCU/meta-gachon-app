@@ -446,7 +446,7 @@ class _ReservationState extends State<Reservation> {
   }
 }
 
-
+///커스텀 드롭다운메뉴위젯
 class CustomDropdownMenu extends StatelessWidget {
   final String hint;
   final List<String> items;
@@ -481,7 +481,7 @@ class CustomDropdownMenu extends StatelessWidget {
           items: _addDividersAfterItems(items),
           value: selectedItem,
           onChanged: onChanged,
-          ///드롭버튼(선택된 항목)
+          ///드롭버튼(선택된 항목) 디자인
           buttonStyleData: ButtonStyleData(
             padding: EdgeInsets.all(0),
             height: 40,
@@ -495,11 +495,11 @@ class CustomDropdownMenu extends StatelessWidget {
               ),
             ),
           ),
-          ///드롭아이콘
+          ///드롭아이콘 디자인
           iconStyleData: IconStyleData(
             iconSize: 0,//아이콘 표시x
           ),
-          ///메뉴창,
+          ///메뉴창 디자인
           dropdownStyleData: DropdownStyleData(
               offset: Offset(0,-4),//위치조정
               padding: EdgeInsets.all(0),
@@ -517,7 +517,7 @@ class CustomDropdownMenu extends StatelessWidget {
                 color: Colors.white.withOpacity(0.9)//배경투명도
               )
           ),
-          ///메뉴들(선택지들)
+          ///메뉴들(선택지들) 디자인
           menuItemStyleData: MenuItemStyleData(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             customHeights: _getCustomItemsHeights(items),
