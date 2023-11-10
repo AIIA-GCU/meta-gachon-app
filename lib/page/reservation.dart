@@ -1,9 +1,12 @@
 ///추호성이꺼
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 
 import 'package:table_calendar/table_calendar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Reservation extends StatefulWidget {
   const Reservation({Key? key}) : super(key: key);
@@ -13,9 +16,22 @@ class Reservation extends StatefulWidget {
 }
 
 class _ReservationState extends State<Reservation> {
+
+  ///캘린더 설정
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+
+  ///dropdown menu items
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+  ];
+
+  String? selectedValue;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,25 +83,122 @@ class _ReservationState extends State<Reservation> {
                   Positioned(
                     left: 64,
                     top: 0,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        top: 5, // 위쪽
-                        bottom: 0, // 아래쪽
-                        left: 37, // 왼쪽
-                        right: 37,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: MGcolor.brand_orig, // 테두리 색상
-                          width: 1.0, // 테두리 두께
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                    child: SizedBox(
                       width: 120,
                       height: 32,
-                      child: Text(
-                        "404 - 1",
-                        style: KR.parag2,
+                      child: DropdownButtonFormField2<String>(
+                        alignment: Alignment.center,
+
+                        isExpanded: true,
+
+                        decoration: InputDecoration(
+
+                          // Add Horizontal padding using menuItemStyleData.padding so it matches
+                          // the menu padding when button's width is not specified.
+                          contentPadding: EdgeInsets.all(0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(width: 0, color: Color(0xFF1762DB)),
+                          ),
+                          // Add more decoration..
+                        ),
+                        hint: Text(
+                          '선택',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        items: items
+                            .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Container(
+                            width: 120,
+                            height: 24,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 37,
+                                  top: 4,
+                                  child: Text(
+                                    item,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xFF7C7C7C),
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                      height: 0,
+                                      letterSpacing: -0.32,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 4,
+                                  top: 24,
+                                  child: Container(
+                                    width: 112,
+                                    decoration: ShapeDecoration(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          width: 1,
+                                          strokeAlign: BorderSide.strokeAlignCenter,
+                                          color: Color(0xFFDDDDDD),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                            .toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select gender.';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          //Do something when selected item is changed.
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white, // 배경 색상
+                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
+                            border: Border.all(
+                              color: Color(0xFF1762DB), // 테두리 색상
+                              width: 1, // 테두리 두께
+                            ),
+                          ),
+                          padding: EdgeInsets.only(right: 0),
+                        ),
+                        iconStyleData:  IconStyleData(
+                          iconSize: 0,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFEDEEF1), // 배경 색상
+                            borderRadius: BorderRadius.circular(4), // 모서리 둥글기
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x19000000), // 그림자 색상
+                                blurRadius: 4, // 흐림 정도
+                                offset: Offset(0, 2), // 그림자 위치
+                                spreadRadius: 0, // 그림자 범위
+                              ),
+                            ],
+                          ),
+                          elevation: 0,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: EdgeInsets.all(4),
+                          height: 24,
+                        ),
                       ),
                     ),
                   ),
