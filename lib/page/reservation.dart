@@ -1,11 +1,9 @@
 ///추호성이꺼
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/widget/calender.dart';
 
-import 'package:table_calendar/table_calendar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Reservation extends StatefulWidget {
@@ -16,11 +14,6 @@ class Reservation extends StatefulWidget {
 }
 
 class _ReservationState extends State<Reservation> {
-
-  ///캘린더 초기설정
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
 
   ///강의실 드롭다운메뉴 아이템들(선택지들)
   final List<String> rooms = [
@@ -42,8 +35,6 @@ class _ReservationState extends State<Reservation> {
   String? selectedRoom;
   String? selectedEnter;
   String? selectedExit;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -113,188 +104,87 @@ class _ReservationState extends State<Reservation> {
 
             ///캘린더
             Container(
-              height: 288,
+              height: 198,
               width: double.infinity,
-              margin: EdgeInsets.only(
-                top: 0, // 위쪽 마진
-                bottom: 12, // 아래쪽 마진
-                left: 16, // 왼쪽 마진
-                right: 16, // 오른쪽 마진
-              ),
-              padding: EdgeInsets.only(
-                top: 0, // 위쪽
-                bottom: 0, // 아래쪽
-                left: 0, // 왼쪽
-                right: 0,
-              ),
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 12),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: SingleChildScrollView(
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      top: 56,
-                      child: Container(
-                        height: 116,
-                      ),
-                    ),
-
-                    ///달력 드가자
-                    Column(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 월
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 61,),
-                        Center(
-                          child: SizedBox(
-                            width: 326,
-                            height: 300,
-                            child: TableCalendar(
-                              firstDay: DateTime.now(),
-                              lastDay: DateTime.now().add(Duration(days: 14)),
-                              focusedDay: DateTime.now(),
-                              headerVisible: false,
-                              daysOfWeekVisible: false,
-
-                              startingDayOfWeek: StartingDayOfWeek.monday,
-                              weekendDays: [DateTime.sunday,6],
-                              calendarBuilders: CalendarBuilders(
-
-                              ),
-                              rowHeight: 43,
-                              /*rangeStartDay: ,
-                              rangeEndDay: ,*/
-                              calendarStyle: CalendarStyle(
-
-
-                                cellMargin: EdgeInsets.all(5),
-                                cellPadding: EdgeInsets.all(0),
-                                // tableBorder: TableBorder(borderRadius: BorderRadius(5)),
-                                ///기본 day 스타일
-                                rowDecoration: BoxDecoration(
-                                  // border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid),
-                                ),
-                                defaultDecoration: BoxDecoration(
-                                  // border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Color(0xFFEDEEF1)
-                                ),
-                                defaultTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0,
-                                ),
-                                ///day 선택시
-                                selectedDecoration: BoxDecoration(
-                                  color: Color(0xFF1662DA),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                selectedTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0,
-                                ),
-                                ///today
-                                todayDecoration: BoxDecoration(
-                                  color: Color(0xFFEDEEF1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                todayTextStyle: TextStyle(
-                                  color: Color(0xFF1662DA),
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0,
-                                ),
-                                ///주말 day
-                                weekendDecoration:  BoxDecoration(
-                                  // border: Border.all(color: Colors.black, width: 1, style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Color(0xFFEDEEF1)
-                                ),
-                                weekendTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0,
-                                ),
-
-                              ),
-
-
-                              ///events
-                              selectedDayPredicate: (day) {
-                                return isSameDay(_selectedDay, day);
-                              },
-                              onDaySelected: (selectedDay, focusedDay) {
-                                setState(() {
-                                  _selectedDay = selectedDay;
-                                  _focusedDay = focusedDay; // update `_focusedDay` here as well
-                                });
-                              },
-                            ),
-
-
+                        Text(
+                          'October',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '~',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'November',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
                           ),
                         ),
                       ],
-                    ),
-                    Positioned(
-                      left: 16,
-                      top: 16,
-                      child: Container(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'October',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                                height: 0,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '~',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                                height: 0,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'November',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                                height: 0,
-                              ),
-                            ),
-                          ],
-                        ),
+                    )
+                  ),
+                  // 달력
+                  Container(
+                    width: 358,
+                    height: 166,
+                    padding: EdgeInsets.fromLTRB(16, 10, 16, 16),
+                    child: CustomCalender(
+                      first: DateTime.now(),
+                      last:  DateTime.now().add(Duration(days: 13)),
+                      rowHeight: 32,
+                      cellStyle: CellStyle(
+                        fieldTextStyle: EN.label1.copyWith(color: MGcolor.base3),
+                        normalDateTextStyle: EN.parag1.copyWith(color: MGcolor.base1),
+                        normalDateBoxDecoration: BoxDecoration(
+                            color: MGcolor.base6, borderRadius: BorderRadius.circular(4)),
+                        selectedDateTextStyle: EN.parag1.copyWith(color: Colors.white),
+                        selelctedDateBoxDecoration: BoxDecoration(
+                            color: MGcolor.btn_active, borderRadius: BorderRadius.circular(4)),
+                        todayTextStyle: EN.parag1.copyWith(color: MGcolor.btn_active),
+                        todayBoxDecoration: BoxDecoration(
+                            color: MGcolor.base6, borderRadius: BorderRadius.circular(4)),
+                        rangeOutDateTextStyle: EN.parag1.copyWith(color: MGcolor.base5),
+                        rangeOutDateBoxDecoration: BoxDecoration(
+                            color: MGcolor.base6, borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
 
