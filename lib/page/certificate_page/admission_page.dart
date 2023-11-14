@@ -11,7 +11,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/config/function.dart';
 import 'package:mata_gachon/page/certificate_page/check_my_certification.dart';
-import 'package:mata_gachon/page/certificate_page/certificate_room.dart';
+import 'package:mata_gachon/page/certificate_page/reservation.dart';
 
 class CertificationPage extends StatelessWidget {
   const CertificationPage({super.key});
@@ -109,7 +109,7 @@ class CertificationPage extends StatelessWidget {
                           SizedBox(width: flexibleSize(context, Size.fromHeight(8)).height),
                           // <인증하러 가기>
                           PageMigrateButton(
-                            targetPage: Certificate(),
+                            targetPage: Reservation(),
                             text: '인증하러 가기',
                             color: MGcolor.btn_active,
                             fontcolor: Colors.white,

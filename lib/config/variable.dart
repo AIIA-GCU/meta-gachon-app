@@ -57,7 +57,8 @@ class EN {
   static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'En');
   static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'En');
   static const TextStyle subtitle2 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'En');
   static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'En');
   static const TextStyle label2 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'En');
 }
