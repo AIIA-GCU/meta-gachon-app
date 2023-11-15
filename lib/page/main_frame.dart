@@ -44,11 +44,28 @@ class _MainFrameState extends State<MainFrame> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Icon(MGLogo.logo_typo_hori, size: 24),
+          title: Icon(MGLogo.logo_typo_hori, color: MGcolor.base4, size: 24),
           actions: [
-            GestureDetector(
-              onTap: () {},
-              child: Icon(AppinIcon.not, size: 24),
+            Center(
+              child: GestureDetector(
+                onTap: () {},
+                child: Stack(children: [
+                  Icon(AppinIcon.not, color: MGcolor.base4, size: 24),
+                  // 읽지 않은 알림이 있을 때, 보이기
+                  Positioned(
+                      top: 1,
+                      left: 1,
+                      child: CircleAvatar(
+                          radius: 4,
+                          backgroundColor: MGcolor.base7,
+                          child: CircleAvatar(
+                            radius: 3,
+                            backgroundColor: MGcolor.system_error,
+                          )
+                      )
+                  )
+                ]),
+              ),
             ),
             SizedBox(width: 16)
           ],

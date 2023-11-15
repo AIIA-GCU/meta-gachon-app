@@ -41,6 +41,7 @@ dev_dependencies:
     sdk: flutter
 
   auto_size_text: ^3.0.0
+  dropdown_button2: ^2.3.9
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
