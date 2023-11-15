@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'user_credentials.dart';
+import 'home.dart';
 class LOGIN extends StatefulWidget {
   @override
   _LOGINState createState() => _LOGINState();
@@ -57,7 +58,23 @@ class _LOGINState extends State<LOGIN>{
                   SizedBox(height: 7),// 패딩 추가
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // 대화 상자 닫기
+                      Navigator.of(context).pushReplacement(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => HOME(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.ease;
+                          final tween = Tween(begin: begin, end: end);
+                          final curvedAnimation = CurvedAnimation(
+                            parent: animation,
+                            curve: curve,
+                          );
+                          return SlideTransition(
+                            position: tween.animate(curvedAnimation),
+                            child: child,
+                          );
+                        },
+                      ));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MGcolor.btn_active,
