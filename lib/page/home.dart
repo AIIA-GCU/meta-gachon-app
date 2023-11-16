@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'alarm.dart';
 
 class HOME extends StatefulWidget {
   @override
@@ -9,7 +10,7 @@ class HOME extends StatefulWidget {
 class _HOMEState extends State<HOME> {
 
   int currentPageIndex = 0;
-
+  IconData currentIcon = AppinIcon.not;
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -32,7 +33,20 @@ class _HOMEState extends State<HOME> {
           Positioned(
             left: screenWidth/18+330,
             top: screenHeight-710,
-            child: Icon( AppinIcon.not, color:MGcolor.base4 ,size: 25),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AIARM(),
+                  ),
+                );
+                },
+                child: Icon(
+                currentIcon,
+                color: MGcolor.base4,
+                size: 25,
+              ),
+            ),
           ),
           //첫 번째
           Stack(
