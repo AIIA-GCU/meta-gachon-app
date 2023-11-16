@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/main_frame.dart';
+import 'package:mata_gachon/page/main/frame.dart';
 import 'user_credentials.dart';
 class Login extends StatefulWidget {
   @override

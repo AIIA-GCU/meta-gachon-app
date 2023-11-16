@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/splash.dart';
+import 'package:mata_gachon/page/main/frame.dart';
 
 void main() => runApp(App());
 
@@ -39,7 +40,7 @@ class App extends StatelessWidget {
             showUnselectedLabels: true,
           ),
       ),
-      home: Splash(),
+      home: MainFrame(),
     );
   }
 }

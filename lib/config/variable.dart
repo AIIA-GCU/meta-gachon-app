@@ -47,8 +47,9 @@ class KR {
   static const TextStyle subtitle4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label2 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static const TextStyle label2 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static const TextStyle label3 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
 }
 class EN {
   EN._();

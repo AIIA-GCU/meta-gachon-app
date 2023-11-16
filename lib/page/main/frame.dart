@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/First.dart';
-import 'package:mata_gachon/page/Second.dart';
-import 'package:mata_gachon/page/certificate_page/admission_page.dart';
+import 'package:mata_gachon/page/main/Second.dart';
+import 'package:mata_gachon/page/main/home.dart';
+import 'package:mata_gachon/page/main/admission.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});
@@ -29,7 +29,7 @@ class _MainFrameState extends State<MainFrame> {
    *      rebuild되는 함수
    */
   int currentPageIndex = 0;
-  final List<Widget> _children = [First(),Fourth(),CertificationPage(), Fourth()];
+  final List<Widget> _children = [Home(),Fourth(),CertificationPage(), Fourth()];
   final pageController = PageController();
 
   void onTap(int index) {

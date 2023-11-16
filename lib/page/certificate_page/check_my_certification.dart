@@ -8,7 +8,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/function.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/certificate_page/admission_page.dart';
+import 'package:mata_gachon/page/main/admission.dart';
 
 class MyCertification extends StatefulWidget {
   const MyCertification({super.key});

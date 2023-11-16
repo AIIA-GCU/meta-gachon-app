@@ -16,16 +16,6 @@ import 'package:mata_gachon/page/certificate_page/reservation.dart';
 class CertificationPage extends StatelessWidget {
   const CertificationPage({super.key});
 
-  // 리스트 아래가 점점 뿌옇게 변하는 효과
-  Shader hazyBottom(Rect rect) {
-    return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.transparent, Color(0xFFF4F5F8), Color(0xFFF4F5F8)],
-      stops: [0.90, 0.93, 1.0], // 10% purple, 80% transparent, 10% purple
-    ).createShader(rect);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
