@@ -76,7 +76,9 @@ class _ReservationState extends State<Reservation> {
           title: Row(
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
                 child: Icon(AppinIcon.back, size: 24*ratio),
               ),
               SizedBox(width: 16*ratio),
