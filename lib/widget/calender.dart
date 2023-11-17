@@ -6,6 +6,7 @@
 // import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/main.dart';
 
 class CustomCalender extends StatefulWidget {
   const CustomCalender({
@@ -13,12 +14,14 @@ class CustomCalender extends StatefulWidget {
     required this.first,
     required this.last,
     required this.rowHeight,
+    required this.rowWidth,
     required this.cellStyle
   }) ;
 
   final DateTime first;
   final DateTime last;
   final double rowHeight;
+  final double rowWidth;
   final CellStyle cellStyle;
 
   @override
@@ -69,14 +72,14 @@ class _CustomCalenderState extends State<CustomCalender> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constrains) =>
         SizedBox(
-          width: constrains.maxWidth,
-          height: constrains.maxHeight,
+          width: (326+5+5)*ratio,
+          height: (139)*ratio,
           child: Table(
             children: <TableRow>[
               TableRow(
                 children: ['일', '월', '화', '수', '목', '금', '토']
                     .map((e) => Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3),
+                      padding: EdgeInsets.only(bottom: 6*ratio),
                       child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
                     ))
                     .toList()
@@ -108,8 +111,9 @@ class _CustomCalenderState extends State<CustomCalender> {
                     onTap: () => toSelect(day),
                     child: Container(
                       height: widget.rowHeight,
+                      width: widget.rowWidth,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(left: 5*ratio,right: 5*ratio,bottom: 10*ratio),
                       decoration: boxDecoration,
                       child: Text(day.day.toString(), style: textStyle),
                     ),
@@ -135,8 +139,9 @@ class _CustomCalenderState extends State<CustomCalender> {
                     onTap: () => toSelect(day),
                     child: Container(
                       height: widget.rowHeight,
+                      width: widget.rowWidth,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(left: 5*ratio,right: 5*ratio,bottom: 10*ratio),
                       decoration: boxDecoration,
                       child: Text(day.day.toString(), style: textStyle),
                     ),
@@ -167,8 +172,9 @@ class _CustomCalenderState extends State<CustomCalender> {
                       onTap: () => toSelect(day),
                       child: Container(
                         height: widget.rowHeight,
+                        width: widget.rowWidth,
                         alignment: Alignment.center,
-                        margin: EdgeInsets.all(5),
+                        margin: EdgeInsets.only(left: 5*ratio,right: 5*ratio,bottom: 10*ratio),
                         decoration: boxDecoration,
                         child: Text(day.day.toString(), style: textStyle),
                       ),

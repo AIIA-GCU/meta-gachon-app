@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/reservation.dart';
 
+///기기의 화면 크기와 우리의 디자인 사이의 비율
+late double ratio;
 // 앱 실행 및 초기화
 void main() => runApp(App());
 
@@ -16,6 +18,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ///기기 스크린의 크기
+    final screenSize = MediaQuery.of(context).size;
+    ///너비 비율계산
+    ratio = screenSize.width / 390;
+    print(screenSize.width);
+    print(ratio);
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
@@ -38,12 +46,35 @@ class App extends StatelessWidget {
         )
       ),
       /*home: MainFrame(),*/
-      home: Reservation(), ///그냥 바로 "예약하기"창으로 이동
+      home: TestMain(), ///그냥 바로 "예약하기"창으로 이동
+    );
+  }
+}
+
+class TestMain extends StatelessWidget {
+  const TestMain({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // 여기에서 Navigator.push를 호출합니다
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Reservation()),
+            );
+          },
+          child: Text('Go to New Screen'),
+        ),
+      ),
     );
   }
 }
 
 
+/*
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});
 
@@ -86,3 +117,4 @@ class _MainFrameState extends State<MainFrame> {
     );
   }
 }
+*/
