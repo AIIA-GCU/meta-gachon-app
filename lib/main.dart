@@ -10,6 +10,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ratio = MediaQuery.of(context).size.width / 390;
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(

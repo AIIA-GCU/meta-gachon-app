@@ -7,6 +7,9 @@
 ///
 import 'package:flutter/material.dart';
 
+/// 비율
+late double ratio;
+
 ///
 /// 색깔
 ///

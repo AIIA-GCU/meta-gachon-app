@@ -10,8 +10,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/config/function.dart';
-import 'package:mata_gachon/page/certificate_page/check_my_certification.dart';
-import 'package:mata_gachon/page/certificate_page/reservation.dart';
+import 'package:mata_gachon/page/services/check_my_certification.dart';
+import 'package:mata_gachon/page/services/reservation.dart';
 
 class CertificationPage extends StatelessWidget {
   const CertificationPage({super.key});

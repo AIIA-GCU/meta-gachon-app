@@ -4,6 +4,7 @@ import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/main/Second.dart';
 import 'package:mata_gachon/page/main/home.dart';
 import 'package:mata_gachon/page/main/admission.dart';
+import 'package:mata_gachon/page/services/alarm.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});
@@ -48,7 +49,9 @@ class _MainFrameState extends State<MainFrame> {
           actions: [
             Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Alarm())
+                ),
                 child: Stack(children: [
                   Icon(AppinIcon.not, color: MGcolor.base4, size: 24),
                   // 읽지 않은 알림이 있을 때, 보이기
