@@ -11,12 +11,15 @@ import '../config/function.dart';
 class PageMigrateButton extends StatelessWidget {
   const PageMigrateButton(
       {Key? key,
-      required this.targetPage,
-      required this.text,
-      required this.color,
-      required this.fontcolor})
+        required this.isPopUp,
+        required this.buttonSize,
+        required this.targetPage,
+        required this.text,
+        required this.color,
+        required this.fontcolor})
       : super(key: key);
-
+  final bool isPopUp; //타겟이 페이지인지 팝업 위젯인지 구분 (Navigator.of 부분에서 변경이 필요)
+  final double buttonSize;
   final Widget targetPage;
   final String text;
   final Color color; // buttton color
@@ -29,11 +32,22 @@ class PageMigrateButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: color,
       ),
-      width: flexibleSize(context, Size.fromWidth(159)).width,
+      width: flexibleSize(context, Size.fromWidth(buttonSize)).width,
       height: flexibleSize(context, Size.fromHeight(40)).height,
       child: TextButton(
         onPressed: () {
-          Navigator.of(context, rootNavigator: true)
+          isPopUp
+              ? {
+            Navigator.of(context).pop(),
+            showDialog(
+              context: context,
+              barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부
+              builder: (BuildContext context) {
+                return targetPage;
+              },
+            )
+          }
+              : Navigator.of(context, rootNavigator: true)
               .push(MaterialPageRoute(builder: (context) => targetPage));
         },
         child: Text(text,

@@ -15,10 +15,10 @@ import '../config/variable.dart';
 class AnotherGuyWidget extends StatelessWidget {
   const AnotherGuyWidget(
       {Key? key,
-      required this.where,
-      required this.name,
-      required this.date,
-      required this.time})
+        required this.where,
+        required this.name,
+        required this.date,
+        required this.time})
       : super(key: key);
 
   final String where;
@@ -72,23 +72,26 @@ class AnotherGuyWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AutoSizeText(
+                    Text(
                       where,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: flexibleSize(context, Size.fromHeight(19)).height,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(19)).height,
                       ),
                     ),
                     Container(
                       height: flexibleSize(context, Size.fromHeight(8)).height,
                     ),
-                    AutoSizeText(name,
+                    Text(name,
                         style: TextStyle(
-                          fontSize: flexibleSize(context, Size.fromHeight(14)).height,
+                          fontSize:
+                          flexibleSize(context, Size.fromHeight(14)).height,
                         )),
-                    AutoSizeText(date,
+                    Text(date,
                         style: TextStyle(
-                          fontSize:flexibleSize(context, Size.fromHeight(14)).height,
+                          fontSize:
+                          flexibleSize(context, Size.fromHeight(14)).height,
                         )),
                   ],
                 ),
@@ -101,8 +104,8 @@ class AnotherGuyWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     color: MGcolor.base4,
                   ),
-                  height:flexibleSize(context, Size.fromHeight(74)).height,
-                  width:flexibleSize(context, Size.fromHeight(74)).height,
+                  height: flexibleSize(context, Size.fromHeight(74)).height,
+                  width: flexibleSize(context, Size.fromHeight(74)).height,
                 )
               ],
             ),
@@ -119,10 +122,10 @@ class AnotherGuyWidget extends StatelessWidget {
 class MyReservationWidget extends StatelessWidget {
   const MyReservationWidget(
       {Key? key,
-      required this.where,
-      required this.time,
-      required this.date,
-      required this.name})
+        required this.where,
+        required this.time,
+        required this.date,
+        required this.name})
       : super(key: key);
 
   final String where;
@@ -158,25 +161,28 @@ class MyReservationWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AutoSizeText(
+                    Text(
                       where,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: flexibleSize(context, Size.fromHeight(19)).height,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(19)).height,
                       ),
                     ),
                     Container(
                       height: flexibleSize(context, Size.fromHeight(8)).height,
                     ),
-                    AutoSizeText(date,
+                    Text(date,
                         style: TextStyle(
-                          fontSize: flexibleSize(context, Size.fromHeight(14)).height,
+                          fontSize:
+                          flexibleSize(context, Size.fromHeight(14)).height,
                           fontWeight: FontWeight.w400,
                           color: MGcolor.base3,
                         )),
-                    AutoSizeText(time,
+                    Text(time,
                         style: TextStyle(
-                          fontSize: flexibleSize(context, Size.fromHeight(14)).height,
+                          fontSize:
+                          flexibleSize(context, Size.fromHeight(14)).height,
                           fontWeight: FontWeight.w400,
                           color: MGcolor.base3,
                         )),
@@ -212,14 +218,14 @@ class MyReservationWidget extends StatelessWidget {
   }
 }
 
-class PopUpWidget extends StatelessWidget {
+class PopUpWidget extends StatefulWidget {
   const PopUpWidget(
       {Key? key,
-      required this.where,
-      required this.name,
-      required this.date,
-      required this.time,
-      required this.isMine})
+        required this.where,
+        required this.name,
+        required this.date,
+        required this.time,
+        required this.isMine})
       : super(key: key);
 
   final String where;
@@ -227,6 +233,15 @@ class PopUpWidget extends StatelessWidget {
   final String date;
   final String time;
   final bool isMine;
+
+  @override
+  State<PopUpWidget> createState() => _PopUpWidgetState();
+}
+
+class _PopUpWidgetState extends State<PopUpWidget> {
+  bool isTimeExceed = false;
+  bool isUsingRoom = false;
+  bool canExtend = false;
 
   @override
   Widget build(BuildContext context) {
@@ -243,156 +258,289 @@ class PopUpWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           width: flexibleSize(context, Size.fromWidth(326)).width,
-          height: isMine
-              ? flexibleSize(context, Size.fromHeight(456)).height
+          height: widget.isMine
+              ? isUsingRoom
+              ? canExtend
+              ? flexibleSize(context, Size.fromHeight(468)).height
+              : flexibleSize(context, Size.fromHeight(398)).height
+              : isTimeExceed
+              ? flexibleSize(context, Size.fromHeight(468)).height
+              : flexibleSize(context, Size.fromHeight(456)).height
               : flexibleSize(context, Size.fromHeight(518)).height,
           child: Container(
-            margin: isMine
+            margin: widget.isMine
                 ? EdgeInsets.symmetric(
-              horizontal:flexibleSize(context, Size.fromWidth(91)).width,
+              horizontal: flexibleSize(context, Size.fromWidth(72)).width,
             )
                 : EdgeInsets.symmetric(
-              horizontal:flexibleSize(context, Size.fromWidth(1)).width,
+              horizontal: flexibleSize(context, Size.fromWidth(1)).width,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
             child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(
-                    flexibleSize(context, Size.fromWidth(12)).width,
-                    flexibleSize(context, Size.fromHeight(25)).height,
-                    flexibleSize(context, Size.fromWidth(12)).width,
-                    0,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: isMine
-                        ? Image.asset(
-                      ImgPath.home_img4,
-                      height: flexibleSize(context, Size.fromHeight(120)).height,
-                    )
-                        : Container(
-                      color: MGcolor.base4,
-                      height: flexibleSize(context, Size.fromHeight(200)).height,
-                      width: flexibleSize(context, Size.fromWidth(246)).width,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isUsingRoom = false;
+                      isTimeExceed =
+                      !isTimeExceed; //이미지 사진 클릭시 시간 만료 팝업으로 변경됨 Stateless -> Stateful로 변경한 이유(추후 필요없을 시 Stateless로 변경해도 됨)
+                    });
+                  },
+                  onDoubleTap: () {
+                    setState(() {
+                      isTimeExceed = false;
+                      isUsingRoom =
+                      !isUsingRoom; //이미지 사진 더블 클릭시 회의실 사용 중 팝업으로 변경됨 Stateless -> Stateful로 변경한 이유(추후 필요없을 시 Stateless로 변경해도 됨)
+                    });
+                  },
+                  onLongPress: () {
+                    setState(() {
+                      isTimeExceed = false;
+                      canExtend = !canExtend;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(
+                      flexibleSize(context, Size.fromWidth(12)).width,
+                      flexibleSize(context, Size.fromHeight(25)).height,
+                      flexibleSize(context, Size.fromWidth(12)).width,
+                      0,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: widget.isMine
+                          ? Image.asset(
+                        ImgPath.home_img4,
+                        height:
+                        flexibleSize(context, Size.fromHeight(120))
+                            .height,
+                      )
+                          : Container(
+                        color: MGcolor.base4,
+                        height:
+                        flexibleSize(context, Size.fromHeight(200))
+                            .height,
+                        width: flexibleSize(context, Size.fromWidth(246))
+                            .width,
+                      ),
                     ),
                   ),
                 ),
                 Container(
-                  height:flexibleSize(context, Size.fromHeight(16)).height,
+                  height: flexibleSize(context, Size.fromHeight(16)).height,
                 ),
-                AutoSizeText(
-                  where,
+                Text(
+                  widget.where,
                   style: TextStyle(
                     color: MGcolor.base1,
-                    fontSize:flexibleSize(context, Size.fromHeight(18)).height,
+                    fontSize: flexibleSize(context, Size.fromHeight(18)).height,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Container(
-                  height:flexibleSize(context, Size.fromHeight(24)).height,
+                  height: flexibleSize(context, Size.fromHeight(24)).height,
                 ),
-                AutoSizeText(
-                  date,
+                Text(
+                  widget.date,
                   style: TextStyle(
                     color: MGcolor.base3,
-                    fontSize:flexibleSize(context, Size.fromHeight(14)).height,
+                    fontSize: flexibleSize(context, Size.fromHeight(14)).height,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 Container(
-                  height:flexibleSize(context, Size.fromWidth(8)).width,
+                  height: flexibleSize(context, Size.fromWidth(8)).width,
                 ),
-                AutoSizeText(
-                  time,
+                Text(
+                  widget.time,
                   style: TextStyle(
                     color: MGcolor.base3,
-                    fontSize:flexibleSize(context, Size.fromHeight(14)).height,
+                    fontSize: flexibleSize(context, Size.fromHeight(14)).height,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                Container(
-                  height:flexibleSize(context, Size.fromHeight(24)).height,
-                ),
-                AutoSizeText(
-                  '대표자',
-                  style: TextStyle(
-                    color: MGcolor.base1,
-                    fontSize:flexibleSize(context, Size.fromHeight(14)).height,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Container(
-                  height:flexibleSize(context, Size.fromHeight(8)).height,
-                ),
-                AutoSizeText(
-                  name,
-                  style: TextStyle(
-                    color: MGcolor.base3,
-                    fontSize:flexibleSize(context, Size.fromHeight(14)).height,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                isMine
+                isTimeExceed
                     ? Column(
                   children: [
                     Container(
-                      height: flexibleSize(context, Size.fromHeight(30)).height,
+                      height: flexibleSize(context, Size.fromHeight(8))
+                          .height,
+                    ),
+                    Text(
+                      '회의실 사용 시간이 다 되었어요.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MGcolor.system_error,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(12))
+                            .height,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      '회의실에서 QR코드 인증을 해주세요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MGcolor.system_error,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(12))
+                            .height,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Container(
+                      height: flexibleSize(context, Size.fromHeight(24))
+                          .height,
+                    ),
+                  ],
+                )
+                    : isUsingRoom
+                    ? Column(
+                  children: [
+                    Container(
+                      height:
+                      flexibleSize(context, Size.fromHeight(8))
+                          .height,
+                    ),
+                    Text(
+                      '현재 회의실을 사용중이에요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MGcolor.system_error,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(12))
+                            .height,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      '남은 시간 : 85분',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MGcolor.system_error,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(12))
+                            .height,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Container(
+                      height:
+                      flexibleSize(context, Size.fromHeight(24))
+                          .height,
+                    ),
+                  ],
+                )
+                    : Container(
+                  height: flexibleSize(context, Size.fromHeight(24))
+                      .height,
+                ),
+                Text(
+                  '대표자',
+                  style: TextStyle(
+                    color: MGcolor.base1,
+                    fontSize: flexibleSize(context, Size.fromHeight(14)).height,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Container(
+                  height: flexibleSize(context, Size.fromHeight(8)).height,
+                ),
+                Text(
+                  widget.name,
+                  style: TextStyle(
+                    color: MGcolor.base3,
+                    fontSize: flexibleSize(context, Size.fromHeight(14)).height,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                widget.isMine
+                    ? isTimeExceed
+                    ? Column(
+                  children: [
+                    Container(
+                      height:
+                      flexibleSize(context, Size.fromHeight(30))
+                          .height,
                     ),
                     PageMigrateButton(
+                      isPopUp: false,
+                      buttonSize: 169,
+                      targetPage: MyCertification(),
+                      text: 'QR 코드 인증하기',
+                      color: MGcolor.brand_orig,
+                      fontcolor: Colors.white,
+                    ),
+                  ],
+                )
+                    : isUsingRoom
+                    ? canExtend
+                    ? Column(
+                  children: [
+                    Container(
+                      height: flexibleSize(
+                          context, Size.fromHeight(30))
+                          .height,
+                    ),
+                    PageMigrateButton(
+                      isPopUp: true,
+                      buttonSize: 145,
+                      targetPage: CancelPopUp(
+                        accept: false,
+                        extendPopUp: true,
+                      ),
+                      text: '예약 연장하기',
+                      color: MGcolor.brand_orig,
+                      fontcolor: Colors.white,
+                    ),
+                  ],
+                )
+                    : Container()
+                    : Column(
+                  children: [
+                    Container(
+                      height: flexibleSize(
+                          context, Size.fromHeight(30))
+                          .height,
+                    ),
+                    PageMigrateButton(
+                      isPopUp: false,
+                      buttonSize: 145,
                       targetPage: MyCertification(),
                       text: '예약 수정하기',
                       color: MGcolor.brand_orig,
                       fontcolor: Colors.white,
                     ),
                     Container(
-                      height: flexibleSize(context, Size.fromHeight(12)).height,
-                    ),
-                    Container(
-                      width: flexibleSize(context, Size.fromWidth(159))
-                          .width,
-                      height: flexibleSize(context, Size.fromHeight(40))
+                      height: flexibleSize(
+                          context, Size.fromHeight(12))
                           .height,
-                      child: TextButton(
-                        onPressed: () {
-
-                          Navigator.of(context).pop();
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부
-                            builder: (BuildContext context) {
-                              return CancelPopUp(
-                                accept: false,
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          '예약 취소하기',
-                          style: TextStyle(
-                              color: MGcolor.base3,
-                              fontSize: flexibleSize(
-                                  context, Size.fromHeight(14))
-                                  .height,
-                            fontWeight: FontWeight.w400,),
-                        ),
-                      ),
                     ),
+                    PageMigrateButton(
+                        isPopUp: true,
+                        buttonSize: 145,
+                        targetPage: CancelPopUp(accept: false, extendPopUp: false),
+                        text: '예약 취소하기',
+                        color: Colors.transparent,
+                        fontcolor: MGcolor.base3)
                   ],
                 )
                     : Column(
                   children: [
                     Container(
-                      height: flexibleSize(context, Size.fromHeight(24)).height,
+                      height: flexibleSize(context, Size.fromHeight(24))
+                          .height,
                     ),
                     Text(
                       '깨끗하게 잘 사용하고 나왔습니다!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: MGcolor.base1,
-                        fontSize:flexibleSize(context, Size.fromHeight(14)).height,
+                        fontSize:
+                        flexibleSize(context, Size.fromHeight(14))
+                            .height,
                         fontWeight: FontWeight.w400,
                         height: 0,
                         letterSpacing: -0.32,
@@ -410,8 +558,10 @@ class PopUpWidget extends StatelessWidget {
 }
 
 class CancelPopUp extends StatelessWidget {
-  const CancelPopUp({Key? key, required this.accept}) : super(key: key);
+  const CancelPopUp({Key? key, required this.accept, required this.extendPopUp})
+      : super(key: key);
 
+  final bool extendPopUp;
   final bool accept; // 취소하기 버튼 누를 시 뜨는 팝업
   @override
   Widget build(BuildContext context) {
@@ -434,18 +584,42 @@ class CancelPopUp extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.fromLTRB(
-                    flexibleSize(context, Size.fromWidth(64)).width,
-                    flexibleSize(context, Size.fromHeight(40)).height,
-                    flexibleSize(context, Size.fromWidth(64)).width,
-                    0,
-                  ),
+                      flexibleSize(context, Size.fromWidth(64)).width,
+                      flexibleSize(context, Size.fromHeight(40)).height,
+                      flexibleSize(context, Size.fromWidth(64)).width,
+                      0),
                   child: accept
+                      ? extendPopUp
                       ? Text(
+                    '연장되었습니다!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: MGcolor.base1,
+                      fontSize:
+                      flexibleSize(context, Size.fromHeight(16))
+                          .height,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                      : Text(
                     '예약이 취소되었습니다!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: MGcolor.base1,
-                      fontSize: flexibleSize(context, Size.fromHeight(16))
+                      fontSize:
+                      flexibleSize(context, Size.fromHeight(16))
+                          .height,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                      : extendPopUp
+                      ? Text(
+                    '1시간 연장하시겠습니까?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: MGcolor.base1,
+                      fontSize:
+                      flexibleSize(context, Size.fromHeight(16))
                           .height,
                       fontWeight: FontWeight.w400,
                     ),
@@ -455,7 +629,8 @@ class CancelPopUp extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: MGcolor.base1,
-                      fontSize: flexibleSize(context, Size.fromHeight(16))
+                      fontSize:
+                      flexibleSize(context, Size.fromHeight(16))
                           .height,
                       fontWeight: FontWeight.w400,
                     ),
@@ -494,79 +669,65 @@ class CancelPopUp extends StatelessWidget {
                     ),
                   ),
                 )
-                    : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        width: flexibleSize(context, Size.fromWidth(147))
-                            .width,
-                        height: flexibleSize(context, Size.fromHeight(40))
-                            .height,
-                        decoration: ShapeDecoration(
-                          color: MGcolor.base6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    : Container(
+                  padding: EdgeInsets.fromLTRB(
+                    0,
+                    0,
+                    0,
+                    flexibleSize(context, Size.fromHeight(12)).height,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width:
+                          flexibleSize(context, Size.fromWidth(147))
+                              .width,
+                          height:
+                          flexibleSize(context, Size.fromHeight(40))
+                              .height,
+                          decoration: ShapeDecoration(
+                            color: MGcolor.base6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '닫기',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: MGcolor.base3,
-                              fontSize: flexibleSize(
-                                  context, Size.fromHeight(14))
-                                  .height,
-                              fontWeight: FontWeight.w400,
+                          child: Center(
+                            child: Text(
+                              '닫기',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: MGcolor.base3,
+                                fontSize: flexibleSize(
+                                    context, Size.fromHeight(14))
+                                    .height,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부
-                          builder: (BuildContext context) {
-                            return CancelPopUp(
-                              accept: true,
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        width: flexibleSize(context, Size.fromWidth(147))
+                      Container(
+                        width: flexibleSize(context, Size.fromWidth(8))
                             .width,
-                        height: flexibleSize(context, Size.fromHeight(40))
-                            .height,
-                        decoration: ShapeDecoration(
+                      ),
+                      PageMigrateButton(
+                          isPopUp: true,
+                          buttonSize: 147,
+                          targetPage: extendPopUp
+                              ? CancelPopUp(
+                              accept: true, extendPopUp: true)
+                              : CancelPopUp(
+                              accept: true, extendPopUp: false),
+                          text: extendPopUp ? '연장하기' : '취소하기',
                           color: MGcolor.brand_orig,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '취소하기',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: MGcolor.base7,
-                              fontSize: flexibleSize(
-                                  context, Size.fromHeight(14))
-                                  .height,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                          fontcolor: MGcolor.base7),
+                    ],
+                  ),
                 ),
               ],
             ),

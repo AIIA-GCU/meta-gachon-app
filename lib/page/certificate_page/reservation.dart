@@ -39,12 +39,12 @@ class _ReservationState extends State<Reservation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          child: Icon(AppinIcon.back, size: 24)
-        ),
-        title: Text("강의실 예약하기",
-            style: TextStyle(color: MGcolor.base1, fontSize: 18))
+          leading: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Icon(AppinIcon.back, size: 24)
+          ),
+          title: Text("강의실 예약하기",
+              style: TextStyle(color: MGcolor.base1, fontSize: 18))
       ),
       body: Center(
         child: Column(
@@ -79,18 +79,18 @@ class _ReservationState extends State<Reservation> {
                         style: KR.parag1,
                       )),
                   Positioned(
-                    left: 64,
-                    top: 0,
-                    child: CustomDropdownMenu(
-                      hint: "선택",
-                      items: rooms,
-                      onChanged: (value){
-                        setState(() {
-                          selectedRoom = value;
-                        });
-                      },
-                      selectedItem: selectedRoom,
-                    )
+                      left: 64,
+                      top: 0,
+                      child: CustomDropdownMenu(
+                        hint: "선택",
+                        items: rooms,
+                        onChanged: (value){
+                          setState(() {
+                            selectedRoom = value;
+                          });
+                        },
+                        selectedItem: selectedRoom,
+                      )
                   ),
                 ],
               ),
@@ -110,47 +110,47 @@ class _ReservationState extends State<Reservation> {
                 children: [
                   // 월
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'October',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: MGcolor.base1,
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            height: 0,
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'October',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: MGcolor.base1,
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '~',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: MGcolor.base1,
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            height: 0,
+                          const SizedBox(width: 4),
+                          Text(
+                            '~',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: MGcolor.base1,
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'November',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: MGcolor.base1,
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            height: 0,
+                          const SizedBox(width: 4),
+                          Text(
+                            'November',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: MGcolor.base1,
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                            ),
                           ),
-                        ),
-                      ],
-                    )
+                        ],
+                      )
                   ),
                   // 달력
                   Container(
@@ -278,47 +278,47 @@ class _ReservationState extends State<Reservation> {
                     top: 16,
                     left: 16,
                     child: Text('대표자',
-                      style: KR.parag1
+                        style: KR.parag1
                     ),
                   ),
                   Positioned(
-                    left: 80,
-                    top: 16,
-                    child: Container(
-                      width: 108,
-                      height: 20,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '20230001',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: MGcolor.base3,
-                              fontSize: 14,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                              letterSpacing: -0.32,
+                      left: 80,
+                      top: 16,
+                      child: Container(
+                        width: 108,
+                        height: 20,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '20230001',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: MGcolor.base3,
+                                fontSize: 14,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
+                                letterSpacing: -0.32,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '김가천',
-                            style: TextStyle(
-                              color: MGcolor.base3,
-                              fontSize: 14,
-                              fontFamily: 'Noto Sans KR',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                              letterSpacing: -0.32,
+                            const SizedBox(width: 4),
+                            Text(
+                              '김가천',
+                              style: TextStyle(
+                                color: MGcolor.base3,
+                                fontSize: 14,
+                                fontFamily: 'Noto Sans KR',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
+                                letterSpacing: -0.32,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
+                          ],
+                        ),
+                      )
                   ),
                 ],
               ),
@@ -398,7 +398,7 @@ class CustomDropdownMenu extends StatelessWidget {
                       spreadRadius: 0,
                     )
                   ],
-                color: Colors.white.withOpacity(0.9)//배경투명도
+                  color: Colors.white.withOpacity(0.9)//배경투명도
               )
           ),
           ///메뉴들(선택지들) 디자인

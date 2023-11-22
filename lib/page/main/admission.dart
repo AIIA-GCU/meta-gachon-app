@@ -57,7 +57,7 @@ class CertificationPage extends StatelessWidget {
                           ),
                           Container(
                             width:
-                                flexibleSize(context, Size.fromWidth(10)).width,
+                            flexibleSize(context, Size.fromWidth(10)).width,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class CertificationPage extends StatelessWidget {
                                 '강의실 이용 끝!',
                                 style: TextStyle(
                                     fontSize: flexibleSize(
-                                            context, Size.fromHeight(14))
+                                        context, Size.fromHeight(14))
                                         .height,
                                     fontWeight: FontWeight.w400,
                                     color: MGcolor.base3),
@@ -75,8 +75,8 @@ class CertificationPage extends StatelessWidget {
                                 '이제 인증하러 가볼까요?',
                                 style: TextStyle(
                                   fontSize:
-                                      flexibleSize(context, Size.fromHeight(18))
-                                          .height,
+                                  flexibleSize(context, Size.fromHeight(18))
+                                      .height,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -93,6 +93,8 @@ class CertificationPage extends StatelessWidget {
                         children: [
                           // <내 인증 확인하기>
                           PageMigrateButton(
+                            isPopUp: true,
+                            buttonSize: 159,
                             targetPage: MyCertification(),
                             text: '내 인증 확인하기',
                             color: MGcolor.btn_inactive,
@@ -103,6 +105,8 @@ class CertificationPage extends StatelessWidget {
                                   .height),
                           // <인증하러 가기>
                           PageMigrateButton(
+                            isPopUp: true,
+                            buttonSize: 159,
                             targetPage: Reservation(),
                             text: '인증하러 가기',
                             color: MGcolor.btn_active,
@@ -117,7 +121,7 @@ class CertificationPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical:
-                          flexibleSize(context, Size.fromHeight(30)).height),
+                      flexibleSize(context, Size.fromHeight(30)).height),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -126,7 +130,7 @@ class CertificationPage extends StatelessWidget {
 
                         Container(
                           height:
-                              flexibleSize(context, Size.fromHeight(8)).height,
+                          flexibleSize(context, Size.fromHeight(8)).height,
                         ),
 
                         // 메인

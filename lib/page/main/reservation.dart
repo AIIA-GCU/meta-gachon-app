@@ -67,7 +67,7 @@ class _ReservationPageState extends State<ReservationPage> {
                                 ),
                               ),
                               Container(
-                                width: flexibleSize(context, Size.fromWidth(8)).width
+                                  width: flexibleSize(context, Size.fromWidth(8)).width
                               ),
                               AutoSizeText(
                                 '강의실 예약하기',
@@ -157,44 +157,3 @@ class _ReservationPageState extends State<ReservationPage> {
 }
 
 
-
-class pageMigrateButton extends StatelessWidget {
-  const pageMigrateButton(
-      {Key? key,
-      required this.targetPage,
-      required this.text,
-      required this.color,
-      required this.fontcolor})
-      : super(key: key);
-
-  final Widget targetPage;
-  final String text;
-  final Color color;
-  final Color fontcolor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: color,
-      ),
-      width: MediaQuery.of(context).size.width * 0.4076923076923077,
-      height: MediaQuery.of(context).size.height * 0.0446927374301676,
-      child: TextButton(
-        onPressed: () {
-          Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(builder: (context) => targetPage),
-          );
-        },
-        child: AutoSizeText(
-          text,
-          style: TextStyle(
-              color: fontcolor,
-              fontSize:
-                  MediaQuery.of(context).size.height * 0.0156424581005587),
-        ),
-      ),
-    );
-  }
-}
