@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/login.dart';
 
+// 온보딩 화면 위젯 정의
 class OnBoarding extends StatelessWidget {
 
   @override
@@ -17,18 +18,21 @@ class OnBoarding extends StatelessWidget {
     final double logoX = (screenWidth - logoWidth) / 2;
     final double logoY = (screenHeight - logoHeight) / 2;
 
+    // 온보딩 화면 구성
     return Scaffold(
       backgroundColor: Color(0xFFE8E8E8),
       body: Center(
         child: Stack(
           children: [
+            // 배경 이미지 표시
             Positioned(
-              child:Image.asset(
+              child: Image.asset(
                 ImgPath.lv_default,
                 width: screenWidth, // 원하는 이미지 너비로 설정
                 height: screenHeight, // 원하는 이미지 높이로 설정
               ),
             ),
+            // "간편하게 강의실을 예약해요" 텍스트
             Positioned(
               left: logoX + 24,
               top: logoY + 180,
@@ -37,42 +41,48 @@ class OnBoarding extends StatelessWidget {
                 style: KR.subtitle2,
               ),
             ),
+            // "언제 어디서든 비어있는 강의실을 예약하고 확인하세요." 텍스트
             Positioned(
-              left: logoX-10,
+              left: logoX - 10,
               top: logoY + 220,
               child: Text(
                 '언제 어디서든 비어있는 강의실을 예약하고 확인하세요.',
                 style: KR.label1.copyWith(
-                  color:MGcolor.base3
+                    color: MGcolor.base3
                 ),
               ),
             ),
+            // 약관 동의하기 버튼
             Positioned(
-              left: logoX-60,
-              top: logoY+360,
+              left: logoX - 60,
+              top: logoY + 360,
               child: ElevatedButton(
                 onPressed: () {
+                  // 약관 동의 팝업 띄우기
                   showModalBottomSheet(
-                    shape:RoundedRectangleBorder(
-                      borderRadius:BorderRadius.vertical(top: Radius.circular(24.0)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
                     ),
                     context: context,
                     isScrollControlled: true,
                     builder: (BuildContext context) {
-                      return  Container(
-                        height: MediaQuery.of(context).size.height * 0.75,//팝업창 높이
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.75, // 팝업창 높이
                         child: Stack(
                           children: [
+                            // 약관 동의 내용 텍스트
                             Positioned(
-                              left:logoX+70,
-                              top:logoY-200,
-                              child:Text('약관 동의 내용'),
+                              left: logoX + 70,
+                              top: logoY - 200,
+                              child: Text('약관 동의 내용'),
                             ),
+                            // "동의하기" 버튼
                             Positioned(
-                              left:logoX-60,
-                              top:logoY+120,
-                              child:ElevatedButton(
+                              left: logoX - 60,
+                              top: logoY + 120,
+                              child: ElevatedButton(
                                 onPressed: () {
+                                  // 로그인 화면으로 이동
                                   Navigator.of(context).pushReplacement(PageRouteBuilder(
                                     pageBuilder: (context, animation, secondaryAnimation) => Login(),
                                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -105,22 +115,24 @@ class OnBoarding extends StatelessWidget {
                                     color: MGcolor.btn_inactive,
                                   ),
                                 ),
-                            ),
-                            ),
-                            Positioned(
-                              left:logoX+85,
-                              top:logoY+175,
-                              child:TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                '닫기',
-                              style: TextStyle(
-                                color: MGcolor.btn_active,
                               ),
                             ),
-                            ),
+                            // "닫기" 버튼
+                            Positioned(
+                              left: logoX + 85,
+                              top: logoY + 175,
+                              child: TextButton(
+                                onPressed: () {
+                                  // 팝업 닫기
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '닫기',
+                                  style: TextStyle(
+                                    color: MGcolor.btn_active,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
