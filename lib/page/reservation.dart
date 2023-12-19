@@ -339,7 +339,7 @@ class MyContainer extends StatelessWidget {
     required this.title,
     required this.height,
     required this.content,
-    this.additionalContent, // 생성자를 통해 ratio를 받음
+    this.additionalContent,
     super.key,
   });
 
@@ -362,15 +362,19 @@ class MyContainer extends StatelessWidget {
         Positioned(
           left: 16 * ratio,
           top: 16 * ratio,
-          child: Text(
-            title,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'Noto Sans KR',
-              fontWeight: FontWeight.w500,
-              height: 0,
-              letterSpacing: -0.32,
+          child: Container(
+            alignment: Alignment.center,
+            height: 20*ratio,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: 'Noto Sans KR',
+                fontWeight: FontWeight.w500,
+                height: 0,
+                letterSpacing: -0.32,
+              ),
             ),
           ),
         ),
@@ -381,7 +385,7 @@ class MyContainer extends StatelessWidget {
             children: content, // combined 리스트를 사용합니다.
           ),
         ),
-        ...?additionalContent
+        ...?additionalContent //추가 위젯들 들어가는 곳
       ]),
     );
   }
