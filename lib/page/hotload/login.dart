@@ -28,14 +28,14 @@ class _LoginState extends State<Login> {
   }
 
   void updateLoginButtonState() {
-    // 사용자명과 비밀번호 모두 입력되면 로그인 버튼 활성화
+    // 사용자명과 비밀번호 모두 입력되면 로그인 버튼 활성화함
     setState(() {
       isLoginButtonEnabled =
           idController.text.isNotEmpty && passwordController.text.isNotEmpty;
     });
   }
 
-  // 로그인 성공 팝업창 표시
+  // 로그인 성공 팝업창 표시함
   void showLoginPopup({String message = '로그인 되었습니다!'}) {
     showDialog(
       context: context,
@@ -64,10 +64,10 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 7),
                   ElevatedButton(
                     onPressed: () {
-                      // 로그인 팝업 확인 버튼을 누르면 메인 프레임으로 이동하고 이전 화면들을 제거
+                      // 로그인 팝업 확인 버튼을 누르면 메인 프레임으로 이동하고 이전 화면들을 제거함
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => MainFrame()),
-                            (route) => route.isFirst,
+                        (route) => route.isFirst,
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
     final double screenWidth = screenSize.width;
     final double screenHeight = screenSize.height;
 
-    // 로고 이미지를 표시할 위치 계산
+    // 로고 이미지를 표시할 위치 계산함
     final double logoWidth = screenWidth * 0.6;
     final double logoHeight = logoWidth * 0.4;
     final double logoX = (screenWidth - logoWidth) / 2;
@@ -108,7 +108,7 @@ class _LoginState extends State<Login> {
 
     return GestureDetector(
       onTap: () {
-        // 다른 곳을 터치하면 키보드 숨김
+        // 다른 곳을 터치하면 키보드 숨기기
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
@@ -120,7 +120,8 @@ class _LoginState extends State<Login> {
               ),
               Container(
                 margin: EdgeInsets.only(left: logoX - 60, top: logoY + 35),
-                child: Icon(MGLogo.logo, color: MGcolor.btn_active, size: 79.99),
+                child:
+                    Icon(MGLogo.logo, color: MGcolor.btn_active, size: 79.99),
               ),
               Container(
                 margin: EdgeInsets.only(left: logoX - 60, top: logoY + 130),
@@ -227,28 +228,27 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: isLoginButtonEnabled
                       ? () {
-                    setState(() {
-                      isLoading = true;
-                      errorMessage = '';
-                    });
-                    Future.delayed(Duration(seconds: 2), () {
-                      if (idController.text ==
-                          UserCredentials.correctId &&
-                          passwordController.text ==
-                              UserCredentials.correctPassword) {
-                        showLoginPopup(message: '로그인되었습니다!');
-                      } else {
-                        setState(() {
-                          errorMessage =
-                          '아이디 혹은 비밀번호가 맞지 않습니다.';
-                          isLoading = false;
-                        });
-                      }
-                      setState(() {
-                        isLoading = false;
-                      });
-                    });
-                  }
+                          setState(() {
+                            isLoading = true;
+                            errorMessage = '';
+                          });
+                          Future.delayed(Duration(seconds: 2), () {
+                            if (idController.text ==
+                                    UserCredentials.correctId &&
+                                passwordController.text ==
+                                    UserCredentials.correctPassword) {
+                              showLoginPopup(message: '로그인되었습니다!');
+                            } else {
+                              setState(() {
+                                errorMessage = '아이디 혹은 비밀번호가 맞지 않습니다.';
+                                isLoading = false;
+                              });
+                            }
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        }
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MGcolor.btn_active,
