@@ -1,7 +1,3 @@
-///
-/// 내 인증 확인하기 페이지
-///
-
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -19,6 +15,7 @@ class MyCertification extends StatefulWidget {
 
 class _MyCertificationState extends State<MyCertification> {
 
+  // 인증이 존재하는지 추적하기 위한 변수
   bool isExist = false;
 
   @override
@@ -31,12 +28,13 @@ class _MyCertificationState extends State<MyCertification> {
             highlightColor: Colors.transparent,
             icon: Icon(AppinIcon.back, size: 24),
             onPressed: () {
+              // 슬라이드 애니메이션을 통해 인증 페이지로 이동
               Navigator.of(context, rootNavigator: true).pop(
                 PageRouteBuilder(
-                  transitionsBuilder: slideRigth2Left,  // animation
+                  transitionsBuilder: slideRigth2Left,  // 전환 애니메이션.
                   pageBuilder: (context, animation, secondaryAnimation)
-                  => CertificationPage(),
-                  fullscreenDialog: false,  // No Dialog
+                  => CertificationPage(), // 타깃 페이지(인증 페이지)
+                  fullscreenDialog: false,
                 ),
               );
             }
@@ -49,10 +47,11 @@ class _MyCertificationState extends State<MyCertification> {
         ),
         ),
         actions: [
+          // 'isExist' 상태를 변경하기 위한 GestureDetector.
           GestureDetector(
             onTap: () {
               setState(() {
-                isExist = !isExist; //테스트 버튼 테스트
+                isExist = !isExist; // 'isExist' 상태를 토글
               });
             },
             child: Icon(AppinIcon.not, size: 24),
@@ -62,11 +61,12 @@ class _MyCertificationState extends State<MyCertification> {
           )
         ],
       ),
-      body: isExist
+      body: isExist // 'isExist'를 통해 인증이 존재하는지 알아보고, 존재여부에 따라 토글
           ? Center(
         child: Container(
           child: ShaderMask(
             shaderCallback: (Rect rect) {
+              // 리스트 뷰에 그라디언트 효과 적용
               return LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -75,11 +75,7 @@ class _MyCertificationState extends State<MyCertification> {
                   Color(0xFFF4F5F8),
                   Color(0xFFF4F5F8),
                 ],
-                stops: [
-                  0.80,
-                  0.93,
-                  1.0
-                ], // 10% purple, 80% transparent, 10% purple
+                stops: [0.80, 0.93, 1.0],
               ).createShader(rect);
             },
             blendMode: BlendMode.dstOut,
@@ -90,6 +86,7 @@ class _MyCertificationState extends State<MyCertification> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width *
                           0.041025641025641),
+                  // 위젯 추가
                   child: ListView.builder(
                     physics: ScrollPhysics(),
                     shrinkWrap: true,
@@ -109,10 +106,10 @@ class _MyCertificationState extends State<MyCertification> {
           ),
         ),
       )
-          : Transform.translate(
+          : Transform.translate( // 인증이 없으면 나오는 위젯
         offset: Offset(0, -1 * AppBar().preferredSize.height),
-        // 디바이스의 정 중앙에 배치
         child: Center(
+          // 인증이 없을 때 표시되는 텍스트
           child: AutoSizeText(
             '아직 인증이 없어요!',
             style: TextStyle(
@@ -128,6 +125,7 @@ class _MyCertificationState extends State<MyCertification> {
   }
 }
 
+// 다른 사용자의 개별 인증 항목을 표시하기 위한 위젯
 class anotherGuyWidget extends StatelessWidget {
   const anotherGuyWidget(
       {Key? key, required this.where, required this.name, required this.date})

@@ -26,6 +26,7 @@ class AnotherGuyWidget extends StatelessWidget {
   final String date;
   final String time;
 
+  // 팝업 위젯
   void showCard(BuildContext ctx) => showDialog(
     context: ctx,
     barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
@@ -116,6 +117,7 @@ class AnotherGuyWidget extends StatelessWidget {
   }
 }
 
+// 내 예약 위젯
 class MyReservationWidget extends StatelessWidget {
   const MyReservationWidget(
       {Key? key,
@@ -154,6 +156,7 @@ class MyReservationWidget extends StatelessWidget {
             height: flexibleSize(context, Size.fromHeight(98)).height,
             child: Row(
               children: [
+                // 좌측 정렬을 통해 내 인증 강의실 정보 표시
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,6 +189,7 @@ class MyReservationWidget extends StatelessWidget {
                   child: Container(),
                   flex: 1,
                 ),
+                // 우측에 강의실 사진 표시
                 Transform.translate(
                   offset: Offset(
                     0,
@@ -212,6 +216,7 @@ class MyReservationWidget extends StatelessWidget {
   }
 }
 
+// 팝업 위젯
 class PopUpWidget extends StatelessWidget {
   const PopUpWidget(
       {Key? key,
@@ -226,10 +231,11 @@ class PopUpWidget extends StatelessWidget {
   final String name;
   final String date;
   final String time;
-  final bool isMine;
+  final bool isMine; // 사용자의 위젯인지 아닌지 구분하여 위젯 형식 변경
 
   @override
   Widget build(BuildContext context) {
+    // AlertDialog로 팝업 위젯 표시
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(
         vertical: flexibleSize(context, Size.fromHeight(30)).height,
@@ -409,6 +415,7 @@ class PopUpWidget extends StatelessWidget {
   }
 }
 
+// 예약 취소를 하기 위한 팝업 위젯
 class CancelPopUp extends StatelessWidget {
   const CancelPopUp({Key? key, required this.accept}) : super(key: key);
 

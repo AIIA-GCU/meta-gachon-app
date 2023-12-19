@@ -12,7 +12,7 @@ import 'package:mata_gachon/page/services/reservation.dart';
 import 'package:mata_gachon/widget/certificate_widget.dart';
 
 
-
+// 예약 페이지
 class ReservationPage extends StatefulWidget {
   const ReservationPage({super.key});
 
@@ -21,8 +21,9 @@ class ReservationPage extends StatefulWidget {
 }
 
 class _ReservationPageState extends State<ReservationPage> {
+  // 렌더링 최적화
   bool get wantKeepAlive => false;
-
+  // 사용자의 예약 존재 여부 확인
   bool isExist = false;
 
   @override
@@ -39,7 +40,8 @@ class _ReservationPageState extends State<ReservationPage> {
                   horizontal:flexibleSize(context, Size.fromWidth(16)).width),
               child: Column(
                 children: [
-                  GestureDetector(
+                  // 상단에 위치한 회의실 예약 위젯
+                  GestureDetector( // 위젯 터치 시 예약 페이지로 이동
                     onTap: () {
                       Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
@@ -101,7 +103,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isExist = !isExist; //테스트 버튼 테스트
+                        isExist = !isExist; //테스트 버튼 테스트 (내 예약 확인하기 글자 클릭 시 토글)
                       });
                     },
                     child: Container(
@@ -119,7 +121,7 @@ class _ReservationPageState extends State<ReservationPage> {
                     height: flexibleSize(context, Size.fromHeight(18)).height,
                   ),
                   isExist
-                      ? ListView.builder(
+                      ? ListView.builder( //예약 존재 시 내 예약 리스트 표시
                     physics: ScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: 3,
@@ -129,7 +131,7 @@ class _ReservationPageState extends State<ReservationPage> {
                         date: '2024.03.2${index} 목요일',
                         name: '2023000${index + 1} 김가천'),
                   )
-                      : Transform.translate(
+                      : Transform.translate( // 예약 미 존재 시 표시
                     offset: Offset(
                       0,flexibleSize(context, Size.fromHeight(227)).height,
                     ), // 디바이스의 정 중앙에 배치
@@ -157,7 +159,7 @@ class _ReservationPageState extends State<ReservationPage> {
 }
 
 
-
+// 페이지 이동 버튼 위젯
 class pageMigrateButton extends StatelessWidget {
   const pageMigrateButton(
       {Key? key,
@@ -184,7 +186,7 @@ class pageMigrateButton extends StatelessWidget {
       child: TextButton(
         onPressed: () {
           Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(builder: (context) => targetPage),
+            MaterialPageRoute(builder: (context) => targetPage), //targetPage로 이동
           );
         },
         child: AutoSizeText(

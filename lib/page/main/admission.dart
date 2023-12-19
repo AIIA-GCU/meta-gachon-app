@@ -29,7 +29,7 @@ class CertificationPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                   horizontal: flexibleSize(context, Size.fromWidth(16)).width),
               child: Column(children: [
-                // <내 인증 확인하기> & <인증하러 가기>
+                // 상단 위젯(<내 인증 확인하기> & <인증하러 가기>가 있는 위젯) 생성
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),

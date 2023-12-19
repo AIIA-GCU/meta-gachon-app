@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../config/function.dart';
 
+//페이지 이동 버튼
 class PageMigrateButton extends StatelessWidget {
   const PageMigrateButton(
       {Key? key,
@@ -34,7 +35,7 @@ class PageMigrateButton extends StatelessWidget {
       child: TextButton(
         onPressed: () {
           Navigator.of(context, rootNavigator: true)
-              .push(MaterialPageRoute(builder: (context) => targetPage));
+              .push(MaterialPageRoute(builder: (context) => targetPage)); // targetpage로 이동
         },
         child: Text(text,
             style: TextStyle(

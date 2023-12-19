@@ -1,3 +1,4 @@
+// 테스트 페이지(reservation page)
 import 'package:flutter/material.dart';
 
 class Fourth extends StatefulWidget {
@@ -9,7 +10,7 @@ class _FourthState extends State<Fourth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('Fourth'),
+      child: Text('Reservation Page'),
     );
   }
 }
