@@ -6,6 +6,7 @@
 /// - 앱 로고 및 아이콘
 ///
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// 비율
 late double ratio;
@@ -29,7 +30,8 @@ class MGcolor {
   static const Color base4 = Color(0xFFABABAB);
   static const Color base5 = Color(0xFFDDDDDD);
   static const Color base6 = Color(0xFFEDEEF1);
-  static const Color base7 = Color(0xFFF4F5F8);
+  static const Color base7 = Color(0xFFE7E7E7);
+  static const Color base8 = Color(0xFFF4F5F8);
 
   static const Color btn_active = Color(0xFF1762DB);
   static const Color btn_inactive = Color(0xFFE3EDFD);
@@ -90,6 +92,8 @@ class AppinIcon {
 class ImgPath {
   ImgPath._();
 
+  static const String on_boarding = "assets/images/on_boarding.png";
+
   static const String lv_warning = "assets/images/warning.png";
   static const String lv_caution = "assets/images/caution.png";
   static const String lv_default = "assets/images/default.png";
@@ -117,3 +121,9 @@ class MGLogo {
   static const IconData logo_typo_only = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logo = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
+
+///
+/// Date Format
+///
+final yMdE_format = DateFormat('y.M.d EEE');
+final Hm_format = DateFormat('H:m');

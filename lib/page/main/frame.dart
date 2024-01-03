@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/main/Second.dart';
 import 'package:mata_gachon/page/main/home.dart';
 import 'package:mata_gachon/page/main/admission.dart';
+import 'package:mata_gachon/page/main/reservation.dart';
 import 'package:mata_gachon/page/services/alarm.dart';
 
 class MainFrame extends StatefulWidget {
@@ -30,15 +30,13 @@ class _MainFrameState extends State<MainFrame> {
    *      rebuild되는 함수
    */
   int currentPageIndex = 0;
-  final List<Widget> _children = [Home(),Fourth(),CertificationPage(), Fourth()];
+  final List<Widget> _children = [
+    HomePage(),
+    ReservationListPage(),
+    AdmissionListPage(),
+    Center(child: Text("마이 페이지"))
+  ];
   final pageController = PageController();
-
-  void onTap(int index) {
-    pageController.jumpToPage(index);
-  }
-  void onPageChanged(int index) {
-    setState(() => currentPageIndex = index);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +58,7 @@ class _MainFrameState extends State<MainFrame> {
                       left: 1,
                       child: CircleAvatar(
                           radius: 4,
-                          backgroundColor: MGcolor.base7,
+                          backgroundColor: MGcolor.base8,
                           child: CircleAvatar(
                             radius: 3,
                             backgroundColor: MGcolor.system_error,
@@ -91,5 +89,13 @@ class _MainFrameState extends State<MainFrame> {
             ]
         )
     );
+  }
+
+  void onTap(int index) {
+    pageController.jumpToPage(index);
+  }
+
+  void onPageChanged(int index) {
+    setState(() => currentPageIndex = index);
   }
 }

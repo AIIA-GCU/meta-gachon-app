@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/splash.dart';
-import 'package:mata_gachon/page/main/frame.dart';
 
 void main() => runApp(App());
 
@@ -14,9 +14,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
-          scaffoldBackgroundColor: MGcolor.base7,
+          scaffoldBackgroundColor: MGcolor.base8,
           appBarTheme: AppBarTheme(
-              backgroundColor: MGcolor.base7,
+              backgroundColor: MGcolor.base8,
               elevation: 0,
               foregroundColor: MGcolor.base4,
               toolbarHeight: 56
@@ -40,8 +40,9 @@ class App extends StatelessWidget {
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),
+          useMaterial3: true
       ),
-      home: MainFrame(),
+      home: Splash(),
     );
   }
 }

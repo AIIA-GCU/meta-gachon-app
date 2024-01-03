@@ -15,9 +15,9 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     //3초 후에 다음 화면으로 이동
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(milliseconds: 100), () {
      Navigator.push(
-       context,MaterialPageRoute(builder:(context)=>OnBoarding())
+       context, MaterialPageRoute(builder:(context)=>OnBoarding())
       );
     });
   }
@@ -35,40 +35,32 @@ class _SplashState extends State<Splash> {
     final double logoX = (screenWidth - logoWidth) / 2;
     final double logoY = (screenHeight - logoHeight) / 2;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      body: Center(
-        child: Stack(
-          children: [
-            Container(
-              color: MGcolor.base7,
-            ),
-            Positioned(
-              left: logoX,
-              top: logoY,
-              child: Icon(MGLogo.logo, color: MGcolor.btn_active, size: 120),
-            ),
-            Positioned(
-              left: logoX - 45,
-              top: logoY + 160,
-              child: Icon(MGLogo.logo_typo_only, color: MGcolor.btn_active, size: 29),
-            ),
-            Positioned(
-              left: logoX + 44,
-              top: logoY + 330,
-              child: Text(
-                'ver. 1.1.0',
-                style: TextStyle(
-                  color: MGcolor.base3,
-                  fontSize: 14,
-                ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned(
+            left: logoX,
+            top: logoY,
+            child: Icon(MGLogo.logo, color: MGcolor.btn_active, size: 120),
+          ),
+          Positioned(
+            left: logoX - 45,
+            top: logoY + 160,
+            child: Icon(MGLogo.logo_typo_only, color: MGcolor.btn_active, size: 29),
+          ),
+          Positioned(
+            left: logoX + 44,
+            top: logoY + 330,
+            child: Text(
+              'ver. 1.1.0',
+              style: TextStyle(
+                color: MGcolor.base3,
+                fontSize: 14,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    ),
     );
   }
 }
