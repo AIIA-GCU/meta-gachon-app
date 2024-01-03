@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/main.dart';
+import 'package:mata_gachon/page/reservation.dart';
 
 class CustomCalender extends StatefulWidget {
   const CustomCalender({
@@ -32,10 +33,10 @@ class _CustomCalenderState extends State<CustomCalender> {
   late DateTime rangeFirst;
   late DateTime rangeLast;
 
-  DateTime? selected;
+  // DateTime? selected;
   void toSelect(DateTime day) {
-    if (day != selected && cmp(day))
-      setState(() => selected = day);
+    if (day != selectedDate && cmp(day))
+      setState(() => selectedDate = day);
   }
 
   bool isSameDate(DateTime a, DateTime b) {
@@ -90,7 +91,7 @@ class _CustomCalenderState extends State<CustomCalender> {
                   late BoxDecoration boxDecoration;
                   DateTime day = rangeFirst.add(Duration(days: index));
 
-                  if (selected != null && isSameDate(selected!, day)) {
+                  if (selectedDate != null && isSameDate(selectedDate!, day)) {
                     textStyle = widget.cellStyle.selectedDateTextStyle;
                     boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
                   }
@@ -126,7 +127,7 @@ class _CustomCalenderState extends State<CustomCalender> {
                   late BoxDecoration boxDecoration;
                   DateTime day = rangeFirst.add(Duration(days: 7+index));
 
-                  if (selected != null && selected!.day == day.day) {
+                  if (selectedDate != null && selectedDate!.day == day.day) {
                     textStyle = widget.cellStyle.selectedDateTextStyle;
                     boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
                   }
@@ -155,7 +156,7 @@ class _CustomCalenderState extends State<CustomCalender> {
                     late BoxDecoration boxDecoration;
                     DateTime day = rangeFirst.add(Duration(days: 14+index));
 
-                    if (selected != null && selected! == day) {
+                    if (selectedDate != null && selectedDate! == day) {
                       textStyle = widget.cellStyle.selectedDateTextStyle;
                       boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
                     }

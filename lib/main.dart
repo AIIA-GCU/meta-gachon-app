@@ -10,6 +10,7 @@ import 'package:mata_gachon/page/reservation.dart';
 
 ///기기의 화면 크기와 우리의 디자인 사이의 비율
 late double ratio;
+late Size screenSize;
 // 앱 실행 및 초기화
 void main() => runApp(App());
 
@@ -19,7 +20,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///기기 스크린의 크기
-    final screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery.of(context).size;
     ///너비 비율계산
     ratio = screenSize.width / 390;
     print(screenSize.width);

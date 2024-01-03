@@ -1,6 +1,7 @@
 ///추호성이꺼
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/widget/calender.dart';
 import 'package:mata_gachon/main.dart';
@@ -18,7 +19,15 @@ import 'package:dropdown_button2/dropdown_button2.dart';
   대표자 : 358*52
   이용자 : 358*()
 */
+///유저가 선택한 정보변수들
+String? selectedRoom;//강의실
+DateTime? selectedDate;//이용날짜
+String? selectedEnter;//입실시간
+String? selectedExit;//퇴실시간
 
+late String leaderNumber;//대표자 학번
+late String leaderName;//대표자 이름
+List<String> usersList = [];//이용자리스트
 class Reservation extends StatefulWidget {
   const Reservation({Key? key}) : super(key: key);
 
@@ -27,8 +36,6 @@ class Reservation extends StatefulWidget {
 }
 
 class _ReservationState extends State<Reservation> {
-  ///기기 스크린 사이즈
-  late Size screenSize;
 
   ///강의실 목록
   late List<String> rooms;
@@ -36,10 +43,10 @@ class _ReservationState extends State<Reservation> {
   ///시간 드롭다운메뉴 아이템들
   late List<String> times;
 
-  ///유저가 선택한 저장변수들
-  String? selectedRoom;
-  String? selectedEnter;
-  String? selectedExit;
+  ///이용자 위젯리스트
+  List<Widget> usersWidgets = [];
+  ///이용자 컨데이너 안내메세지
+  String alertMessege = "대표자를 제외한 이용자의 학번과 이름을 입력해주세요!";
 
   @override
   void initState() {
@@ -56,273 +63,483 @@ class _ReservationState extends State<Reservation> {
       '402 - 4',
       '402 - 5',
     ];
-    /*//화면 크기 불러오기, 비율계산
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        screenSize = MediaQuery.of(context).size;
-        ratio = 390 / screenSize.width;
-      });
-    });*/
+
+    leaderNumber = '202300001';//임의값 넣음 -> 추후에 로그인 정보를 가져오게해야함
+    leaderName = '김가천';//임의값 넣음 -> 추후에 로그인 정보를 가져오게해야함
+
+    /*usersWidgets.add(_MyUserBox('202334556', 'dddddddddddd'));//임의값 넣음
+    usersWidgets.add(_MyUserBox('202334555', '추호성'));//임의값 넣음*/
   }
 
   ///textfield controllor
-  TextEditingController _controller = TextEditingController();
+  TextEditingController _controllerNumber = TextEditingController();
+  TextEditingController _controllerName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(AppinIcon.back, size: 24*ratio),
+      appBar: AppBar(
+        // toolbarHeight: 100,
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Icon(AppinIcon.back, size: 24 * ratio),
+            ),
+            SizedBox(width: 16 * ratio),
+            Text(
+              "강의실 예약하기",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18 * ratio,
+                fontFamily: 'Noto Sans KR',
+                fontWeight: FontWeight.w500,
+                height: 0,
               ),
-              SizedBox(width: 16*ratio),
-              Text("강의실 예약하기",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18*ratio,
-                    fontFamily: 'Noto Sans KR',
-                    fontWeight: FontWeight.w500,
-                    height: 0,
-                  ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            //여기
-            children: [
-              ///회의실 선택
-              MyContainer(title: "회의실", height: 52, content: [
-                CustomDropdownMenu(
-                  hint: "선택",
-                  items: rooms,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRoom = value;
-                    });
-                  },
-                  selectedItem: selectedRoom,
-                )
-              ], additionalContent: []),
+      ),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+          Container(
+            height: screenSize.height-135,
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    ///회의실 선택
+                    MyContainer(title: "회의실", height: 52, content: [
+                      MyDropdownMenu(
+                        hint: "선택",
+                        items: rooms,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRoom = value;
+                          });
+                        },
+                        selectedItem: selectedRoom,
+                      )
+                    ], additionalContent: []),
 
-              ///날짜 선택
-              MyContainer(
-                title: 'October',
-                height: 198,
-                content: [],
-                additionalContent: [
-                  Positioned(
-                    top: 43 * ratio,
-                    left: 11 * ratio,
-                    child: CustomCalender(
-                      first: DateTime.now(),
-                      last: DateTime.now().add(Duration(days: 13)),
-                      rowHeight: 32 * ratio,
-                      rowWidth: 38 * ratio,
-                      cellStyle: CellStyle(
-                        fieldTextStyle:
-                            EN.label1.copyWith(color: MGcolor.base3),
-                        normalDateTextStyle:
-                            EN.parag1.copyWith(color: MGcolor.base1),
-                        normalDateBoxDecoration: BoxDecoration(
-                            color: MGcolor.base6,
-                            borderRadius: BorderRadius.circular(4)),
-                        selectedDateTextStyle:
-                            EN.parag1.copyWith(color: Colors.white),
-                        selelctedDateBoxDecoration: BoxDecoration(
-                            color: MGcolor.btn_active,
-                            borderRadius: BorderRadius.circular(4)),
-                        todayTextStyle:
-                            EN.parag1.copyWith(color: MGcolor.btn_active),
-                        todayBoxDecoration: BoxDecoration(
-                            color: MGcolor.base6,
-                            borderRadius: BorderRadius.circular(4)),
-                        rangeOutDateTextStyle:
-                            EN.parag1.copyWith(color: MGcolor.base5),
-                        rangeOutDateBoxDecoration: BoxDecoration(
-                            color: MGcolor.base6,
-                            borderRadius: BorderRadius.circular(4)),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-
-              ///예약 시간 선택
-              MyContainer(
-                title: "예약 시간",
-                height: 73,
-                content: [
-                  CustomDropdownMenu(
-                    hint: "입실",
-                    items: times,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedEnter = value;
-                      });
-                    },
-                    selectedItem: selectedEnter,
-                  ),
-                  Container(width: 22 * ratio, child: Center(child: Text("~"))),
-                  CustomDropdownMenu(
-                    hint: "퇴실",
-                    items: times,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedExit = value;
-                      });
-                    },
-                    selectedItem: selectedExit,
-                  ),
-                ],
-                additionalContent: [
-                  Positioned(
-                      left: 80 * ratio,
-                      top: 46 * ratio,
-                      child: Text('예약은 최대 3시간 까지 가능합니다!',
-                          style: TextStyle(
-                            color: Color(0xFF1662DA),
-                            fontSize: 12 * ratio,
-                            fontFamily: 'Noto Sans KR',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          )))
-                ],
-              ),
-
-              MyContainer(
-                title: "대표자",
-                height: 52,
-                content: [],
-                additionalContent: [
-                  Positioned(
-                      left: 80 * ratio,
-                      top: 16 * ratio,
-                      child: Row(
-                        children: [
-                          Text(
-                            '20230001',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF7C7C7C),
-                              fontSize: 14 * ratio,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                              letterSpacing: -0.32,
+                    ///날짜 선택
+                    MyContainer(
+                      title: 'October',
+                      height: 198,
+                      content: [],
+                      additionalContent: [
+                        Positioned(
+                          top: 43 * ratio,
+                          left: 11 * ratio,
+                          child: CustomCalender(
+                            first: DateTime.now(),
+                            last: DateTime.now().add(Duration(days: 13)),
+                            rowHeight: 32 * ratio,
+                            rowWidth: 38 * ratio,
+                            cellStyle: CellStyle(
+                              fieldTextStyle:
+                                  EN.label1.copyWith(color: MGcolor.base3),
+                              normalDateTextStyle:
+                                  EN.parag1.copyWith(color: MGcolor.base1),
+                              normalDateBoxDecoration: BoxDecoration(
+                                  color: MGcolor.base6,
+                                  borderRadius: BorderRadius.circular(4)),
+                              selectedDateTextStyle:
+                                  EN.parag1.copyWith(color: Colors.white),
+                              selelctedDateBoxDecoration: BoxDecoration(
+                                  color: MGcolor.btn_active,
+                                  borderRadius: BorderRadius.circular(4)),
+                              todayTextStyle:
+                                  EN.parag1.copyWith(color: MGcolor.btn_active),
+                              todayBoxDecoration: BoxDecoration(
+                                  color: MGcolor.base6,
+                                  borderRadius: BorderRadius.circular(4)),
+                              rangeOutDateTextStyle:
+                                  EN.parag1.copyWith(color: MGcolor.base5),
+                              rangeOutDateBoxDecoration: BoxDecoration(
+                                  color: MGcolor.base6,
+                                  borderRadius: BorderRadius.circular(4)),
                             ),
                           ),
-                          SizedBox(width: 4 * ratio),
-                          Text(
-                            '김가천',
-                            style: TextStyle(
-                              color: Color(0xFF7C7C7C),
-                              fontSize: 14 * ratio,
-                              fontFamily: 'Noto Sans KR',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                              letterSpacing: -0.32,
+                        )
+                      ],
+                    ),
+
+                    ///예약 시간 선택
+                    MyContainer(
+                      title: "예약 시간",
+                      height: 73,
+                      content: [
+                        MyDropdownMenu(
+                          hint: "입실",
+                          items: times,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEnter = value;
+                            });
+                          },
+                          selectedItem: selectedEnter,
+                        ),
+                        Container(
+                            width: 22 * ratio, child: Center(child: Text("~"))),
+                        MyDropdownMenu(
+                          hint: "퇴실",
+                          items: times,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedExit = value;
+                            });
+                          },
+                          selectedItem: selectedExit,
+                        ),
+                      ],
+                      additionalContent: [
+                        Positioned(
+                            left: 80 * ratio,
+                            top: 46 * ratio,
+                            child: Text('예약은 최대 3시간 까지 가능합니다!',
+                                style: TextStyle(
+                                  color: Color(0xFF1662DA),
+                                  fontSize: 12 * ratio,
+                                  fontFamily: 'Noto Sans KR',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                )))
+                      ],
+                    ),
+
+                    ///대표자
+                    MyContainer(
+                      title: "대표자",
+                      height: 52,
+                      content: [],
+                      additionalContent: [
+                        Positioned(
+                            left: 80 * ratio,
+                            top: 16 * ratio,
+                            child: Row(
+                              children: [
+                                Text(
+                                  leaderNumber,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFF7C7C7C),
+                                    fontSize: 14 * ratio,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w400,
+                                    height: 0,
+                                    letterSpacing: -0.32,
+                                  ),
+                                ),
+                                SizedBox(width: 4 * ratio),
+                                Text(
+                                  leaderName,
+                                  style: TextStyle(
+                                    color: Color(0xFF7C7C7C),
+                                    fontSize: 14 * ratio,
+                                    fontFamily: 'Noto Sans KR',
+                                    fontWeight: FontWeight.w400,
+                                    height: 0,
+                                    letterSpacing: -0.32,
+                                  ),
+                                ),
+                              ],
+                            ))
+                      ],
+                    ),
+
+                    ///이용자
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 0,
+                        bottom: 12 * ratio,
+                        left: 0,
+                        right: 0,
+                      ),
+                      padding: EdgeInsets.all(0),
+                      width: 358 * ratio,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(0),
+                            width: 358 * ratio,
+                            height: 63 * ratio,
+                            child: Stack(children: [
+                              Positioned(
+                                left: 16 * ratio,
+                                top: 16 * ratio,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 20 * ratio,
+                                  child: Text(
+                                    '이용자',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14 * ratio,
+                                      fontFamily: 'Noto Sans KR',
+                                      fontWeight: FontWeight.w500,
+                                      height: 0,
+                                      letterSpacing: -0.32,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 80 * ratio,
+                                top: 10 * ratio,
+                                child: Row(
+                                  children: [
+                                    MyTextField(
+                                      width: 122,
+                                      height: 32,
+                                      controller: _controllerNumber,
+                                      hint: '학번',
+                                      format: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        //숫자만 허용
+                                        LengthLimitingTextInputFormatter(9),
+                                        //9글자만 허용
+                                      ],
+                                    ),
+                                    SizedBox(width: 8 * ratio),
+                                    MyTextField(
+                                      width: 92,
+                                      height: 32,
+                                      controller: _controllerName,
+                                      hint: '이름',
+                                      format: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
+                                      ],
+                                    ),
+                                    SizedBox(width: 8 * ratio),
+                                    GestureDetector(
+                                      onTap: () {
+                                        print("clicked");
+                                        if (usersWidgets.any((widget) =>
+                                            widget.key ==
+                                            Key(_controllerNumber.text))) {
+                                          // 같은 Key를 가진 위젯이 이미 존재하면 추가하지 않습니다.
+                                          print('Same key already exists.');
+                                          setState(() {
+                                            alertMessege = '이미 등록된 사용자입니다!';
+                                          });
+                                        }else if(_controllerNumber.text == leaderNumber){
+                                          setState(() {
+                                            alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
+                                          });
+                                        } else {
+                                          setState(() {
+                                            usersWidgets.add(_MyUserBox(
+                                                _controllerNumber.text,
+                                                _controllerName.text));
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 32,
+                                        height: 32,
+                                        padding: EdgeInsets.all(0),
+                                        decoration: ShapeDecoration(
+                                          color: Color(0xFFEDEEF1),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    )
+                                  ], // combined 리스트를 사용합니다.
+                                ),
+                              ),
+                              Positioned(
+                                  left: 80 * ratio,
+                                  top: 46 * ratio,
+                                  child: Text(
+                                    alertMessege,
+                                    style: TextStyle(
+                                      color: Color(0xFF1662DA),
+                                      fontSize: 12 * ratio,
+                                      fontFamily: 'Noto Sans KR',
+                                      fontWeight: FontWeight.w400,
+                                      height: 0,
+                                      letterSpacing: -0.32,
+                                    ),
+                                  )),
+                            ]),
+                          ),
+                          Container(
+                            // color: Colors.red,
+                            width: 274 * ratio,
+                            margin: EdgeInsets.only(
+                                left: 68 * ratio, bottom: 12 * ratio),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 8,
+                                  // runSpacing: 8,
+                                  children: usersWidgets,
+                                ),
+                                SizedBox(
+                                  height: 8 * ratio,
+                                ),
+                                Container(
+                                  width: 140 * ratio,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      /*
+                                      이 체크박스가 왜있는건지는 모르겠는데 일단 위치는 잡아뒀습니다.
+                                      강의실을 혼자서도 이용할 수 있는건가요.?
+                                      */
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          null,
+                                          size: 10,
+                                        ),
+                                        Text(
+                                          '추가 이용자가 없습니다.',
+                                          style: TextStyle(
+                                            color: Color(0xFF7C7C7C),
+                                            fontSize: 12,
+                                            fontFamily: 'Noto Sans KR',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0,
+                                            letterSpacing: -0.32,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ],
-                      ))
-                ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10*ratio,
+                    )
+                  ],
+                ),
               ),
-
-              MyContainer(title: "이용자", height: 100, content: [
-                SizedBox(
-                  width: 122 * ratio,
-                  height: 32 * ratio,
-                  child: TextField(
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                      letterSpacing: -0.32,
-                    ),
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: 27, right: 27, top: 8, bottom: 7),
-                      border: OutlineInputBorder(
-                        // 테두리 스타일
-                        borderRadius: BorderRadius.circular(4),
-                        // 모서리 둥글기
-                        borderSide: BorderSide(
-                          color: Color(0xFF1762DB), // 테두리 색상
-                          width: 1, // 테두리 두께
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        // 테두리 스타일
-                        borderRadius: BorderRadius.circular(4),
-                        // 모서리 둥글기
-                        borderSide: BorderSide(
-                          color: Color(0xFF1762DB), // 테두리 색상
-                          width: 1, // 테두리 두께
-                        ),
-                      ),
-                    ),
-                    onChanged: (text) {
-                      print("Text changed: $text");
-                    },
-                  ),
-                ),
-                SizedBox(width: 8 * ratio),
-                SizedBox(
-                  width: 92 * ratio,
-                  height: 32 * ratio,
-                  child: TextField(
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                      letterSpacing: -0.32,
-                    ),
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: 27, right: 27, top: 8, bottom: 7),
-                      border: OutlineInputBorder(
-                        // 테두리 스타일
-                        borderRadius: BorderRadius.circular(4),
-                        // 모서리 둥글기
-                        borderSide: BorderSide(
-                          color: Color(0xFF1762DB), // 테두리 색상
-                          width: 1, // 테두리 두께
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        // 테두리 스타일
-                        borderRadius: BorderRadius.circular(4),
-                        // 모서리 둥글기
-                        borderSide: BorderSide(
-                          color: Color(0xFF1762DB), // 테두리 색상
-                          width: 1, // 테두리 두께
-                        ),
-                      ),
-                    ),
-                    onChanged: (text) {
-                      print("Text changed: $text");
-                    },
-                  ),
-                ),
-              ]),
-            ],
+            ),
           ),
+          ///예약하기 버튼
+          Positioned(
+            top: screenSize.height-145,
+            left: 16*ratio,
+            child: GestureDetector(
+              onTap: () {
+                if(selectedRoom == null) {
+                  overlayEntry = createOverlayEntry('회의실을 입력해주세요!');
+                }else if(selectedDate == null){
+                  overlayEntry = createOverlayEntry('날짜를 선택해주세요!');
+                }else if(selectedEnter==null || selectedExit == null){
+                  overlayEntry = createOverlayEntry('예약 시간을 입력해주세요!');
+                }else if(usersList.isEmpty){
+                  overlayEntry = createOverlayEntry('이용자를 입력해주세요!');
+                }else{
+                  //여기에 서버와 상호작용하는 기능을 추가하면됩니다.
+                }
+                // 플로팅 메세지 표시
+                Overlay.of(context).insert(overlayEntry);
+              },
+              child: Container(
+                width: 358 * ratio,
+                height: 48 * ratio,
+                alignment: Alignment.center,
+                decoration: ShapeDecoration(
+                  color: Color(0xFF1762DB),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  "예약하기",
+                  style:  TextStyle(
+                    color: Colors.white,
+                    fontSize: 16*ratio,
+                    fontFamily: 'Noto Sans KR',
+                    fontWeight: FontWeight.w700,
+                    height: 0,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
+  }
+  ///이용자 등록표시 위젯
+  Widget _MyUserBox(String number, String name) {
+    return Container(
+      key: Key(number),
+      width: 133 * ratio,
+      height: 26 * ratio,
+      margin: EdgeInsets.only(top: 8 * ratio),
+      decoration: ShapeDecoration(
+        color: Color(0xFF4985E5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 4 * ratio,
+            left: 10 * ratio,
+            width: 93 * ratio,
+            child: Text(
+              '$number $name',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              softWrap: false,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * ratio,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                // height: 0.11,
+                letterSpacing: -0.32,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 3 * ratio,
+            right: 5 * ratio,
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    usersWidgets.removeWhere((widget) => widget.key == Key(number));
+                  });
+                },
+                child: Icon(
+                  Icons.close,
+                  size: 20,
+                  color: Colors.white,
+                )),
+          ),
+        ],
       ),
     );
   }
@@ -352,6 +569,7 @@ class MyContainer extends StatelessWidget {
         left: 0,
         right: 0,
       ),
+      padding: EdgeInsets.all(0),
       width: 358 * ratio,
       height: height * ratio,
       decoration: BoxDecoration(
@@ -364,12 +582,12 @@ class MyContainer extends StatelessWidget {
           top: 16 * ratio,
           child: Container(
             alignment: Alignment.center,
-            height: 20*ratio,
+            height: 20 * ratio,
             child: Text(
               title,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 14,
+                fontSize: 14 * ratio,
                 fontFamily: 'Noto Sans KR',
                 fontWeight: FontWeight.w500,
                 height: 0,
@@ -392,13 +610,13 @@ class MyContainer extends StatelessWidget {
 }
 
 ///커스텀 드롭다운메뉴위젯
-class CustomDropdownMenu extends StatelessWidget {
+class MyDropdownMenu extends StatelessWidget {
   final String hint;
   final List<String> items;
   final String? selectedItem;
   final Function(String?) onChanged;
 
-  const CustomDropdownMenu({
+  const MyDropdownMenu({
     Key? key,
     required this.hint,
     required this.items,
@@ -536,3 +754,134 @@ class CustomDropdownMenu extends StatelessWidget {
     return itemsHeights;
   }
 }
+
+///커스텀 텍스트필드위젯
+class MyTextField extends StatelessWidget {
+  final int width;
+  final int height;
+  final TextEditingController controller;
+  final String hint;
+  final List<TextInputFormatter>? format;
+
+  const MyTextField({
+    required this.width,
+    required this.height,
+    required this.controller,
+    required this.hint,
+    this.format,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width * ratio,
+      height: height * ratio,
+      child: TextField(
+        // showCursor: false,
+        textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.center,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 14 * ratio,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w400,
+          letterSpacing: -0.32,
+        ),
+        controller: controller,
+        inputFormatters: format,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(0),
+          hintText: hint,
+          focusedBorder: OutlineInputBorder(
+            // 테두리 스타일
+            borderRadius: BorderRadius.circular(4),
+            // 모서리 둥글기
+            borderSide: BorderSide(
+              color: Color(0xFF1762DB), // 테두리 색상
+              width: 1, // 테두리 두께
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            // 테두리 스타일
+            borderRadius: BorderRadius.circular(4),
+            // 모서리 둥글기
+            borderSide: BorderSide(
+              color: Color(0xFF1762DB), // 테두리 색상
+              width: 1, // 테두리 두께
+            ),
+          ),
+        ),
+        onChanged: (text) {
+          print("Text changed: $text");
+        },
+      ),
+    );
+  }
+}
+
+
+///예약하기 버튼 클릭시 표시되는 플로팅 메세지
+OverlayEntry createOverlayEntry(String text) {
+  return OverlayEntry(
+    builder: (context) => Container(
+      color: Color.fromRGBO(0, 0, 0, 0.25),
+      child: Center(
+        child: Container(
+          width: 326*ratio,
+          height: 156*ratio,
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 40*ratio,),
+              Text(
+                text, // 텍스트를 파라미터로 받아서 사용
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Noto Sans KR',
+                  fontWeight: FontWeight.w400,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+              SizedBox(height: 42*ratio,),
+              GestureDetector(
+                onTap: (){
+                  overlayEntry.remove();
+                },
+                child: Container(
+                  width: 302*ratio,
+                  height: 40*ratio,
+                  alignment: Alignment.center,
+                  decoration: ShapeDecoration(
+                    color: Color(0xFF1762DB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    '확인',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontFamily: 'Noto Sans KR',
+                      fontWeight: FontWeight.w500,
+                      height: 0,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+OverlayEntry overlayEntry = createOverlayEntry('예약되었습니다!');
