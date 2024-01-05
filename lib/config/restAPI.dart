@@ -3,111 +3,117 @@
 ///
 
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:mata_gachon/config/session.dart';
 
-class Credential {
-  final String id;
-  final String pw;
+enum HTTPMethod { GET, POST, PUT, DELETE }
 
-  Credential(this.id, this.pw);
+class APIRequest {
+  static const String BASE_URL = ""; // API URL로 수정(마지막 / 붙여야 함)
+  static const String SESSION_COOKIE_NAME = "JSESSIONID";
 
-  factory Credential.fromJson(Map<String, dynamic> json) {
-    return Credential(json['ID'], json['PW']);
+  static late String appVersion;
+  final String path;
+  late Map<String, String> cookies;
+
+  APIRequest(this.path) {
+    _getAppVersion();
   }
-}
 
-class User {
-  final String name;
-  final int stu_num;
-  final int rating;
-  final int negative;
-  final int positive;
-  final List<Notifi> notifis;
-
-  User(this.name, this.stu_num, this.rating, this.negative, this.positive, this.notifis);
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    var notifis = (json['notifi'] as List).map((e) {
-      return Notifi(e['category'], e['message']);
-    }).toList();
-    return User(
-      json['name'],
-      json['stu_num'],
-      json['rating'],
-      json['negative'],
-      json['positive'],
-      notifis
-    );
+  Future<void> _getAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    appVersion = packageInfo.version;
   }
-}
 
-class Book {
-  final Long reservationID;
-  final String name;
-  final int stu_num;
-  final String room;
-  final DateTime start;
-  final int duraion;
+  Future<Map<String, dynamic>> send(HTTPMethod method,
+      {Map<String, dynamic>? params}) async {
+    try {
+      final session = Session();
 
-  Book(this.reservationID, this.name, this.stu_num, this.room, this.start, this.duraion);
+      final uri = Uri.parse(BASE_URL + path);
+      http.Request request;
 
-  factory Book.fromJson(Map<String, dynamic> json) {
-    return Book(
-      json['reservationID'],
-      json['name'],
-      json['stu_num'],
-      json['room'],
-      json['start'],
-      json['duration']
-    );
+      switch (method) {
+        case HTTPMethod.GET:
+          request = http.Request('GET', uri);
+          break;
+        case HTTPMethod.POST:
+          request = http.Request('POST', uri);
+          break;
+        case HTTPMethod.PUT:
+          request = http.Request('PUT', uri);
+          break;
+        case HTTPMethod.DELETE:
+          request = http.Request('DELETE', uri);
+          break;
+      }
+
+      try {
+        final sessionToken = await session.get();
+        cookies[SESSION_COOKIE_NAME] = sessionToken;
+      } catch (_) {
+        // Pass
+      }
+
+      final headers = {
+        'User-Agent': 'MetaGachonClient/$appVersion',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Cookie': _encodeCookie(),
+      };
+
+      request.headers.addAll(headers);
+
+      if (params != null) {
+        request.body = json.encode(params); // 파라미터가 있으면 JSON으로 인코딩하여 body에 추가
+      }
+
+      final response = await http.Client().send(request);
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+        // 쿠키 파싱, 토큰 설정
+        final Map<String, String> serverCookies =
+            _parseServerCookies(await http.Response.fromStream(response));
+        if (serverCookies.containsKey(SESSION_COOKIE_NAME)) {
+          final newToken = serverCookies[SESSION_COOKIE_NAME]!;
+          if (session.get() != newToken) {
+            session.set(newToken);
+          }
+        }
+
+        return jsonResponse;
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
   }
-}
 
-class Comfirm {
-  final String name;
-  final int stu_num;
-  final String room;
-  final DateTime start;
-  final int duration;
-  final String review;
-
-  Comfirm(this.name, this.stu_num, this.room, this.start, this.duration, this.review);
-
-  factory Comfirm.fromJson(Map<String, dynamic> json) {
-    return Comfirm(
-      json['name'],
-      json['stu_num'],
-      json['room'],
-      json['start'],
-      json['duration'],
-      json['review']
-    );
+  String _encodeCookie() {
+    List<String> cookieList = [];
+    cookies.forEach((key, value) {
+      cookieList.add('$key=$value');
+    });
+    return cookieList.join('; ');
   }
-}
 
-class Notifi {
-  final String category;
-  final String message;
-
-  Notifi(this.category, this.message);
-  
-  factory Notifi.fromJson(Map<String, dynamic> json) {
-    return Notifi(json['category'], json['message']);
+  Map<String, String> _parseServerCookies(http.Response response) {
+    Map<String, String> serverCookies = {};
+    String? rawCookie = response.headers['set-cookie'];
+    if (rawCookie != null) {
+      List<String> cookies = rawCookie.split(',');
+      cookies.forEach((cookie) {
+        List<String> values = cookie.split(';');
+        String cookieValue = values[0];
+        List<String> keyValue = cookieValue.split('=');
+        String key = keyValue[0].trim();
+        String value = keyValue[1].trim();
+        serverCookies[key] = value;
+      });
+    }
+    return serverCookies;
   }
-}
-
-const BASE_URL = "";
-
-Future<http.Response> login(Credential credential) {
-  return http.post(
-    Uri.parse(BASE_URL+""),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic>{
-      'ID': credential.id,
-      'PW': credential.pw
-    })
-  );
 }
