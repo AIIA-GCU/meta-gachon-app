@@ -8,10 +8,17 @@
 /// 
 
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/function.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/page/services/admission.dart';
+import 'package:mata_gachon/page/services/reservation.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.movetoReserList, required this.movetoAdmisList});
+
+  final VoidCallback movetoReserList;
+  final VoidCallback movetoAdmisList;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -22,74 +29,73 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          flexibleSize(context, Size.fromWidth(16)).width,
+          ratio.width * 16,
           0,
-          flexibleSize(context, Size.fromWidth(16)).width,
-          flexibleSize(context, Size.fromWidth(16)).width,
+          ratio.width * 16,
+          ratio.height * 16
         ),
         child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // <예약하기> & <인증하기>
+              /// <예약하기> & <인증하기>
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // <예약하기>
+                  /// <예약하기>
                   Container(
-                    width: flexibleSize(context, Size.fromWidth(173)).width,
-                    // height: flexibleSize(context, Size.fromHeight(271)).height,
+                    width: ratio.width * 173,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12)
                     ),
-                    padding: EdgeInsets.all(
-                        flexibleSize(context, Size.fromWidth(12)).width),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ratio.width * 12,
+                      vertical: ratio.height * 12
+                    ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          /// Image
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.asset(
                               ImgPath.home_img3,
-                              width: flexibleSize(context, Size.fromWidth(149)).width,
-                              height: flexibleSize(context, Size.fromWidth(149)).width,
+                              width: ratio.width * 149,
                               fit: BoxFit.cover, // 이미지의 적절한 크기 조절
                             ),
                           ),
-                          SizedBox(height: flexibleSize(context, Size.fromHeight(8)).height),
-                          Text("강의실을 빌려\n편하게 공부해요!",
-                            style: KR.subtitle4.copyWith(
-                              color: MGcolor.base1,
-                              fontSize: flexibleSize(context, Size.fromWidth(16)).width,
-                            ),
+                          SizedBox(height: ratio.height * 8),
+
+                          /// Text
+                          Text(
+                            "강의실을 빌려\n편하게 공부해요!",
+                            style: KR.subtitle4.copyWith(color: MGcolor.base1)
                           ),
-                          SizedBox(height: flexibleSize(context, Size.fromHeight(12)).height),
+                          SizedBox(height: ratio.height * 12),
+
+                          /// Button
                           Material(
                             child: InkWell(
-                              onTap: () {},
+                              onTap: doReservation,
                               customBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      flexibleSize(context, Size.fromHeight(8)).height
-                                  )
-                              ),
+                                  borderRadius: BorderRadius.circular(8)),
                               child: Ink(
-                                width: flexibleSize(context, Size.fromWidth(77)).width,
+                                width: ratio.width * 77,
                                 decoration: BoxDecoration(
                                   color: MGcolor.btn_active,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: flexibleSize(context, Size.fromWidth(16)).width,
-                                    vertical: flexibleSize(context, Size.fromHeight(8)).height
+                                  horizontal: ratio.width * 16,
+                                  vertical: ratio.height * 8
                                 ),
                                 child: Center(child: Text(
                                   "예약하기",
                                   style: KR.label1.copyWith(
-                                      color: Colors.white,
-                                      fontSize: flexibleSize(context, Size.fromHeight(12)).height,
-                                      fontWeight: FontWeight.w600
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600
                                   ),
                                 )),
                               ),
@@ -98,58 +104,64 @@ class _HomePageState extends State<HomePage> {
                         ]
                     ),
                   ),
-                  // <인증하기>
+
+                  /// <인증하기>
                   Container(
-                    width: flexibleSize(context, Size.fromWidth(173)).width,
+                    width: ratio.width * 173,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12)
                     ),
-                    padding: EdgeInsets.all(
-                        flexibleSize(context, Size.fromWidth(12)).width),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ratio.width * 12,
+                      vertical: ratio.height * 12
+                    ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          /// Image
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.asset(
                               ImgPath.home_img2,
-                              width: flexibleSize(context, Size.fromWidth(149)).width,
-                              height: flexibleSize(context, Size.fromWidth(149)).width,
+                              width: ratio.width * 149,
                               fit: BoxFit.cover, // 이미지의 적절한 크기 조절
                             ),
                           ),
-                          SizedBox(height: flexibleSize(context, Size.fromHeight(8)).height),
+                          SizedBox(height: ratio.height * 8),
+
+                          /// Text
                           Text("강의실 이용 후\n인증을 올려주세요!",
                             style: KR.subtitle4.copyWith(
                               color: MGcolor.base1,
-                              fontSize: flexibleSize(context, Size.fromWidth(16)).width,
+                              fontSize: ratio.height * 16,
                             ),
                           ),
-                          SizedBox(height: flexibleSize(context, Size.fromHeight(12)).height),
+                          SizedBox(height: ratio.height * 12),
+
+                          /// Button
                           Material(
                             child: InkWell(
-                              onTap: () {},
+                              onTap: doAdmission,
                               customBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
-                                      flexibleSize(context, Size.fromHeight(8)).height
+                                      ratio.height * 8
                                   )
                               ),
                               child: Ink(
-                                width: flexibleSize(context, Size.fromWidth(77)).width,
+                                width: ratio.width * 77,
                                 decoration: BoxDecoration(
                                   color: MGcolor.btn_active,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: flexibleSize(context, Size.fromWidth(16)).width,
-                                    vertical: flexibleSize(context, Size.fromHeight(8)).height
+                                    horizontal: ratio.height * 16,
+                                    vertical: ratio.height * 8
                                 ),
                                 child: Center(child: Text(
                                   "인증하기",
                                   style: KR.label1.copyWith(
                                       color: Colors.white,
-                                      fontSize: flexibleSize(context, Size.fromHeight(12)).height,
                                       fontWeight: FontWeight.w600
                                   ),
                                 )),
@@ -161,29 +173,34 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: flexibleSize(context, Size.fromHeight(30)).height),
-              // <등급 확인하기> & <예약 확인하기> & <내 인증 확인하기>
-              Text("내 정보를 빠르게 확인해요!",
+
+              SizedBox(height: ratio.height * 30),
+
+              /// <등급 확인하기> & <예약 확인하기> & <내 인증 확인하기>
+              Text(
+                "내 정보를 빠르게 확인해요!",
                 style: KR.subtitle1.copyWith(color: MGcolor.base1),
               ),
               Container(
-                height: flexibleSize(context, Size.fromHeight(444)).height,
-                padding: EdgeInsets.only(
-                    top: flexibleSize(context, Size.fromHeight(8)).height
-                ),
+                height: ratio.height * 444,
+                padding: EdgeInsets.only(top: ratio.height * 8),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // <등급 확인하기>
+                      /// <등급 확인하기>
                       Container(
-                          height: flexibleSize(context, Size.fromHeight(140)).height,
-                          padding: EdgeInsets.all(12),
+                          height: ratio.height * 140,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ratio.width * 12,
+                            vertical: ratio.height * 12
+                          ),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)
                           ),
                           child: LayoutBuilder(builder: (context, constrains) =>
                               Stack(children: [
+                                /// Image
                                 Positioned(
                                   top: 0,
                                   left: 0,
@@ -191,57 +208,54 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.asset(
                                       ImgPath.home_img5,
-                                      width: constrains.maxHeight,
+                                      height: constrains.maxHeight,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
+
+                                /// Text
                                 Positioned(
                                   top: 0,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  left: ratio.width * 128,
                                   child: Text("현재 나의 등급은?",
                                     style: KR.label2.copyWith(
                                         color: MGcolor.base1,
-                                        fontSize: flexibleSize(context, Size.fromHeight(16)).height
+                                        fontSize: ratio.height * 16
                                     ),
                                   ),
                                 ),
                                 Positioned(
-                                  top: flexibleSize(context, Size.fromHeight(27)).height,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  top: ratio.height * 27,
+                                  left: ratio.width * 128,
                                   child: Text(
                                     "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
-                                    style: KR.label2.copyWith(
-                                        color: MGcolor.base3,
-                                        fontSize: flexibleSize(context, Size.fromHeight(12)).height
-                                    ),
+                                    style: KR.label2.copyWith(color: MGcolor.base3),
                                   ),
                                 ),
+
+                                /// Button
                                 Positioned(
                                     bottom: 0,
-                                    left: 128,
+                                    left: ratio.width * 128,
                                     child: Material(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: checkRating,
                                         customBorder: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                flexibleSize(context, Size.fromHeight(8)).height
-                                            )
-                                        ),
+                                            borderRadius: BorderRadius.circular(8)),
                                         child: Ink(
                                           decoration: BoxDecoration(
                                             color: MGcolor.btn_active,
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: flexibleSize(context, Size.fromWidth(16)).width,
-                                              vertical: flexibleSize(context, Size.fromHeight(8)).height
+                                              horizontal: ratio.height * 16,
+                                              vertical: ratio.height * 8
                                           ),
                                           child: Center(child: Text(
                                             "등급 확인하기",
                                             style: KR.label1.copyWith(
                                                 color: Colors.white,
-                                                fontSize: flexibleSize(context, Size.fromHeight(12)).height,
                                                 fontWeight: FontWeight.w600
                                             ),
                                           )),
@@ -252,16 +266,21 @@ class _HomePageState extends State<HomePage> {
                               ])
                           )
                       ),
-                      // <예약 확인하기>
+
+                      /// <예약 확인하기>
                       Container(
-                          height: flexibleSize(context, Size.fromHeight(140)).height,
-                          padding: EdgeInsets.all(12),
+                          height: ratio.height * 140,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: ratio.width * 12,
+                              vertical: ratio.height * 12
+                          ),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)
                           ),
                           child: LayoutBuilder(builder: (context, constrains) =>
                               Stack(children: [
+                                /// Image
                                 Positioned(
                                   top: 0,
                                   left: 0,
@@ -269,42 +288,41 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.asset(
                                       ImgPath.home_img4,
-                                      width: constrains.maxHeight,
+                                      height: constrains.maxHeight,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
+
+                                /// Text
                                 Positioned(
                                   top: 0,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  left: ratio.width * 128,
                                   child: Text("내가 언제 예약했더라?",
                                     style: KR.label2.copyWith(
                                         color: MGcolor.base1,
-                                        fontSize: flexibleSize(context, Size.fromHeight(16)).height
+                                        fontSize: ratio.height * 16
                                     ),
                                   ),
                                 ),
                                 Positioned(
-                                  top: flexibleSize(context, Size.fromHeight(27)).height,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  top: ratio.height * 27,
+                                  left: ratio.width * 128,
                                   child: Text(
                                     "내가 예약한 강의실과\n예약 시간을 확인해요!",
-                                    style: KR.label2.copyWith(
-                                        color: MGcolor.base3,
-                                        fontSize: flexibleSize(context, Size.fromHeight(12)).height
-                                    ),
+                                    style: KR.label2.copyWith(color: MGcolor.base3),
                                   ),
                                 ),
+
+                                /// Button
                                 Positioned(
                                     bottom: 0,
-                                    left: 128,
+                                    left: ratio.width * 128,
                                     child: Material(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: widget.movetoReserList,
                                         customBorder: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                flexibleSize(context, Size.fromHeight(8)).height
-                                            )
+                                            borderRadius: BorderRadius.circular(8)
                                         ),
                                         child: Ink(
                                           decoration: BoxDecoration(
@@ -312,14 +330,13 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: flexibleSize(context, Size.fromWidth(16)).width,
-                                              vertical: flexibleSize(context, Size.fromHeight(8)).height
+                                              horizontal: ratio.height * 16,
+                                              vertical: ratio.height * 8
                                           ),
                                           child: Center(child: Text(
                                             "예약 확인하기",
                                             style: KR.label1.copyWith(
                                                 color: Colors.white,
-                                                fontSize: flexibleSize(context, Size.fromHeight(12)).height,
                                                 fontWeight: FontWeight.w600
                                             ),
                                           )),
@@ -330,16 +347,21 @@ class _HomePageState extends State<HomePage> {
                               ])
                           )
                       ),
-                      // <내 인증 확인하기>
+
+                      /// <내 인증 확인하기>
                       Container(
-                          height: flexibleSize(context, Size.fromHeight(140)).height,
-                          padding: EdgeInsets.all(12),
+                          height: ratio.height * 140,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: ratio.width * 12,
+                              vertical: ratio.height * 12
+                          ),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)
                           ),
                           child: LayoutBuilder(builder: (context, constrains) =>
                               Stack(children: [
+                                /// Image
                                 Positioned(
                                   top: 0,
                                   left: 0,
@@ -347,42 +369,41 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.asset(
                                       ImgPath.home_img1,
-                                      width: constrains.maxHeight,
+                                      height: constrains.maxHeight,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
+
+                                /// Text
                                 Positioned(
                                   top: 0,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  left: ratio.width * 128,
                                   child: Text("과연 나의 깔끔 점수는?",
                                     style: KR.label2.copyWith(
                                         color: MGcolor.base1,
-                                        fontSize: flexibleSize(context, Size.fromHeight(16)).height
+                                        fontSize: ratio.height * 16
                                     ),
                                   ),
                                 ),
                                 Positioned(
-                                  top: flexibleSize(context, Size.fromHeight(27)).height,
-                                  left: flexibleSize(context, Size.fromWidth(128)).width,
+                                  top: ratio.height * 27,
+                                  left: ratio.width * 128,
                                   child: Text(
                                     "내가 올린 인증 사진 점수는\n과연 몇 점일지 확인해요!",
-                                    style: KR.label2.copyWith(
-                                        color: MGcolor.base3,
-                                        fontSize: flexibleSize(context, Size.fromHeight(12)).height
-                                    ),
+                                    style: KR.label2.copyWith(color: MGcolor.base3),
                                   ),
                                 ),
+
+                                /// Button
                                 Positioned(
                                     bottom: 0,
-                                    left: 128,
+                                    left: ratio.width * 128,
                                     child: Material(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: widget.movetoAdmisList,
                                         customBorder: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                flexibleSize(context, Size.fromHeight(8)).height
-                                            )
+                                            borderRadius: BorderRadius.circular(8)
                                         ),
                                         child: Ink(
                                           decoration: BoxDecoration(
@@ -390,14 +411,13 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: flexibleSize(context, Size.fromWidth(16)).width,
-                                              vertical: flexibleSize(context, Size.fromHeight(8)).height
+                                              horizontal: ratio.height * 16,
+                                              vertical: ratio.height * 8
                                           ),
                                           child: Center(child: Text(
                                             "내 인증 확인하기",
                                             style: KR.label1.copyWith(
                                                 color: Colors.white,
-                                                fontSize: flexibleSize(context, Size.fromHeight(12)).height,
                                                 fontWeight: FontWeight.w600
                                             ),
                                           )),
@@ -416,4 +436,18 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void doReservation() {
+    Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => Reservation()));
+    widget.movetoReserList();
+  }
+
+  void doAdmission() {
+    Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => Admission()));
+    widget.movetoAdmisList();
+  }
+
+  void checkRating() {}
 }

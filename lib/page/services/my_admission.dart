@@ -5,19 +5,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:mata_gachon/config/animation.dart';
-import 'package:mata_gachon/config/function.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/main/admission.dart';
+import 'package:mata_gachon/page/main/admission_list.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
 
-class MyCertification extends StatefulWidget {
-  const MyCertification({super.key});
+class MyAdmission extends StatefulWidget {
+  const MyAdmission({super.key});
 
   @override
-  State<MyCertification> createState() => _MyCertificationState();
+  State<MyAdmission> createState() => _MyAdmissionState();
 }
 
-class _MyCertificationState extends State<MyCertification> {
+class _MyAdmissionState extends State<MyAdmission> {
   bool isExist = false;
 
   @override
@@ -30,12 +29,7 @@ class _MyCertificationState extends State<MyCertification> {
             highlightColor: Colors.transparent,
             icon: Icon(AppinIcon.back, size: 24),
             onPressed: _onPressed),
-        title: Text('내 인증',
-            style: TextStyle(
-                fontSize: flexibleSize(context, Size.fromHeight(18)).height,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontFamily: "KR")),
+        title: Text('내 인증', style: KR.subtitle1),
         actions: [
           GestureDetector(
             onTap: () => setState(() => isExist = !isExist),
@@ -47,15 +41,16 @@ class _MyCertificationState extends State<MyCertification> {
       body: isExist
           ? ListView.separated(
           padding: EdgeInsets.fromLTRB(
-            flexibleSize(context, Size.fromWidth(16)).width,
+            ratio.width * 16,
             0,
-            flexibleSize(context, Size.fromWidth(16)).width,
-            flexibleSize(context, Size.fromHeight(30)).height
+            ratio.width * 16,
+            ratio.height * 16
           ),
           shrinkWrap: true,
           itemCount: 10,
           separatorBuilder: (context, index) => SizedBox(height: 4),
           itemBuilder: (context, index) => CustomListItem(
+            uid: '',
             where: '404 - ${index + 1}',
             name: '김가천',
             begin: DateTime.now().add(Duration(days: index)),

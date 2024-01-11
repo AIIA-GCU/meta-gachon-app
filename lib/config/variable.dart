@@ -5,11 +5,13 @@
 /// - 앱 내부의 아이콘 및 이미지
 /// - 앱 로고 및 아이콘
 ///
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 /// 비율
-late double ratio;
+late Size ratio;
 
 ///
 /// 색깔
@@ -44,29 +46,32 @@ class MGcolor {
 class KR {
   KR._();
 
-  static const TextStyle title1 = TextStyle(fontSize: 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle subtitle2 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle3 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle subtitle4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle label2 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label3 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle subtitle3 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle subtitle4 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle parag1 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle label2 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle label3 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle chattitle = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w600, fontFamily: 'Ko', color: Colors.white);
+  static TextStyle chat = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.white);
+  static TextStyle chattime = TextStyle(fontSize: ratio.height * 12, fontFamily: 'Ko', color: Colors.grey);
 }
 class EN {
   EN._();
 
-  static const TextStyle title1 = TextStyle(fontSize: 28, fontWeight: FontWeight.w500, fontFamily: 'En');
-  static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle subtitle2 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'En');
-  static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle label2 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle parag1 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle label2 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'En');
 }
 
 ///
@@ -127,3 +132,10 @@ class MGLogo {
 ///
 final yMdE_format = DateFormat('y.M.d EEE');
 final Hm_format = DateFormat('H:m');
+final MDHm_format = DateFormat('M/d H:m');
+final yMdEHm_format = DateFormat('y.M.d EEE H:m');
+
+///
+/// StreamController
+///
+final StreamController<String> listListener = StreamController<String>.broadcast();
