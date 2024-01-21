@@ -15,7 +15,7 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     //3초 후에 다음 화면으로 이동
-    Timer(Duration(milliseconds: 100), () {
+    Timer(Duration(milliseconds: 1000), () {
      Navigator.push(
        context, MaterialPageRoute(builder:(context)=>OnBoarding())
       );

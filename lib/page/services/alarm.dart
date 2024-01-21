@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/widget/small_widgets.dart';
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
@@ -13,19 +11,6 @@ class Alarm extends StatefulWidget {
 }
 
 class _AlarmState extends State<Alarm> {
-  static List<String> messages = [
-    "예약을 완료했습니다!\n1월3일 13:00-15:00\n404-1호",
-    "아직 인증을 올리지 않았습니다.\n어서 강의실 이용 사진을 올려주세요!",
-    "사용중인 회의실의 이후 예약자가 없습니다!\n1시간을 추가 예약하시겠습니까?"
-  ];
-  
-  late List<Widget> msgs;
-  
-  @override
-  void initState() {
-    super.initState();
-    msgs = notifis.map((e) => msg(notifi: e)).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,47 +19,46 @@ class _AlarmState extends State<Alarm> {
         leading: IconButton(
           icon: Icon(AppinIcon.back, color: MGcolor.base4),
           onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () => setState(() {
-                  notifis.add(Notifi('예약', messages[Random().nextInt(2)]));
-                  msgs.add(msg(notifi: notifis.last));
-                }),
-              icon: Icon(
-                Icons.add,
-                color: Colors.black,
-              )
-          )
-        ],
+        )
       ),
-      body: msgs.isEmpty
-          ? Center(
-              child: Text(
-                '아직 알림이 없어요!',
-                style: KR.subtitle3.copyWith(
-                  color: MGcolor.base3,
-                ),
-              ),
-            )
-          : SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: ratio.width * 16,
-                vertical: ratio.height * 16
-              ),
-              child: Column(
-                children: List.generate(msgs.length, (index) => msgs[index]),
-              ),
-            ),
+      body: FutureBuilder<List<Notice>?>(
+        future: RestAPI.getNotices(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return ProgressWidget();
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: snapshot.data!
+                        .map((e) => Message(notifi: e))
+                        .toList()
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    '아직 알림이 없어요!',
+                    style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                  )
+                );
+              }
+          }
+        }
+      )
     );
   }
 }
 
 //메세지 위젯
-class msg extends StatelessWidget {
-  const msg({super.key, required this.notifi});
+class Message extends StatelessWidget {
+  const Message({super.key, required this.notifi});
   
-  final Notifi notifi;
+  final Notice notifi;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +93,7 @@ class msg extends StatelessWidget {
               children: [
                 Text(notifi.category, style: KR.chattitle),
                 SizedBox(height: ratio.height * 8),
-                Text(notifi.message, style: KR.chat),
+                Text(notifi.content, style: KR.chat),
               ],
             ),
           ),
@@ -120,10 +104,7 @@ class msg extends StatelessWidget {
               left: ratio.width * 5,
               bottom: ratio.height * 2
             ),
-            child: Text(
-              MDHm_format.format(DateTime.now()),
-              style: KR.chattime,
-            ),
+            child: Text(notifi.time, style: KR.chattime),
           )
         ],
       ),
@@ -148,7 +129,5 @@ class Triangle extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

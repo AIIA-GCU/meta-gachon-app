@@ -7,6 +7,7 @@ import 'package:mata_gachon/page/main/admission_list.dart';
 import 'package:mata_gachon/page/main/reservation_list.dart';
 import 'package:mata_gachon/page/services/alarm.dart';
 import 'package:mata_gachon/page/services/my_admission.dart';
+import 'package:mata_gachon/widget/small_widgets.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});
@@ -47,7 +48,7 @@ class _MainFrameState extends State<MainFrame> {
     _children = [
       HomePage(
         movetoReserList: movetoReserList,
-        movetoAdmisList: movetoMyAdmis
+        movetoAdmisList: movetoAdmisList
       ),
       ReservationListPage(),
       AdmissionListPage(),
@@ -64,28 +65,8 @@ class _MainFrameState extends State<MainFrame> {
           title: Icon(MGLogo.logo_typo_hori, color: MGcolor.base4, size: 24),
           actions: [
             /// alarm
-            Center(
-              child: GestureDetector(
-                onTap: movetoAlarm,
-                child: Stack(children: [
-                  Icon(AppinIcon.not, color: MGcolor.base4, size: 24),
-                  // 읽지 않은 알림이 있을 때, 보이기
-                  Positioned(
-                      top: 1,
-                      left: 1,
-                      child: CircleAvatar(
-                          radius: 4,
-                          backgroundColor: MGcolor.base8,
-                          child: CircleAvatar(
-                            radius: 3,
-                            backgroundColor: MGcolor.system_error,
-                          )
-                      )
-                  )
-                ]),
-              ),
-            ),
-            SizedBox(width: 16)
+            NotificationIcon(onPressed: movetoAlarm),
+            SizedBox(width: ratio.width * 16)
           ],
         ),
         body: PageView(
@@ -119,6 +100,9 @@ class _MainFrameState extends State<MainFrame> {
   void movetoReserList() => pageController
       .animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
 
+  void movetoAdmisList() => pageController
+      .animateToPage(2, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+
   void movetoMyAdmis() => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => MyAdmission()));
+      .push(MaterialPageRoute(builder: (context) => MyAdmissionPage()));
 }

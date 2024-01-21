@@ -1,25 +1,33 @@
 ///
 /// Session: 세션을 관리하는 파일
+/// - Stateless: 로그인 후, 글쓰기 요청을 하면
+///
+/// Todo
+/// @ room 종류: ["405-4", "405-5", "405-6"] 중 하나
+/// @ date 형식: "yyyy-MM-dd HH:mm"
+/// @ photoExtension: *.jpg, *.png
+/// @ 쿠기 저장하기 (w현교)
+/// @ 예약/인증 추가에 leader의 정보는 X
+///   member의 정보는 "(학번) (이름) (학번) (이름) ..."
 ///
 
-
+import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-//import 'package:package_info_plus/package_info_plus.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-enum HTTPMethod { GET, POST, PUT, DELETE }
+enum HTTPMethod { GET, POST, PATCH, DELETE }
+
 const int SUCCESS_CODE = 200;
 const int FAILURE_CODE = 400;
 
 // 임시
-int uid = 0;
-User my_info = User('국희근', 202334418, 2, 0, 12, []);
-List<Book> books = [];
-List<Comfirm> comfirms = [];
-List<Notifi> notifis = [];
+late User myInfo;
+List<Notice> notifis = [];
 
 class Session {
   static const String _storageKey = "sessionToken";
@@ -30,59 +38,66 @@ class Session {
       return _token!;
     }
 
-    // SharedPreferences preferences = await SharedPreferences.getInstance();
-    //_token = preferences.getString(_storageKey);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    bool? first = preferences.getBool('firstTime');
+    _token = preferences.getString(_storageKey);
 
-    if (_token == null) {
+    if (first == null || first == true) {
+      return Future(() => '');
+    } else if (_token == null) {
       throw Exception("No Session");
     }
 
-    return _token!;
+    return Future(() => _token!);
   }
 
   Future<bool> set(String token) async {
-    // final preferences = await SharedPreferences.getInstance();
-    // _token = token;
-    // return preferences.setString(_storageKey, token);
-    return true;
+    final preferences = await SharedPreferences.getInstance();
+    _token = token;
+    return preferences.setString(_storageKey, token);
   }
 
   Future<bool> clear() async {
-    // final preferences = await SharedPreferences.getInstance();
-    // _token = null;
-    // return preferences.remove(_storageKey);
-    return true;
+    final preferences = await SharedPreferences.getInstance();
+    _token = null;
+    return preferences.remove(_storageKey);
   }
 }
 
 class APIRequest {
-  static const String _BASE_URL = "http://210.102.178.161:22/"; // API URL로 수정(마지막 / 붙여야 함)
+  static const String _BASE_URL = "http://210.102.178.161:22/";
   static const String _SESSION_COOKIE_NAME = "JSESSIONID";
 
-  static late String _appVersion;
+  // static late String _appVersion;
   late String _path;
   late Map<String, String> _cookies;
 
-  String get appVersion => _appVersion;
+  // String get appVersion => _appVersion;
+
   String get path => _path;
+
   Map<String, String> get cookies => _cookies;
 
+  // set setAppVersion(String val) => _appVersion = val;
+
   set setPath(String val) => _path = val;
+
   set setCookies(Map<String, String> val) => _cookies = val;
 
   APIRequest(this._path) {
     // _getAppVersion();
   }
 
-  // Future<void> _getAppVersion() async {
-  //   final packageInfo = await PackageInfo.fromPlatform();
-  //   _appVersion = packageInfo.version;
-  // }
+  Future<void> _getAppVersion() async {
+    // final packageInfo = await PackageInfo.fromPlatform();
+    // setAppVersion = packageInfo.version;
+    // debugPrint(appVersion);
+  }
 
-  Future<Map<String, dynamic>> send(HTTPMethod method,
+  Future<dynamic> send(HTTPMethod method,
       {Map<String, dynamic>? params}) async {
     try {
-      // final session = Session();
+      final session = Session();
 
       final uri = Uri.parse(_BASE_URL + _path);
       http.Request request;
@@ -94,8 +109,8 @@ class APIRequest {
         case HTTPMethod.POST:
           request = http.Request('POST', uri);
           break;
-        case HTTPMethod.PUT:
-          request = http.Request('PUT', uri);
+        case HTTPMethod.PATCH:
+          request = http.Request('PATCH', uri);
           break;
         case HTTPMethod.DELETE:
           request = http.Request('DELETE', uri);
@@ -103,45 +118,54 @@ class APIRequest {
       }
 
       try {
-        // final sessionToken = await session.get();
-        // cookies[_SESSION_COOKIE_NAME] = sessionToken;
+        final sessionToken = await session.get();
+        if (sessionToken.isNotEmpty) {
+          setCookies = {_SESSION_COOKIE_NAME: sessionToken};
+        } else {
+          setCookies = {};
+        }
       } catch (_) {
-        // Pass
+        // throw Exception('\n[Error] related cookie: $e');
       }
 
+      final info = await PackageInfo.fromPlatform();
+
       final headers = {
-        // 'User-Agent': 'MetaGachonClient/$appVersion',
+        'User-Agent': 'MetaGachonClient/${info.version}',
         'Content-Type': 'application/json; charset=UTF-8',
-        // 'Cookie': _encodeCookie(),
+        'Cookie': _encodeCookie(),
       };
 
       request.headers.addAll(headers);
+      // request.headers['Content-Type'] = 'application/json';
 
       if (params != null) {
         request.body = jsonEncode(params); // 파라미터가 있으면 JSON으로 인코딩하여 body에 추가
       }
 
-      final response = await http.Client().send(request);
-      if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final Map<String, dynamic> jsonResponse = json.decode(responseBody);
+      final httpReturned = await http.Client().send(request);
+      if (httpReturned.statusCode == 200) {
+        final response = await http.Response.fromStream(httpReturned);
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        debugPrint("[api] returned: ${jsonResponse.toString()}");
 
-        // // 쿠키 파싱, 토큰 설정
-        // final Map<String, String> serverCookies =
-        // _parseServerCookies(await http.Response.fromStream(response));
-        // if (serverCookies.containsKey(_SESSION_COOKIE_NAME)) {
-        //   final newToken = serverCookies[_SESSION_COOKIE_NAME]!;
-        //   if (session.get() != newToken) {
-        //     session.set(newToken);
-        //   }
-        // }
+        // 쿠키 파싱, 토큰 설정
+        final Map<String, String> serverCookies = _parseServerCookies(response);
+        if (serverCookies.containsKey(_SESSION_COOKIE_NAME)) {
+          final newToken = serverCookies[_SESSION_COOKIE_NAME]!;
+          if (session.get() != newToken) {
+            session.set(newToken);
+          }
+        }
 
         return jsonResponse;
       } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+        debugPrint('Status Code: ${httpReturned.statusCode}');
+        throw Exception('\n[Error] related http response: ${httpReturned.statusCode}');
+        // return null;
       }
     } catch (e) {
-      throw Exception('Failed to load data: $e');
+      throw Exception('[Error] api send: $e');
     }
   }
 
@@ -171,136 +195,394 @@ class APIRequest {
   }
 }
 
-class User {
-  static APIRequest _userAPI = APIRequest('/user');
+class RestAPI {
+  RestAPI._();
 
+  /// 로그인
+  static Future<User?> login({
+    required String id,
+    required String pw
+  }) async {
+    final api = APIRequest('user');
+    Map<String, dynamic> response = await api.send(
+      HTTPMethod.POST,
+      params: {"ID": id, "PW": pw}
+    );
+    return response.isEmpty ? null : User.fromJson(response);
+  }
+
+  /// 내 모든 예약
+  static Future<List<Reservate>?> getAllReservation() async {
+    final api = APIRequest('books');
+    List<dynamic> response = await api.send(HTTPMethod.GET);
+
+    if (response.isEmpty) {
+      return null;
+    } else {
+      final result = response.map((e) {
+            final temp = e as Map<String, dynamic>;
+            return Reservate.fromJson(temp);
+          }).toList();
+      return result;
+    }
+  }
+
+  /// 예약 가능한 시간대
+  static Future<Map<int, bool>?> getAvailableTime({
+    required String room,
+    required String date
+  }) async {
+    final api = APIRequest(
+        'books/available?room=${room}&date=${date}');
+    Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+    if (response.isEmpty) {
+      return null;
+    } else {
+      Map<String, dynamic> result = response['disableTime'];
+      return result.map((key, value) => MapEntry(int.parse(key), value));
+    }
+  }
+
+  ///
+  /// 예약 추가
+  ///
+  static Future<int?> addReservation({
+    required String room,
+    required String startTime,
+    required String endTime,
+    required String member
+  }) async {
+    final api = APIRequest('book');
+    Map<String, dynamic> response = await api.send(
+      HTTPMethod.POST,
+      params: {
+        'room': room,
+        'startTime': startTime,
+        'endTime': endTime,
+        'member': member,
+        // 'purpose': '공부'
+      }
+    );
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['reservationID'];
+    }
+  }
+
+  /// 
+  /// 예약 수정
+  /// [!] member에 빈 값을 넣으면 문제가 생기는 듯
+  /// 
+  static Future<int?> patchReservation({
+    required int reservationId,
+    required String room,
+    required String startTime,
+    required String endTime,
+    required String leader,
+    required String member
+  }) async {
+    final api = APIRequest('book');
+    Map<String, dynamic> response = await api.send(
+        HTTPMethod.PATCH,
+        params: {
+          "reservationId": reservationId,
+          "room": room,
+          "startTime": startTime,
+          "endTime": endTime,
+          "leaderInfo": leader,
+          "memberInfo": 'string',
+          "purpose": "String"
+        }
+    );
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['reservationID'];
+    }
+  }
+
+  /// 예약 삭제
+  static Future<int?> delReservation({
+    required int reservationId
+  }) async {
+    final api = APIRequest('book/$reservationId');
+    Map<String, dynamic> response = await api.send(HTTPMethod.DELETE);
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['reservationID'];
+    }
+  }
+
+  /// 예약 연장
+  static Future<int?> prolongReservation({
+    required int reservationId
+  }) async {
+    final api = APIRequest('book/prolong/$reservationId');
+    Map<String, dynamic> response = await api.send(HTTPMethod.PATCH);
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['reservationId'];
+    }
+  }
+
+  /// 모든 인증
+  static Future<List<Admit>?> getAllAdmission() async {
+    final api = APIRequest('admits');
+    List<dynamic> response = await api.send(HTTPMethod.GET);
+
+    if (response.isEmpty) {
+      return null;
+    } else {
+      final result = response.map((e) {
+        final temp = e as Map<String, dynamic>;
+        return Admit.fromJson(temp);
+      }).toList();
+      return result;
+    }
+  }
+
+  /// 내 인증
+  static Future<List<Admit>?> getMyAdmission() async {
+    final api = APIRequest('admits/me');
+    List<dynamic> response = await api.send(HTTPMethod.GET);
+
+    if (response.isEmpty) {
+      return null;
+    } else {
+      final result = response.map((e) {
+        final temp = e as Map<String, dynamic>;
+        return Admit.fromJson(temp);
+      }).toList();
+      return result;
+    }
+  }
+
+  /// 인증 추가
+  static Future<int?> addAdmission({
+    required String review,
+    required String photo,
+    required String photoExtension
+  }) async {
+    final api = APIRequest('admit');
+    Map<String, dynamic> response = await api.send(
+      HTTPMethod.POST,
+      params: {
+        'review': review,
+        'photo': photo,
+        'photoExtension': photoExtension
+      }
+    );
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['admissionID'];
+    }
+  }
+
+  /// 열람하지 않은 알림의 여부
+  static Future<bool?> hasUnopendNotice() async {
+    final api = APIRequest('notice');
+    Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response['hasNotice'];
+    }
+  }
+
+  /// 내 모든 알림
+  static Future<List<Notice>?> getNotices() async {
+    final api = APIRequest('notices');
+    List<Map<String, dynamic>> response = await api.send(HTTPMethod.GET);
+    if (response.isEmpty) {
+      return null;
+    } else {
+      return response.map((e) => Notice.fromJson(e)).toList();
+    }
+  }
+}
+
+class User {
   final String _name;
-  final int _stu_num;
+  final int _stuNum;
   int _rating;
   int _negative;
   int _positive;
-  List<Notifi> _notifis;
 
   String get name => _name;
-  int get stu_num => _stu_num;
+
+  int get stuNum => _stuNum;
+
   int get rating => _rating;
+
   int get negative => _negative;
+
   int get positive => _positive;
-  List<Notifi> get notifis => _notifis;
 
   set setRating(int val) => _rating = val;
+
   set setNegative(int val) => _negative = val;
+
   set setPositive(int val) => _positive = val;
-  set setNotifis(List<Notifi> val) => _notifis = val;
 
-  User(this._name, this._stu_num, this._rating, this._negative, this._positive, this._notifis);
+  User(this._name,
+      this._stuNum,
+      this._rating,
+      this._negative,
+      this._positive);
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    var notifis = (json['notifi'] as List).map((e) {
-      return Notifi(e['category'], e['message']);
-    }).toList();
-    return User(
+  ///
+  /// EX) User 객체의 response
+  /// - "name": "김가천"
+  /// - "stuNum": 202300001
+  /// - "rating": 2 (1 ~ 5)
+  /// - "negative": 5
+  /// - "positive": 10
+  ///
+  factory User.fromJson(Map<String, dynamic> json) => User(
         json['name'],
-        json['stu_num'],
+        json['stuNum'],
         json['rating'],
         json['negative'],
-        json['positive'],
-        notifis
+        json['positive']
     );
-  }
-  String toJson() {
-    return jsonEncode({
-      'name': _name,
-      'stu_num': _stu_num,
-      'rating': _rating,
-      'negative': _negative,
-      'positive': _positive,
-      'notifi': _notifis.map((e) => e.toJson()).toList()
-    });
-  }
 }
 
-class Book {
-  static APIRequest _bookAPI = APIRequest('/books');
-
-  final String _reservationID;
-  final String _name;
-  final int _stu_num;
+class Reservate {
+  final int _reservationId;
+  final String _leaderInfo;
   final String _room;
-  final DateTime _start;
-  final int _duration;
+  final String _date;
+  final String _time;
+  // final String _member;
 
-  String get reservationID => _reservationID;
-  String get name => _name;
-  int get stu_num => _stu_num;
+  int get reservationId => _reservationId;
+
+  String get leaderInfo => _leaderInfo;
+
   String get room => _room;
-  DateTime get start => _start;
-  int get duration => _duration;
 
-  Book(this._reservationID, this._name, this._stu_num, this._room, this._start, this._duration);
+  String get date => _date;
 
-  factory Book.fromJson(Map<String, dynamic> json) {
-    return Book(
-        json['reservationID'],
-        json['name'],
-        json['stu_num'],
+  String get time => _time;
+
+  // String get member => _member;
+
+  Reservate(
+      this._reservationId,
+      this._leaderInfo,
+      this._room,
+      this._date,
+      this._time,
+      // this._member
+      );
+
+  ///
+  /// EX) Reservate 객체의 response
+  /// - "reservationId": 55
+  /// - "LeaderInfo": "202300001 김가천"
+  /// - "room":" 404 - 5"
+  /// - "date": "2023. 01. 01 목요일"
+  /// - "time": "06:00 ~ 15:00"
+  ///
+  factory Reservate.fromJson(Map<String, dynamic> json) => Reservate(
+        json['reservationId'],
+        json['leaderInfo'],
         json['room'],
-        json['start'],
-        json['duration']
+        json['date'],
+        json['time'],
+        // json['member']
     );
-  }
-  String toJson() {
-    return jsonEncode({
-      ''
-    });
-  }
 }
 
-class Comfirm {
-  final String _name;
-  final int _stu_num;
+class Admit {
+  final int _admisstionId;
+  final String _leaderInfo;
   final String _room;
-  final DateTime _start;
-  final int _duration;
+  final String _date;
+  final String _time;
+  // final List<String> _members;
   final String _review;
+  final ByteData _photo;
 
-  String get name => _name;
-  int get stu_num => _stu_num;
+  int get admissionId => _admisstionId;
+
+  String get leaderInfo => _leaderInfo;
+
   String get room => _room;
-  DateTime get start => _start;
-  int get duration => _duration;
+
+  String get date => _date;
+
+  String get time => _time;
+
+  // List<String> get members => _members;
+
   String get review => _review;
 
-  Comfirm(this._name, this._stu_num, this._room, this._start, this._duration, this._review);
+  ByteData get photo => _photo;
 
-  factory Comfirm.fromJson(Map<String, dynamic> json) {
-    return Comfirm(
-        json['name'],
-        json['stu_num'],
-        json['room'],
-        json['start'],
-        json['duration'],
-        json['review']
-    );
-  }
+  Admit(
+      this._admisstionId,
+      this._leaderInfo,
+      this._room,
+      this._date,
+      this._time,
+      // this._members,
+      this._review,
+      this._photo
+      );
+
+  ///
+  /// EX) Admit 객체의 response
+  /// - "admissionId": 66
+  /// - "leaderInfo": "202300001 김가천"
+  /// - "room": "405 - 5"
+  /// - "date": "2023. 01. 01. 목요일"
+  /// - "time": "06:00 ~ 15:00"
+  /// - "review": "잘 썼습니다!"
+  /// - "photo": "9 9JdiONJDJIOFofjdijf...." (base64 포멧)
+  ///
+  factory Admit.fromJson(Map<String, dynamic> json) => Admit(
+      json['admissionId'],
+      json['leaderInfo'],
+      json['room'],
+      json['date'],
+      json['time'],
+      // json['membersInfo'],
+      json['review'],
+      json['photo']
+  );
 }
 
-class Notifi {
+class Notice {
+  final int _noticeId;
   final String _category;
-  final String _message;
+  final String _content;
+  final String _time;
 
-  Notifi(this._category, this._message);
+  int get noticeId => _noticeId;
 
   String get category => _category;
-  String get message => _message;
 
-  factory Notifi.fromJson(Map<String, dynamic> json) {
-    return Notifi(json['category'], json['message']);
-  }
-  String toJson() {
-    return jsonEncode({
-      'category': _category,
-      'message': _message
-    });
-  }
+  String get content => _content;
+
+  String get time => _time;
+
+  Notice(this._noticeId, this._category, this._content, this._time);
+
+  ///
+  /// 2104u902
+  /// "에약"
+  /// "ㅏ머ㅗㄹㅇㅁ냐루ㅐㅁ\nㅇㄹ먀ㅜ럄"
+  /// "01/20 10:40"
+  ///
+  factory Notice.fromJson(Map<String, dynamic> json) => Notice(
+      json['noticeId'],
+      json['category'],
+      json['content'],
+      json['time']
+  );
 }

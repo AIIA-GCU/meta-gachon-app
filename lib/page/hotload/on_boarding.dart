@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/login.dart';
 
 class OnBoarding extends StatelessWidget {
-  late final Size screenSize;
+  static late Size screenSize;
 
   @override
   Widget build(BuildContext context) {
@@ -98,11 +97,8 @@ class OnBoarding extends StatelessWidget {
                 child: Center(
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushReplacement(PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    Login(),
-                            transitionsBuilder: slideLeft2Right));
+                        Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Login()));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MGcolor.btn_active,

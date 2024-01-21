@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/admission.dart';
+import 'package:mata_gachon/page/services/admit.dart';
 import 'package:mata_gachon/page/services/my_admission.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
 
@@ -21,7 +21,7 @@ class AdmissionListPage extends StatefulWidget {
 }
 
 class _AdmissionListPageState extends State<AdmissionListPage> {
-  final Stream<String> _stream = listListener.stream;
+  final Stream<StreamType> _stream = listListener.stream;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           /// <내 인증 확인하기> & <인증하러 가기>
           Container(
             decoration: BoxDecoration(
@@ -88,7 +88,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     /// <내 인증 확인하기>
                     ElevatedButton(
                       onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => MyAdmission())),
+                          .push(MaterialPageRoute(builder: (context) => MyAdmissionPage())),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MGcolor.btn_inactive,
                         shape: RoundedRectangleBorder(
@@ -102,8 +102,9 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     ),
                     /// <인증하러 가기>
                     ElevatedButton(
-                      onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => Admission())),
+                      onPressed: () {},
+                          // Navigator.of(context)
+                          // .push(MaterialPageRoute(builder: (context) => AdmitPage())),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: MGcolor.btn_active,
                           shape: RoundedRectangleBorder(
@@ -123,34 +124,50 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
           // 리스트
           Padding(
-            padding: EdgeInsets.symmetric(vertical: ratio.height * 30),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              /// 타이틀
-              Text('다른 친구들 인증 보기', style: KR.subtitle1),
-              /// 메인
-                  if (comfirms.isNotEmpty)
-                    ...List.generate(
-                        comfirms.length,
-                            (index) => CustomListItem(
-                            uid: '',
-                            where: comfirms[index].room,
-                            name: '${comfirms[index].stu_num} ${comfirms[index].name}',
-                            begin: comfirms[index].start,
-                            duration: Duration(hours: comfirms[index].duration),
-                            admission: true,
-                        )
-                    )
-                  else
-                    Container(
-                        height: ratio.height * 594,
-                        alignment: Alignment.center,
-                        child: Text(
-                          "아직 예약 내역이 없어요!",
-                          style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                        )
-                    )
-            ]),
+            padding: EdgeInsets.only(top: ratio.height * 30),
+            child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: ratio.height * 30),
+            child: FutureBuilder<List<Admit>?>(
+              future: RestAPI.getAllAdmission(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                  case ConnectionState.waiting:
+                    return ProgressWidget();
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return Column(
+                          children: snapshot.data!
+                              .map((e) {
+                                final temp = e.leaderInfo.split(' ');
+                                return CustomListItem(
+                                  uid: e.admissionId,
+                                  name: temp[1],
+                                  stuNum: int.parse(temp[0]),
+                                  room: e.room,
+                                  date: e.date,
+                                  time: e.time,
+                                  // membersInfo: e.members,
+                                );
+                              })
+                              .toList()
+                      );
+                    } else {
+                      return Container(
+                          height: ratio.height * 594,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "아직 인증이 없어요!",
+                            style: KR.subtitle4.copyWith(color: MGcolor.base3),
+                          )
+                      );
+                    }
+                }
+              }
+            )
           )
         ]),
       ),

@@ -13,6 +13,7 @@ import 'package:mata_gachon/config/variable.dart';
 class CustomCalender extends StatefulWidget {
   const CustomCalender({
     super.key,
+    required this.init,
     required this.first,
     required this.last,
     required this.rowHeight,
@@ -21,6 +22,7 @@ class CustomCalender extends StatefulWidget {
     required this.onSelected
   }) ;
 
+  final String? init;
   final DateTime first;
   final DateTime last;
   final double rowHeight;
@@ -40,7 +42,7 @@ class _CustomCalenderState extends State<CustomCalender> {
   DateTime? selectedDay;
   void toSelect(DateTime day) {
     if (day != selectedDay && cmp(day)) {
-      widget.onSelected(yMdE_format.format(day));
+      widget.onSelected(std2_format.format(day));
       setState(() => selectedDay = day);
     }
   }
@@ -61,6 +63,10 @@ class _CustomCalenderState extends State<CustomCalender> {
   @override
   void initState() {
     super.initState();
+    if (widget.init != null) {
+      selectedDay = std2_format.parse(widget.init!);
+    }
+
     rangeFirst = DateTime(widget.first.year, widget.first.month, widget.first.day);
     rangeLast = DateTime(widget.last.year, widget.last.month, widget.last.day);
 

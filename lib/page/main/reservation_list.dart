@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/reservation.dart';
+import 'package:mata_gachon/page/services/reservate.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
 
 class ReservationListPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class ReservationListPage extends StatefulWidget {
 }
 
 class _ReservationListPageState extends State<ReservationListPage> {
-  final Stream<String> _stream = listListener.stream;
+  final Stream<StreamType> _stream = listListener.stream;
 
   @override
   void initState() {
@@ -27,8 +27,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
     _stream.listen((event) => _event(event));
   }
   
-  void _event(String event) {
-    if (mounted && event == "reservation") {
+  void _event(StreamType event) {
+    if (mounted && event == StreamType.reservate) {
       setState(() {});
     }
   }
@@ -39,7 +39,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
       child: Column(children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-          child: Column(children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             /// 예약하기 카드
             GestureDetector(
               onTap: doReservation,
@@ -78,31 +78,50 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
             /// 리스트
             Padding(
-                padding: EdgeInsets.symmetric(vertical: ratio.height * 30),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('내 예약 확인하기', style: KR.subtitle1),
-
-                  if (books.isNotEmpty)
-                    ...List.generate(
-                        books.length,
-                        (index) => CustomListItem(
-                            uid: books[index].reservationID,
-                            where: books[index].room,
-                            name: '${books[index].stu_num} ${books[index].name}',
-                            begin: books[index].start,
-                            duration: Duration(hours: books[index].duration)
-                        )
-                    )
-                  else
-                    Container(
-                      height: ratio.height * 594,
-                      alignment: Alignment.center,
-                      child: Text(
-                        "아직 예약 내역이 없어요!",
-                        style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                      )
-                    )
-                ])
+              padding: EdgeInsets.only(top: ratio.height * 30),
+              child: Text('내 예약 확인하기', style: KR.subtitle1),
+            ),
+            Padding(
+                padding: EdgeInsets.only(bottom: ratio.height * 30),
+                child: FutureBuilder<List<Reservate>?>(
+                  future: RestAPI.getAllReservation(),
+                  initialData: [],
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                      case ConnectionState.waiting:
+                        return ProgressWidget();
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                          return Column(
+                            children: snapshot.data!
+                                .map((e) {
+                                  final temp = e.leaderInfo.split(' ');
+                                  return CustomListItem(
+                                    uid: e.reservationId,
+                                    name: temp[1],
+                                    stuNum: int.parse(temp[0]),
+                                    room: e.room,
+                                    date: e.date,
+                                    time: e.time
+                                  );
+                                })
+                                .toList()
+                          );
+                        } else {
+                          return Container(
+                              height: ratio.height * 594,
+                              alignment: Alignment.center,
+                              child: Text(
+                                "아직 예약 내역이 없어요!",
+                                style: KR.subtitle4.copyWith(color: MGcolor.base3),
+                              )
+                          );
+                        }
+                    }
+                  }
+                )
             )
           ]),
         ),
@@ -111,5 +130,5 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   void doReservation() => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => Reservation()));
+      .push(MaterialPageRoute(builder: (context) => ReservatePage()));
 }

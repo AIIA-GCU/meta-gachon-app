@@ -10,8 +10,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/admission.dart';
-import 'package:mata_gachon/page/services/reservation.dart';
+import 'package:mata_gachon/page/services/admit.dart';
+import 'package:mata_gachon/page/services/my_admission.dart';
+import 'package:mata_gachon/page/services/reservate.dart';
+import 'package:mata_gachon/widget/popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.movetoReserList, required this.movetoAdmisList});
@@ -401,7 +403,7 @@ class _HomePageState extends State<HomePage> {
                                     left: ratio.width * 128,
                                     child: Material(
                                       child: InkWell(
-                                        onTap: widget.movetoAdmisList,
+                                        onTap: checkMyAdmission,
                                         customBorder: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(8)
                                         ),
@@ -439,15 +441,27 @@ class _HomePageState extends State<HomePage> {
 
   void doReservation() {
     Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => Reservation()));
+      .push(MaterialPageRoute(builder: (context) => ReservatePage()));
     widget.movetoReserList();
   }
 
   void doAdmission() {
-    Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => Admission()));
-    widget.movetoAdmisList();
+    // Navigator.of(context)
+    //   .push(MaterialPageRoute(builder: (context) => AdmitPage()));
+    // widget.movetoAdmisList();
   }
 
-  void checkRating() {}
+  void checkRating() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.25),
+      builder: (context) => GradePopup()
+    );
+  }
+
+  void checkMyAdmission() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyAdmissionPage()));
+    widget.movetoAdmisList();
+  }
 }
