@@ -5,11 +5,17 @@
 /// - 앱 내부의 아이콘 및 이미지
 /// - 앱 로고 및 아이콘
 ///
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:camera/camera.dart';
 
 /// 비율
-late double ratio;
+late Size ratio;
+
+/// 카메라
+late final CameraDescription camera;
 
 ///
 /// 색깔
@@ -44,29 +50,32 @@ class MGcolor {
 class KR {
   KR._();
 
-  static const TextStyle title1 = TextStyle(fontSize: 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle subtitle2 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle subtitle3 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle subtitle4 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static const TextStyle label2 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static const TextStyle label3 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle subtitle3 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle subtitle4 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle parag1 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle label2 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle label3 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'Ko');
+  static TextStyle chattitle = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w600, fontFamily: 'Ko', color: Colors.white);
+  static TextStyle chat = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.white);
+  static TextStyle chattime = TextStyle(fontSize: ratio.height * 12, fontFamily: 'Ko', color: Colors.grey);
 }
 class EN {
   EN._();
 
-  static const TextStyle title1 = TextStyle(fontSize: 28, fontWeight: FontWeight.w500, fontFamily: 'En');
-  static const TextStyle title2 = TextStyle(fontSize: 22, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle subtitle1 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle subtitle2 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle parag1 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'En');
-  static const TextStyle parag2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle label1 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static const TextStyle label2 = TextStyle(fontSize: 11, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle parag1 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle label2 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'En');
 }
 
 ///
@@ -78,16 +87,20 @@ class AppinIcon {
   static const _kFontFam = 'MGIcon';
   static const String? _kFontPkg = null;
 
-  static const IconData home = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData res = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData cert = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData back = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData my = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData edit = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData eye_off = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData setting = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData eye_on = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData not = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData edit = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData eye_off = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData eye_on = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData go = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData home = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData my = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData not = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData plus = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData res = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData setting = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData back = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData camera = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData cert = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData cross = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
 class ImgPath {
   ImgPath._();
@@ -116,14 +129,24 @@ class MGLogo {
   static const _kFontFam = 'MGIcon';
   static const String? _kFontPkg = null;
 
-  static const IconData logo_typo_hori = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData logo_typo_vert = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData logo_typo_only = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData logo = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo_typo_hori = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo_typo_vert = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo_typo_only = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData logo = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
 
 ///
 /// Date Format
 ///
-final yMdE_format = DateFormat('y.M.d EEE');
-final Hm_format = DateFormat('H:m');
+final std1_format = DateFormat('yyyy-MM-dd-HH:mm');
+final std2_format = DateFormat('yyyy-MM-dd');
+final alarm_format = DateFormat('MM/dd HH:mm');
+final date1_format = DateFormat('yyyy. MM. dd EEE');
+final date2_format = DateFormat('yyyy.MM.dd');
+final time_format = DateFormat('HH:mm');
+
+///
+/// StreamController
+///
+final StreamController<StreamType> listListener = StreamController<StreamType>.broadcast();
+enum StreamType { reservate, admit }

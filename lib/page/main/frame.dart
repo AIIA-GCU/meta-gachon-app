@@ -1,10 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/main/home.dart';
-import 'package:mata_gachon/page/main/admission.dart';
-import 'package:mata_gachon/page/main/reservation.dart';
+import 'package:mata_gachon/page/main/admission_list.dart';
+import 'package:mata_gachon/page/main/reservation_list.dart';
 import 'package:mata_gachon/page/services/alarm.dart';
+import 'package:mata_gachon/page/services/my_admission.dart';
+import 'package:mata_gachon/widget/small_widgets.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});
@@ -12,6 +15,7 @@ class MainFrame extends StatefulWidget {
   @override
   State<MainFrame> createState() => _MainFrameState();
 }
+
 class _MainFrameState extends State<MainFrame> {
 
   /**
@@ -28,15 +32,30 @@ class _MainFrameState extends State<MainFrame> {
    *      페이지가 애니메이션 없이 바뀜
    *  - onPageChanged:
    *      rebuild되는 함수
+   *  - movetoReserList:
+   *      예약 리스트 페이지로 이동하는 callback
+   *  - movetoAdmisList:
+   *      인증 리스트 페이지로 이동하는 callback
    */
-  int currentPageIndex = 0;
-  final List<Widget> _children = [
-    HomePage(),
-    ReservationListPage(),
-    AdmissionListPage(),
-    Center(child: Text("마이 페이지"))
-  ];
-  final pageController = PageController();
+  late int currentPageIndex;
+  late final List<Widget> _children;
+  late final PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPageIndex = 0;
+    _children = [
+      HomePage(
+        movetoReserList: movetoReserList,
+        movetoAdmisList: movetoAdmisList
+      ),
+      ReservationListPage(),
+      AdmissionListPage(),
+      Center(child: Text("마이 페이지"))
+    ];
+    pageController = PageController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,30 +64,9 @@ class _MainFrameState extends State<MainFrame> {
           automaticallyImplyLeading: false,
           title: Icon(MGLogo.logo_typo_hori, color: MGcolor.base4, size: 24),
           actions: [
-            Center(
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Alarm())
-                ),
-                child: Stack(children: [
-                  Icon(AppinIcon.not, color: MGcolor.base4, size: 24),
-                  // 읽지 않은 알림이 있을 때, 보이기
-                  Positioned(
-                      top: 1,
-                      left: 1,
-                      child: CircleAvatar(
-                          radius: 4,
-                          backgroundColor: MGcolor.base8,
-                          child: CircleAvatar(
-                            radius: 3,
-                            backgroundColor: MGcolor.system_error,
-                          )
-                      )
-                  )
-                ]),
-              ),
-            ),
-            SizedBox(width: 16)
+            /// alarm
+            NotificationIcon(onPressed: movetoAlarm),
+            SizedBox(width: ratio.width * 16)
           ],
         ),
         body: PageView(
@@ -91,11 +89,20 @@ class _MainFrameState extends State<MainFrame> {
     );
   }
 
-  void onTap(int index) {
-    pageController.jumpToPage(index);
-  }
+  void movetoAlarm() => Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => Alarm()));
 
-  void onPageChanged(int index) {
-    setState(() => currentPageIndex = index);
-  }
+  void onTap(int index) => pageController
+      .animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+
+  void onPageChanged(int index) => setState(() => currentPageIndex = index);
+
+  void movetoReserList() => pageController
+      .animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+
+  void movetoAdmisList() => pageController
+      .animateToPage(2, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+
+  void movetoMyAdmis() => Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => MyAdmissionPage()));
 }
