@@ -72,8 +72,8 @@ class _MainFrameState extends State<MainFrame> {
         body: PageView(
           controller: pageController,
           onPageChanged: onPageChanged,
+          physics: PageScrollPhysics(),
           children: _children,
-          physics: NeverScrollableScrollPhysics(), // No sliding
         ),
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
