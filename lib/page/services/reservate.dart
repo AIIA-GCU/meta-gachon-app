@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/calender.dart';
+import 'package:mata_gachon/widget/select_time.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mata_gachon/widget/popup.dart';
@@ -19,14 +19,11 @@ class ReservatePage extends StatefulWidget {
 }
 
 class _ReservatePageState extends State<ReservatePage> {
-  late final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
   ///강의실 목록
   final List<String> rooms = ['405-4', '405-5', '405-6'];
-
-  /// 시간 드롭다운메뉴 아이템들
-  final List<String> times = List.generate(
-      17, (index) => "${(6 + index).toString().padLeft(2, '0')}:00");
 
   ///textfield controllor
   final TextEditingController _controllerNumber = TextEditingController();
@@ -35,12 +32,13 @@ class _ReservatePageState extends State<ReservatePage> {
   late int leaderNumber; //대표자 학번
   late String leaderName; //대표자 이름
   late bool isSolo, loading, canTime;
+  late Color addUserGuideline;
 
   ///유저가 선택한 정보변수들
   String? selectedRoom; //강의실
   String? selectedDate; //이용날짜
-  String? selectedEnter; //입실시간
-  String? selectedExit; //퇴실시간
+  int? selectedEnter; //입실시간
+  int? selectedExit; //퇴실시간
   List<String> usersList = []; //이용자리스트
 
   /// 이용자 위젯리스트
@@ -54,6 +52,7 @@ class _ReservatePageState extends State<ReservatePage> {
     super.initState();
 
     this.isSolo = this.loading = this.canTime = false;
+    this.addUserGuideline = MGcolor.brand_orig;
     if (widget.reservate != null) {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
@@ -63,8 +62,8 @@ class _ReservatePageState extends State<ReservatePage> {
       temp = widget.reservate!.date.split(' ');
       this.selectedDate = temp.first;
       temp = widget.reservate!.time.split(' ~ ');
-      this.selectedEnter = temp[0];
-      this.selectedExit = temp[1];
+      this.selectedEnter = int.parse(temp[0].substring(0, 2));
+      this.selectedExit = int.parse(temp[1].substring(0, 2));
       this.isSolo = true;
       this.canTime = true;
       // if (widget.reservate!.member.isEmpty) {
@@ -117,19 +116,29 @@ class _ReservatePageState extends State<ReservatePage> {
                         ratio.width * 16,
                         ratio.height * 12
                       ),
-                      content: [
-                        CustomDropdown(
-                          hint: "선택",
-                          items: rooms,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedRoom = value;
-                              availableTime();
-                            });
-                          },
-                          selectedItem: selectedRoom,
-                        )
-                      ]
+                      content: Row(
+                        children: [
+                          CustomDropdown(
+                            hint: "선택",
+                            items: rooms,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedRoom = value;
+                                if (selectedRoom != null && selectedDate != null) {
+                                  setState(() {
+                                    selectedEnter = selectedExit = null;
+                                    if (!canTime) {
+                                      canTime = true;
+                                      _listKey.currentState!.insertAllItems(0, 3);
+                                    }
+                                  });
+                                }
+                              });
+                            },
+                            selectedItem: selectedRoom,
+                          )
+                        ]
+                      )
                   ),
 
                   /// 날짜 선택
@@ -176,70 +185,57 @@ class _ReservatePageState extends State<ReservatePage> {
                         ),
                         onSelected: (value) {
                           selectedDate = value;
-                          availableTime();
+                          if (selectedRoom != null && selectedDate != null) {
+                            setState(() {
+                              selectedEnter = selectedExit = null;
+                              if (!canTime) {
+                                canTime = true;
+                                _listKey.currentState!.insertAllItems(0, 3);
+                              }
+                            });
+                          }
                         },
                       )
                   )
                 ]),
                 SliverAnimatedList(
                   key: _listKey,
-                  initialItemCount: 0,
+                  initialItemCount: canTime ? 3 : 0,
                   itemBuilder: (context, index, animation) {
                     final List<Widget> temp = [
                       ///예약 시간 선택
-                      CustomContainer(
-                        title: "예약 시간",
-                        height: 73,
-                        margin: EdgeInsets.fromLTRB(
-                            ratio.width * 16,
-                            0,
-                            ratio.width * 16,
-                            ratio.height * 12
-                        ),
-                        content: [
-                          CustomDropdown(
-                            hint: "입실",
-                            items: times,
-                            onChanged: (value) {
-                              setState(() => selectedEnter = value);
-                            },
-                            selectedItem: selectedEnter,
-                          ),
-                          SizedBox(
-                              width: 22 * ratio.width,
-                              child: Center(child: Text("~"))
-                          ),
-                          CustomDropdown(
-                            hint: "퇴실",
-                            items: times,
-                            onChanged: (value) {
-                              setState(() => selectedExit = value);
-                            },
-                            selectedItem: selectedExit,
-                          ),
-                        ],
-                        additionalContent: [
-                          Positioned(
-                              left: 80 * ratio.width,
-                              top: 46 * ratio.height,
-                              child: selectedRoom != null && selectedDate != null
-                                  ? Text(
-                                  '예약은 최대 3시간 까지 가능합니다!',
-                                  style: KR.label2.copyWith(color: MGcolor.brand_orig)
-                              )
-                                  : Text(
-                                  '회의실과 시간을 먼저 선택해주세요!',
-                                  style: KR.label2.copyWith(color: MGcolor.base3)
-                              )
-                          )
-                        ],
+                      FutureBuilder<List<bool>>(
+                        future: availableTime(),
+                        builder: (context, snapshot) {
+                          return Container(
+                            margin: EdgeInsets.fromLTRB(
+                              ratio.width * 16,
+                              0,
+                              ratio.width * 16,
+                              ratio.height * 12
+                            ),
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12)),
+                            child: snapshot.hasData
+                                ? CustomTimePicker(
+                                    start: selectedEnter,
+                                    end: selectedExit,
+                                    availableTimes: snapshot.data!,
+                                    setStart: (index) => selectedEnter = index,
+                                    setEnd: (index) => selectedExit = index + 1,
+                                  )
+                                : null
+                          );
+                        }
                       ),
 
                       ///대표자
                       CustomContainer(
                         title: "대표자",
                         height: 52,
-                        content: [],
+                        content: SizedBox.shrink(),
                         margin: EdgeInsets.fromLTRB(
                             ratio.width * 16,
                             0,
@@ -299,41 +295,61 @@ class _ReservatePageState extends State<ReservatePage> {
                                 Positioned(
                                   left: 80 * ratio.width,
                                   top: 10 * ratio.height,
-                                  child: Row(
-                                    children: [
-                                      MyTextField(
-                                        enabled: !isSolo,
-                                        width: 122,
-                                        height: 32,
-                                        controller: _controllerNumber,
-                                        hint: '202300001',
-                                        format: [
-                                          FilteringTextInputFormatter.digitsOnly,
-                                          //숫자만 허용
-                                          LengthLimitingTextInputFormatter(9),
-                                          //9글자만 허용
-                                        ],
-                                      ),
-                                      SizedBox(width: 8 * ratio.width),
-                                      MyTextField(
-                                        enabled: !isSolo,
-                                        width: 92,
-                                        height: 32,
-                                        controller: _controllerName,
-                                        hint: '김가천',
-                                        format: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
-                                        ],
-                                      ),
-                                      SizedBox(width: 8 * ratio.width),
-                                      Material(
-                                        child: InkWell(
-                                          onTap: isSolo ? null : validateAddingUser,
-                                          customBorder: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(12)),
-                                          child: Ink(
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Row(
+                                      children: [
+                                        MyTextField(
+                                          enabled: !isSolo,
+                                          width: 122,
+                                          height: 32,
+                                          controller: _controllerNumber,
+                                          hint: '202300001',
+                                          format: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                            //숫자만 허용
+                                            LengthLimitingTextInputFormatter(9),
+                                            //9글자만 허용
+                                          ],
+                                          validator: (str) {
+                                            if (str!.isEmpty || str.length != 9) {
+                                              return alertMessege = "정확한 학번과 이름을 입력해 주세요";
+                                            } else if(leaderNumber.toString() == str) {
+                                              return alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
+                                            } else if (usersWidgets.any((e) => (e.key! as ValueKey<String>).value.contains(str))) {
+                                              return alertMessege = "이미 등록된 이용자입니다!";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(width: 8 * ratio.width),
+                                        MyTextField(
+                                          enabled: !isSolo,
+                                          width: 92,
+                                          height: 32,
+                                          controller: _controllerName,
+                                          hint: '김가천',
+                                          format: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
+                                          ],
+                                          validator: (str) {
+                                            if (str!.isEmpty) {
+                                              return alertMessege = "정확한 학번과 이름을 입력해 주세요";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(width: 8 * ratio.width),
+                                        Material(
+                                          child: InkWell(
+                                            onTap: isSolo ? null : validateAddingUser,
+                                            customBorder: RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(12)),
+                                            child: Ink(
                                               width: 32 * ratio.width,
                                               height: 32 * ratio.height,
                                               decoration: BoxDecoration(
@@ -342,20 +358,30 @@ class _ReservatePageState extends State<ReservatePage> {
                                                 BorderRadius.circular(12),
                                               ),
                                               child: Center(
-                                                  child: Icon(AppinIcon.plus, size: 16))),
-                                        ),
-                                      )
-                                    ], // combined 리스트를 사용합니다.
+                                                child: Icon(
+                                                  AppinIcon.plus,
+                                                  size: 16,
+                                                  color: isSolo ? MGcolor.base4 : null,
+                                                )
+                                              )
+                                            ),
+                                          ),
+                                        )
+                                      ]
+                                    ),
                                   ),
                                 ),
                                 Positioned(
                                     left: 80 * ratio.width,
                                     top: 46 * ratio.height,
-                                    child: Text(alertMessege,
-                                        style: KR.label2.copyWith(
-                                            color: isSolo
-                                                ? MGcolor.base3
-                                                : MGcolor.brand_orig))
+                                    child: Text(
+                                      alertMessege,
+                                      style: KR.label2.copyWith(
+                                        color: isSolo
+                                            ? MGcolor.base4
+                                            : addUserGuideline
+                                      )
+                                    )
                                 ),
                               ]),
                             ),
@@ -466,110 +492,20 @@ class _ReservatePageState extends State<ReservatePage> {
   }
 
   void validateAddingUser() {
-    print("clicked");
-    if (_controllerName.text.isEmpty && _controllerNumber.text.length < 9) {
-      setState(() => alertMessege = "정확한 학번과 이름을 입력해 주세요");
-    } else if (usersWidgets
-        .any((widget) => widget.key == Key(_controllerNumber.text))) {
-      // 같은 Key를 가진 위젯이 이미 존재하면 추가하지 않습니다.
-      print('Same key already exists.');
-      setState(() => alertMessege = '이미 등록된 이용자입니다!');
-    } else if (_controllerNumber.text == leaderNumber) {
-      setState(() => alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!');
-    } else {
-      if (MediaQuery.of(context).viewInsets.bottom > 0) {
-        FocusScope.of(context).unfocus();
-      }
-      setState(() {
+    setState(() {
+      if (_formKey.currentState!.validate()) {
+        if (MediaQuery.of(context).viewInsets.bottom > 0) {
+          FocusScope.of(context).unfocus();
+        }
         alertMessege = "정상적으로 추가됐습니다";
+        addUserGuideline = MGcolor.brand_orig;
         usersList.add("${_controllerNumber.text} ${_controllerName.text}");
         usersWidgets.add(_MyUserBox("${_controllerNumber.text} ${_controllerName.text}"));
         _controllerNumber.clear();
         _controllerName.clear();
-      });
-    }
-  }
-
-  Future<void> reservate() async {
-    bool allClear = false;
-    late String title;
-    late Function() onPressed;
-
-    setState(() => loading = true);
-
-    if (selectedRoom == null) {
-      title = '회의실을 선택해주세요!';
-      onPressed = () => Navigator.pop(context);
-    } else if (selectedDate == null) {
-      title = '날짜를 선택해주세요!';
-      onPressed = () => Navigator.pop(context);
-    } else if (selectedEnter == null || selectedExit == null) {
-      title = '예약 시간을 입력해주세요!';
-      onPressed = () => Navigator.pop(context);
-    } else if (!isSolo && usersList.isEmpty) {
-      title = '추가 이용자를 입력해주세요!';
-      onPressed = () => Navigator.pop(context);
-    } else if (widget.reservate != null && _isSame()) {
-      title = '이전 내용과 같습니다.';
-      onPressed = () => Navigator.pop(context);
-    } else {
-      final startTime = '$selectedDate $selectedEnter';
-      final endTime = '$selectedDate $selectedExit';
-      String member = usersList.toString();
-      member = member.substring(1, member.length-1);
-      debugPrint("""
-      [reservation Info]
-        . room: $selectedRoom
-        . startTime: $startTime
-        . endTime: $endTime
-        . leader: $leaderNumber $leaderName
-        . member: $member""");
-
-      try {
-        int? uid = widget.reservate != null
-          ? await RestAPI.patchReservation(
-              reservationId: widget.reservate!.reservationId,
-              room: selectedRoom!,
-              startTime: startTime,
-              endTime: endTime,
-              leader: widget.reservate!.leaderInfo,
-              member: member
-            )
-          : await RestAPI.addReservation(
-              room: selectedRoom!,
-              startTime: startTime,
-              endTime: endTime,
-              member: member
-            );
-        if (uid == null) {
-          title = 'Not found';
-          onPressed = () => Navigator.pop(context);
-        } else {
-          allClear = true;
-          title = '예약되었습니다!';
-          onPressed = () {
-            listListener.add(StreamType.reservate);
-            Navigator.popUntil(context, (route) => route.isFirst);
-          };
-        }
-      } catch(_) {
-        title = '[400] 서버와의 통신에 문제가 있습니다.';
-        onPressed = () => Navigator.pop(context);
+      } else {
+        addUserGuideline = MGcolor.system_error;
       }
-    }
-
-    setState(() {
-      loading = false;
-      showDialog(
-          context: context,
-          barrierColor: Colors.black.withOpacity(0.25),
-          builder: (context) => CommentPopup(
-              title: title, onPressed: onPressed)
-      ).then((_) {
-        if (allClear) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      });
     });
   }
 
@@ -580,19 +516,31 @@ class _ReservatePageState extends State<ReservatePage> {
     && widget.reservate!.time == '$selectedEnter ~ $selectedExit';
   }
 
-  void availableTime() {
-    if (!canTime && selectedRoom != null && selectedDate != null) {
-      RestAPI.getAvailableTime(room: selectedRoom!, date: selectedDate!);
-      setState(() {
-        canTime = true;
-        _listKey.currentState!.insertAllItems(0, 3);
-      });
+  Future<List<bool>> availableTime() async {
+    List<bool> result = List.generate(26, (index) => false);
+    if (selectedRoom != null && selectedDate != null) {
+      try {
+        Map<int, bool>? times = await RestAPI
+            .getAvailableTime(room: selectedRoom!, date: selectedDate!);
+        int a = times!.keys.first, b = times.keys.last;
+        for (a - 1; a < b; a++) {
+          result[a] = !times[a]!;
+        }
+
+        if (widget.reservate != null) {
+          for (a = selectedEnter! - 1; a < selectedExit!; a++) {
+            result[a] = true;
+          }
+        }
+      } catch(e) {}
     }
+    debugPrint('available times: $result');
+    return result;
   }
 
   Widget _MyUserBox(String memberInfo) {
     return Container(
-      key: Key(memberInfo),
+      key: ValueKey<String>(memberInfo),
       width: 133 * ratio.width,
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
@@ -634,12 +582,97 @@ class _ReservatePageState extends State<ReservatePage> {
       ),
     );
   }
+
+  Future<void> reservate() async {
+    bool allClear = false;
+    late String title;
+    late Function() onPressed;
+
+    setState(() => loading = true);
+
+    if (selectedRoom == null) {
+      title = '회의실을 선택해주세요!';
+      onPressed = () => Navigator.pop(context);
+    } else if (selectedDate == null) {
+      title = '날짜를 선택해주세요!';
+      onPressed = () => Navigator.pop(context);
+    } else if (selectedEnter == null || selectedExit == null) {
+      title = '예약 시간을 입력해주세요!';
+      onPressed = () => Navigator.pop(context);
+    } else if (!isSolo && usersList.isEmpty) {
+      title = '추가 이용자를 입력해주세요!';
+      onPressed = () => Navigator.pop(context);
+    } else if (widget.reservate != null && _isSame()) {
+      title = '이전 내용과 같습니다.';
+      onPressed = () => Navigator.pop(context);
+    } else {
+      final startTime =
+          '$selectedDate ${selectedEnter! < 9 ? '0$selectedEnter': selectedEnter!}:00';
+      final endTime =
+          '$selectedDate ${selectedExit! < 9 ? '0$selectedExit' : selectedExit}:00';
+      String member = usersList.toString();
+      member = member.substring(1, member.length-1);
+      debugPrint("""
+      [reservation Info]
+        . room: $selectedRoom
+        . startTime: $startTime
+        . endTime: $endTime
+        . leader: $leaderNumber $leaderName
+        . member: $member""");
+
+      try {
+        int? uid = widget.reservate != null
+            ? await RestAPI.patchReservation(
+            reservationId: widget.reservate!.reservationId,
+            room: selectedRoom!,
+            startTime: startTime,
+            endTime: endTime,
+            leader: widget.reservate!.leaderInfo,
+            member: member
+        )
+            : await RestAPI.addReservation(
+            room: selectedRoom!,
+            startTime: startTime,
+            endTime: endTime,
+            member: member
+        );
+        if (uid == null) {
+          title = 'Not found';
+          onPressed = () => Navigator.pop(context);
+        } else {
+          allClear = true;
+          title = '예약되었습니다!';
+          onPressed = () {
+            listListener.add(StreamType.reservate);
+            Navigator.popUntil(context, (route) => route.isFirst);
+          };
+        }
+      } catch(_) {
+        title = '[400] 서버와의 통신에 문제가 있습니다.';
+        onPressed = () => Navigator.pop(context);
+      }
+    }
+
+    setState(() {
+      loading = false;
+      showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.25),
+          builder: (context) => CommentPopup(
+              title: title, onPressed: onPressed)
+      ).then((_) {
+        if (allClear) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      });
+    });
+  }
 }
 
 ///커스텀 컨테이너
 class CustomContainer extends StatelessWidget {
   final EdgeInsets? margin;
-  final List<Widget> content;
+  final Widget content;
   final List<Widget>? additionalContent;
   final String title;
   final int height;
@@ -672,9 +705,9 @@ class CustomContainer extends StatelessWidget {
         Positioned(
           left: 80 * ratio.width,
           top: 10 * ratio.height,
-          child: Row(
-            children: content, // combined 리스트를 사용합니다.
-          ),
+          width: 262 * ratio.width,
+          height: 32 * ratio.height,
+          child: content
         ),
         ...?additionalContent //추가 위젯들 들어가는 곳
       ]),
@@ -817,6 +850,7 @@ class MyTextField extends StatelessWidget {
   final int height;
   final TextEditingController controller;
   final String hint;
+  final String? Function(String?)? validator;
   final List<TextInputFormatter>? format;
 
   const MyTextField({
@@ -825,6 +859,7 @@ class MyTextField extends StatelessWidget {
     required this.height,
     required this.controller,
     required this.hint,
+    this.validator,
     this.format,
     super.key,
   });
@@ -834,8 +869,9 @@ class MyTextField extends StatelessWidget {
     return SizedBox(
       width: width * ratio.width,
       height: height * ratio.height,
-      child: TextField(
+      child: TextFormField(
         enabled: enabled,
+        validator: validator,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
         style: KR.parag2,
@@ -844,6 +880,11 @@ class MyTextField extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(0),
           hintText: hint,
+          errorStyle: TextStyle(fontSize: 0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(color: MGcolor.brand_orig, width: 1),
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
             borderSide: BorderSide(color: MGcolor.brand_orig, width: 2),
@@ -856,6 +897,14 @@ class MyTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             borderSide: BorderSide(color: MGcolor.base4, width: 1.2),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(color: MGcolor.system_error, width: 1)
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(color: MGcolor.system_error, width: 2)
+          )
         )
       ),
     );
