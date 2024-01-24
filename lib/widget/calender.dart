@@ -88,141 +88,139 @@ class _CustomCalenderState extends State<CustomCalender> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constrains) =>
-        SizedBox(
-          width: 336 * ratio.width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: EN.parag1.copyWith(color: MGcolor.base1)),
-              SizedBox(height: 10 * ratio.height),
-              Table(
-                children: <TableRow>[
-                  TableRow(
-                    children: ['일', '월', '화', '수', '목', '금', '토']
-                        .map((e) => Padding(
-                          padding: EdgeInsets.only(bottom: 6 * ratio.height),
-                          child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
-                        ))
-                        .toList()
-                  ),
-                  TableRow(
-                    children: List.generate(7, (index) {
-                      late TextStyle textStyle;
-                      late BoxDecoration boxDecoration;
-                      DateTime day = rangeFirst.add(Duration(days: index));
+    return SizedBox(
+      width: 336 * ratio.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: EN.parag1.copyWith(color: MGcolor.base1)),
+          SizedBox(height: 10 * ratio.height),
+          Table(
+            children: <TableRow>[
+              TableRow(
+                children: ['일', '월', '화', '수', '목', '금', '토']
+                    .map((e) => Padding(
+                      padding: EdgeInsets.only(bottom: 6 * ratio.height),
+                      child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
+                    ))
+                    .toList()
+              ),
+              TableRow(
+                children: List.generate(7, (index) {
+                  late TextStyle textStyle;
+                  late BoxDecoration boxDecoration;
+                  DateTime day = rangeFirst.add(Duration(days: index));
 
-                      if (selectedDay != null && isSameDate(selectedDay!, day)) {
-                        textStyle = widget.cellStyle.selectedDateTextStyle;
-                        boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                      }
-                      else if (isSameDate(widget.first, day)) {
-                        textStyle = widget.cellStyle.todayTextStyle;
-                        boxDecoration = widget.cellStyle.todayBoxDecoration;
-                      }
-                      else if (day.isBefore(widget.first)) {
-                        textStyle = widget.cellStyle.rangeOutDateTextStyle;
-                        boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
-                      }
-                      else {
-                        textStyle = widget.cellStyle.normalDateTextStyle;
-                        boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                      }
+                  if (selectedDay != null && isSameDate(selectedDay!, day)) {
+                    textStyle = widget.cellStyle.selectedDateTextStyle;
+                    boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                  }
+                  else if (isSameDate(widget.first, day)) {
+                    textStyle = widget.cellStyle.todayTextStyle;
+                    boxDecoration = widget.cellStyle.todayBoxDecoration;
+                  }
+                  else if (day.isBefore(widget.first)) {
+                    textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                    boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+                  }
+                  else {
+                    textStyle = widget.cellStyle.normalDateTextStyle;
+                    boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                  }
 
-                      return GestureDetector(
-                        onTap: () => toSelect(day),
-                        child: Container(
-                          height: widget.rowHeight,
-                          width: widget.rowWidth,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.fromLTRB(
+                  return GestureDetector(
+                    onTap: () => toSelect(day),
+                    child: Container(
+                      height: widget.rowHeight,
+                      width: widget.rowWidth,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.fromLTRB(
+                        5 * ratio.width,
+                        0,
+                        5 * ratio.width,
+                        10 * ratio.height
+                      ),
+                      decoration: boxDecoration,
+                      child: Text(day.day.toString(), style: textStyle),
+                    ),
+                  );
+                }).toList()
+              ),
+              TableRow(
+                children: List.generate(7, (index) {
+                  late TextStyle textStyle;
+                  late BoxDecoration boxDecoration;
+                  DateTime day = rangeFirst.add(Duration(days: 7+index));
+
+                  if (selectedDay != null && selectedDay!.day == day.day) {
+                    textStyle = widget.cellStyle.selectedDateTextStyle;
+                    boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                  }
+                  else {
+                    textStyle = widget.cellStyle.normalDateTextStyle;
+                    boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                  }
+
+                  return GestureDetector(
+                    onTap: () => toSelect(day),
+                    child: Container(
+                      height: widget.rowHeight,
+                      width: widget.rowWidth,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.fromLTRB(
+                          5 * ratio.width,
+                          0,
+                          5 * ratio.width,
+                          10 * ratio.height
+                      ),
+                      decoration: boxDecoration,
+                      child: Text(day.day.toString(), style: textStyle),
+                    ),
+                  );
+                }).toList()
+              ),
+              if (rangeLast.day - rangeFirst.day != 13)
+                TableRow(
+                  children: List.generate(7, (index) {
+                    late TextStyle textStyle;
+                    late BoxDecoration boxDecoration;
+                    DateTime day = rangeFirst.add(Duration(days: 14+index));
+
+                    if (selectedDay != null && selectedDay! == day) {
+                      textStyle = widget.cellStyle.selectedDateTextStyle;
+                      boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                    }
+                    else if (day.isAfter(widget.last)) {
+                      textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                      boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+                    }
+                    else {
+                      textStyle = widget.cellStyle.normalDateTextStyle;
+                      boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                    }
+
+                    return GestureDetector(
+                      onTap: () => toSelect(day),
+                      child: Container(
+                        height: widget.rowHeight,
+                        width: widget.rowWidth,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(
                             5 * ratio.width,
                             0,
                             5 * ratio.width,
                             10 * ratio.height
-                          ),
-                          decoration: boxDecoration,
-                          child: Text(day.day.toString(), style: textStyle),
                         ),
-                      );
-                    }).toList()
-                  ),
-                  TableRow(
-                    children: List.generate(7, (index) {
-                      late TextStyle textStyle;
-                      late BoxDecoration boxDecoration;
-                      DateTime day = rangeFirst.add(Duration(days: 7+index));
-
-                      if (selectedDay != null && selectedDay!.day == day.day) {
-                        textStyle = widget.cellStyle.selectedDateTextStyle;
-                        boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                      }
-                      else {
-                        textStyle = widget.cellStyle.normalDateTextStyle;
-                        boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                      }
-
-                      return GestureDetector(
-                        onTap: () => toSelect(day),
-                        child: Container(
-                          height: widget.rowHeight,
-                          width: widget.rowWidth,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.fromLTRB(
-                              5 * ratio.width,
-                              0,
-                              5 * ratio.width,
-                              10 * ratio.height
-                          ),
-                          decoration: boxDecoration,
-                          child: Text(day.day.toString(), style: textStyle),
-                        ),
-                      );
-                    }).toList()
-                  ),
-                  if (rangeLast.day - rangeFirst.day != 13)
-                    TableRow(
-                      children: List.generate(7, (index) {
-                        late TextStyle textStyle;
-                        late BoxDecoration boxDecoration;
-                        DateTime day = rangeFirst.add(Duration(days: 14+index));
-
-                        if (selectedDay != null && selectedDay! == day) {
-                          textStyle = widget.cellStyle.selectedDateTextStyle;
-                          boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                        }
-                        else if (day.isAfter(widget.last)) {
-                          textStyle = widget.cellStyle.rangeOutDateTextStyle;
-                          boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
-                        }
-                        else {
-                          textStyle = widget.cellStyle.normalDateTextStyle;
-                          boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                        }
-
-                        return GestureDetector(
-                          onTap: () => toSelect(day),
-                          child: Container(
-                            height: widget.rowHeight,
-                            width: widget.rowWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.fromLTRB(
-                                5 * ratio.width,
-                                0,
-                                5 * ratio.width,
-                                10 * ratio.height
-                            ),
-                            decoration: boxDecoration,
-                            child: Text(day.day.toString(), style: textStyle),
-                          ),
-                        );
-                      }).toList()
-                    ),
-                ],
-              ),
+                        decoration: boxDecoration,
+                        child: Text(day.day.toString(), style: textStyle),
+                      ),
+                    );
+                  }).toList()
+                ),
             ],
-          )
-        )
+          ),
+        ],
+      )
     );
   }
 }
