@@ -12,8 +12,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController idController = TextEditingController();
-  TextEditingController pwController = TextEditingController();
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController pwController = TextEditingController();
   bool isLoginButtonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -73,80 +74,86 @@ class _LoginState extends State<Login> {
                     ),
 
                     /// input
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: ratio.width * 358,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: MGcolor.btn_active),
-                          ),
-                          child: TextField(
-                            controller: idController,
-                            decoration: InputDecoration(
-                              hintText: '아이디를 입력하세요',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: ratio.width * 12,
-                                  vertical: ratio.height * 12
+                    Form(
+                      key: key,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: ratio.width * 358,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: MGcolor.btn_active),
+                            ),
+                            child: TextFormField(
+                              controller: idController,
+                              decoration: InputDecoration(
+                                hintText: '아이디를 입력하세요',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: ratio.width * 12,
+                                    vertical: ratio.height * 12
+                                ),
+                                hintStyle: KR.subtitle3.copyWith(
+                                  color: MGcolor.base4,
+                                ),
                               ),
-                              hintStyle: KR.subtitle3.copyWith(
-                                color: MGcolor.base4,
-                              ),
+                              validator: (val) {
+                                return val == null ? '' : null;
+                              },
                             ),
                           ),
-                        ),
-                        SizedBox(height: ratio.height * 10),
-                        Container(
-                          width: ratio.width * 358,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: MGcolor.btn_active),
-                          ),
-                          child: Stack(
-                            children: [
-                              TextField(
-                                controller: pwController,
-                                obscureText: !isPasswordVisible,
-                                decoration: InputDecoration(
-                                  hintText: '비밀번호를 입력하세요',
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: ratio.width * 12,
-                                      vertical: ratio.height * 12
-                                  ),
-                                  hintStyle: KR.subtitle3.copyWith(
-                                    color: MGcolor.base4,
+                          SizedBox(height: ratio.height * 10),
+                          Container(
+                            width: ratio.width * 358,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: MGcolor.btn_active),
+                            ),
+                            child: Stack(
+                              children: [
+                                TextField(
+                                  controller: pwController,
+                                  obscureText: !isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    hintText: '비밀번호를 입력하세요',
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: ratio.width * 12,
+                                        vertical: ratio.height * 12
+                                    ),
+                                    hintStyle: KR.subtitle3.copyWith(
+                                      color: MGcolor.base4,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                right: ratio.width * 3,
-                                child: IconButton(
-                                  icon: Icon(
-                                    isPasswordVisible
-                                        ? AppinIcon.eye_on
-                                        : AppinIcon.eye_off,
-                                    color: Colors.grey,
+                                Positioned(
+                                  right: ratio.width * 3,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      isPasswordVisible
+                                          ? AppinIcon.eye_on
+                                          : AppinIcon.eye_off,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      setState(() =>
+                                      isPasswordVisible = !isPasswordVisible);
+                                    },
                                   ),
-                                  onPressed: () {
-                                    setState(() =>
-                                    isPasswordVisible = !isPasswordVisible);
-                                  },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: ratio.height * 4),
-                        Text(
-                            errorMessage,
-                            style: KR.label2.copyWith(color: MGcolor.system_error)
-                        ),
-                      ],
+                          SizedBox(height: ratio.height * 4),
+                          Text(
+                              errorMessage,
+                              style: KR.label2.copyWith(color: MGcolor.system_error)
+                          ),
+                        ],
+                      ),
                     ),
 
                     /// button
@@ -178,6 +185,10 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
+  }
+
+  void validate() {
+
   }
 
   /// using api
