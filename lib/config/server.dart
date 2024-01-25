@@ -43,11 +43,12 @@ class Session {
     _token = preferences.getString(_storageKey);
 
     if (first == null || first == true) {
-      return Future(() => '');
+      throw true;
     } else if (_token == null) {
       throw Exception("No Session");
     }
 
+    debugPrint("token = $_token");
     return Future(() => _token!);
   }
 
@@ -58,6 +59,7 @@ class Session {
   }
 
   Future<bool> clear() async {
+    debugPrint("Called Session.clear()");
     final preferences = await SharedPreferences.getInstance();
     _token = null;
     return preferences.remove(_storageKey);
@@ -119,13 +121,9 @@ class APIRequest {
 
       try {
         final sessionToken = await session.get();
-        if (sessionToken.isNotEmpty) {
-          setCookies = {_SESSION_COOKIE_NAME: sessionToken};
-        } else {
-          setCookies = {};
-        }
+        setCookies = {_SESSION_COOKIE_NAME: sessionToken};
       } catch (_) {
-        // throw Exception('\n[Error] related cookie: $e');
+        setCookies = {};
       }
 
       final info = await PackageInfo.fromPlatform();
@@ -203,12 +201,16 @@ class RestAPI {
     required String id,
     required String pw
   }) async {
-    final api = APIRequest('user');
-    Map<String, dynamic> response = await api.send(
-      HTTPMethod.POST,
-      params: {"ID": id, "PW": pw}
-    );
-    return response.isEmpty ? null : User.fromJson(response);
+    try {
+      final api = APIRequest('user');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.POST,
+          params: {"ID": id, "PW": pw}
+      );
+      return User.fromJson(response);
+    } catch(_) {
+      return null;
+    }
   }
 
   /// 내 모든 예약
