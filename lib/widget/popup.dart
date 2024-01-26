@@ -318,15 +318,14 @@ class AdmissionPopup extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               GestureDetector(
-                onTap: enlargePhoto,
+                onTap: () => enlargePhoto(context),
                 child: Container(
                   width: ratio.height * 246,
                   height: ratio.height * 200,
                   decoration: ShapeDecoration(
-                      color: Colors.grey,
-                      // image: DecorationImage(
-                      //     fit: BoxFit.fitHeight,
-                      //     image: AssetImage(ImgPath.home_img4)),
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: MemoryImage(item.photo)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))
                   ),
@@ -370,8 +369,39 @@ class AdmissionPopup extends StatelessWidget {
     );
   }
 
-  void enlargePhoto() {
-    print("사진 확대");
+  void enlargePhoto(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.55),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: ratio.height * 150,
+            bottom: ratio.height * 44
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.memory(
+                item.photo,
+                height: ratio.height * 594,
+                fit: BoxFit.fill,
+              ),
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                style: IconButton.styleFrom(
+                  foregroundColor: MGcolor.btn_active,
+                  backgroundColor: MGcolor.btn_inactive,
+                  fixedSize: Size(ratio.width * 48, ratio.width * 48)
+                ),
+                icon: Icon(AppinIcon.cross)
+              )
+            ]
+          ),
+        );
+      }
+    );
   }
 }
 

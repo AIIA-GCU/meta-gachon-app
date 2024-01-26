@@ -160,8 +160,13 @@ class CustomListItem extends StatelessWidget {
                   width: ratio.height * 74,
                   height: ratio.height * 74,
                   decoration: BoxDecoration(
-                      color: MGcolor.base4,
-                      borderRadius: BorderRadius.circular(8)))
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: MemoryImage(photo!),
+                      fit: BoxFit.fill
+                    )
+                  )
+              )
           ],
         ),
       ),
