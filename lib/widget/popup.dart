@@ -386,7 +386,7 @@ class AdmissionPopup extends StatelessWidget {
               Image.memory(
                 item.photo,
                 height: ratio.height * 594,
-                fit: BoxFit.fill,
+                fit: BoxFit.fitWidth,
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
