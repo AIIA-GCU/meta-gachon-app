@@ -26,7 +26,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
     super.initState();
     _stream.listen((event) => _event(event));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -76,29 +76,39 @@ class _ReservationListPageState extends State<ReservationListPage> {
               child: Text('내 예약 확인하기', style: KR.subtitle1),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: ratio.height * 30),
-              child: reservates.isEmpty
-                  ? Container(
-                      height: ratio.height * 594,
-                      alignment: Alignment.center,
-                      child: Text(
-                        "아직 인증이 없어요!",
-                        style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                      )
-                    )
-                  : Column(
-                      children: reservates.map((e) {
-                        List<String> temp = e.leaderInfo.split(' ');
-                        return CustomListItem(
-                          uid: e.reservationId,
-                          name: temp[1],
-                          stuNum: int.parse(temp[0]),
-                          room: e.room,
-                          date: e.date,
-                          time: e.time,
+                padding: EdgeInsets.only(bottom: ratio.height * 30),
+                child: FutureBuilder<List<Reservate>?>(
+                    future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                            height: ratio.height * 594,
+                            alignment: Alignment.center,
+                            child: Text(
+                                '아직 예약 내역이 없어요!',
+                                style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                            )
                         );
-                      }).toList()
-                    )
+                      }
+
+                      if (snapshot.hasData) {
+                        reservates = snapshot.data!;
+                      }
+                      return Column(
+                          children: reservates.map((e) {
+                            List<String> temp = e.leaderInfo.split(' ');
+                            return CustomListItem(
+                              uid: e.reservationId,
+                              name: temp[1],
+                              stuNum: int.parse(temp[0]),
+                              room: e.room,
+                              date: e.date,
+                              time: e.time,
+                            );
+                          }).toList()
+                      );
+                    }
+                )
             )
           ]),
         ),
@@ -108,7 +118,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
   void _event(StreamType event) {
     if (mounted && event == StreamType.reservate) {
-      setState(() {});
+      setState(() => reservates.clear());
     }
   }
 

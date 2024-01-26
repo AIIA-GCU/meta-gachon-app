@@ -22,35 +22,49 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 26,
-        leading: IconButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            icon: Icon(AppinIcon.back, size: 24),
-            onPressed: _onPressed),
-        title: Text('내 인증', style: KR.subtitle1.copyWith(color: MGcolor.base1))
-      ),
-      body: myAdmits.isEmpty
-          ? Center(child: Text(
-              "아직 인증이 없어요!",
-              style: KR.subtitle4.copyWith(color: MGcolor.base3),
-            ))
-          : Column(
-              children: myAdmits.map((e) {
-                List<String> temp = e.leaderInfo.split(' ');
-                return CustomListItem(
-                  uid: e.admissionId,
-                  name: temp[1],
-                  stuNum: int.parse(temp[0]),
-                  room: e.room,
-                  date: e.date,
-                  time: e.time,
-                  photo: e.photo,
-                  review: e.review,
+        appBar: AppBar(
+            leadingWidth: 26,
+            leading: IconButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                icon: Icon(AppinIcon.back, size: 24),
+                onPressed: _onPressed),
+            title: Text('내 인증', style: KR.subtitle1.copyWith(color: MGcolor.base1))
+        ),
+        body: FutureBuilder<List<Admit>?>(
+            future: myAdmits.isEmpty ? RestAPI.getMyAdmission() : null,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    height: ratio.height * 594,
+                    alignment: Alignment.center,
+                    child: Text(
+                        '아직 인증이 없어요!',
+                        style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                    )
                 );
-              }).toList()
-            )
+              }
+
+              if (snapshot.hasData) {
+                myAdmits = snapshot.data!;
+              }
+              return Column(
+                  children: myAdmits.map((e) {
+                    List<String> temp = e.leaderInfo.split(' ');
+                    return CustomListItem(
+                      uid: e.admissionId,
+                      name: temp[1],
+                      stuNum: int.parse(temp[0]),
+                      room: e.room,
+                      date: e.date,
+                      time: e.time,
+                      photo: e.photo,
+                      review: e.review,
+                    );
+                  }).toList()
+              );
+            }
+        )
     );
   }
 

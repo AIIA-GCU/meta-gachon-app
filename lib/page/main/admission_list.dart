@@ -26,11 +26,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   @override
   void initState() {
     super.initState();
-    _stream.listen((event) {
-      if (event == "admission") {
-        setState(() {});
-      }
-    });
+    _stream.listen((event) => _event(event));
   }
 
   @override
@@ -46,8 +42,8 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
               color: Colors.white,
             ),
             padding: EdgeInsets.symmetric(
-              horizontal: ratio.width * 16,
-              vertical: ratio.height * 16
+                horizontal: ratio.width * 16,
+                vertical: ratio.height * 16
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,12 +64,12 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '강의실 이용 끝!',
-                          style: KR.parag2.copyWith(color: MGcolor.base3)
+                            '강의실 이용 끝!',
+                            style: KR.parag2.copyWith(color: MGcolor.base3)
                         ),
                         Text(
-                          '이제 인증하러 가볼까요?',
-                          style: KR.subtitle1
+                            '이제 인증하러 가볼까요?',
+                            style: KR.subtitle1
                         ),
                       ],
                     )
@@ -90,10 +86,10 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       onPressed: () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => MyAdmissionPage())),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: MGcolor.btn_inactive,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                        fixedSize: Size(ratio.width * 159, ratio.height * 40)
+                          backgroundColor: MGcolor.btn_inactive,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          fixedSize: Size(ratio.width * 159, ratio.height * 40)
                       ),
                       child: Text(
                         '내 인증 확인하기',
@@ -103,8 +99,8 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     /// <인증하러 가기>
                     ElevatedButton(
                       onPressed: () {},
-                          // Navigator.of(context)
-                          // .push(MaterialPageRoute(builder: (context) => AdmitPage())),
+                      // Navigator.of(context)
+                      // .push(MaterialPageRoute(builder: (context) => AdmitPage())),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: MGcolor.btn_active,
                           shape: RoundedRectangleBorder(
@@ -124,38 +120,57 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
           // 리스트
           Padding(
-            padding: EdgeInsets.only(top: ratio.height * 30),
-            child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
+              padding: EdgeInsets.only(top: ratio.height * 30),
+              child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: ratio.height * 30),
-            child: admits.isEmpty
-                ? Container(
-                    height: ratio.height * 594,
-                    alignment: Alignment.center,
-                    child: Text(
-                      "아직 인증이 없어요!",
-                      style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                    )
-                  )
-                : Column(
-                    children: admits.map((e) {
-                      List<String> temp = e.leaderInfo.split(' ');
-                      return CustomListItem(
-                          uid: e.admissionId,
-                          name: temp[1],
-                          stuNum: int.parse(temp[0]),
-                          room: e.room,
-                          date: e.date,
-                          time: e.time,
-                          photo: e.photo,
-                          review: e.review,
+              padding: EdgeInsets.only(bottom: ratio.height * 30),
+              child: FutureBuilder<List<Admit>?>(
+                  future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                          height: ratio.height * 594,
+                          alignment: Alignment.center,
+                          child: Text(
+                              '아직 인증이 없어요!',
+                              style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                          )
                       );
-                    }).toList()
-                  )
+                    }
+
+                    if (snapshot.hasData) {
+                      admits = snapshot.data!;
+                    }
+                    return Column(
+                        children: admits.map((e) {
+                          List<String> temp = e.leaderInfo.split(' ');
+                          return CustomListItem(
+                            uid: e.admissionId,
+                            name: temp[1],
+                            stuNum: int.parse(temp[0]),
+                            room: e.room,
+                            date: e.date,
+                            time: e.time,
+                            photo: e.photo,
+                            review: e.review,
+                          );
+                        }).toList()
+                    );
+                  }
+              )
           )
         ]),
       ),
     );
+  }
+
+  void _event(StreamType event) {
+    if (mounted && event == StreamType.admit) {
+      setState(() {
+        admits.clear();
+        myAdmits.clear();
+      });
+    }
   }
 }
