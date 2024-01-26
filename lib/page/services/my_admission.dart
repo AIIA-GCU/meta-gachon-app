@@ -31,45 +31,26 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
             onPressed: _onPressed),
         title: Text('내 인증', style: KR.subtitle1.copyWith(color: MGcolor.base1))
       ),
-      body: FutureBuilder<List<Admit>?>(
-        future: RestAPI.getMyAdmission(),
-        initialData: [],
-        builder: (context, snapshot) {
-          debugPrint(snapshot.toString());
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-              return ProgressWidget();
-            case ConnectionState.active:
-            case ConnectionState.done:
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: snapshot.data!
-                        .map((e) {
-                          final temp = e.leaderInfo.split(' ');
-                          return CustomListItem(
-                            uid: e.admissionId,
-                            name: temp[1],
-                            stuNum: int.parse(temp[0]),
-                            room: e.room,
-                            date: e.date,
-                            time: e.time,
-                            // membersInfo: e.members,
-                          );
-                        })
-                        .toList()
-                  )
+      body: myAdmits.isEmpty
+          ? Center(child: Text(
+              "아직 인증이 없어요!",
+              style: KR.subtitle4.copyWith(color: MGcolor.base3),
+            ))
+          : Column(
+              children: myAdmits.map((e) {
+                List<String> temp = e.leaderInfo.split(' ');
+                return CustomListItem(
+                  uid: e.admissionId,
+                  name: temp[1],
+                  stuNum: int.parse(temp[0]),
+                  room: e.room,
+                  date: e.date,
+                  time: e.time,
+                  photo: e.photo,
+                  review: e.review,
                 );
-              } else {
-                return Center(child: Text(
-                  "아직 인증이 없어요!",
-                  style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                ));
-              }
-          }
-        }
-      )
+              }).toList()
+            )
     );
   }
 

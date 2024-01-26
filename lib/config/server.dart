@@ -20,14 +20,17 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// save
+late User myInfo;
+late List<Reservate> reservates;
+late List<Admit> admits;
+late List<Admit> myAdmits;
+
+// restapi
 enum HTTPMethod { GET, POST, PATCH, DELETE }
 
 const int SUCCESS_CODE = 200;
 const int FAILURE_CODE = 400;
-
-// 임시
-late User myInfo;
-List<Notice> notifis = [];
 
 class Session {
   static const String _storageKey = "sessionToken";
@@ -407,6 +410,7 @@ class RestAPI {
   }
 }
 
+// objects
 class User {
   final String _name;
   final int _stuNum;

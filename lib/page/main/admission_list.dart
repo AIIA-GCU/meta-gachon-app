@@ -129,45 +129,30 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: ratio.height * 30),
-            child: FutureBuilder<List<Admit>?>(
-              future: RestAPI.getAllAdmission(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                    return ProgressWidget();
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      return Column(
-                          children: snapshot.data!
-                              .map((e) {
-                                final temp = e.leaderInfo.split(' ');
-                                return CustomListItem(
-                                  uid: e.admissionId,
-                                  name: temp[1],
-                                  stuNum: int.parse(temp[0]),
-                                  room: e.room,
-                                  date: e.date,
-                                  time: e.time,
-                                  // membersInfo: e.members,
-                                );
-                              })
-                              .toList()
+            child: admits.isEmpty
+                ? Container(
+                    height: ratio.height * 594,
+                    alignment: Alignment.center,
+                    child: Text(
+                      "아직 인증이 없어요!",
+                      style: KR.subtitle4.copyWith(color: MGcolor.base3),
+                    )
+                  )
+                : Column(
+                    children: admits.map((e) {
+                      List<String> temp = e.leaderInfo.split(' ');
+                      return CustomListItem(
+                          uid: e.admissionId,
+                          name: temp[1],
+                          stuNum: int.parse(temp[0]),
+                          room: e.room,
+                          date: e.date,
+                          time: e.time,
+                          photo: e.photo,
+                          review: e.review,
                       );
-                    } else {
-                      return Container(
-                          height: ratio.height * 594,
-                          alignment: Alignment.center,
-                          child: Text(
-                            "아직 인증이 없어요!",
-                            style: KR.subtitle4.copyWith(color: MGcolor.base3),
-                          )
-                      );
-                    }
-                }
-              }
-            )
+                    }).toList()
+                  )
           )
         ]),
       ),

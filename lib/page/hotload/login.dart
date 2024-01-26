@@ -187,10 +187,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void validate() {
-
-  }
-
   /// using api
   Future<void> tryLogin() async {
     if (isLoginButtonEnabled) {
@@ -203,7 +199,13 @@ class _LoginState extends State<Login> {
         pw: pwController.text
       );
       if (user != null) {
+        // save data local
         myInfo = user;
+        reservates = await RestAPI.getAllReservation() ?? [];
+        admits = await RestAPI.getAllAdmission() ?? [];
+        myAdmits = await RestAPI.getMyAdmission() ?? [];
+
+        // appaer popup screen
         setState(() {
           isLoading = false;
           showDialog(
