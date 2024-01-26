@@ -512,7 +512,7 @@ class Admit {
   final String _time;
   // final List<String> _members;
   final String _review;
-  final ByteData _photo;
+  final Uint8List _photo;
 
   int get admissionId => _admisstionId;
 
@@ -528,7 +528,7 @@ class Admit {
 
   String get review => _review;
 
-  ByteData get photo => _photo;
+  Uint8List get photo => _photo;
 
   Admit(
       this._admisstionId,
@@ -552,14 +552,14 @@ class Admit {
   /// - "photo": "9 9JdiONJDJIOFofjdijf...." (base64 포멧)
   ///
   factory Admit.fromJson(Map<String, dynamic> json) => Admit(
-      json['admissionId'],
+      json['admissionID'],
       json['leaderInfo'],
       json['room'],
       json['date'],
       json['time'],
       // json['membersInfo'],
       json['review'],
-      json['photo']
+      base64Decode(json['photo'])
   );
 }
 
