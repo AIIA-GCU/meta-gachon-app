@@ -211,14 +211,7 @@ class _LoginState extends State<Login> {
               barrierColor: Colors.black.withOpacity(0.25),
               builder: (BuildContext context) => CommentPopup(
                   title: '로그인되었습니다!',
-                  onPressed: () async {
-                    final preference = await SharedPreferences.getInstance();
-                    if (preference.getBool('firstTime')! == true) {
-                      preference.setBool('firstTime', false);
-                      debugPrint("You logined at first!");
-                    }
-                    Navigator.pop(context);
-                  }
+                  onPressed: () => Navigator.pop(context)
               )
           ).then((_) => Navigator.pushAndRemoveUntil(
               context,

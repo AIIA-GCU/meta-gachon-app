@@ -207,6 +207,11 @@ class RestAPI {
           HTTPMethod.POST,
           params: {"ID": id, "PW": pw}
       );
+      final preference = await SharedPreferences.getInstance();
+      if (preference.getBool('firstTime')! == true) {
+        preference.setBool('firstTime', false);
+        debugPrint("You logined at first!");
+      }
       return User.fromJson(response);
     } catch(_) {
       return null;
