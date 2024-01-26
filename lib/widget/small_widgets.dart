@@ -114,7 +114,7 @@ class CustomListItem extends StatelessWidget {
   final String date;
   final String time;
   final String? review;
-  final ByteData? photo;
+  final Uint8List? photo;
 
   late final bool isReservation;
 

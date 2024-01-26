@@ -31,7 +31,7 @@ Future<void> main() async {
       start = OnBoarding();
     } else {
       await new Session().get();
-      start = MainFrame();
+      start = Login();
     }
   } catch(e) {
     debugPrint("token is empty");
