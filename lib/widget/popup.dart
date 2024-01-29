@@ -3,6 +3,7 @@ import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/services/admit.dart';
 import 'package:mata_gachon/page/services/reservate.dart';
+import 'package:mata_gachon/page/services/using_camera.dart';
 
 class AlertPopup extends StatelessWidget {
   const AlertPopup({
@@ -286,8 +287,11 @@ class ReservationPopup extends StatelessWidget {
     );
   }
 
-  void _validateQR() {
-
+  void _validateQR(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context)
+      => QrScannerPage(onMatchedCode: () => Navigator.pop(context)))
+    );
   }
 
   void _prolong() {
