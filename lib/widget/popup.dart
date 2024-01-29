@@ -324,7 +324,7 @@ class AdmissionPopup extends StatelessWidget {
                   height: ratio.height * 200,
                   decoration: ShapeDecoration(
                       image: DecorationImage(
-                          fit: BoxFit.fill,
+                          fit: BoxFit.fitWidth,
                           image: MemoryImage(item.photo)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))
