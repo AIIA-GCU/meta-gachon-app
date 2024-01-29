@@ -103,6 +103,7 @@ class APIRequest {
   Future<dynamic> send(HTTPMethod method,
       {Map<String, dynamic>? params}) async {
     try {
+      /// Todo: 세션 클래스 작동 방식 확인
       final session = Session();
 
       final uri = Uri.parse(_BASE_URL + _path);

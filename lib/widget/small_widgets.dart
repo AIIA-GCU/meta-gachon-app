@@ -228,18 +228,21 @@ class TileButton extends StatelessWidget {
     this.onTap,
     this.alignment,
     this.padding,
+    this.borderRadius,
     required this.child
   });
 
   final VoidCallback? onTap;
   final Alignment? alignment;
   final EdgeInsetsGeometry? padding;
+  final BorderRadius? borderRadius;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: borderRadius,
       child: Container(
         padding: padding,
         alignment: alignment,

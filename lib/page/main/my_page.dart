@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/services/my_admission.dart';
+import 'package:mata_gachon/page/services/setting.dart';
 import 'package:mata_gachon/widget/popup.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({
@@ -276,8 +276,8 @@ class MyPage extends StatelessWidget {
   }
 
   void _floatSettingPage(BuildContext context) {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(builder: (context) => ));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => SettingPage()));
   }
 }
 
