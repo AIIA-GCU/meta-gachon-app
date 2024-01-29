@@ -44,7 +44,7 @@ class AlertPopup extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.base6,
+                    backgroundColor: MGcolor.base7,
                     fixedSize: Size(ratio.width * 147, ratio.height * 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))

@@ -147,7 +147,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                   normalDateTextStyle:
                                   EN.parag1.copyWith(color: MGcolor.base1),
                                   normalDateBoxDecoration: BoxDecoration(
-                                      color: MGcolor.base6,
+                                      color: MGcolor.base7,
                                       borderRadius: BorderRadius.circular(4)),
                                   selectedDateTextStyle:
                                   EN.parag1.copyWith(color: Colors.white),
@@ -157,12 +157,12 @@ class _ReservatePageState extends State<ReservatePage> {
                                   todayTextStyle:
                                   EN.parag1.copyWith(color: MGcolor.btn_active),
                                   todayBoxDecoration: BoxDecoration(
-                                      color: MGcolor.base6,
+                                      color: MGcolor.base7,
                                       borderRadius: BorderRadius.circular(4)),
                                   rangeOutDateTextStyle:
-                                  EN.parag1.copyWith(color: MGcolor.base5),
+                                  EN.parag1.copyWith(color: MGcolor.base6),
                                   rangeOutDateBoxDecoration: BoxDecoration(
-                                      color: MGcolor.base6,
+                                      color: MGcolor.base7,
                                       borderRadius: BorderRadius.circular(4)),
                                 ),
                                 onSelected: (value) {
@@ -308,7 +308,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                   width: 32 * ratio.width,
                                                   height: 32 * ratio.height,
                                                   decoration: BoxDecoration(
-                                                    color: MGcolor.base6,
+                                                    color: MGcolor.base7,
                                                     borderRadius:
                                                     BorderRadius.circular(12),
                                                   ),
@@ -753,7 +753,7 @@ class CustomDropdown extends StatelessWidget {
           if (item != inItems.last)
             const DropdownMenuItem<String>(
               enabled: false,
-              child: Divider(color: MGcolor.base5),
+              child: Divider(color: MGcolor.base6),
             ),
         ],
       );

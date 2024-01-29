@@ -26,7 +26,7 @@ class ProgressWidget extends StatelessWidget {
       child: SizedBox(
           width: ratio.width * 40,
           height: ratio.width * 40,
-          child: CircularProgressIndicator(color: MGcolor.base5)),
+          child: CircularProgressIndicator(color: MGcolor.base6)),
     );
   }
 }
@@ -75,7 +75,7 @@ class _NotificationIconState extends State<NotificationIcon> {
                   left: 1,
                   child: CircleAvatar(
                       radius: 4,
-                      backgroundColor: MGcolor.base8,
+                      backgroundColor: MGcolor.base9,
                       child: CircleAvatar(
                         radius: 3,
                         backgroundColor: MGcolor.system_error,

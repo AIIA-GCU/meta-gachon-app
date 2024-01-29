@@ -196,8 +196,42 @@ class APIRequest {
 class RestAPI {
   RestAPI._();
 
+  /// 아이디 중복
+  static Future<bool> checkOverlappingId({
+    required String id
+  }) async {
+    try {
+      final api = APIRequest('user/overlap');
+      Map<String, dynamic> response = await api.send(
+        HTTPMethod.GET,
+        params: {"ID" : id}
+      );
+      return response['overlapping'];
+    } catch(_) {
+      return false;
+    }
+  }
+
+  /// 회원가입
+  static Future<bool> signUp({
+    required String name,
+    required String id,
+    required String pw
+  }) async {
+    try {
+      final api = APIRequest('user/signUp');
+      Map<String, dynamic> response = await api.send(
+        HTTPMethod.GET,
+        params: {'name' : name, 'ID' : id, 'PW' : pw}
+      );
+      return response['result'];
+    } catch(_) {
+      return true;
+    }
+  }
+
   /// 로그인
-  static Future<User?> login({
+  static Future<User?> signIn({
     required String id,
     required String pw
   }) async {

@@ -105,7 +105,7 @@ class _AdmitPageState extends State<AdmitPage> {
                                   child: _picturePath == null
                                       ? Container(
                                           decoration: BoxDecoration(
-                                              color: MGcolor.base6,
+                                              color: MGcolor.base7,
                                               borderRadius: BorderRadius.circular(8)
                                           ),
                                           alignment: Alignment.center,
@@ -236,7 +236,7 @@ class _AdmitPageState extends State<AdmitPage> {
                                   vertical: ratio.height * 10
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MGcolor.base6,
+                                  color: MGcolor.base7,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 alignment: Alignment.topLeft,
