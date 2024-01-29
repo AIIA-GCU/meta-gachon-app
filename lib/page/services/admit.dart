@@ -102,27 +102,34 @@ class _AdmitPageState extends State<AdmitPage> {
                                 child: GestureDetector(
                                   onTap: moveToCamera,
                                   behavior: HitTestBehavior.translucent,
-                                  child: _picturePath == null
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                              color: MGcolor.base6,
-                                              borderRadius: BorderRadius.circular(8)
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Icon(AppinIcon.camera, size: 24, color: MGcolor.base4),
-                                              SizedBox(height: ratio.height * 4),
-                                              Text("사진 업로드", style: KR.parag2.copyWith(color: MGcolor.base4))
-                                            ],
-                                          ),
-                                       )
-                                     : OverflowBox(
-                                    child: Image.file(
-                                      File(_picturePath!),
-                                      alignment: Alignment.center,
-                                      fit: BoxFit.fill,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: MGcolor.base6,
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: _picturePath == null ? null :
+                                          DecorationImage(
+                                            image: FileImage(File(_picturePath!)),
+                                            fit: BoxFit.fitWidth
+                                          )
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          AppinIcon.camera,
+                                          size: 24,
+                                          color: _picturePath == null
+                                              ? MGcolor.base4
+                                              : MGcolor.base2
+                                        ),
+                                        SizedBox(height: ratio.height * 4),
+                                        Text("사진 업로드", style: KR.parag2.copyWith(
+                                          color: _picturePath == null
+                                              ? MGcolor.base4
+                                              : MGcolor.base2
+                                        ))
+                                      ]
                                     ),
                                   )
                                 ),
@@ -379,6 +386,7 @@ class _AdmitPageState extends State<AdmitPage> {
         title = '인증했습니다!';
         onPressed = () {
           listListener.add(StreamType.reservate);
+          listListener.add(StreamType.admit);
           Navigator.popUntil(context, (route) => route.isFirst);
         };
       }
