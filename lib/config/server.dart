@@ -17,6 +17,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mata_gachon/config/variable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -412,11 +413,17 @@ class RestAPI {
 
 // objects
 class User {
+  late final String _ratingName;
+  late final AssetImage _ratingImg;
   final String _name;
   final int _stuNum;
   int _rating;
   int _negative;
   int _positive;
+
+  String get ratingName => _ratingName;
+
+  AssetImage get ratingImg => _ratingImg;
 
   String get name => _name;
 
@@ -438,7 +445,31 @@ class User {
       this._stuNum,
       this._rating,
       this._negative,
-      this._positive);
+      this._positive) {
+    switch (_rating) {
+      case 1:
+        _ratingImg = AssetImage(ImgPath.lv_warning);
+        _ratingName = "GRAY";
+        break;
+      case 2:
+        _ratingImg = AssetImage(ImgPath.lv_caution);
+        _ratingName = "STONE";
+        break;
+      case 4:
+        _ratingImg = AssetImage(ImgPath.lv_good);
+        _ratingName = "SKY";
+        break;
+      case 5:
+        _ratingImg = AssetImage(ImgPath.lv_vip);
+        _ratingName = "AQUA";
+        break;
+      case 3:
+      default:
+        _ratingImg = AssetImage(ImgPath.lv_default);
+        _ratingName = "COBALT";
+        break;
+    }
+  }
 
   ///
   /// EX) User 객체의 response

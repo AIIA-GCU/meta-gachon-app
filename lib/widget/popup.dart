@@ -410,68 +410,42 @@ class GradePopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late String img, name;
-    late bool showDuration;
-    switch (myInfo.rating) {
-      case 1:
-        showDuration = true;
-        img = ImgPath.lv_warning;
-        name = "GRAY";
-        break;
-      case 2:
-        showDuration = true;
-        img = ImgPath.lv_warning;
-        name = "STONE";
-        break;
-      case 4:
-        showDuration = true;
-        img = ImgPath.lv_good;
-        name = "SKY";
-        break;
-      case 5:
-        showDuration = true;
-        img = ImgPath.lv_vip;
-        name = "AQUA";
-        break;
-      case 3:
-      default:
-        showDuration = false;
-        img = ImgPath.lv_default;
-        name = "COBALT";
-        break;
-    }
+    bool showDuration = myInfo.rating != 3;
     return Dialog(
       insetPadding: EdgeInsets.zero,
-      child: Container(
-        width: ratio.width * 326,
-        height: ratio.height * 560,
-        padding: EdgeInsets.only(
-          bottom: ratio.height * (myInfo.rating == 3 ? 68 : 32)),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.fitWidth,
-            image: AssetImage(img)
-          ),
-          borderRadius: BorderRadius.circular(12)
-        ),
-        alignment: Alignment.bottomCenter,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(name, style: EN.subtitle1),
-            SizedBox(height: ratio.height * 40),
-            Text(
-              '당신은 $name 등급입니다.\n정말 깔끔하네요!',
-              style: KR.parag2.copyWith(color: MGcolor.base2),
-              textAlign: TextAlign.center,
+      child: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          width: ratio.width * 326,
+          height: ratio.height * 560,
+          padding: EdgeInsets.only(
+            bottom: ratio.height * (myInfo.rating == 3 ? 68 : 32)),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fitHeight,
+              image: myInfo.ratingImg
             ),
-            SizedBox(height: ratio.height * 16),
-            if (showDuration)
+            borderRadius: BorderRadius.circular(12)
+          ),
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(myInfo.ratingName, style: EN.subtitle1),
+              SizedBox(height: ratio.height * 40),
               Text(
-                '등급 지속 시간: ${123}일',
-                style: KR.parag2.copyWith(color: MGcolor.brand_orig),
-              )
-          ]
+                '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔하네요!',
+                style: KR.parag2.copyWith(color: MGcolor.base2),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: ratio.height * 16),
+              if (showDuration)
+                Text(
+                  '등급 지속 시간: ${123}일',
+                  style: KR.parag2.copyWith(color: MGcolor.brand_orig),
+                )
+            ]
+          ),
         ),
       ),
     );

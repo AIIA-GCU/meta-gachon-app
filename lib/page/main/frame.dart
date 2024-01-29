@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/main/home.dart';
 import 'package:mata_gachon/page/main/admission_list.dart';
+import 'package:mata_gachon/page/main/my_page.dart';
 import 'package:mata_gachon/page/main/reservation_list.dart';
 import 'package:mata_gachon/page/services/alarm.dart';
 import 'package:mata_gachon/page/services/my_admission.dart';
@@ -52,7 +53,10 @@ class _MainFrameState extends State<MainFrame> {
       ),
       ReservationListPage(),
       AdmissionListPage(),
-      Center(child: Text("마이 페이지"))
+      MyPage(
+        manager: false,
+        moveToReserList: movetoReserList,
+      )
     ];
     pageController = PageController();
   }
