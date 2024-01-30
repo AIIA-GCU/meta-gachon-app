@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/login.dart';
+import 'package:mata_gachon/page/hotload/sign_in.dart';
 import 'package:mata_gachon/widget/popup.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
 
@@ -212,7 +212,7 @@ class _SettingPageState extends State<SettingPage> {
               builder: (context) => CommentPopup(
                 title: "로그아웃 되었습니다!",
                 onPressed: () =>Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => SignInPage()),
                     (route) => false
                 )
               )

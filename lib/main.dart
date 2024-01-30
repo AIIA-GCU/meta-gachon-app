@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:provider/provider.dart';
 
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/login.dart';
+import 'package:mata_gachon/page/hotload/sign_in.dart';
 import 'package:mata_gachon/page/hotload/on_boarding.dart';
 // import 'package:mata_gachon/page/main/frame.dart';
 // import 'package:mata_gachon/page/services/alarm.dart';
@@ -35,7 +35,7 @@ Future<void> main() async {
     }
   } catch(e) {
     debugPrint("token is empty");
-    start = Login();
+    start = SignInPage();
   }
   debugPrint("complete camera setting");
   camera = await availableCameras().then((value) {

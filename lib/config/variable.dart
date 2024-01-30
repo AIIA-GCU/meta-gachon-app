@@ -108,6 +108,7 @@ class ImgPath {
   ImgPath._();
 
   static const String on_boarding = "assets/images/on_boarding.png";
+  static const String aiia_color = "assets/images/aiia_color.png";
 
   static const String lv_warning = "assets/images/warning.png";
   static const String lv_caution = "assets/images/caution.png";
