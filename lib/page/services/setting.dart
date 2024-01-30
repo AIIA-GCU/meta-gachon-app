@@ -6,6 +6,7 @@ import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/sign_in.dart';
 import 'package:mata_gachon/widget/popup.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -123,10 +124,14 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                             angle: pi,
-                            child: Icon(
-                              AppinIcon.back,
+                            child: IconButton(
+                              onPressed: (){
+                                launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do'));
+                              },
+                              icon: Icon(AppinIcon.back,
                               size: ratio.width * 24,
                               color: MGcolor.base4
+                              )
                             )
                           )
                         ]
@@ -152,11 +157,15 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                               angle: pi,
-                              child: Icon(
-                                  AppinIcon.back,
-                                  size: ratio.width * 24,
-                                  color: MGcolor.base4
+                              child: IconButton(
+                              onPressed: (){
+                                launchUrl(Uri.parse('https://cyber.gachon.ac.kr/login.php'));
+                              },
+                              icon: Icon(AppinIcon.back,
+                              size: ratio.width * 24,
+                              color: MGcolor.base4
                               )
+                            )
                           )
                         ]
                     )
