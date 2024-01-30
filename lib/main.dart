@@ -91,7 +91,7 @@ class _MataGachonState extends State<MataGachon> {
               foregroundColor: MGcolor.base4,
               toolbarHeight: 56,
               scrolledUnderElevation: 0.0
-            ),
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
