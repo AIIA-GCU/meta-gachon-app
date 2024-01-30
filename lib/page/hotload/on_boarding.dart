@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/login.dart';
+import 'package:mata_gachon/page/hotload/sign_in.dart';
 
 class OnBoarding extends StatelessWidget {
   static late Size screenSize;
@@ -16,7 +16,7 @@ class OnBoarding extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [MGcolor.base7, MGcolor.base8],
+                colors: [MGcolor.base8, MGcolor.base9],
                 stops: [0.0, 0.5])),
         child: Stack(
           children: [
@@ -60,7 +60,7 @@ class OnBoarding extends StatelessWidget {
                     minimumSize: Size(ratio.width * 358, ratio.height * 48),
                   ),
                   child: Text(
-                    '약관 동의하기',
+                    '시작하기',
                     style: EN.subtitle2.copyWith(
                       fontWeight: FontWeight.w700,
                       color: MGcolor.btn_inactive,
@@ -98,7 +98,7 @@ class OnBoarding extends StatelessWidget {
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                          MaterialPageRoute(builder: (context) => SignInPage()));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MGcolor.btn_active,
@@ -110,7 +110,7 @@ class OnBoarding extends StatelessWidget {
                         '동의하기',
                         style: EN.subtitle2.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: MGcolor.base8,
+                          color: MGcolor.base9,
                         ),
                       )),
                 ),

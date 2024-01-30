@@ -34,10 +34,11 @@ class MGcolor {
   static const Color base2 = Color(0xFF333232);
   static const Color base3 = Color(0xFF7C7C7C);
   static const Color base4 = Color(0xFFABABAB);
-  static const Color base5 = Color(0xFFDDDDDD);
-  static const Color base6 = Color(0xFFEDEEF1);
-  static const Color base7 = Color(0xFFE7E7E7);
-  static const Color base8 = Color(0xFFF4F5F8);
+  static const Color base5 = Color(0xFFC9C9C9);
+  static const Color base6 = Color(0xFFDDDDDD);
+  static const Color base7 = Color(0xFFEDEEF1);
+  static const Color base8 = Color(0xFFE7E7E7);
+  static const Color base9 = Color(0xFFF4F5F8);
 
   static const Color btn_active = Color(0xFF1762DB);
   static const Color btn_inactive = Color(0xFFE3EDFD);
@@ -51,8 +52,8 @@ class KR {
   KR._();
 
   static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'Ko');
-  static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
-  static TextStyle title3 = TextStyle(fontSize: ratio.height * 20, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle title2 = TextStyle(fontSize: ratio.height * 24, fontWeight: FontWeight.w500, fontFamily: 'Ko');
+  static TextStyle title3 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w500, fontFamily: 'Ko');
   static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'Ko');
   static TextStyle subtitle3 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w500, fontFamily: 'Ko');

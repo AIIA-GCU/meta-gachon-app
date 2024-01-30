@@ -31,7 +31,7 @@ Future<void> main() async {
       start = OnBoarding();
     } else {
       await new Session().get();
-      start = Login();
+      start = SignInPage();
     }
   } catch(e) {
     debugPrint("token is empty");
@@ -84,9 +84,9 @@ class _MataGachonState extends State<MataGachon> {
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
-          scaffoldBackgroundColor: MGcolor.base8,
+          scaffoldBackgroundColor: MGcolor.base9,
           appBarTheme: AppBarTheme(
-              backgroundColor: MGcolor.base8,
+              backgroundColor: MGcolor.base9,
               elevation: 0,
               foregroundColor: MGcolor.base4,
               toolbarHeight: 56,
