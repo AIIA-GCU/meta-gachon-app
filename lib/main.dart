@@ -30,8 +30,11 @@ Future<void> main() async {
     } else if (first == true) {
       start = OnBoarding();
     } else {
-      await new Session().get();
-      start = SignInPage();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn'))!;
+      reservates = await RestAPI.getAllReservation() ?? [];
+      admits = await RestAPI.getAllAdmission() ?? [];
+      myAdmits = await RestAPI.getMyAdmission() ?? [];
+      start = MainFrame();
     }
   } catch(e) {
     debugPrint("token is empty");

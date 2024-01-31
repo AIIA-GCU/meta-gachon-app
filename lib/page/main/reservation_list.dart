@@ -80,33 +80,48 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 child: FutureBuilder<List<Reservate>?>(
                     future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
                     builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Container(
+                            height: ratio.height * 594,
+                            alignment: Alignment.center,
+                            child: Text(
+                                '통신 속도가 너무 느립니다!',
+                                style: KR.subtitle4.copyWith(
+                                    color: MGcolor.base3)
+                            )
+                        );
+                      }
                       if (snapshot.connectionState == ConnectionState.waiting) {
+                        return ProgressWidget();
+                      }
+                      if (snapshot.hasData) {
+                        reservates = snapshot.data!;
+                      }
+                      if (reservates.isNotEmpty) {
+                        return Column(
+                            children: reservates.map((e) {
+                              List<String> temp = e.leaderInfo.split(' ');
+                              return CustomListItem(
+                                uid: e.reservationId,
+                                name: temp[1],
+                                stuNum: int.parse(temp[0]),
+                                room: e.room,
+                                date: e.date,
+                                time: e.time,
+                              );
+                            }).toList()
+                        );
+                      } else {
                         return Container(
                             height: ratio.height * 594,
                             alignment: Alignment.center,
                             child: Text(
                                 '아직 예약 내역이 없어요!',
-                                style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                                style: KR.subtitle4.copyWith(
+                                    color: MGcolor.base3)
                             )
                         );
                       }
-
-                      if (snapshot.hasData) {
-                        reservates = snapshot.data!;
-                      }
-                      return Column(
-                          children: reservates.map((e) {
-                            List<String> temp = e.leaderInfo.split(' ');
-                            return CustomListItem(
-                              uid: e.reservationId,
-                              name: temp[1],
-                              stuNum: int.parse(temp[0]),
-                              room: e.room,
-                              date: e.date,
-                              time: e.time,
-                            );
-                          }).toList()
-                      );
                     }
                 )
             )

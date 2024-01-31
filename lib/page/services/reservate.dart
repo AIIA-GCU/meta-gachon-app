@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -649,6 +651,9 @@ class _ReservatePageState extends State<ReservatePage> {
             Navigator.popUntil(context, (route) => route.isFirst);
           };
         }
+      } on TimeoutException {
+        title = '통신 속도가 너무 느립니다!';
+        onPressed = () => Navigator.pop(context);
       } catch(_) {
         title = '[400] 서버와의 통신에 문제가 있습니다.';
         onPressed = () => Navigator.pop(context);

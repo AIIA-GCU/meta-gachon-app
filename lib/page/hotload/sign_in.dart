@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
@@ -271,37 +273,47 @@ class _SignInPageState extends State<SignInPage> {
         FocusScope.of(context).unfocus();
         isLoading = true;
       });
-      User? user = await RestAPI.signIn(
-        id: idController.text,
-        pw: pwController.text
-      );
-      if (user != null) {
-        // save data local
-        myInfo = user;
-        reservates = await RestAPI.getAllReservation() ?? [];
-        admits = await RestAPI.getAllAdmission() ?? [];
-        myAdmits = await RestAPI.getMyAdmission() ?? [];
+      try {
+        User? user = await RestAPI.signIn(
+            id: idController.text, pw: pwController.text);
+        if (user != null) {
+          // save data local
+          myInfo = user;
+          reservates = await RestAPI.getAllReservation() ?? [];
+          admits = await RestAPI.getAllAdmission() ?? [];
+          myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-        // appaer popup screen
+          // appaer popup screen
+          setState(() {
+            isLoading = false;
+            showDialog(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.25),
+                builder: (BuildContext context) => CommentPopup(
+                    title: '로그인되었습니다!',
+                    onPressed: () => Navigator.pop(context))).then((_) =>
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainFrame()),
+                    (route) => false));
+          });
+        } else {
+          setState(() {
+            errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
+            isLoading = false;
+          });
+        }
+      } on TimeoutException {
         setState(() {
           isLoading = false;
           showDialog(
               context: context,
               barrierColor: Colors.black.withOpacity(0.25),
-              builder: (BuildContext context) => CommentPopup(
-                  title: '로그인되었습니다!',
+              builder: (context) => CommentPopup(
+                  title: "통신 속도가 너무 느립니다!",
                   onPressed: () => Navigator.pop(context)
               )
-          ).then((_) => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => MainFrame()),
-                  (route) => false
-          ));
-        });
-      } else {
-        setState(() {
-          errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
-          isLoading = false;
+          );
         });
       }
     }
