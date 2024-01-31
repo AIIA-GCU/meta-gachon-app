@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
@@ -262,24 +264,31 @@ class ReservationPopup extends StatelessWidget {
           agreeMsg: "취소하기",
           onAgreed: () async {
             Navigator.pop(context);
-            int? uid = await RestAPI.delReservation(reservationId: item.reservationId);
-            if (uid == null) {
+            try {
+                int? uid = await RestAPI.delReservation(
+                    reservationId: item.reservationId);
+                if (uid == null) {
+                  showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.25),
+                      builder: (context) => CommentPopup(
+                          title: "[Error] deleting reservation",
+                          onPressed: () => Navigator.pop(context)));
+                } else {
+                  showDialog(
+                          context: context,
+                          builder: (context) => CommentPopup(
+                              title: "예약이 취소되었습니다!",
+                              onPressed: () => Navigator.pop(context)))
+                      .then((_) => listListener.add(StreamType.reservate));
+                }
+            } on TimeoutException {
               showDialog(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
-                builder: (context) => CommentPopup(
-                  title: "[Error] deleting reservation",
-                  onPressed: () => Navigator.pop(context)
-                )
-              );
-            } else {
-              showDialog(
-                context: context,
-                builder: (context) => CommentPopup(
-                  title: "예약이 취소되었습니다!",
-                  onPressed: () => Navigator.pop(context)
-                )
-              ).then((_) => listListener.add(StreamType.reservate));
+                  context: context,
+                  barrierColor: Colors.black.withOpacity(0.25),
+                  builder: (context) => CommentPopup(
+                      title: "통신 속도가 너무 느립니다!",
+                      onPressed: () => Navigator.pop(context)));
             }
           }
       )

@@ -128,7 +128,38 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
               child: FutureBuilder<List<Admit>?>(
                   future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
                   builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Container(
+                          height: ratio.height * 594,
+                          alignment: Alignment.center,
+                          child: Text(
+                              '통신 속도가 너무 느립니다!',
+                              style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                          )
+                      );
+                    }
                     if (snapshot.connectionState == ConnectionState.waiting) {
+                      return ProgressWidget();
+                    }
+                    if (snapshot.hasData) {
+                      admits = snapshot.data!;
+                    }
+                    if (admits.isNotEmpty) {
+                      return Column(
+                          children: admits.map((e) {
+                        List<String> temp = e.leaderInfo.split(' ');
+                        return CustomListItem(
+                          uid: e.admissionId,
+                          name: temp[1],
+                          stuNum: int.parse(temp[0]),
+                          room: e.room,
+                          date: e.date,
+                          time: e.time,
+                          photo: e.photo,
+                          review: e.review,
+                        );
+                      }).toList());
+                    } else {
                       return Container(
                           height: ratio.height * 594,
                           alignment: Alignment.center,
@@ -138,25 +169,6 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                           )
                       );
                     }
-
-                    if (snapshot.hasData) {
-                      admits = snapshot.data!;
-                    }
-                    return Column(
-                        children: admits.map((e) {
-                          List<String> temp = e.leaderInfo.split(' ');
-                          return CustomListItem(
-                            uid: e.admissionId,
-                            name: temp[1],
-                            stuNum: int.parse(temp[0]),
-                            room: e.room,
-                            date: e.date,
-                            time: e.time,
-                            photo: e.photo,
-                            review: e.review,
-                          );
-                        }).toList()
-                    );
                   }
               )
           )

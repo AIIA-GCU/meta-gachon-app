@@ -34,7 +34,38 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
         body: FutureBuilder<List<Admit>?>(
             future: myAdmits.isEmpty ? RestAPI.getMyAdmission() : null,
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Container(
+                    height: ratio.height * 594,
+                    alignment: Alignment.center,
+                    child: Text(
+                        '통신 속도가 너무 느려요!',
+                        style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                    )
+                );
+              }
               if (snapshot.connectionState == ConnectionState.waiting) {
+                return ProgressWidget();
+              }
+              if (snapshot.hasData) {
+                myAdmits = snapshot.data!;
+              }
+              if (myAdmits.isNotEmpty) {
+                return Column(
+                    children: myAdmits.map((e) {
+                  List<String> temp = e.leaderInfo.split(' ');
+                  return CustomListItem(
+                    uid: e.admissionId,
+                    name: temp[1],
+                    stuNum: int.parse(temp[0]),
+                    room: e.room,
+                    date: e.date,
+                    time: e.time,
+                    photo: e.photo,
+                    review: e.review,
+                  );
+                }).toList());
+              } else {
                 return Container(
                     height: ratio.height * 594,
                     alignment: Alignment.center,
@@ -44,25 +75,6 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
                     )
                 );
               }
-
-              if (snapshot.hasData) {
-                myAdmits = snapshot.data!;
-              }
-              return Column(
-                  children: myAdmits.map((e) {
-                    List<String> temp = e.leaderInfo.split(' ');
-                    return CustomListItem(
-                      uid: e.admissionId,
-                      name: temp[1],
-                      stuNum: int.parse(temp[0]),
-                      room: e.room,
-                      date: e.date,
-                      time: e.time,
-                      photo: e.photo,
-                      review: e.review,
-                    );
-                  }).toList()
-              );
             }
         )
     );
