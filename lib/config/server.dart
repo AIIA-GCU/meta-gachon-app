@@ -204,6 +204,7 @@ class RestAPI {
   RestAPI._();
 
   /// 아이디 중복
+  /// Todo: 통합 로그인용
   static Future<bool> checkOverlappingId({
     required String id
   }) async {
@@ -220,6 +221,7 @@ class RestAPI {
   }
 
   /// 회원가입
+  /// Todo: 통합 로그인용
   static Future<bool> signUp({
     required String name,
     required String id,
@@ -238,6 +240,7 @@ class RestAPI {
   }
 
   /// 로그인
+  /// Todo: 추후 통합 로그인용으로 바꿔야 함
   static Future<User?> signIn({
     required String id,
     required String pw
@@ -318,20 +321,14 @@ class RestAPI {
         'member': member,
         // 'purpose': '공부'
       });
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['reservationID'];
-      }
+      return response['reservationID'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
   }
 
-  /// 
   /// 예약 수정
-  /// [!] member에 빈 값을 넣으면 문제가 생기는 듯
-  /// 
+  /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<int?> patchReservation({
     required int reservationId,
     required String room,
@@ -348,14 +345,10 @@ class RestAPI {
         "startTime": startTime,
         "endTime": endTime,
         "leaderInfo": leader,
-        "memberInfo": 'string',
+        "memberInfo": member,
         "purpose": "String"
       });
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['reservationID'];
-      }
+      return response['reservationID'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -368,11 +361,25 @@ class RestAPI {
     try {
       final api = APIRequest('book/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.DELETE);
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['reservationID'];
-      }
+      return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 현재 예약의 상태
+  /// . 0: 시작까지 한참 남음
+  /// . 1: 사용 시작이 다가옴
+  /// . 2: 사용 중
+  /// . 3: 사용 끝
+  /// Todo: 아직 추가 안 됨
+  static Future<int?> currentReservationStatus({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+      return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -385,11 +392,7 @@ class RestAPI {
     try {
       final api = APIRequest('book/prolong/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.PATCH);
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['reservationId'];
-      }
+      return response['reservationId'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -448,11 +451,7 @@ class RestAPI {
         'photo': photo,
         'photoExtension': photoExtension
       });
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['admissionID'];
-      }
+      return response['admissionID'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -463,11 +462,7 @@ class RestAPI {
     try {
       final api = APIRequest('notice');
       Map<String, dynamic> response = await api.send(HTTPMethod.GET);
-      if (response.isEmpty) {
-        return null;
-      } else {
-        return response['hasNotice'];
-      }
+      return response['hasNotice'];
     } on TimeoutException {
       return null;
     }
@@ -494,6 +489,7 @@ class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
   final String _name;
+  final String _depart;
   final int _stuNum;
   int _rating;
   int _negative;
@@ -504,6 +500,8 @@ class User {
   AssetImage get ratingImg => _ratingImg;
 
   String get name => _name;
+
+  String get depart => _depart;
 
   int get stuNum => _stuNum;
 
@@ -520,6 +518,7 @@ class User {
   set setPositive(int val) => _positive = val;
 
   User(this._name,
+      this._depart,
       this._stuNum,
       this._rating,
       this._negative,
@@ -552,6 +551,7 @@ class User {
   ///
   /// EX) User 객체의 response
   /// - "name": "김가천"
+  /// - "department": "소프트웨어학과"
   /// - "stuNum": 202300001
   /// - "rating": 2 (1 ~ 5)
   /// - "negative": 5
@@ -559,6 +559,7 @@ class User {
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
         json['name'],
+        json['department'],
         json['stuNum'],
         json['rating'],
         json['negative'],
