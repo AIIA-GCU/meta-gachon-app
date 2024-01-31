@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:mata_gachon/config/variable.dart';
 
@@ -269,7 +270,18 @@ class CustomTimePicker extends StatefulWidget {
   State<CustomTimePicker> createState() => _CustomTimePickerState();
 }
 class _CustomTimePickerState extends State<CustomTimePicker> {
+  late final LinkedScrollControllerGroup _scrollCtrGroup;
+  late final ScrollController _scrollCtr1, _scrollCtr2;
+
   int? _start, _end;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollCtrGroup = LinkedScrollControllerGroup();
+    _scrollCtr1 = _scrollCtrGroup.addAndGet();
+    _scrollCtr2 = _scrollCtrGroup.addAndGet();
+  }
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
@@ -283,12 +295,20 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   }
 
   @override
+  void dispose() {
+    _scrollCtr1.dispose();
+    _scrollCtr2.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: ratio.width * 336,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// 타이틀
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -300,51 +320,92 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
               )
             ],
           ),
+          
           SizedBox(height: ratio.height * 10),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-            decoration: BoxDecoration(
-              color: MGcolor.base5,
-              borderRadius: BorderRadius.circular(4)
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(26, (index) {
-                  Color? color;
-                  if (!widget.availableTimes[index]) {
-                    color = MGcolor.brand_deep;
-                  }
-                  else if (_start != null && _end != null) {
-                    if (_start! <= index && index <= _end!) {
-                      color = MGcolor.brand_orig;
-                    } else if (index == _start!+1) {
-                      color = MGcolor.brand_orig.withOpacity(0.2);
-                    } else if (index == _start!+2 && widget.availableTimes[index-1]) {
-                      color = MGcolor.brand_orig.withOpacity(0.2);
-                    }
-                  }
-                  if (color == null) {
-                    color = Colors.white;
-                  }
+          
+          /// 메인
+          Column(
+            children: [
+              /// 터치 박스
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ratio.width * 2,
+                  vertical: ratio.height * 4
+                ),
+                decoration: BoxDecoration(
+                  color: MGcolor.base6,
+                  borderRadius: BorderRadius.circular(4)
+                ),
+                child: SingleChildScrollView(
+                  controller: _scrollCtr1,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(26, (index) {
+                      Color? color;
+                      if (!widget.availableTimes[index]) {
+                        color = MGcolor.brand_deep;
+                      }
+                      else if (_start != null && _end != null) {
+                        if (_start! <= index && index <= _end!) {
+                          color = MGcolor.brand_orig;
+                        } else if (index == _start!+1) {
+                          color = MGcolor.brand_orig.withOpacity(0.2);
+                        } else if (index == _start!+2 && widget.availableTimes[index-1]) {
+                          color = MGcolor.brand_orig.withOpacity(0.2);
+                        }
+                      }
+                      if (color == null) {
+                        color = Colors.white;
+                      }
 
-                  return GestureDetector(
-                    onTap: color != MGcolor.brand_deep
-                        ? () => _onTap(index) : null,
-                    behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      width: 24,
-                      height: 28,
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(3)
-                      )
-                    ),
-                  );
-                })
+                      return GestureDetector(
+                        onTap: color != MGcolor.brand_deep
+                            ? () => _onTap(index) : null,
+                        behavior: HitTestBehavior.translucent,
+                        child: Container(
+                          width: 24,
+                          height: 28,
+                          margin: EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(3)
+                          )
+                        ),
+                      );
+                    })
+                  )
+                ),
+              ),
+
+              /// 시간
+              SingleChildScrollView(
+                controller: _scrollCtr2,
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ratio.width * 2),
+                  child: Row(children: List.generate(5, (index) {
+                    if (index != 4) {
+                      return SizedBox(
+                        width: (24 + 3*2) * 6,
+                        child: Text('${index * 6}', style: EN.label1),
+                      );
+                    } else {
+                      return SizedBox(
+                        width: (24 + 3*2) * 2,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('24', style: EN.label1),
+                            Text('2', style: EN.label1)
+                          ]
+                        )
+                      );
+                    }
+                  })),
+                )
               )
-            ),
+            ],
           )
         ]
       )
