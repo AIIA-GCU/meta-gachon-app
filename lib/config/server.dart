@@ -371,13 +371,14 @@ class RestAPI {
   /// . 0: 시작까지 한참 남음
   /// . 1: 사용 시작이 다가옴
   /// . 2: 사용 중
-  /// . 3: 사용 끝
+  /// . 3: 연장 가능
+  /// . 4: 사용 끝
   /// Todo: 아직 추가 안 됨
   static Future<int?> currentReservationStatus({
-    required int reservationId
+    required int uid
   }) async {
     try {
-      final api = APIRequest('book/$reservationId');
+      final api = APIRequest('book/$uid');
       Map<String, dynamic> response = await api.send(HTTPMethod.GET);
       return response['status'];
     } on TimeoutException {

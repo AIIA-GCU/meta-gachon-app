@@ -123,13 +123,10 @@ class CommentPopup extends StatelessWidget {
 }
 
 class ReservationPopup extends StatelessWidget {
-  const ReservationPopup(this.item, {super.key});
+  const ReservationPopup(this.item, this.status, {super.key});
 
   final Reservate item;
-
-  static bool waiting = true;
-  static bool qr = false;
-  static bool prolong = false;
+  final int status;
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +138,7 @@ class ReservationPopup extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            /// 이미지
             Container(
               width: ratio.height * 120,
               height: ratio.height * 120,
@@ -152,35 +150,59 @@ class ReservationPopup extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8))
               ),
             ),
+
             SizedBox(height: ratio.height * 16),
+
+            /// 장소
             Text(item.room, style: KR.subtitle1),
+
             SizedBox(height: ratio.height * 24),
+
+            /// 날짜 및 시간
             Column(
               children: [
                 Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3)),
                 SizedBox(height: ratio.height * 8),
                 Text(item.time, style: EN.parag2.copyWith(color: MGcolor.base3)),
-                if (qr)
-                  ...[
-                    SizedBox(height: ratio.height * 8),
-                    Text(
-                      '회의실 사용 시간이 다 되었어요.\n회의실에서 QR코드 인증을 해주세요!',
-                      style: KR.label2.copyWith(color: MGcolor.system_error),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                if (prolong)
-                  ...[
-                    SizedBox(height: ratio.height * 8),
-                    Text(
-                      '현재 회의실을 사용중이에요!\n남은 시간 : 85분',
-                      style: KR.label2.copyWith(color: MGcolor.system_error),
-                      textAlign: TextAlign.center,
-                    )
-                  ]
+                Builder(builder: (context) {
+                  switch (status) {
+                    case 1:
+                      return Padding(
+                        padding: EdgeInsets.only(top: ratio.height * 8),
+                        child: Text(
+                          '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!',
+                          style: KR.label2.copyWith(color: MGcolor.system_error),
+                          textAlign: TextAlign.center,
+                        )
+                      );
+                    case 3:
+                      return Padding(
+                          padding: EdgeInsets.only(top: ratio.height * 8),
+                          child: Text(
+                            '곧 있음 이용 시간이 끝납니다.',
+                            style: KR.label2.copyWith(color: MGcolor.system_error),
+                            textAlign: TextAlign.center,
+                          )
+                      );
+                    case 4:
+                      return Padding(
+                        padding: EdgeInsets.only(top: ratio.height * 8),
+                        child: Text(
+                          '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!',
+                          style: KR.label2.copyWith(color: MGcolor.system_error),
+                          textAlign: TextAlign.center,
+                        )
+                      );
+                    default:
+                      return SizedBox.shrink();
+                  }
+                })
               ],
             ),
+
             SizedBox(height: ratio.height * 24),
+
+            /// 대표자
             Column(
               children: [
                 Text("대표자", style: KR.parag2),
@@ -188,75 +210,86 @@ class ReservationPopup extends StatelessWidget {
                 Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGcolor.base3)),
               ],
             ),
+
             SizedBox(height: ratio.height * 30),
-            Column(children:
-            waiting ? [
-              ElevatedButton(
-                onPressed: () => _editReservation(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.btn_active,
-                  fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("예약 수정하기", style: KR.parag1.copyWith(color: Colors.white))
-              ),
-              TextButton(
-                onPressed: () => _delReservation(context),
-                style: TextButton.styleFrom(
-                  fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("예약 취소하기", style: KR.parag1.copyWith(color: MGcolor.base3))
-              ),
-              ElevatedButton(
-                  onPressed: () => _admit(context),
-                  style: ElevatedButton.styleFrom(
+
+            /// 버튼
+            Builder(builder: (context) {
+              switch (status) {
+                case 0:
+                  return Column(children: [
+                    ElevatedButton(
+                        onPressed: () => _edit(context),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: MGcolor.btn_active,
+                            fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))
+                        ),
+                        child: Text("예약 수정하기", style: KR.parag1.copyWith(color: Colors.white))
+                    ),
+                    TextButton(
+                        onPressed: () => _del(context),
+                        style: TextButton.styleFrom(
+                            fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))
+                        ),
+                        child: Text("예약 취소하기", style: KR.parag1.copyWith(color: MGcolor.base3))
+                    )
+                  ]);
+                case 1:
+                  return ElevatedButton(
+                      onPressed: () => _qr,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MGcolor.btn_active,
+                          fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))
+                      ),
+                      child: Text("QR 코드 인증하기", style: KR.parag1.copyWith(color: Colors.white))
+                  );
+                case 3:
+                  return ElevatedButton(
+                      onPressed: () => _prolong,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MGcolor.btn_active,
+                          fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))
+                      ),
+                      child: Text("예약 연장하기", style: KR.parag1.copyWith(color: Colors.white))
+                  );
+                case 4:
+                  return ElevatedButton(
+                    onPressed: () => _admit(context),
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: MGcolor.btn_active,
                       fixedSize: Size(ratio.width * 145, ratio.height * 40),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))
-                  ),
-                  child: Text("※ 인증하기 ※", style: KR.parag1.copyWith(color: Colors.white))
-              ),
-            ] : qr ? [
-              ElevatedButton(
-                onPressed: () => _validateQR,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.btn_active,
-                  fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("QR 코드 인증하기", style: KR.parag1.copyWith(color: Colors.white))
-              ),
-            ] : prolong ? [
-              ElevatedButton(
-                onPressed: () => _prolong,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.btn_active,
-                  fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("예약 연장하기", style: KR.parag1.copyWith(color: Colors.white))
-              ),
-            ] : []
-            )
+                    ),
+                    child: Text("인증하기", style: KR.parag1.copyWith(color: Colors.white))
+                  );
+                default:
+                  return SizedBox.shrink();
+              }
+            })
           ]
         ),
       ),
     );
   }
 
-  void _editReservation(BuildContext context) {
+  // 예약 수정
+  void _edit(BuildContext context) {
     Navigator.pop(context);
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => ReservatePage(reservate: item)));
   }
 
-  void _delReservation(BuildContext context) {
+  // 예약 삭제
+  void _del(BuildContext context) {
     Navigator.pop(context);
     showDialog(
       context: context,
@@ -296,17 +329,57 @@ class ReservationPopup extends StatelessWidget {
     );
   }
 
-  void _validateQR(BuildContext context) {
+  // QR 확인
+  void _qr(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context)
       => QrScannerPage(onMatchedCode: () => Navigator.pop(context)))
     );
   }
 
-  void _prolong() {
-
+  // 예약 연장
+  void _prolong(BuildContext context) {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.25),
+      builder: (context) => AlertPopup(
+        title: '1시간 연장하시겠습니까?',
+        agreeMsg: '연장하기',
+        onAgreed: () async {
+          Navigator.pop(context);
+          try {
+            int? uid = await RestAPI.prolongReservation(
+                reservationId: item.reservationId);
+            if (uid == null) {
+              showDialog(
+                  context: context,
+                  barrierColor: Colors.black.withOpacity(0.25),
+                  builder: (context) => CommentPopup(
+                      title: "[Error] prolonging reservation",
+                      onPressed: () => Navigator.pop(context)));
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (context) => CommentPopup(
+                      title: "연장하기",
+                      onPressed: () => Navigator.pop(context)))
+                  .then((_) => listListener.add(StreamType.reservate));
+            }
+          } on TimeoutException {
+            showDialog(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.25),
+                builder: (context) => CommentPopup(
+                    title: "통신 속도가 너무 느립니다!",
+                    onPressed: () => Navigator.pop(context)));
+          }
+        }
+      )
+    );
   }
 
+  // 인증으로
   void _admit(BuildContext context) {
     Navigator.pop(context);
     Navigator.push(context,
