@@ -165,7 +165,7 @@ class _ReservatePageState extends State<ReservatePage> {
                           normalDateTextStyle:
                           EN.parag1.copyWith(color: MGcolor.base1),
                           normalDateBoxDecoration: BoxDecoration(
-                              color: MGcolor.base6,
+                              color: MGcolor.base7,
                               borderRadius: BorderRadius.circular(4)),
                           selectedDateTextStyle:
                           EN.parag1.copyWith(color: Colors.white),
@@ -175,12 +175,12 @@ class _ReservatePageState extends State<ReservatePage> {
                           todayTextStyle:
                           EN.parag1.copyWith(color: MGcolor.btn_active),
                           todayBoxDecoration: BoxDecoration(
-                              color: MGcolor.base6,
+                              color: MGcolor.base7,
                               borderRadius: BorderRadius.circular(4)),
                           rangeOutDateTextStyle:
                           EN.parag1.copyWith(color: MGcolor.base5),
                           rangeOutDateBoxDecoration: BoxDecoration(
-                              color: MGcolor.base6,
+                              color: MGcolor.base8,
                               borderRadius: BorderRadius.circular(4)),
                         ),
                         onSelected: (value) {
@@ -353,7 +353,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                               width: 32 * ratio.width,
                                               height: 32 * ratio.height,
                                               decoration: BoxDecoration(
-                                                color: MGcolor.base6,
+                                                color: isSolo ? MGcolor.base6
+                                                    : MGcolor.brand_orig,
                                                 borderRadius:
                                                 BorderRadius.circular(12),
                                               ),
@@ -361,7 +362,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                                 child: Icon(
                                                   AppinIcon.plus,
                                                   size: 16,
-                                                  color: isSolo ? MGcolor.base4 : null,
+                                                  color: isSolo ? MGcolor.base4
+                                                      : Colors.white,
                                                 )
                                               )
                                             ),
@@ -518,23 +520,23 @@ class _ReservatePageState extends State<ReservatePage> {
 
   Future<List<bool>> availableTime() async {
     List<bool> result = List.generate(26, (index) => false);
-    if (selectedRoom != null && selectedDate != null) {
-      try {
-        Map<int, bool>? times = await RestAPI
-            .getAvailableTime(room: selectedRoom!, date: selectedDate!);
-        int a = times!.keys.first, b = times.keys.last;
-        for (a - 1; a < b; a++) {
-          result[a] = !times[a]!;
-        }
-
-        if (widget.reservate != null) {
-          for (a = selectedEnter! - 1; a < selectedExit!; a++) {
-            result[a] = true;
-          }
-        }
-      } catch(e) {}
-    }
-    debugPrint('available times: $result');
+    // if (selectedRoom != null && selectedDate != null) {
+    //   try {
+    //     Map<int, bool>? times = await RestAPI
+    //         .getAvailableTime(room: selectedRoom!, date: selectedDate!);
+    //     int a = times!.keys.first, b = times.keys.last;
+    //     for (a - 1; a < b; a++) {
+    //       result[a] = !times[a]!;
+    //     }
+    //
+    //     if (widget.reservate != null) {
+    //       for (a = selectedEnter! - 1; a < selectedExit!; a++) {
+    //         result[a] = true;
+    //       }
+    //     }
+    //   } catch(e) {}
+    // }
+    // debugPrint('available times: $result');
     return result;
   }
 
