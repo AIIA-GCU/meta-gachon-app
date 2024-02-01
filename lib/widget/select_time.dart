@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mata_gachon/config/server.dart';
 
 import 'package:mata_gachon/config/variable.dart';
 
@@ -252,16 +253,18 @@ class CellStyle {
 class CustomTimePicker extends StatefulWidget {
   const CustomTimePicker({
     super.key,
-    this.start,
+    required this.room,
+    required this.date,
+    this.begin,
     this.end,
-    required this.availableTimes,
     required this.setStart,
     required this.setEnd
   });
 
-  final int? start;
+  final String room;
+  final String date;
+  final int? begin;
   final int? end;
-  final List<bool> availableTimes;
   final Function(int) setStart;
   final Function(int) setEnd;
 
@@ -269,101 +272,140 @@ class CustomTimePicker extends StatefulWidget {
   State<CustomTimePicker> createState() => _CustomTimePickerState();
 }
 class _CustomTimePickerState extends State<CustomTimePicker> {
-  int? _start, _end;
+  late List<bool> _availables;
+  late bool _reset;
+
+  int? _begin, _end;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _reset = true;
+  }
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    this._start = widget.start;
+    this._reset = true;
+    this._begin = widget.begin;
     this._end = widget.end;
-    if (_start != null && _end != null) {
+    if (_begin != null && _end != null) {
       _end = _end! - 1;
-      debugPrint("start: $_start | end: ${_end!+1}");
+      debugPrint("start: $_begin | end: ${_end!+1}");
     }
     super.didUpdateWidget(oldWidget);
   }
 
+  /// Todo: 나중에 애니메이션 추가하기
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: ratio.width * 336,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+    return FutureBuilder<void>(
+      future: _reset ? _availableTime() : null,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox.shrink();
+        }
+        return SizedBox(
+          width: ratio.width * 336,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("예약 시간", style: KR.parag1),
-              SizedBox(width: 12),
-              Text(
-                '예약은 최대 3시간까지 가능합니다',
-                style: KR.label2.copyWith(color: MGcolor.brand_orig)
-              )
-            ],
-          ),
-          SizedBox(height: ratio.height * 10),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-            decoration: BoxDecoration(
-              color: MGcolor.base5,
-              borderRadius: BorderRadius.circular(4)
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(26, (index) {
-                  Color? color;
-                  if (!widget.availableTimes[index]) {
-                    color = MGcolor.brand_deep;
-                  }
-                  else if (_start != null && _end != null) {
-                    if (_start! <= index && index <= _end!) {
-                      color = MGcolor.brand_orig;
-                    } else if (index == _start!+1) {
-                      color = MGcolor.brand_orig.withOpacity(0.2);
-                    } else if (index == _start!+2 && widget.availableTimes[index-1]) {
-                      color = MGcolor.brand_orig.withOpacity(0.2);
-                    }
-                  }
-                  if (color == null) {
-                    color = Colors.white;
-                  }
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("예약 시간", style: KR.parag1),
+                  SizedBox(width: 12),
+                  Text(
+                    '예약은 최대 3시간까지 가능합니다',
+                    style: KR.label2.copyWith(color: MGcolor.brand_orig)
+                  )
+                ],
+              ),
+              SizedBox(height: ratio.height * 10),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                decoration: BoxDecoration(
+                  color: MGcolor.base5,
+                  borderRadius: BorderRadius.circular(4)
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(26, (index) {
+                      Color? color;
+                      if (!_availables![index]) {
+                        color = MGcolor.brand_deep;
+                      }
+                      else if (_begin != null && _end != null) {
+                        if (_begin! <= index && index <= _end!) {
+                          color = MGcolor.brand_orig;
+                        } else if (index == _begin!+1) {
+                          color = MGcolor.brand_orig.withOpacity(0.2);
+                        } else if (index == _begin!+2 && _availables![index]) {
+                          color = MGcolor.brand_orig.withOpacity(0.2);
+                        }
+                      }
+                      if (color == null) {
+                        color = Colors.white;
+                      }
 
-                  return GestureDetector(
-                    onTap: color != MGcolor.brand_deep
-                        ? () => _onTap(index) : null,
-                    behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      width: 24,
-                      height: 28,
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(3)
-                      )
-                    ),
-                  );
-                })
+                      return GestureDetector(
+                        onTap: color != MGcolor.brand_deep
+                            ? () => _onTap(index) : null,
+                        behavior: HitTestBehavior.translucent,
+                        child: Container(
+                          width: 24,
+                          height: 28,
+                          margin: EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(3)
+                          )
+                        ),
+                      );
+                    })
+                  )
+                ),
               )
-            ),
+            ]
           )
-        ]
-      )
+        );
+      }
     );
   }
 
   void _onTap(int idx) {
     setState(() {
-      if (_start == null || idx < _start! || _start!+2 < idx) {
-        widget.setStart(_start = idx);
+      if (_begin == null || idx < _begin! || _begin!+2 < idx) {
+        widget.setStart(_begin = idx);
         widget.setEnd(_end = idx);
-      } else if (_end! <= _start!+2) {
+      } else if (_end! <= _begin!+2) {
         if (idx == _end!) {
-          widget.setStart(_start = idx);
+          widget.setStart(_begin = idx);
         } else {
           widget.setEnd(_end = idx);
         }
       }
-      debugPrint("start: $_start | end: ${_end!+1}");
+      debugPrint("start: $_begin | end: ${_end!+1}");
     });
+  }
+
+  Future<void> _availableTime() async {
+    _availables = List.generate(26, (index) => false);
+    try {
+      Map<int, bool>? times = await RestAPI
+          .getAvailableTime(room: widget.room, date: widget.date);
+      int a = times!.keys.first, b = times.keys.last;
+      for (a - 1; a < b; a++) {
+        _availables[a] = !times[a]!;
+      }
+      if (_begin != null && _end != null) {
+        for (a = _begin! - 1; a < _end!; a++) {
+          _availables[a] = true;
+        }
+      }
+    } catch(e) {}
+    debugPrint('available times: $_availables');
+    _reset = false;
   }
 }

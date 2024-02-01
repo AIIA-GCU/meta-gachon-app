@@ -100,7 +100,7 @@ class CustomListItem extends StatelessWidget {
     required this.room,
     required this.date,
     required this.time,
-    // required this.membersInfo,
+    required this.members,
     this.review,
     this.photo
   }) {
@@ -113,6 +113,7 @@ class CustomListItem extends StatelessWidget {
   final String room;
   final String date;
   final String time;
+  final String members;
   final String? review;
   final Uint8List? photo;
 
@@ -178,10 +179,10 @@ class CustomListItem extends StatelessWidget {
       builder: (context) {
         if (photo == null) {
           return ReservationPopup(
-              Reservate(uid, '$stuNum $name', room, date, time));
+              Reservate(uid, '$stuNum $name', room, date, time, members));
         } else {
           return AdmissionPopup(
-              Admit(uid, '$stuNum $name', room, date, time, review!, photo!));
+              Admit(uid, '$stuNum $name', room, date, time, members, review!, photo!));
         }
       }
   );

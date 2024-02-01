@@ -459,6 +459,7 @@ class RestAPI {
   }
 
   /// 인증 추가
+  /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
   static Future<int?> addAdmission({
     required String review,
     required String photo,
@@ -593,7 +594,7 @@ class Reservate {
   final String _room;
   final String _date;
   final String _time;
-  // final String _member;
+  final String _memberInfo;
 
   int get reservationId => _reservationId;
 
@@ -605,7 +606,7 @@ class Reservate {
 
   String get time => _time;
 
-  // String get member => _member;
+  String get memberInfo => _memberInfo;
 
   Reservate(
       this._reservationId,
@@ -613,7 +614,7 @@ class Reservate {
       this._room,
       this._date,
       this._time,
-      // this._member
+      this._memberInfo
       );
 
   ///
@@ -630,7 +631,7 @@ class Reservate {
     json['room'],
     json['date'],
     json['time'],
-    // json['member']
+    json['memberInfo'] ?? ''
   );
 }
 
@@ -640,7 +641,7 @@ class Admit {
   final String _room;
   final String _date;
   final String _time;
-  // final List<String> _members;
+  final String _memberInfo;
   final String _review;
   final Uint8List _photo;
 
@@ -654,7 +655,7 @@ class Admit {
 
   String get time => _time;
 
-  // List<String> get members => _members;
+  String get memberInfo => _memberInfo;
 
   String get review => _review;
 
@@ -666,7 +667,7 @@ class Admit {
       this._room,
       this._date,
       this._time,
-      // this._members,
+      this._memberInfo,
       this._review,
       this._photo
       );
@@ -687,7 +688,7 @@ class Admit {
       json['room'],
       json['date'],
       json['time'],
-      // json['membersInfo'],
+      json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo'])
   );

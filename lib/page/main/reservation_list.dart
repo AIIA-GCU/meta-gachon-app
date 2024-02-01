@@ -108,6 +108,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                                 room: e.room,
                                 date: e.date,
                                 time: e.time,
+                                members: e.memberInfo
                               );
                             }).toList()
                         );

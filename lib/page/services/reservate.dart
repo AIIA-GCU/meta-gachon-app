@@ -206,32 +206,26 @@ class _ReservatePageState extends State<ReservatePage> {
                   itemBuilder: (context, index, animation) {
                     final List<Widget> temp = [
                       ///예약 시간 선택
-                      FutureBuilder<List<bool>>(
-                        future: availableTime(),
-                        builder: (context, snapshot) {
-                          return Container(
-                            margin: EdgeInsets.fromLTRB(
-                              ratio.width * 16,
-                              0,
-                              ratio.width * 16,
-                              ratio.height * 12
-                            ),
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12)),
-                            child: snapshot.hasData
-                                ? CustomTimePicker(
-                                    start: selectedEnter,
-                                    end: selectedExit,
-                                    availableTimes: snapshot.data!,
-                                    setStart: (index) => selectedEnter = index,
-                                    setEnd: (index) => selectedExit = index + 1,
-                                  )
-                                : null
-                          );
-                        }
-                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(
+                            ratio.width * 16,
+                            0,
+                            ratio.width * 16,
+                            ratio.height * 12
+                        ),
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: CustomTimePicker(
+                          room: selectedRoom!,
+                          date: selectedDate!,
+                          begin: selectedEnter,
+                          end: selectedExit,
+                          setStart: (index) => selectedEnter = index,
+                          setEnd: (index) => selectedExit = index + 1,
+                        )
+                    ),
 
                       ///대표자
                       CustomContainer(
@@ -454,29 +448,26 @@ class _ReservatePageState extends State<ReservatePage> {
                       Spacer(),
 
                       ///예약하기 버튼
-                      AnimatedOpacity(
-                        opacity: canTime ? 1 : 0,
-                        duration: Duration(milliseconds: 200),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: ratio.height * 10),
-                          child: ElevatedButton(
-                              onPressed: reservate,
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: MGcolor.brand_orig,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  fixedSize: Size(ratio.width * 358, ratio.height * 48)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: ratio.height * 10),
+                        child: ElevatedButton(
+                            onPressed: canTime ? reservate : null,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: MGcolor.brand_orig,
+                                disabledBackgroundColor: MGcolor.base5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                fixedSize: Size(ratio.width * 358, ratio.height * 48)
+                            ),
+                            child: Text(
+                              "예약하기",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16 * ratio.height,
+                                fontFamily: 'Noto Sans KR',
+                                fontWeight: FontWeight.w700,
                               ),
-                              child: Text(
-                                "예약하기",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16 * ratio.height,
-                                  fontFamily: 'Noto Sans KR',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              )
-                          ),
+                            )
                         ),
                       ),
                     ])
@@ -516,28 +507,6 @@ class _ReservatePageState extends State<ReservatePage> {
     return widget.reservate!.room == selectedRoom!
     && temp == selectedDate!
     && widget.reservate!.time == '$selectedEnter ~ $selectedExit';
-  }
-
-  Future<List<bool>> availableTime() async {
-    List<bool> result = List.generate(26, (index) => false);
-    if (selectedRoom != null && selectedDate != null) {
-      try {
-        Map<int, bool>? times = await RestAPI
-            .getAvailableTime(room: selectedRoom!, date: selectedDate!);
-        int a = times!.keys.first, b = times.keys.last;
-        for (a - 1; a < b; a++) {
-          result[a] = !times[a]!;
-        }
-
-        if (widget.reservate != null) {
-          for (a = selectedEnter! - 1; a < selectedExit!; a++) {
-            result[a] = true;
-          }
-        }
-      } catch(e) {}
-    }
-    debugPrint('available times: $result');
-    return result;
   }
 
   Widget _MyUserBox(String memberInfo) {
