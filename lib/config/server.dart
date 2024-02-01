@@ -71,7 +71,7 @@ class Session {
 }
 
 class APIRequest {
-  static const String _BASE_URL = "http://210.102.178.161:22/";
+  static const String _BASE_URL = "http://210.102.178.161:8080/";
   static const String _SESSION_COOKIE_NAME = "JSESSIONID";
 
   // static late String _appVersion;
@@ -284,28 +284,7 @@ class RestAPI {
     }
   }
 
-  /// 예약 가능한 시간대
-  static Future<Map<int, bool>?> getAvailableTime({
-    required String room,
-    required String date
-  }) async {
-    try {
-      final api = APIRequest('books/available?room=${room}&date=${date}');
-      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
-      if (response.isEmpty) {
-        return null;
-      } else {
-        Map<String, dynamic> result = response['disableTime'];
-        return result.map((key, value) => MapEntry(int.parse(key), value));
-      }
-    } on TimeoutException {
-      throw TimeoutException('transmission rate is too slow!');
-    }
-  }
-
-  ///
   /// 예약 추가
-  ///
   static Future<int?> addReservation({
     required String room,
     required String startTime,
@@ -367,25 +346,6 @@ class RestAPI {
     }
   }
 
-  /// 현재 예약의 상태
-  /// . 0: 시작까지 한참 남음
-  /// . 1: 사용 시작이 다가옴
-  /// . 2: 사용 중
-  /// . 3: 연장 가능
-  /// . 4: 사용 끝
-  /// Todo: 아직 추가 안 됨
-  static Future<int?> currentReservationStatus({
-    required int uid
-  }) async {
-    try {
-      final api = APIRequest('book/$uid');
-      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
-      return response['status'];
-    } on TimeoutException {
-      throw TimeoutException('transmission rate is too slow!');
-    }
-  }
-
   /// 예약 연장
   static Future<int?> prolongReservation({
     required int reservationId
@@ -394,6 +354,65 @@ class RestAPI {
       final api = APIRequest('book/prolong/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.PATCH);
       return response['reservationId'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 현재 예약의 상태
+  /// . 0: 사용 전 (예약 변경 O)
+  /// . 1: 사용 전 (예약 변경 X)
+  /// . 2: 사용 중 (연장 X)
+  /// . 3: 사용 중 (연장 O)
+  /// . 4: 사용 끝 (인증 X)
+  /// . 5: 사용 끝 (인증 O)
+  /// Todo: 아직 추가 안 됨
+  static Future<int?> currentReservationStatus({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+      return response['status'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 가능한 시간대
+  static Future<Map<int, bool>?> getAvailableTime({
+    required String room,
+    required String date
+  }) async {
+    try {
+      final api = APIRequest('books/available?room=${room}&date=${date}');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        Map<String, dynamic> result = response['disableTime'];
+        return result.map((key, value) => MapEntry(int.parse(key), value));
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 서비스에 따른 예약 장소 반환
+  static Future<List<String>?> placeForService({
+    required int service
+  }) async {
+    try {
+      final api = APIRequest('book/place');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.GET,
+          params: {'service': service}
+      );
+      if (response.isEmpty) {
+        return null;
+      } else {
+        return response['places'];
+      }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -440,6 +459,7 @@ class RestAPI {
   }
 
   /// 인증 추가
+  /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
   static Future<int?> addAdmission({
     required String review,
     required String photo,
@@ -490,7 +510,7 @@ class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
   final String _name;
-  final String _depart;
+  // final String _depart;
   final int _stuNum;
   int _rating;
   int _negative;
@@ -502,7 +522,7 @@ class User {
 
   String get name => _name;
 
-  String get depart => _depart;
+  // String get depart => _depart;
 
   int get stuNum => _stuNum;
 
@@ -519,7 +539,7 @@ class User {
   set setPositive(int val) => _positive = val;
 
   User(this._name,
-      this._depart,
+      // this._depart,
       this._stuNum,
       this._rating,
       this._negative,
@@ -559,13 +579,13 @@ class User {
   /// - "positive": 10
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
-        json['name'],
-        json['department'],
-        json['stuNum'],
-        json['rating'],
-        json['negative'],
-        json['positive']
-    );
+      json['name'],
+      // json['department'],
+      json['stuNum'],
+      json['rating'],
+      json['negative'],
+      json['positive']
+  );
 }
 
 class Reservate {
@@ -574,7 +594,7 @@ class Reservate {
   final String _room;
   final String _date;
   final String _time;
-  // final String _member;
+  final String _memberInfo;
 
   int get reservationId => _reservationId;
 
@@ -586,7 +606,7 @@ class Reservate {
 
   String get time => _time;
 
-  // String get member => _member;
+  String get memberInfo => _memberInfo;
 
   Reservate(
       this._reservationId,
@@ -594,7 +614,7 @@ class Reservate {
       this._room,
       this._date,
       this._time,
-      // this._member
+      this._memberInfo
       );
 
   ///
@@ -606,13 +626,13 @@ class Reservate {
   /// - "time": "06:00 ~ 15:00"
   ///
   factory Reservate.fromJson(Map<String, dynamic> json) => Reservate(
-        json['reservationId'],
-        json['leaderInfo'],
-        json['room'],
-        json['date'],
-        json['time'],
-        // json['member']
-    );
+    json['reservationId'],
+    json['leaderInfo'],
+    json['room'],
+    json['date'],
+    json['time'],
+    json['memberInfo'] ?? ''
+  );
 }
 
 class Admit {
@@ -621,7 +641,7 @@ class Admit {
   final String _room;
   final String _date;
   final String _time;
-  // final List<String> _members;
+  final String _memberInfo;
   final String _review;
   final Uint8List _photo;
 
@@ -635,7 +655,7 @@ class Admit {
 
   String get time => _time;
 
-  // List<String> get members => _members;
+  String get memberInfo => _memberInfo;
 
   String get review => _review;
 
@@ -647,7 +667,7 @@ class Admit {
       this._room,
       this._date,
       this._time,
-      // this._members,
+      this._memberInfo,
       this._review,
       this._photo
       );
@@ -668,7 +688,7 @@ class Admit {
       json['room'],
       json['date'],
       json['time'],
-      // json['membersInfo'],
+      json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo'])
   );

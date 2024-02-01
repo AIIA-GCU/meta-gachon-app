@@ -155,6 +155,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                           room: e.room,
                           date: e.date,
                           time: e.time,
+                          members: e.memberInfo,
                           photo: e.photo,
                           review: e.review,
                         );

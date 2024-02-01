@@ -61,6 +61,7 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
                     room: e.room,
                     date: e.date,
                     time: e.time,
+                    members: e.memberInfo,
                     photo: e.photo,
                     review: e.review,
                   );

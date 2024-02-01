@@ -100,7 +100,7 @@ class CustomListItem extends StatelessWidget {
     required this.room,
     required this.date,
     required this.time,
-    // required this.membersInfo,
+    required this.members,
     this.review,
     this.photo
   }) {
@@ -113,6 +113,7 @@ class CustomListItem extends StatelessWidget {
   final String room;
   final String date;
   final String time;
+  final String members;
   final String? review;
   final Uint8List? photo;
 
@@ -121,13 +122,7 @@ class CustomListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        int? status;
-        if (review == null) {
-          status = await RestAPI.currentReservationStatus(uid: uid);
-        }
-        showCard(context, status);
-      },
+      onTap: () => showCard(context),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: ratio.height * 4),
         padding: EdgeInsets.symmetric(
@@ -179,17 +174,15 @@ class CustomListItem extends StatelessWidget {
     );
   }
 
-  void showCard(BuildContext ctx, int? status) => showDialog(
+  void showCard(BuildContext ctx) => showDialog(
       context: ctx,
       builder: (context) {
-        if (status == null) {
+        if (photo == null) {
           return ReservationPopup(
-            Reservate(uid, '$stuNum $name', room, date, time),
-            status!
-          );
+              Reservate(uid, '$stuNum $name', room, date, time, members));
         } else {
           return AdmissionPopup(
-            Admit(uid, '$stuNum $name', room, date, time, review!, photo!));
+              Admit(uid, '$stuNum $name', room, date, time, members, review!, photo!));
         }
       }
   );
