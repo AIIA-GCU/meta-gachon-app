@@ -369,7 +369,6 @@ class _AdmitPageState extends State<AdmitPage> {
         . startTime: $date $begin
         . endTime: $date $end
         . leader: $leaderInfo
-        . member: ???
         . review: ${_textCtr.text}
         . photo: ${bytes}""");
 
