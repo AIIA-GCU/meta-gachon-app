@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/sign_in.dart';
+import 'package:mata_gachon/pages/sign_in_page.dart';
 
 class OnBoarding extends StatelessWidget {
   static late Size screenSize;

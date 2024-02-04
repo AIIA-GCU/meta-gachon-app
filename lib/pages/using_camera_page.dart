@@ -3,10 +3,11 @@ import 'dart:io' show Platform;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({super.key, required this.takenPictrue});

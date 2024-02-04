@@ -6,10 +6,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/reservate.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/pages/reservate_page.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class ReservationListPage extends StatefulWidget {
   const ReservationListPage({super.key});

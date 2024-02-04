@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/on_boarding.dart';
+import 'package:mata_gachon/pages/on_boarding_page.dart';
 
 class Splash extends StatefulWidget {
   @override

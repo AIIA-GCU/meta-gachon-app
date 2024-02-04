@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/sign_up.dart';
-import 'package:mata_gachon/page/main/frame.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mata_gachon/pages/sign_up_page.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class SignInPage extends StatefulWidget {
   @override

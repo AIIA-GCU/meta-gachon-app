@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});

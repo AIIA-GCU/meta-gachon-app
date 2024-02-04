@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/admit.dart';
-import 'package:mata_gachon/page/services/my_admission.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/pages/admit_page.dart';
+import 'package:mata_gachon/pages/my_admission_list_page.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class AdmissionListPage extends StatefulWidget {
   const AdmissionListPage({super.key});
@@ -162,8 +162,8 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       }).toList());
                     } else {
                       return Container(
-                          height: ratio.height * 594,
-                          alignment: Alignment.center,
+                          height: ratio.height * 218,
+                          alignment: Alignment.bottomCenter,
                           child: Text(
                               '아직 인증이 없어요!',
                               style: KR.subtitle4.copyWith(color: MGcolor.base3)

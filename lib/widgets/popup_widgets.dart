@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/admit.dart';
-import 'package:mata_gachon/page/services/reservate.dart';
-import 'package:mata_gachon/page/services/using_camera.dart';
+import 'package:mata_gachon/pages/admit_page.dart';
+import 'package:mata_gachon/pages/reservate_page.dart';
+import 'package:mata_gachon/pages/using_camera_page.dart';
 
 class AlertPopup extends StatelessWidget {
   const AlertPopup({

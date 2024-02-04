@@ -14,7 +14,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/popup.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
 
 class ProgressWidget extends StatelessWidget {
   const ProgressWidget({super.key});
@@ -131,6 +131,8 @@ class CustomListItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
+          border: isReservation && date.contains(today)
+              ? Border.all(color: MGcolor.brand_orig) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

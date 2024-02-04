@@ -3,21 +3,22 @@ import 'dart:io' show Platform;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/page/main/frame.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:go_router/go_router.dart';
 // import 'package:provider/provider.dart';
 
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/sign_in.dart';
-import 'package:mata_gachon/page/hotload/on_boarding.dart';
-// import 'package:mata_gachon/page/main/frame.dart';
-// import 'package:mata_gachon/page/services/alarm.dart';
-// import 'package:mata_gachon/page/services/my_admission.dart';
-// import 'package:mata_gachon/page/services/reservate.dart';
+import 'package:mata_gachon/pages/sign_in_page.dart';
+import 'package:mata_gachon/pages/on_boarding_page.dart';
+// import 'package:mata_gachon/page/main/main_frame.dart';
+// import 'package:mata_gachon/page/services/alarm_page.dart';
+// import 'package:mata_gachon/page/services/my_admission_list_page.dart';
+// import 'package:mata_gachon/page/services/reservate_page.dart';
 
 Future<void> main() async {
   debugPrint("called main()");
+  today = std2_format.format(DateTime.now());
   WidgetsFlutterBinding.ensureInitialized();
   debugPrint("determining initial page");
   late final Widget start;

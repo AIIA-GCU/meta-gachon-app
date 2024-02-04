@@ -14,6 +14,9 @@ import 'package:camera/camera.dart';
 /// 비율
 late Size ratio;
 
+/// 오늘 날짜
+late final String today;
+
 /// 카메라
 late final CameraDescription camera;
 

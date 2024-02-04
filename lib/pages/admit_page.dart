@@ -7,9 +7,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:mata_gachon/page/services/using_camera.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'package:mata_gachon/pages/using_camera_page.dart';
 
 
 

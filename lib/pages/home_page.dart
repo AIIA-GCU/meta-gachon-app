@@ -10,10 +10,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/admit.dart';
-import 'package:mata_gachon/page/services/my_admission.dart';
-import 'package:mata_gachon/page/services/reservate.dart';
-import 'package:mata_gachon/widget/popup.dart';
+import 'package:mata_gachon/pages/admit_page.dart';
+import 'package:mata_gachon/pages/my_admission_list_page.dart';
+import 'package:mata_gachon/pages/reservate_page.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.movetoReserList, required this.movetoAdmisList});

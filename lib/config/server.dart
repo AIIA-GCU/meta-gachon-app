@@ -273,10 +273,16 @@ class RestAPI {
       if (response.isEmpty) {
         return null;
       } else {
-        final result = response.map((e) {
+        List<Reservate> result = response.map((e) {
           final temp = e as Map<String, dynamic>;
           return Reservate.fromJson(temp);
         }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
         return result;
       }
     } on TimeoutException {
@@ -427,10 +433,16 @@ class RestAPI {
       if (response.isEmpty) {
         return null;
       } else {
-        final result = response.map((e) {
+        List<Admit> result = response.map((e) {
           final temp = e as Map<String, dynamic>;
           return Admit.fromJson(temp);
         }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
         return result;
       }
     } on TimeoutException {
@@ -447,10 +459,16 @@ class RestAPI {
       if (response.isEmpty) {
         return null;
       } else {
-        final result = response.map((e) {
+        List<Admit> result = response.map((e) {
           final temp = e as Map<String, dynamic>;
           return Admit.fromJson(temp);
         }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
         return result;
       }
     } on TimeoutException {

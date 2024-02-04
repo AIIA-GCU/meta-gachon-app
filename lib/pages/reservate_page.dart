@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/select_time.dart';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/widgets/select_time_widgets.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class ReservatePage extends StatefulWidget {
   const ReservatePage({

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/my_admission.dart';
-import 'package:mata_gachon/page/services/setting.dart';
-import 'package:mata_gachon/page/services/term.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/pages/my_admission_list_page.dart';
+import 'package:mata_gachon/pages/setting_page.dart';
+import 'package:mata_gachon/pages/term_page.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({
