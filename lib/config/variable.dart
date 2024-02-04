@@ -17,6 +17,9 @@ late Size ratio;
 /// 카메라
 late final CameraDescription camera;
 
+/// 학교 바코드
+const String BARCODE = "12016091019242582042";
+
 ///
 /// 색깔
 ///
