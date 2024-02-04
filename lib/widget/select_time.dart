@@ -1,16 +1,10 @@
-///
-/// 메타가천용 캘린더
-/// -
-///
-
-// import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
-import 'package:mata_gachon/config/server.dart';
 
+import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/widget/small_widgets.dart';
 
 class CustomCalender extends StatefulWidget {
   const CustomCalender({
@@ -284,7 +278,15 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   @override
   void initState() {
     super.initState();
-    _reset = true;
+
+    this._reset = true;
+    this._begin = widget.begin;
+    this._end = widget.end;
+    if (_begin != null && _end != null) {
+      _end = _end! - 1;
+      debugPrint("start: $_begin | end: ${_end!+1}");
+    }
+
     _scrollCtrGroup = LinkedScrollControllerGroup();
     _scrollCtr1 = _scrollCtrGroup.addAndGet();
     _scrollCtr2 = _scrollCtrGroup.addAndGet();
@@ -315,9 +317,30 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     return FutureBuilder<void>(
       future: _reset ? _availableTime() : null,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox.shrink();
+        /// 시간 표시용 텍스트
+        late final Text beginStr, endStr;
+        if (_begin != null && _end != null) {
+          if (_begin! < 10) {
+            beginStr = Text('0$_begin:00', style: EN.subtitle2);
+          } else if (_begin! >= 24) {
+            beginStr = Text('0${_begin! % 24}:00', style: EN.subtitle2);
+          } else {
+            beginStr = Text('$_begin:00', style: EN.subtitle2);
+          }
+          if (_end! < 9) {
+            endStr = Text('0${_end!+1}:00', style: EN.subtitle2);
+          } else if (_end! >= 23) {
+            endStr = Text('0${(_end!+1) % 24}:00', style: EN.subtitle2);
+          } else {
+            endStr = Text('${_end!+1}:00', style: EN.subtitle2);
+          }
+        } else {
+          beginStr = Text('00:00',
+              style: EN.subtitle2.copyWith(color: MGcolor.base5));
+          endStr = Text('00:00',
+              style: EN.subtitle2.copyWith(color: MGcolor.base5));
         }
+
         return SizedBox(
           width: ratio.width * 336,
           child: Column(
@@ -334,57 +357,132 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                   )
                 ],
               ),
-              SizedBox(height: ratio.height * 10),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                decoration: BoxDecoration(
-                  color: MGcolor.base5,
-                  borderRadius: BorderRadius.circular(4)
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(26, (index) {
-                      Color? color;
-                      if (!_availables![index]) {
-                        color = MGcolor.brand_deep;
-                      }
-                      else if (_begin != null && _end != null) {
-                        if (_begin! <= index && index <= _end!) {
-                          color = MGcolor.brand_orig;
-                        } else if (index == _begin!+1) {
-                          color = MGcolor.brand_orig.withOpacity(0.2);
-                        } else if (index == _begin!+2 && _availables![index]) {
-                          color = MGcolor.brand_orig.withOpacity(0.2);
-                        }
-                      }
-                      if (color == null) {
-                        color = Colors.white;
-                      }
 
-                  return GestureDetector(
-                    onTap: color != MGcolor.brand_deep
-                        ? () => _onTap(index) : null,
-                    behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      width: 24,
-                      height: 28,
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(3)
-                      )
+              SizedBox(height: ratio.height * 10),
+
+              if (_reset)
+                ...[
+                  SizedBox(height: 40 + ratio.height * 55)
+                ]
+              else
+                ...[
+                  /// 마이쮸 시간표
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                    decoration: BoxDecoration(
+                        color: MGcolor.base6,
+                        borderRadius: BorderRadius.circular(4)
                     ),
-                  );
-                })
-              )
-            ),
+                    child: SingleChildScrollView(
+                        controller: _scrollCtr1,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(children: List.generate(26, (index) {
+                          Color? color;
+                          if (!_availables[index]) {
+                            color = MGcolor.brand_deep;
+                          }
+                          else if (_begin != null && _end != null) {
+                            if (_begin! <= index && index <= _end!) {
+                              color = MGcolor.brand_orig;
+                            } else if (index == _begin!+1) {
+                              color = MGcolor.brand_orig.withOpacity(0.2);
+                            } else if (index == _begin!+2 && _availables[index]) {
+                              color = MGcolor.brand_orig.withOpacity(0.2);
+                            }
+                          }
+                          if (color == null) {
+                            color = Colors.white;
+                          }
+
+                          return GestureDetector(
+                            onTap: color == MGcolor.brand_deep
+                                ? null : () => _onTap(index),
+                            child: Container(
+                                width: 24,
+                                height: 28,
+                                margin: EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(3)
+                                )
+                            ),
+                          );
+                        }))
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ratio.width * 2
+                    ),
+                    child: SingleChildScrollView(
+                        controller: _scrollCtr2,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(children: List.generate(9, (index) {
+                          if (index == 8) {
+                            return SizedBox(
+                                width: (24 + 3 * 2) * 2,
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('24', style: EN.label2),
+                                      Text('2', style: EN.label2),
+                                    ]
+                                )
+                            );
+                          } else {
+                            return SizedBox(
+                                width: (24 + 3 * 2) * 3,
+                                child: Text('${index * 3}', style: EN.label2)
+                            );
+                          }
+                        }))
+                    ),
+                  ),
+
+                  SizedBox(height: ratio.height * 8),
+
+                  /// 시간 표시용 텍스트
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: ratio.width * 108,
+                          height: ratio.height * 36,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: MGcolor.brand_orig)
+                          ),
+                          child: beginStr
+                      ),
+                      SizedBox(
+                          width: 24 * ratio.width,
+                          child: Center(child: Text("~"))
+                      ),
+                      Container(
+                          width: ratio.width * 108,
+                          height: ratio.height * 36,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: MGcolor.brand_orig)
+                          ),
+                          child: endStr
+                      ),
+                    ]
+                  )
+                ]
+            ]
           )
-        ]
-      )
+        );
+      }
     );
   }
 
+  /// 박스를 클릭했을 때, 시간을 설정하기
   void _onTap(int idx) {
     setState(() {
       if (_begin == null || idx < _begin! || _begin!+2 < idx) {
@@ -401,17 +499,18 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     });
   }
 
+  /// 서버에서 예약 가능한 시간 확인하기
   Future<void> _availableTime() async {
     _availables = List.generate(26, (index) => false);
     try {
       Map<int, bool>? times = await RestAPI
           .getAvailableTime(room: widget.room, date: widget.date);
       int a = times!.keys.first, b = times.keys.last;
-      for (a - 1; a < b; a++) {
+      for (a; a <= b; a++) {
         _availables[a] = !times[a]!;
       }
       if (_begin != null && _end != null) {
-        for (a = _begin! - 1; a < _end!; a++) {
+        for (a = _begin! - 1; a <= _end!; a++) {
           _availables[a] = true;
         }
       }
