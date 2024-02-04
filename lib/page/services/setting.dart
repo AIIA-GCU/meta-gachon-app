@@ -107,7 +107,7 @@ class _SettingPageState extends State<SettingPage> {
               TileButtonCard(items: [
                 /// 학교 홈페이지로 바로 가기
                 TileButton(
-                  onTap: () {},
+                  onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                       ratio.width * 22,
                       ratio.height * 12,
@@ -124,14 +124,10 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                             angle: pi,
-                            child: IconButton(
-                              onPressed: (){
-                                launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do'));
-                              },
-                              icon: Icon(AppinIcon.back,
-                              size: ratio.width * 24,
-                              color: MGcolor.base4
-                              )
+                            child: Icon(
+                                AppinIcon.back,
+                                size: ratio.width * 24,
+                                color: MGcolor.base4
                             )
                           )
                         ]
@@ -140,7 +136,7 @@ class _SettingPageState extends State<SettingPage> {
 
                 /// 사이버 캠퍼스로 바로 가기
                 TileButton(
-                    onTap: () {},
+                    onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                         ratio.width * 22,
                         ratio.height * 12,
@@ -157,15 +153,11 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                               angle: pi,
-                              child: IconButton(
-                              onPressed: (){
-                                launchUrl(Uri.parse('https://cyber.gachon.ac.kr/login.php'));
-                              },
-                              icon: Icon(AppinIcon.back,
-                              size: ratio.width * 24,
-                              color: MGcolor.base4
+                              child: Icon(
+                                  AppinIcon.back,
+                                  size: ratio.width * 24,
+                                  color: MGcolor.base4
                               )
-                            )
                           )
                         ]
                     )
