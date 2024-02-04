@@ -181,3 +181,68 @@ class CustomListItem extends StatelessWidget {
       }
   );
 }
+
+class TileButtonCard extends StatelessWidget {
+  const TileButtonCard({
+    super.key,
+    this.background,
+    this.shape,
+    this.margin,
+    this.padding,
+    required this.items
+  });
+
+  final Color? background;
+  final ShapeBorder? shape;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? padding;
+  final List<TileButton> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: margin != null ? margin!
+          : EdgeInsets.symmetric(vertical: ratio.height * 8),
+      child: Material(
+        color: background != null ? background: Colors.white,
+        shape: shape != null ? shape
+            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: padding != null ? padding!
+              : EdgeInsets.symmetric(vertical: ratio.height * 8),
+          child: Column(children: items),
+        ),
+      ),
+    );
+  }
+}
+
+class TileButton extends StatelessWidget {
+  const TileButton({
+    super.key,
+    this.onTap,
+    this.alignment,
+    this.padding,
+    this.borderRadius,
+    required this.child
+  });
+
+  final VoidCallback? onTap;
+  final Alignment? alignment;
+  final EdgeInsetsGeometry? padding;
+  final BorderRadius? borderRadius;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: borderRadius,
+      child: Container(
+        padding: padding,
+        alignment: alignment,
+        child: child,
+      ),
+    );
+  }
+}

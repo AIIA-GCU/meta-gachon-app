@@ -8,6 +8,7 @@ import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/widget/popup.dart';
 import 'package:mata_gachon/widget/small_widgets.dart';
 
+/// 회원가입 프로세스를 위한 프레임
 class SignUpFrame extends StatefulWidget {
   const SignUpFrame({super.key});
 
@@ -198,6 +199,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
   }
 }
 
+/// 약관 & 개인정보 수집 동의 페이지
 class AgreePge extends StatefulWidget {
   const AgreePge({
     super.key,
@@ -245,47 +247,53 @@ class _AgreePgeState extends State<AgreePge> {
             child: Column(
               children: [
                 /// 이용약관
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: _list[0],
-                      activeColor: MGcolor.btn_active,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(width: 1.6, color: MGcolor.base6)),
-                      onChanged: (val) => _onAgreed(0, val!)
-                    ),
-                    Expanded(child: Text(
-                      '이용약관 동의', style: KR.subtitle2)),
-                    Transform.rotate(
-                      angle: pi,
-                      child: Icon(AppinIcon.back, size: 24),
-                    )
-                  ]
-                ),
-
-                /// 개인정보 수집 및 이용
-                Row(
+                TileButton(
+                  onTap: () => _showTerms(Term.usingService),
+                  child: Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Checkbox(
-                          value: _list[1],
-                          activeColor: MGcolor.btn_active,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              side: BorderSide(width: 1.6, color: MGcolor.base6)),
-                          onChanged: (val) => _onAgreed(1, val!)
+                        value: _list[0],
+                        activeColor: MGcolor.btn_active,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                        onChanged: (val) => _onAgreed(0, val!)
                       ),
                       Expanded(child: Text(
-                          '개인정보 수집 및 이용 동의', style: KR.subtitle2)),
+                          '이용약관 동의', style: KR.subtitle2)),
                       Transform.rotate(
                         angle: pi,
                         child: Icon(AppinIcon.back, size: 24),
                       )
                     ]
+                  )
+                ),
+
+                /// 개인정보 수집 및 이용
+                TileButton(
+                  onTap: () => _showTerms(Term.personalInfomationCollection),
+                  child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: _list[1],
+                            activeColor: MGcolor.btn_active,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                                side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                            onChanged: (val) => _onAgreed(1, val!)
+                        ),
+                        Expanded(child: Text(
+                            '개인정보 수집 및 이용 동의', style: KR.subtitle2)),
+                        Transform.rotate(
+                          angle: pi,
+                          child: Icon(AppinIcon.back, size: 24),
+                        )
+                      ]
+                  ),
                 ),
 
                 Divider(
@@ -297,25 +305,34 @@ class _AgreePgeState extends State<AgreePge> {
                 ),
 
                 /// 전체 동의
-                Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                          value: _list[0] && _list[1],
-                          activeColor: MGcolor.btn_active,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              side: BorderSide(width: 1.6, color: MGcolor.base6)),
-                          onChanged: (val) => _onAgreed(2, val!)
-                      ),
-                      Expanded(child: Text(
-                          '전체 동의', style: KR.subtitle2)),
-                      Transform.rotate(
-                        angle: pi,
-                        child: Icon(AppinIcon.back, size: 24),
-                      )
-                    ]
+                TileButton(
+                  onTap: () {
+                    if (!_list[0] || !_list[1]) {
+                      _onAgreed(2, true);
+                    } else {
+                      _onAgreed(2, false);
+                    }
+                  },
+                  child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: _list[0] && _list[1],
+                            activeColor: MGcolor.btn_active,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                                side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                            onChanged: (val) => _onAgreed(2, val!)
+                        ),
+                        Expanded(child: Text(
+                            '전체 동의', style: KR.subtitle2)),
+                        Transform.rotate(
+                          angle: pi,
+                          child: Icon(AppinIcon.back, size: 24),
+                        )
+                      ]
+                  ),
                 )
               ]
             ),
@@ -334,6 +351,116 @@ class _AgreePgeState extends State<AgreePge> {
       }
       widget.allowToMovePage(_list[0] && _list[1]);
     });
+  }
+
+  void _showTerms(Term term) {
+    switch (term) {
+      case Term.usingService:
+        showModalBottomSheet(
+            context: context,
+            enableDrag: false,
+            isScrollControlled: true,
+            barrierColor: Colors.black.withOpacity(0.25),
+            backgroundColor: Colors.white,
+            constraints: BoxConstraints(maxHeight: ratio.height * 814),
+            builder: (context) => Padding(
+                padding: EdgeInsets.only(top: ratio.height * 108),
+                child: Column(
+                    children: [
+                      /// Title
+                      Text('이용약관 동의 전문', style: KR.subtitle0),
+
+                      SizedBox(height: ratio.height * 29),
+
+                      /// Content
+                      ShaderMask(
+                        shaderCallback: hazySide,
+                        blendMode: BlendMode.dstOut,
+                        child: SizedBox(
+                          height: ratio.height * 495,
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: ratio.width * 61,
+                                vertical: ratio.height * 60
+                            ),
+                            child: Text(
+                                USING_SERVICE_TERM,
+                                style: KR.parag2.copyWith(color: MGcolor.base3),
+                                softWrap: true
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: ratio.height * 30),
+
+                      /// Button
+                      ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: MGcolor.brand_orig,
+                              foregroundColor: Colors.white,
+                              fixedSize: Size(ratio.width * 358, ratio.height * 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12))
+                          ),
+                          child: Text('확인', style: KR.subtitle4)
+                      )
+                    ]
+                )
+            )
+        );
+        break;
+      case Term.personalInfomationCollection:
+        showModalBottomSheet(
+            context: context,
+            enableDrag: false,
+            isScrollControlled: true,
+            barrierColor: Colors.black.withOpacity(0.25),
+            backgroundColor: Colors.white,
+            constraints: BoxConstraints(maxHeight: ratio.height * 520),
+            builder: (context) => Padding(
+                padding: EdgeInsets.only(top: ratio.height * 108),
+                child: Column(
+                    children: [
+                      /// Title
+                      Text('개인정보 수집 및 이용 동의 전문', style: KR.subtitle0),
+
+                      SizedBox(height: ratio.height * 60),
+
+                      /// Content
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ratio.width * 61
+                        ),
+                        child: Text(
+                            PERSONAL_INFORMATION_COLLECTION_TERM,
+                            style: KR.parag2.copyWith(color: MGcolor.base3),
+                            softWrap: true
+                        ),
+                      ),
+
+                      SizedBox(height: ratio.height * 71),
+
+                      /// Button
+                      ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: MGcolor.brand_orig,
+                              foregroundColor: Colors.white,
+                              fixedSize: Size(ratio.width * 358, ratio.height * 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12))
+                          ),
+                          child: Text('확인', style: KR.subtitle4)
+                      )
+                    ]
+                )
+            )
+        );
+        break;
+    }
+
   }
 }
 

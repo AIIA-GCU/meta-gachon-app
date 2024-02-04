@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/page/hotload/sign_in.dart';
 
@@ -52,7 +53,13 @@ class OnBoarding extends StatelessWidget {
               width: screenSize.width,
               child: Center(
                 child: ElevatedButton(
-                  onPressed: () => onPress(context),
+                  onPressed: () => Navigator.of(context).push(
+                    PageRouteBuilder(
+                      fullscreenDialog: false,
+                      transitionsBuilder: slideRigth2Left,
+                      pageBuilder: (context, anime, secondAnime) => SignInPage()
+                    )
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MGcolor.btn_active,
                     shape: RoundedRectangleBorder(
@@ -72,68 +79,6 @@ class OnBoarding extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void onPress(BuildContext context) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0))),
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: screenSize.height * 0.75,
-          child: Stack(
-            children: [
-              Positioned(
-                top: ratio.height * 138,
-                width: screenSize.width,
-                child: Text('약관 동의 내용', textAlign: TextAlign.center),
-              ),
-              Positioned(
-                bottom: ratio.height * 80,
-                width: screenSize.width,
-                child: Center(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => SignInPage()));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MGcolor.btn_active,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        minimumSize: Size(ratio.width * 358, ratio.height * 48),
-                      ),
-                      child: Text(
-                        '동의하기',
-                        style: EN.subtitle2.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: MGcolor.base9,
-                        ),
-                      )),
-                ),
-              ),
-              Positioned(
-                bottom: ratio.height * 30,
-                width: screenSize.width,
-                child: Center(
-                  child: TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          minimumSize:
-                              Size(ratio.width * 358, ratio.height * 48)),
-                      child: Text('닫기',
-                          style: TextStyle(color: MGcolor.btn_active))),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
