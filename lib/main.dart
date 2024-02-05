@@ -20,72 +20,51 @@ import 'package:mata_gachon/pages/on_boarding_page.dart';
 // import 'package:mata_gachon/page/services/reservate_page.dart';
 
 Future<void> main() async {
+
   debugPrint("called main()\n");
+
   today = std2_format.format(DateTime.now());
-  debugPrint("initialized flutter binding");
+
+  debugPrint("initializing flutter binding");
+
   await WidgetsFlutterBinding.ensureInitialized();
-  debugPrint("initialized Firebase");
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseMessaging.instance.requestPermission(
-    badge: true, alert: true, sound: true);
-  await FCM.getToken();
-  await FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-    if (message != null) {
-      if (message.notification != null) {
-        debugPrint(message.notification!.title);
-        debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
-      }
-    }
-  });
-  await FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
-    if (message != null) {
-      if (message.notification != null) {
-        debugPrint(message.notification!.title);
-        debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
-      }
-    }
-  });
-  await FirebaseMessaging.instance
-      .getInitialMessage()
-      .then((RemoteMessage? message) {
-    if (message != null) {
-      if (message.notification != null) {
-        debugPrint(message.notification!.title);
-        debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
-      }
-    }
-  });
+
   debugPrint("determining initial page");
+
   late final Widget start;
-  try {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final bool? first = preferences.getBool('firstTime');
-    if (first == null) {
-      preferences.setBool('firstTime', true);
-      start = OnBoarding();
-    } else if (first == true) {
-      start = OnBoarding();
-    } else {
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn'))!;
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  final bool? first = preferences.getBool('firstTime');
+
+  if (first == null) {
+    preferences.setBool('firstTime', true);
+    start = OnBoarding();
+  } else if (first == true) {
+    start = OnBoarding();
+  } else {
+    try {
+      await FCM.initialize();
+      final fcmToken = await FCM.getToken();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
       reservates = await RestAPI.getAllReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
+
       start = MainFrame();
+    } catch(_) {
+      debugPrint('No token');
+      start = SignInPage();
     }
-  } catch(e) {
-    debugPrint("token is empty");
-    start = SignInPage();
   }
+
   debugPrint("complete camera setting");
+
   camera = await availableCameras().then((value) {
     debugPrint(value.length.toString());
     return value.first;
   });
+
   debugPrint("start to run app");
+
   runApp(MataGachon(start: start));
 }
 

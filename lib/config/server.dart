@@ -15,12 +15,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mata_gachon/config/variable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/firebase_options.dart';
 
 // save
 late User myInfo;
@@ -244,13 +248,14 @@ class RestAPI {
   /// Todo: 추후 통합 로그인용으로 바꿔야 함
   static Future<User?> signIn({
     required String id,
-    required String pw
+    required String pw,
+    required String token,
   }) async {
     try {
       final api = APIRequest('user');
       Map<String, dynamic> response = await api.send(
           HTTPMethod.POST,
-          params: {"ID": id, "PW": pw}
+          params: {"ID": id, "PW": pw, "fcmToken": token}
       );
       final preference = await SharedPreferences.getInstance();
       if (preference.getBool('firstTime')! == true) {
@@ -525,11 +530,50 @@ class RestAPI {
 }
 
 class FCM {
-  FCM._();
+  /// 토큰 얻기
+  static Future<String> getToken() async {
+    /// shared preference에서 불러오기
+    final preference = await SharedPreferences.getInstance();
+    String? token = preference.getString('fcm');
 
-  static Future<void> getToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
+    /// 아직 없다면, Firebase에 접근해서 얻고 저장하기
+    if (token == null) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+      token = await FirebaseMessaging.instance.getToken();
+      await preference.setString('fcm', token!);
+    }
+
     debugPrint('Firebase FCM token: $token');
+    return token;
+  }
+
+  /// fcm이 동작할 수 있게 초기화
+  static Future<bool> initialize() async {
+    /// declaration
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform);
+    final fireMsg = await FirebaseMessaging.instance;
+
+    /// 권한 설정
+    final notifiPermission = await fireMsg.requestPermission(badge: true, alert: true, sound: true);
+
+    /// 권한이 허락된 경우에만 메시지 수신하기
+    if (notifiPermission.authorizationStatus == AuthorizationStatus.authorized) {
+      /// Forground
+      FirebaseMessaging.onMessage.listen((msg) { });
+
+      /// Background
+      FirebaseMessaging.onMessageOpenedApp.listen((mgs) { });
+
+      /// Terminate
+      fireMsg.getInitialMessage().then((msg) { });
+
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }
 
