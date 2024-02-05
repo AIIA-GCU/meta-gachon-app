@@ -15,6 +15,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:mata_gachon/config/variable.dart';
@@ -520,6 +521,15 @@ class RestAPI {
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
+  }
+}
+
+class FCM {
+  FCM._();
+
+  static Future<void> getToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    debugPrint('Firebase FCM token: $token');
   }
 }
 

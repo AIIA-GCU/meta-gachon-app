@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "832071493502",
+    "project_id": "meta-gachon-fcm-8056",
+    "storage_bucket": "meta-gachon-fcm-8056.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832071493502:android:80242cc6e15306113a752f",
+        "android_client_info": {
+          "package_name": "com.aiia.mata_gachon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzp90IpwNLe-Gtdf7K7G6peJTWKAJ8BWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

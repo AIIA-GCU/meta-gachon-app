@@ -1,14 +1,17 @@
 import 'dart:io' show Platform;
 
-import 'package:camera/camera.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:camera/camera.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:go_router/go_router.dart';
 // import 'package:provider/provider.dart';
 
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/server.dart';
+import 'package:mata_gachon/config/firebase_options.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
 // import 'package:mata_gachon/page/main/main_frame.dart';
@@ -17,9 +20,45 @@ import 'package:mata_gachon/pages/on_boarding_page.dart';
 // import 'package:mata_gachon/page/services/reservate_page.dart';
 
 Future<void> main() async {
-  debugPrint("called main()");
+  debugPrint("called main()\n");
   today = std2_format.format(DateTime.now());
-  WidgetsFlutterBinding.ensureInitialized();
+  debugPrint("initialized flutter binding");
+  await WidgetsFlutterBinding.ensureInitialized();
+  debugPrint("initialized Firebase");
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseMessaging.instance.requestPermission(
+    badge: true, alert: true, sound: true);
+  await FCM.getToken();
+  await FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
+  await FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
+  await FirebaseMessaging.instance
+      .getInitialMessage()
+      .then((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
   debugPrint("determining initial page");
   late final Widget start;
   try {
