@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/main/home.dart';
-import 'package:mata_gachon/page/main/admission_list.dart';
-import 'package:mata_gachon/page/main/my_page.dart';
-import 'package:mata_gachon/page/main/reservation_list.dart';
-import 'package:mata_gachon/page/services/alarm.dart';
-import 'package:mata_gachon/page/services/my_admission.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/pages/home_page.dart';
+import 'package:mata_gachon/pages/admission_list_page.dart';
+import 'package:mata_gachon/pages/my_page.dart';
+import 'package:mata_gachon/pages/reservation_list_page.dart';
+import 'package:mata_gachon/pages/alarm_page.dart';
+import 'package:mata_gachon/pages/my_admission_list_page.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({super.key});

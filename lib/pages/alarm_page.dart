@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
@@ -30,7 +30,14 @@ class _AlarmState extends State<Alarm> {
               return ProgressWidget();
             case ConnectionState.active:
             case ConnectionState.done:
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              if (snapshot.hasError) {
+                return Center(
+                    child: Text(
+                        '통신 속도가 너무 느려요!',
+                        style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                    )
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

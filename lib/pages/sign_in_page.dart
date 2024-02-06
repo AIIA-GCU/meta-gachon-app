@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/sign_up.dart';
-import 'package:mata_gachon/page/main/frame.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mata_gachon/pages/sign_up_page.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -271,37 +273,47 @@ class _SignInPageState extends State<SignInPage> {
         FocusScope.of(context).unfocus();
         isLoading = true;
       });
-      User? user = await RestAPI.signIn(
-        id: idController.text,
-        pw: pwController.text
-      );
-      if (user != null) {
-        // save data local
-        myInfo = user;
-        reservates = await RestAPI.getAllReservation() ?? [];
-        admits = await RestAPI.getAllAdmission() ?? [];
-        myAdmits = await RestAPI.getMyAdmission() ?? [];
+      try {
+        User? user = await RestAPI.signIn(
+            id: idController.text, pw: pwController.text);
+        if (user != null) {
+          // save data local
+          myInfo = user;
+          reservates = await RestAPI.getAllReservation() ?? [];
+          admits = await RestAPI.getAllAdmission() ?? [];
+          myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-        // appaer popup screen
+          // appaer popup screen
+          setState(() {
+            isLoading = false;
+            showDialog(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.25),
+                builder: (BuildContext context) => CommentPopup(
+                    title: '로그인되었습니다!',
+                    onPressed: () => Navigator.pop(context))).then((_) =>
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainFrame()),
+                    (route) => false));
+          });
+        } else {
+          setState(() {
+            errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
+            isLoading = false;
+          });
+        }
+      } on TimeoutException {
         setState(() {
           isLoading = false;
           showDialog(
               context: context,
               barrierColor: Colors.black.withOpacity(0.25),
-              builder: (BuildContext context) => CommentPopup(
-                  title: '로그인되었습니다!',
+              builder: (context) => CommentPopup(
+                  title: "통신 속도가 너무 느립니다!",
                   onPressed: () => Navigator.pop(context)
               )
-          ).then((_) => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => MainFrame()),
-                  (route) => false
-          ));
-        });
-      } else {
-        setState(() {
-          errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
-          isLoading = false;
+          );
         });
       }
     }

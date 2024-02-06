@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/hotload/sign_in.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mata_gachon/pages/sign_in_page.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -107,7 +108,7 @@ class _SettingPageState extends State<SettingPage> {
               TileButtonCard(items: [
                 /// 학교 홈페이지로 바로 가기
                 TileButton(
-                  onTap: () {},
+                  onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                       ratio.width * 22,
                       ratio.height * 12,
@@ -124,14 +125,10 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                             angle: pi,
-                            child: IconButton(
-                              onPressed: (){
-                                launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do'));
-                              },
-                              icon: Icon(AppinIcon.back,
-                              size: ratio.width * 24,
-                              color: MGcolor.base4
-                              )
+                            child: Icon(
+                                AppinIcon.back,
+                                size: ratio.width * 24,
+                                color: MGcolor.base4
                             )
                           )
                         ]
@@ -140,7 +137,7 @@ class _SettingPageState extends State<SettingPage> {
 
                 /// 사이버 캠퍼스로 바로 가기
                 TileButton(
-                    onTap: () {},
+                    onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                         ratio.width * 22,
                         ratio.height * 12,
@@ -157,15 +154,11 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Transform.rotate(
                               angle: pi,
-                              child: IconButton(
-                              onPressed: (){
-                                launchUrl(Uri.parse('https://cyber.gachon.ac.kr/login.php'));
-                              },
-                              icon: Icon(AppinIcon.back,
-                              size: ratio.width * 24,
-                              color: MGcolor.base4
+                              child: Icon(
+                                  AppinIcon.back,
+                                  size: ratio.width * 24,
+                                  color: MGcolor.base4
                               )
-                            )
                           )
                         ]
                     )

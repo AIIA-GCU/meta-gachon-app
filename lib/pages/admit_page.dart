@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,9 +7,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widget/popup.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
-import 'package:mata_gachon/page/services/using_camera.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'package:mata_gachon/pages/using_camera_page.dart';
 
 
 
@@ -368,7 +369,6 @@ class _AdmitPageState extends State<AdmitPage> {
         . startTime: $date $begin
         . endTime: $date $end
         . leader: $leaderInfo
-        . member: ???
         . review: ${_textCtr.text}
         . photo: ${bytes}""");
 
@@ -390,6 +390,9 @@ class _AdmitPageState extends State<AdmitPage> {
           Navigator.popUntil(context, (route) => route.isFirst);
         };
       }
+    } on TimeoutException{
+      title = '통신 속도가 너무 느려요!';
+      onPressed = () => Navigator.pop(context);
     } catch(_) {
       title = '[400] 서버와의 통신에 문제가 있습니다.';
       onPressed = () => Navigator.pop(context);

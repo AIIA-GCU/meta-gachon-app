@@ -6,10 +6,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/page/services/reservate.dart';
-import 'package:mata_gachon/widget/small_widgets.dart';
+import 'package:mata_gachon/pages/reservate_page.dart';
+import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class ReservationListPage extends StatefulWidget {
   const ReservationListPage({super.key});
@@ -80,33 +81,49 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 child: FutureBuilder<List<Reservate>?>(
                     future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
                     builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Container(
+                            height: ratio.height * 594,
+                            alignment: Alignment.center,
+                            child: Text(
+                                '통신 속도가 너무 느립니다!',
+                                style: KR.subtitle4.copyWith(
+                                    color: MGcolor.base3)
+                            )
+                        );
+                      }
                       if (snapshot.connectionState == ConnectionState.waiting) {
+                        return ProgressWidget();
+                      }
+                      if (snapshot.hasData) {
+                        reservates = snapshot.data!;
+                      }
+                      if (reservates.isNotEmpty) {
+                        return Column(
+                            children: reservates.map((e) {
+                              List<String> temp = e.leaderInfo.split(' ');
+                              return CustomListItem(
+                                uid: e.reservationId,
+                                name: temp[1],
+                                stuNum: int.parse(temp[0]),
+                                room: e.room,
+                                date: e.date,
+                                time: e.time,
+                                members: e.memberInfo
+                              );
+                            }).toList()
+                        );
+                      } else {
                         return Container(
                             height: ratio.height * 594,
                             alignment: Alignment.center,
                             child: Text(
                                 '아직 예약 내역이 없어요!',
-                                style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                                style: KR.subtitle4.copyWith(
+                                    color: MGcolor.base3)
                             )
                         );
                       }
-
-                      if (snapshot.hasData) {
-                        reservates = snapshot.data!;
-                      }
-                      return Column(
-                          children: reservates.map((e) {
-                            List<String> temp = e.leaderInfo.split(' ');
-                            return CustomListItem(
-                              uid: e.reservationId,
-                              name: temp[1],
-                              stuNum: int.parse(temp[0]),
-                              room: e.room,
-                              date: e.date,
-                              time: e.time,
-                            );
-                          }).toList()
-                      );
                     }
                 )
             )

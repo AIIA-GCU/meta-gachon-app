@@ -71,7 +71,7 @@ class Session {
 }
 
 class APIRequest {
-  static const String _BASE_URL = "http://210.102.178.161:22/";
+  static const String _BASE_URL = "http://210.102.178.161:8080/";
   static const String _SESSION_COOKIE_NAME = "JSESSIONID";
 
   // static late String _appVersion;
@@ -140,13 +140,13 @@ class APIRequest {
       };
 
       request.headers.addAll(headers);
-      // request.headers['Content-Type'] = 'application/json';
 
       if (params != null) {
         request.body = jsonEncode(params); // 파라미터가 있으면 JSON으로 인코딩하여 body에 추가
       }
 
-      final httpReturned = await http.Client().send(request);
+      final httpReturned = await http.Client()
+          .send(request).timeout(Duration(seconds: 5));
       if (httpReturned.statusCode == 200) {
         final response = await http.Response.fromStream(httpReturned);
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
@@ -167,6 +167,8 @@ class APIRequest {
         throw Exception('\n[Error] related http response: ${httpReturned.statusCode}');
         // return null;
       }
+    } on TimeoutException {
+      throw TimeoutException('[Error] api send: timeout');
     } catch (e) {
       throw Exception('[Error] api send: $e');
     }
@@ -202,6 +204,7 @@ class RestAPI {
   RestAPI._();
 
   /// 아이디 중복
+  /// Todo: 통합 로그인용
   static Future<bool> checkOverlappingId({
     required String id
   }) async {
@@ -218,6 +221,7 @@ class RestAPI {
   }
 
   /// 회원가입
+  /// Todo: 통합 로그인용
   static Future<bool> signUp({
     required String name,
     required String id,
@@ -236,6 +240,7 @@ class RestAPI {
   }
 
   /// 로그인
+  /// Todo: 추후 통합 로그인용으로 바꿔야 함
   static Future<User?> signIn({
     required String id,
     required String pw
@@ -252,6 +257,8 @@ class RestAPI {
         debugPrint("You logined at first!");
       }
       return User.fromJson(response);
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     } catch(_) {
       return null;
     }
@@ -259,67 +266,54 @@ class RestAPI {
 
   /// 내 모든 예약
   static Future<List<Reservate>?> getAllReservation() async {
-    final api = APIRequest('books');
-    List<dynamic> response = await api.send(HTTPMethod.GET);
+    try {
+      final api = APIRequest('books');
+      List<dynamic> response = await api.send(HTTPMethod.GET);
 
-    if (response.isEmpty) {
-      return null;
-    } else {
-      final result = response.map((e) {
-            final temp = e as Map<String, dynamic>;
-            return Reservate.fromJson(temp);
-          }).toList();
-      return result;
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Reservate> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Reservate.fromJson(temp);
+        }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
-  /// 예약 가능한 시간대
-  static Future<Map<int, bool>?> getAvailableTime({
-    required String room,
-    required String date
-  }) async {
-    final api = APIRequest(
-        'books/available?room=${room}&date=${date}');
-    Map<String, dynamic> response = await api.send(HTTPMethod.GET);
-    if (response.isEmpty) {
-      return null;
-    } else {
-      Map<String, dynamic> result = response['disableTime'];
-      return result.map((key, value) => MapEntry(int.parse(key), value));
-    }
-  }
-
-  ///
   /// 예약 추가
-  ///
   static Future<int?> addReservation({
     required String room,
     required String startTime,
     required String endTime,
     required String member
   }) async {
-    final api = APIRequest('book');
-    Map<String, dynamic> response = await api.send(
-      HTTPMethod.POST,
-      params: {
+    try {
+      final api = APIRequest('book');
+      Map<String, dynamic> response = await api.send(HTTPMethod.POST, params: {
         'room': room,
         'startTime': startTime,
         'endTime': endTime,
         'member': member,
         // 'purpose': '공부'
-      }
-    );
-    if (response.isEmpty) {
-      return null;
-    } else {
+      });
       return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
-  /// 
   /// 예약 수정
-  /// [!] member에 빈 값을 넣으면 문제가 생기는 듯
-  /// 
+  /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<int?> patchReservation({
     required int reservationId,
     required String room,
@@ -328,23 +322,20 @@ class RestAPI {
     required String leader,
     required String member
   }) async {
-    final api = APIRequest('book');
-    Map<String, dynamic> response = await api.send(
-        HTTPMethod.PATCH,
-        params: {
-          "reservationId": reservationId,
-          "room": room,
-          "startTime": startTime,
-          "endTime": endTime,
-          "leaderInfo": leader,
-          "memberInfo": 'string',
-          "purpose": "String"
-        }
-    );
-    if (response.isEmpty) {
-      return null;
-    } else {
+    try {
+      final api = APIRequest('book');
+      Map<String, dynamic> response = await api.send(HTTPMethod.PATCH, params: {
+        "reservationId": reservationId,
+        "room": room,
+        "startTime": startTime,
+        "endTime": endTime,
+        "leaderInfo": leader,
+        "memberInfo": member,
+        "purpose": "String"
+      });
       return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
@@ -352,12 +343,12 @@ class RestAPI {
   static Future<int?> delReservation({
     required int reservationId
   }) async {
-    final api = APIRequest('book/$reservationId');
-    Map<String, dynamic> response = await api.send(HTTPMethod.DELETE);
-    if (response.isEmpty) {
-      return null;
-    } else {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.DELETE);
       return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
@@ -365,88 +356,169 @@ class RestAPI {
   static Future<int?> prolongReservation({
     required int reservationId
   }) async {
-    final api = APIRequest('book/prolong/$reservationId');
-    Map<String, dynamic> response = await api.send(HTTPMethod.PATCH);
-    if (response.isEmpty) {
-      return null;
-    } else {
+    try {
+      final api = APIRequest('book/prolong/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.PATCH);
       return response['reservationId'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 현재 예약의 상태
+  /// . 0: 사용 전 (예약 변경 O)
+  /// . 1: 사용 전 (예약 변경 X)
+  /// . 2: 사용 중 (연장 X)
+  /// . 3: 사용 중 (연장 O)
+  /// . 4: 사용 끝 (인증 X)
+  /// . 5: 사용 끝 (인증 O)
+  /// Todo: 아직 추가 안 됨
+  static Future<int?> currentReservationStatus({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+      return response['status'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 가능한 시간대
+  static Future<Map<int, bool>?> getAvailableTime({
+    required String room,
+    required String date
+  }) async {
+    try {
+      final api = APIRequest('books/available?room=${room}&date=${date}');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        Map<String, dynamic> result = response['disableTime'];
+        return result.map((key, value) => MapEntry(int.parse(key), value));
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 서비스에 따른 예약 장소 반환
+  static Future<List<String>?> placeForService({
+    required int service
+  }) async {
+    try {
+      final api = APIRequest('book/place');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.GET,
+          params: {'service': service}
+      );
+      if (response.isEmpty) {
+        return null;
+      } else {
+        return response['places'];
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 모든 인증
   static Future<List<Admit>?> getAllAdmission() async {
-    final api = APIRequest('admits');
-    List<dynamic> response = await api.send(HTTPMethod.GET);
+    try {
+      final api = APIRequest('admits');
+      List<dynamic> response = await api.send(HTTPMethod.GET);
 
-    if (response.isEmpty) {
-      return null;
-    } else {
-      final result = response.map((e) {
-        final temp = e as Map<String, dynamic>;
-        return Admit.fromJson(temp);
-      }).toList();
-      return result;
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Admit> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Admit.fromJson(temp);
+        }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 내 인증
   static Future<List<Admit>?> getMyAdmission() async {
-    final api = APIRequest('admits/me');
-    List<dynamic> response = await api.send(HTTPMethod.GET);
+    try {
+      final api = APIRequest('admits/me');
+      List<dynamic> response = await api.send(HTTPMethod.GET);
 
-    if (response.isEmpty) {
-      return null;
-    } else {
-      final result = response.map((e) {
-        final temp = e as Map<String, dynamic>;
-        return Admit.fromJson(temp);
-      }).toList();
-      return result;
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Admit> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Admit.fromJson(temp);
+        }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 인증 추가
+  /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
   static Future<int?> addAdmission({
     required String review,
     required String photo,
     required String photoExtension
   }) async {
-    final api = APIRequest('admit');
-    Map<String, dynamic> response = await api.send(
-      HTTPMethod.POST,
-      params: {
+    try {
+      final api = APIRequest('admit');
+      Map<String, dynamic> response = await api.send(HTTPMethod.POST, params: {
         'review': review,
         'photo': photo,
         'photoExtension': photoExtension
-      }
-    );
-    if (response.isEmpty) {
-      return null;
-    } else {
+      });
       return response['admissionID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 열람하지 않은 알림의 여부
   static Future<bool?> hasUnopendNotice() async {
-    final api = APIRequest('notice');
-    Map<String, dynamic> response = await api.send(HTTPMethod.GET);
-    if (response.isEmpty) {
-      return null;
-    } else {
+    try {
+      final api = APIRequest('notice');
+      Map<String, dynamic> response = await api.send(HTTPMethod.GET);
       return response['hasNotice'];
+    } on TimeoutException {
+      return null;
     }
   }
 
   /// 내 모든 알림
   static Future<List<Notice>?> getNotices() async {
-    final api = APIRequest('notices');
-    List<Map<String, dynamic>> response = await api.send(HTTPMethod.GET);
-    if (response.isEmpty) {
-      return null;
-    } else {
-      return response.map((e) => Notice.fromJson(e)).toList();
+    try {
+      final api = APIRequest('notices');
+      List<Map<String, dynamic>> response = await api.send(HTTPMethod.GET);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        return response.map((e) => Notice.fromJson(e)).toList();
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
     }
   }
 }
@@ -456,6 +528,7 @@ class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
   final String _name;
+  // final String _depart;
   final int _stuNum;
   int _rating;
   int _negative;
@@ -466,6 +539,8 @@ class User {
   AssetImage get ratingImg => _ratingImg;
 
   String get name => _name;
+
+  // String get depart => _depart;
 
   int get stuNum => _stuNum;
 
@@ -482,6 +557,7 @@ class User {
   set setPositive(int val) => _positive = val;
 
   User(this._name,
+      // this._depart,
       this._stuNum,
       this._rating,
       this._negative,
@@ -514,18 +590,20 @@ class User {
   ///
   /// EX) User 객체의 response
   /// - "name": "김가천"
+  /// - "department": "소프트웨어학과"
   /// - "stuNum": 202300001
   /// - "rating": 2 (1 ~ 5)
   /// - "negative": 5
   /// - "positive": 10
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
-        json['name'],
-        json['stuNum'],
-        json['rating'],
-        json['negative'],
-        json['positive']
-    );
+      json['name'],
+      // json['department'],
+      json['stuNum'],
+      json['rating'],
+      json['negative'],
+      json['positive']
+  );
 }
 
 class Reservate {
@@ -534,7 +612,7 @@ class Reservate {
   final String _room;
   final String _date;
   final String _time;
-  // final String _member;
+  final String _memberInfo;
 
   int get reservationId => _reservationId;
 
@@ -546,7 +624,7 @@ class Reservate {
 
   String get time => _time;
 
-  // String get member => _member;
+  String get memberInfo => _memberInfo;
 
   Reservate(
       this._reservationId,
@@ -554,7 +632,7 @@ class Reservate {
       this._room,
       this._date,
       this._time,
-      // this._member
+      this._memberInfo
       );
 
   ///
@@ -566,13 +644,13 @@ class Reservate {
   /// - "time": "06:00 ~ 15:00"
   ///
   factory Reservate.fromJson(Map<String, dynamic> json) => Reservate(
-        json['reservationId'],
-        json['leaderInfo'],
-        json['room'],
-        json['date'],
-        json['time'],
-        // json['member']
-    );
+    json['reservationId'],
+    json['leaderInfo'],
+    json['room'],
+    json['date'],
+    json['time'],
+    json['memberInfo'] ?? ''
+  );
 }
 
 class Admit {
@@ -581,7 +659,7 @@ class Admit {
   final String _room;
   final String _date;
   final String _time;
-  // final List<String> _members;
+  final String _memberInfo;
   final String _review;
   final Uint8List _photo;
 
@@ -595,7 +673,7 @@ class Admit {
 
   String get time => _time;
 
-  // List<String> get members => _members;
+  String get memberInfo => _memberInfo;
 
   String get review => _review;
 
@@ -607,7 +685,7 @@ class Admit {
       this._room,
       this._date,
       this._time,
-      // this._members,
+      this._memberInfo,
       this._review,
       this._photo
       );
@@ -628,7 +706,7 @@ class Admit {
       json['room'],
       json['date'],
       json['time'],
-      // json['membersInfo'],
+      json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo'])
   );
