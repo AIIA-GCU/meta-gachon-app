@@ -520,7 +520,7 @@ class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
   final String _name;
-  // final String _depart;
+  // final String _major;
   final int _stuNum;
   int _rating;
   int _negative;
@@ -532,7 +532,7 @@ class User {
 
   String get name => _name;
 
-  // String get depart => _depart;
+  // String get major => _major;
 
   int get stuNum => _stuNum;
 
@@ -582,7 +582,7 @@ class User {
   ///
   /// EX) User 객체의 response
   /// - "name": "김가천"
-  /// - "department": "소프트웨어학과"
+  /// - "major": "소프트웨어학과(소프트웨어전공)"
   /// - "stuNum": 202300001
   /// - "rating": 2 (1 ~ 5)
   /// - "negative": 5
@@ -590,7 +590,7 @@ class User {
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
       json['name'],
-      // json['department'],
+      // json['major'],
       json['stuNum'],
       json['rating'],
       json['negative'],
