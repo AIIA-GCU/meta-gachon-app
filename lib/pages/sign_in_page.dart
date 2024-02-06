@@ -150,7 +150,7 @@ class _SignInPageState extends State<SignInPage> {
                           SizedBox(height: ratio.height * 4),
                           Text(
                               errorMessage,
-                              style: KR.label2.copyWith(color: MGcolor.system_error)
+                              style: KR.label2.copyWith(color: MGcolor.systemError)
                           ),
                         ],
                       ),

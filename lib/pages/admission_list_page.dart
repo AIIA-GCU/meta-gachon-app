@@ -93,7 +93,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       ),
                       child: Text(
                         '내 인증 확인하기',
-                        style: KR.parag2.copyWith(color: MGcolor.brand_orig),
+                        style: KR.parag2.copyWith(color: MGcolor.brandOrig),
                       ),
                     ),
                     /// <인증하러 가기>

@@ -29,12 +29,13 @@ const String BARCODE = "12016091019242582042";
 class MGcolor {
   MGcolor._();
 
-  static const Color brand_deep = Color(0xFF0B3199);
-  static const Color brand_orig = Color(0xFF1762DB);
-  static const Color brand_light = Color(0xFF4AB6F2);
+  static const Color brandDeep = Color(0xFF0B3199);
+  static const Color brandOrig = Color(0xFF1762DB);
+  static const Color brandLight = Color(0xFF4AB6F2);
 
-  static const Color system_error = Color(0xFFE03616);
-  static const Color system_ok = Color(0xFF00AF54);
+  static const Color systemError = Color(0xFFE03616);
+  static const Color systemOk = Color(0xFF00AF54);
+  static const Color barrier = Color(0x40000000);
 
   static const Color base1 = Color(0xFF000000);
   static const Color base2 = Color(0xFF333232);
@@ -45,6 +46,7 @@ class MGcolor {
   static const Color base7 = Color(0xFFEDEEF1);
   static const Color base8 = Color(0xFFE7E7E7);
   static const Color base9 = Color(0xFFF4F5F8);
+  static const Color base10 = Color(0xFFEDEEF1);
 
   static const Color btn_active = Color(0xFF1762DB);
   static const Color btn_inactive = Color(0xFFE3EDFD);

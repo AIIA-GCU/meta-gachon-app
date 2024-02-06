@@ -172,7 +172,7 @@ class ReservationPopup extends StatelessWidget {
                         padding: EdgeInsets.only(top: ratio.height * 8),
                         child: Text(
                           '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!',
-                          style: KR.label2.copyWith(color: MGcolor.system_error),
+                          style: KR.label2.copyWith(color: MGcolor.systemError),
                           textAlign: TextAlign.center,
                         )
                       );
@@ -181,7 +181,7 @@ class ReservationPopup extends StatelessWidget {
                           padding: EdgeInsets.only(top: ratio.height * 8),
                           child: Text(
                             '곧 있음 이용 시간이 끝납니다.',
-                            style: KR.label2.copyWith(color: MGcolor.system_error),
+                            style: KR.label2.copyWith(color: MGcolor.systemError),
                             textAlign: TextAlign.center,
                           )
                       );
@@ -190,7 +190,7 @@ class ReservationPopup extends StatelessWidget {
                         padding: EdgeInsets.only(top: ratio.height * 8),
                         child: Text(
                           '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!',
-                          style: KR.label2.copyWith(color: MGcolor.system_error),
+                          style: KR.label2.copyWith(color: MGcolor.systemError),
                           textAlign: TextAlign.center,
                         )
                       );
@@ -305,7 +305,7 @@ class ReservationPopup extends StatelessWidget {
                 if (uid == null) {
                   showDialog(
                       context: context,
-                      barrierColor: Colors.black.withOpacity(0.25),
+                      barrierColor: MGcolor.barrier,
                       builder: (context) => CommentPopup(
                           title: "[Error] deleting reservation",
                           onPressed: () => Navigator.pop(context)));
@@ -320,7 +320,7 @@ class ReservationPopup extends StatelessWidget {
             } on TimeoutException {
               showDialog(
                   context: context,
-                  barrierColor: Colors.black.withOpacity(0.25),
+                  barrierColor: MGcolor.barrier,
                   builder: (context) => CommentPopup(
                       title: "통신 속도가 너무 느립니다!",
                       onPressed: () => Navigator.pop(context)));
@@ -344,7 +344,7 @@ class ReservationPopup extends StatelessWidget {
     Navigator.pop(context);
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.25),
+      barrierColor: MGcolor.barrier,
       builder: (context) => AlertPopup(
         title: '1시간 연장하시겠습니까?',
         agreeMsg: '연장하기',
@@ -356,7 +356,7 @@ class ReservationPopup extends StatelessWidget {
             if (uid == null) {
               showDialog(
                   context: context,
-                  barrierColor: Colors.black.withOpacity(0.25),
+                  barrierColor: MGcolor.barrier,
                   builder: (context) => CommentPopup(
                       title: "[Error] prolonging reservation",
                       onPressed: () => Navigator.pop(context)));
@@ -371,7 +371,7 @@ class ReservationPopup extends StatelessWidget {
           } on TimeoutException {
             showDialog(
                 context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
+                barrierColor: MGcolor.barrier,
                 builder: (context) => CommentPopup(
                     title: "통신 속도가 너무 느립니다!",
                     onPressed: () => Navigator.pop(context)));
@@ -530,7 +530,7 @@ class GradePopup extends StatelessWidget {
               if (showDuration)
                 Text(
                   '등급 지속 시간: ${123}일',
-                  style: KR.parag2.copyWith(color: MGcolor.brand_orig),
+                  style: KR.parag2.copyWith(color: MGcolor.brandOrig),
                 )
             ]
           ),

@@ -352,7 +352,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                   SizedBox(width: 12),
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
-                    style: KR.label2.copyWith(color: MGcolor.brand_orig)
+                    style: KR.label2.copyWith(color: MGcolor.brandOrig)
                   )
                 ],
               ),
@@ -369,7 +369,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                     decoration: BoxDecoration(
-                        color: MGcolor.base6,
+                        color: MGcolor.base9,
                         borderRadius: BorderRadius.circular(4)
                     ),
                     child: SingleChildScrollView(
@@ -378,15 +378,15 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                         child: Row(children: List.generate(26, (index) {
                           Color? color;
                           if (!_availables[index]) {
-                            color = MGcolor.brand_deep;
+                            color = MGcolor.base6;
                           }
                           else if (_begin != null && _end != null) {
                             if (_begin! <= index && index <= _end!) {
-                              color = MGcolor.brand_orig;
+                              color = MGcolor.brandOrig;
                             } else if (index == _begin!+1) {
-                              color = MGcolor.brand_orig.withOpacity(0.2);
+                              color = MGcolor.brandOrig.withOpacity(0.2);
                             } else if (index == _begin!+2 && _availables[index]) {
-                              color = MGcolor.brand_orig.withOpacity(0.2);
+                              color = MGcolor.brandOrig.withOpacity(0.2);
                             }
                           }
                           if (color == null) {
@@ -394,7 +394,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           }
 
                           return GestureDetector(
-                            onTap: color == MGcolor.brand_deep
+                            onTap: color == MGcolor.brandDeep
                                 ? null : () => _onTap(index),
                             child: Container(
                                 width: 24,
@@ -452,7 +452,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.brand_orig)
+                              border: Border.all(color: MGcolor.brandOrig)
                           ),
                           child: beginStr
                       ),
@@ -467,7 +467,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.brand_orig)
+                              border: Border.all(color: MGcolor.brandOrig)
                           ),
                           child: endStr
                       ),

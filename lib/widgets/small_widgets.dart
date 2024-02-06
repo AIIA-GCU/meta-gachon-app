@@ -78,7 +78,7 @@ class _NotificationIconState extends State<NotificationIcon> {
                       backgroundColor: MGcolor.base9,
                       child: CircleAvatar(
                         radius: 3,
-                        backgroundColor: MGcolor.system_error,
+                        backgroundColor: MGcolor.systemError,
                       )
                   )
               );
@@ -131,7 +131,7 @@ class CustomListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
           border: isReservation && date.contains(today)
-              ? Border.all(color: MGcolor.brand_orig) : null
+              ? Border.all(color: MGcolor.brandOrig) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +274,7 @@ class CustomDropdown extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(width: 1, color: MGcolor.brand_orig),
+              border: Border.all(width: 1, color: MGcolor.brandOrig),
             ),
           ),
 
@@ -404,15 +404,15 @@ class CustomTextField extends StatelessWidget {
               errorStyle: TextStyle(fontSize: 0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brand_orig, width: 1),
+                borderSide: BorderSide(color: MGcolor.brandOrig, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brand_orig, width: 2),
+                borderSide: BorderSide(color: MGcolor.brandOrig, width: 2),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brand_orig, width: 1),
+                borderSide: BorderSide(color: MGcolor.brandOrig, width: 1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
@@ -420,11 +420,11 @@ class CustomTextField extends StatelessWidget {
               ),
               errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
-                  borderSide: BorderSide(color: MGcolor.system_error, width: 1)
+                  borderSide: BorderSide(color: MGcolor.systemError, width: 1)
               ),
               focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
-                  borderSide: BorderSide(color: MGcolor.system_error, width: 2)
+                  borderSide: BorderSide(color: MGcolor.systemError, width: 2)
               )
           )
       ),

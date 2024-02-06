@@ -56,7 +56,7 @@ class _ReservatePageState extends State<ReservatePage> {
 
     this._loading = false;
     this._isSolo = this._canTime = false;
-    this._addUserGuideline = MGcolor.brand_orig;
+    this._addUserGuideline = MGcolor.brandOrig;
     this._leaderNumber = myInfo.stuNum;
     this._leaderName = myInfo.name;
     if (widget.reservate != null) {
@@ -168,7 +168,7 @@ class _ReservatePageState extends State<ReservatePage> {
                               normalDateTextStyle:
                               EN.parag1.copyWith(color: MGcolor.base1),
                               normalDateBoxDecoration: BoxDecoration(
-                                  color: MGcolor.base7,
+                                  color: MGcolor.base10,
                                   borderRadius: BorderRadius.circular(4)),
                               selectedDateTextStyle:
                               EN.parag1.copyWith(color: Colors.white),
@@ -178,12 +178,12 @@ class _ReservatePageState extends State<ReservatePage> {
                               todayTextStyle:
                               EN.parag1.copyWith(color: MGcolor.btn_active),
                               todayBoxDecoration: BoxDecoration(
-                                  color: MGcolor.base7,
+                                  color: MGcolor.base10,
                                   borderRadius: BorderRadius.circular(4)),
                               rangeOutDateTextStyle:
-                              EN.parag1.copyWith(color: MGcolor.base5),
+                              EN.parag1.copyWith(color: MGcolor.base6),
                               rangeOutDateBoxDecoration: BoxDecoration(
-                                  color: MGcolor.base8,
+                                  color: MGcolor.base10,
                                   borderRadius: BorderRadius.circular(4)),
                             ),
                             onSelected: (value) {
@@ -357,7 +357,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                   height: 32 * ratio.height,
                                                   decoration: BoxDecoration(
                                                     color: _isSolo ? MGcolor.base6
-                                                        : MGcolor.brand_orig,
+                                                        : MGcolor.brandOrig,
                                                     borderRadius:
                                                     BorderRadius.circular(12),
                                                   ),
@@ -426,7 +426,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                         color: MGcolor.base3,
                                                         width: 1.6
                                                     ),
-                                                    activeColor: MGcolor.brand_orig,
+                                                    activeColor: MGcolor.brandOrig,
                                                     onChanged: (bool? value) {
                                                       setState(() => _isSolo = value!);
                                                     }),
@@ -462,7 +462,7 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: ElevatedButton(
                                 onPressed: _canTime ? _reservate : null,
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: MGcolor.brand_orig,
+                                    backgroundColor: MGcolor.brandOrig,
                                     disabledBackgroundColor: MGcolor.base5,
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12)),
@@ -511,13 +511,13 @@ class _ReservatePageState extends State<ReservatePage> {
           FocusScope.of(context).unfocus();
         }
         alertMessege = "정상적으로 추가됐습니다";
-        _addUserGuideline = MGcolor.brand_orig;
+        _addUserGuideline = MGcolor.brandOrig;
         _usersList.add("${_controllerNumber.text} ${_controllerName.text}");
         _usersWidgets.add(_MyUserBox("${_controllerNumber.text} ${_controllerName.text}"));
         _controllerNumber.clear();
         _controllerName.clear();
       } else {
-        _addUserGuideline = MGcolor.system_error;
+        _addUserGuideline = MGcolor.systemError;
       }
     });
   }
@@ -530,7 +530,7 @@ class _ReservatePageState extends State<ReservatePage> {
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
       decoration: ShapeDecoration(
-        color: MGcolor.brand_orig,
+        color: MGcolor.brandOrig,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -669,7 +669,7 @@ class _ReservatePageState extends State<ReservatePage> {
       _loading = false;
       showDialog(
           context: context,
-          barrierColor: Colors.black.withOpacity(0.25),
+          barrierColor: MGcolor.barrier,
           builder: (context) => CommentPopup(
               title: title, onPressed: onPressed)
       ).then((_) {

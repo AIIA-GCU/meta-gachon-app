@@ -399,7 +399,7 @@ class _AgreePgeState extends State<AgreePge> {
                       ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brand_orig,
+                              backgroundColor: MGcolor.brandOrig,
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, ratio.height * 48),
                               shape: RoundedRectangleBorder(
@@ -447,7 +447,7 @@ class _AgreePgeState extends State<AgreePge> {
                       ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brand_orig,
+                              backgroundColor: MGcolor.brandOrig,
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, ratio.height * 48),
                               shape: RoundedRectangleBorder(
@@ -581,7 +581,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 Text('아이디', style: KR.subtitle3),
                 Text(
                   _idError ?? '',
-                  style: KR.label2.copyWith(color: MGcolor.system_error)
+                  style: KR.label2.copyWith(color: MGcolor.systemError)
                 )
               ],
             ),
@@ -615,10 +615,10 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                       borderSide: BorderSide(color: MGcolor.base4, width: 1.6)),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error)),
+                      borderSide: BorderSide(color: MGcolor.systemError)),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error, width: 1.6)),
+                      borderSide: BorderSide(color: MGcolor.systemError, width: 1.6)),
                 ),
                 onChanged: (val) {
                   _tempId = val;
@@ -656,7 +656,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 Text('비밀번호', style: KR.subtitle3),
                 Text(
                   _pwError ?? '',
-                  style: KR.label2.copyWith(color: MGcolor.system_error)
+                  style: KR.label2.copyWith(color: MGcolor.systemError)
                 )
               ],
             ),
@@ -691,10 +691,10 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                       borderSide: BorderSide(color: MGcolor.base4, width: 1.6)),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error)),
+                      borderSide: BorderSide(color: MGcolor.systemError)),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error, width: 1.6)),
+                      borderSide: BorderSide(color: MGcolor.systemError, width: 1.6)),
                 ),
                 onChanged: (val) {
                   _tempPw = val;
@@ -741,10 +741,10 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                       borderSide: BorderSide(color: MGcolor.base4, width: 1.6)),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error)),
+                      borderSide: BorderSide(color: MGcolor.systemError)),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: MGcolor.system_error, width: 1.6)),
+                      borderSide: BorderSide(color: MGcolor.systemError, width: 1.6)),
                 ),
                 onChanged: (val) => setState(() {
                   _tempPwCheck = val;

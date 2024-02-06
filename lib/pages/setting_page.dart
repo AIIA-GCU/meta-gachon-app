@@ -121,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                             '학교 홈페이지로 바로 가기',
-                            style: KR.subtitle4.copyWith(color: MGcolor.brand_orig)
+                            style: KR.subtitle4.copyWith(color: MGcolor.brandOrig)
                           ),
                           Transform.rotate(
                             angle: pi,
@@ -150,7 +150,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                               '사이버 캠퍼스로 바로 가기',
-                              style: KR.subtitle4.copyWith(color: MGcolor.brand_orig)
+                              style: KR.subtitle4.copyWith(color: MGcolor.brandOrig)
                           ),
                           Transform.rotate(
                               angle: pi,

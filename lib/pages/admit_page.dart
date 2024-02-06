@@ -95,7 +95,7 @@ class _AdmitPageState extends State<AdmitPage> {
                               SizedBox(height: ratio.height * 10),
                               Text(
                                 '회의실 전체가 다 보이도록 사진을 찍어 올려주세요!',
-                                style: KR.label2.copyWith(color: MGcolor.brand_orig),
+                                style: KR.label2.copyWith(color: MGcolor.brandOrig),
                               ),
                               SizedBox(height: ratio.height * 4),
                               Expanded(
@@ -104,7 +104,7 @@ class _AdmitPageState extends State<AdmitPage> {
                                   behavior: HitTestBehavior.translucent,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: MGcolor.base6,
+                                      color: MGcolor.base7,
                                       borderRadius: BorderRadius.circular(8),
                                       image: _picturePath == null ? null :
                                           DecorationImage(
@@ -243,7 +243,7 @@ class _AdmitPageState extends State<AdmitPage> {
                                   vertical: ratio.height * 10
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MGcolor.base6,
+                                  color: MGcolor.base7,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 alignment: Alignment.topLeft,
@@ -277,7 +277,7 @@ class _AdmitPageState extends State<AdmitPage> {
                   child: ElevatedButton(
                     onPressed: doubleCheck,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.brand_orig,
+                      backgroundColor: MGcolor.brandOrig,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                       fixedSize: Size(ratio.width * 358, ratio.height * 48)
@@ -322,7 +322,7 @@ class _AdmitPageState extends State<AdmitPage> {
     if (_picturePath == null) {
       showDialog(
         context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
+        barrierColor: MGcolor.barrier,
         builder: (context) => CommentPopup(
           title: '인증 사진을 업로드해주세요!',
           onPressed: () => Navigator.pop(context)
@@ -331,7 +331,7 @@ class _AdmitPageState extends State<AdmitPage> {
     } else if (_textCtr.text.isEmpty) {
       showDialog(
         context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
+        barrierColor: MGcolor.barrier,
         builder: (context) => CommentPopup(
           title: '후기를 입력해주세요!',
           onPressed: () => Navigator.pop(context)
@@ -340,7 +340,7 @@ class _AdmitPageState extends State<AdmitPage> {
     } else {
       showDialog(
         context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
+        barrierColor: MGcolor.barrier,
         builder: (context) => AlertPopup(
           title: '인증은 수정할 수 없습니다\n정말 업로드 하시겠습니까?',
           agreeMsg: '인증하기',
@@ -401,7 +401,7 @@ class _AdmitPageState extends State<AdmitPage> {
       loading = false;
       showDialog(
           context: context,
-          barrierColor: Colors.black.withOpacity(0.25),
+          barrierColor: MGcolor.barrier,
           builder: (context) => CommentPopup(
               title: title, onPressed: onPressed)
       ).then((_) {
