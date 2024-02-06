@@ -90,15 +90,7 @@ class APIRequest {
 
   set setCookies(Map<String, String> val) => _cookies = val;
 
-  APIRequest(this._path) {
-    // _getAppVersion();
-  }
-
-  Future<void> _getAppVersion() async {
-    // final packageInfo = await PackageInfo.fromPlatform();
-    // setAppVersion = packageInfo.version;
-    // debugPrint(appVersion);
-  }
+  APIRequest(this._path);
 
   Future<dynamic> send(HTTPMethod method,
       {Map<String, dynamic>? params}) async {

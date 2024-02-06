@@ -5,7 +5,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';

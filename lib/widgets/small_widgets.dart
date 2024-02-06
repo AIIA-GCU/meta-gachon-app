@@ -9,7 +9,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'package:mata_gachon/config/server.dart';

@@ -1,20 +1,12 @@
-import 'dart:io' show Platform;
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:provider/provider.dart';
 
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
-// import 'package:mata_gachon/page/main/main_frame.dart';
-// import 'package:mata_gachon/page/services/alarm_page.dart';
-// import 'package:mata_gachon/page/services/my_admission_list_page.dart';
-// import 'package:mata_gachon/page/services/reservate_page.dart';
 
 Future<void> main() async {
   debugPrint("called main()");
@@ -59,25 +51,6 @@ class MataGachon extends StatefulWidget {
   State<MataGachon> createState() => _MataGachonState();
 }
 class _MataGachonState extends State<MataGachon> {
-  late final AppLifecycleListener _listener;
-
-  @override
-  void initState() {
-    super.initState();
-    _listener = AppLifecycleListener(onStateChange: _onStateChange);
-  }
-
-  Future<void> _onStateChange(AppLifecycleState state) async {
-    if (Platform.isAndroid && state == AppLifecycleState.paused) {
-      debugPrint("killed android app");
-      await new Session().clear();
-      _listener.dispose();
-    } else if (Platform.isIOS && state == AppLifecycleState.detached) {
-      debugPrint("kiiled ios app");
-      await new Session().clear();
-      _listener.dispose();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

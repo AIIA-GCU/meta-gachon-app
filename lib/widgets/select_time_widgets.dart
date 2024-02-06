@@ -4,7 +4,6 @@ import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
 
 class CustomCalender extends StatefulWidget {
   const CustomCalender({
