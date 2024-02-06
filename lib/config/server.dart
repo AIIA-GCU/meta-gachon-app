@@ -295,7 +295,8 @@ class RestAPI {
     required String room,
     required String startTime,
     required String endTime,
-    required String member
+    required String member,
+    required String purpose
   }) async {
     try {
       final api = APIRequest('book');
@@ -304,7 +305,7 @@ class RestAPI {
         'startTime': startTime,
         'endTime': endTime,
         'member': member,
-        // 'purpose': '공부'
+        'purpose': purpose
       });
       return response['reservationID'];
     } on TimeoutException {
@@ -320,7 +321,8 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String leader,
-    required String member
+    required String member,
+    required String purpose
   }) async {
     try {
       final api = APIRequest('book');
@@ -331,7 +333,7 @@ class RestAPI {
         "endTime": endTime,
         "leaderInfo": leader,
         "memberInfo": member,
-        "purpose": "String"
+        "purpose": purpose
       });
       return response['reservationID'];
     } on TimeoutException {

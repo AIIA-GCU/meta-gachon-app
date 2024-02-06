@@ -28,8 +28,9 @@ class _ReservatePageState extends State<ReservatePage> {
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
   ///textfield controllor
-  final TextEditingController _controllerNumber = TextEditingController();
-  final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _stuNumCtr = TextEditingController();
+  final TextEditingController _nameCtr = TextEditingController();
+  final TextEditingController _purposeCtr = TextEditingController();
 
   /// 고정 데이터
   late final int _leaderNumber; //대표자 학번
@@ -60,7 +61,10 @@ class _ReservatePageState extends State<ReservatePage> {
     this._addUserGuideline = MGcolor.brand_orig;
     this._leaderNumber = myInfo.stuNum;
     this._leaderName = myInfo.name;
+
+    // 예약을 수정할 경우, 데이터 먼저 초기화
     if (widget.reservate != null) {
+      //
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
       this._selectedRoom = widget.reservate!.room;
@@ -79,8 +83,19 @@ class _ReservatePageState extends State<ReservatePage> {
       } else {
         this._isSolo = true;
       }
+      // Todo: 나중에 바꾸기
+      this._purposeCtr.text = 'late change!';
+      // 위젯
       this._canTime = true;
     }
+  }
+
+  @override
+  void dispose() {
+    _stuNumCtr.dispose();
+    _nameCtr.dispose();
+    _purposeCtr.dispose();
+    super.dispose();
   }
 
   @override
@@ -133,7 +148,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                         _selectedEnter = _selectedExit = null;
                                         if (!_canTime) {
                                           _canTime = true;
-                                          _listKey.currentState!.insertAllItems(0, 3);
+                                          _listKey.currentState!.insertAllItems(0, 4);
                                         }
                                       });
                                     }
@@ -202,7 +217,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                   }
                                   if (!_canTime) {
                                     _canTime = true;
-                                    _listKey.currentState!.insertAllItems(0, 3);
+                                    _listKey.currentState!.insertAllItems(0, 4);
                                   }
                                 });
                               }
@@ -212,7 +227,7 @@ class _ReservatePageState extends State<ReservatePage> {
                     ]),
                     SliverAnimatedList(
                       key: _listKey,
-                      initialItemCount: _canTime ? 3 : 0,
+                      initialItemCount: _canTime ? 4 : 0,
                       itemBuilder: (context, index, animation) {
                         final List<Widget> temp = [
                           ///예약 시간 선택
@@ -309,7 +324,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               enabled: !_isSolo,
                                               width: 122,
                                               height: 32,
-                                              controller: _controllerNumber,
+                                              controller: _stuNumCtr,
                                               hint: '202300001',
                                               format: [
                                                 FilteringTextInputFormatter.digitsOnly, //숫자만 허용
@@ -332,7 +347,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               enabled: !_isSolo,
                                               width: 92,
                                               height: 32,
-                                              controller: _controllerName,
+                                              controller: _nameCtr,
                                               hint: '김가천',
                                               format: [
                                                 FilteringTextInputFormatter.allow(
@@ -445,6 +460,63 @@ class _ReservatePageState extends State<ReservatePage> {
                               ],
                             ),
                           ),
+
+                          /// 사용 목적
+                          Container(
+                            width: ratio.width * 358,
+                            height: ratio.height * 150,
+                            margin: EdgeInsets.fromLTRB(
+                                ratio.width * 16,
+                                0,
+                                ratio.width * 16,
+                                ratio.height * 12
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: ratio.width * 16,
+                                vertical: ratio.height * 16
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            alignment: Alignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// Title
+                                Text('사용 목적', style: KR.subtitle3.copyWith(color: Colors.black)),
+
+                                SizedBox(height: ratio.height * 10),
+
+                                /// TextField
+                                Expanded(child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: ratio.width * 12,
+                                        vertical: ratio.height * 10
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(color: MGcolor.brand_orig)
+                                    ),
+                                    alignment: Alignment.topLeft,
+                                    child: TextField(
+                                      controller: _purposeCtr,
+                                      maxLength: 70,
+                                      textAlign: TextAlign.start,
+                                      maxLines: 2,
+                                      style: KR.parag2,
+                                      decoration: InputDecoration(
+                                          hintText: '회의실을 예약하는 목적을 입력해주세요.',
+                                          counterText: '',
+                                          contentPadding: EdgeInsets.zero,
+                                          border: InputBorder.none,
+                                          hintStyle: KR.parag2.copyWith(color: MGcolor.base5)
+                                      ),
+                                    )
+                                ))
+                              ],
+                            ),
+                          )
                         ];
                         return SizeTransition(
                           sizeFactor: animation,
@@ -513,10 +585,10 @@ class _ReservatePageState extends State<ReservatePage> {
         }
         alertMessege = "정상적으로 추가됐습니다";
         _addUserGuideline = MGcolor.brand_orig;
-        _usersList.add("${_controllerNumber.text} ${_controllerName.text}");
-        _usersWidgets.add(_MyUserBox("${_controllerNumber.text} ${_controllerName.text}"));
-        _controllerNumber.clear();
-        _controllerName.clear();
+        _usersList.add("${_stuNumCtr.text} ${_nameCtr.text}");
+        _usersWidgets.add(_MyUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
+        _stuNumCtr.clear();
+        _nameCtr.clear();
       } else {
         _addUserGuideline = MGcolor.system_error;
       }
@@ -597,10 +669,14 @@ class _ReservatePageState extends State<ReservatePage> {
     } else if (!_isSolo && _usersList.isEmpty) {
       title = '추가 이용자를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
+    } else if (_purposeCtr.text.isEmpty) {
+      title = '사용 목적을 입력해주세요!';
+      onPressed = () => Navigator.pop(context);
     } else if (widget.reservate != null && _isSame()) {
       title = '이전 내용과 같습니다.';
       onPressed = () => Navigator.pop(context);
     } else {
+      onPressed = () => Navigator.pop(context);
       late final String startTime, endTime;
       if (_selectedEnter! < 10) {
         startTime = '$_selectedDate 0$_selectedEnter:00';
@@ -628,7 +704,8 @@ class _ReservatePageState extends State<ReservatePage> {
         . startTime: $startTime
         . endTime: $endTime
         . leader: $_leaderNumber $_leaderName
-        . member: $member""");
+        . member: $member
+        . purpose: ${_purposeCtr.text}""");
 
       try {
         int? uid = widget.reservate != null
@@ -638,13 +715,15 @@ class _ReservatePageState extends State<ReservatePage> {
             startTime: startTime,
             endTime: endTime,
             leader: widget.reservate!.leaderInfo,
-            member: member
+            member: member,
+            purpose: _purposeCtr.text
         )
             : await RestAPI.addReservation(
             room: _selectedRoom!,
             startTime: startTime,
             endTime: endTime,
-            member: member
+            member: member,
+            purpose: _purposeCtr.text
         );
         if (uid == null) {
           title = 'Not found';
