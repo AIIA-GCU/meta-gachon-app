@@ -19,7 +19,7 @@ class _SettingPageState extends State<SettingPage> {
   bool _loading = false;
   bool _temp1 = false;
   bool _temp2 = false;
-
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -79,8 +79,6 @@ class _SettingPageState extends State<SettingPage> {
                     ]
                   )
                 ),
-
-                /// 다크 모드
                 TileButton(
                     padding: EdgeInsets.symmetric(
                       // vertical: ratio.height * 10,
@@ -90,20 +88,57 @@ class _SettingPageState extends State<SettingPage> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('다크 모드', style: KR.subtitle4),
-                          Switch(
-                              value: _temp2,
-                              activeColor: Colors.white,
-                              activeTrackColor: MGcolor.btn_active,
-                              inactiveTrackColor: MGcolor.base6,
-                              inactiveThumbColor: Colors.white,
-                              onChanged: (val) {
-                                setState(() => _temp2 = val);
-                              }
-                          )
+                          ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                SelectTheme.changeblue();  
+                              });
+                            },
+                            child: Text('파란색'),
+                          ),
+                          ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                SelectTheme.changepurple();
+                              });
+                            },
+                            child: Text('보라색'),
+                          ),
+                          ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                SelectTheme.changeblue_green();
+                              });
+                            },
+                            child: Text('청록색'),
+                          ),
                         ]
                     )
                 ),
+                /// 다크 모드
+                // TileButton(
+                //     padding: EdgeInsets.symmetric(
+                //       // vertical: ratio.height * 10,
+                //         horizontal: ratio.width * 22
+                //     ),
+                //     child: Row(
+                //         mainAxisSize: MainAxisSize.max,
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Text('다크 모드', style: KR.subtitle4),
+                //           Switch(
+                //               value: _temp2,
+                //               activeColor: Colors.white,
+                //               activeTrackColor: MGcolor.btn_active,
+                //               inactiveTrackColor: MGcolor.base6,
+                //               inactiveThumbColor: Colors.white,
+                //               onChanged: (val) {
+                //                 setState(() => _temp2 = val);
+                //               }
+                //           )
+                //         ]
+                //     )
+                // ),
               ]),
               TileButtonCard(items: [
                 /// 학교 홈페이지로 바로 가기

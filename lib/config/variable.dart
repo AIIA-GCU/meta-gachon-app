@@ -11,6 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 
+class SelectTheme {
+  static String theme = 'blue';
+
+  static void changeblue() {
+    theme = "blue";
+  }
+
+  static void changepurple() {
+    theme = "purple";
+  }
+
+  static void changeblue_green() {
+    theme = "blue-green";
+  }
+}
+
 /// 비율
 late Size ratio;
 
@@ -28,9 +44,25 @@ const String BARCODE = "12016091019242582042";
 ///
 class MGcolor {
   MGcolor._();
+  
+  static Color get brand_orig {
+    return SelectTheme.theme == "blue"
+        ? Color(0xFF1762DB)
+        : SelectTheme.theme == "purple"
+            ? Color(0xFF5C30D9)
+            : Color(0xFF0097C6);
+  }
+
+  static Color get btn_active {
+    return SelectTheme.theme == "blue"
+        ? Color(0xFF1762DB)
+        : SelectTheme.theme == "purple"
+            ? Color(0xFF5C30D9)
+            : Color(0xFF0097C6);
+  }
 
   static const Color brand_deep = Color(0xFF0B3199);
-  static const Color brand_orig = Color(0xFF1762DB);
+  // static Color brand_orig = SelectTheme.theme == "blue" ? Color(0xFF1762DB) : SelectTheme.theme == "purple" ? Color(0xFF5C30D9) : Color(0xFF0097C6);
   static const Color brand_light = Color(0xFF4AB6F2);
 
   static const Color system_error = Color(0xFFE03616);
@@ -46,7 +78,7 @@ class MGcolor {
   static const Color base8 = Color(0xFFE7E7E7);
   static const Color base9 = Color(0xFFF4F5F8);
 
-  static const Color btn_active = Color(0xFF1762DB);
+  // static Color btn_active = SelectTheme.theme == "blue" ? Color(0xFF1762DB) : SelectTheme.theme == "purple" ? Color(0xFF5C30D9) : Color(0xFF0097C6);
   static const Color btn_inactive = Color(0xFFE3EDFD);
 }
 
