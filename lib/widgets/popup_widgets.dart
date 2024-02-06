@@ -217,7 +217,8 @@ class ReservationPopup extends StatelessWidget {
             /// 버튼
             Builder(builder: (context) {
               switch (status) {
-                case 0:
+                /// 사용 전 (예약 변경 O)
+                case 1:
                   return Column(children: [
                     ElevatedButton(
                         onPressed: () => _edit(context),
@@ -239,7 +240,8 @@ class ReservationPopup extends StatelessWidget {
                         child: Text("예약 취소하기", style: KR.parag1.copyWith(color: MGcolor.base3))
                     )
                   ]);
-                case 1:
+                /// 사용 전 (예약 변경 X)
+                case 0:
                   return ElevatedButton(
                       onPressed: () => _qr,
                       style: ElevatedButton.styleFrom(
@@ -250,6 +252,7 @@ class ReservationPopup extends StatelessWidget {
                       ),
                       child: Text("QR 코드 인증하기", style: KR.parag1.copyWith(color: Colors.white))
                   );
+                /// 사용 중 (연장 O)
                 case 3:
                   return ElevatedButton(
                       onPressed: () => _prolong,
@@ -261,6 +264,7 @@ class ReservationPopup extends StatelessWidget {
                       ),
                       child: Text("예약 연장하기", style: KR.parag1.copyWith(color: Colors.white))
                   );
+                /// 사용 끝 (인증 X)
                 case 4:
                   return ElevatedButton(
                     onPressed: () => _admit(context),
@@ -272,6 +276,9 @@ class ReservationPopup extends StatelessWidget {
                     ),
                     child: Text("인증하기", style: KR.parag1.copyWith(color: Colors.white))
                   );
+                /// 그 외
+                /// - 사용 중 (연장 X)
+                /// - 사용 끝 (인증 O)
                 default:
                   return SizedBox.shrink();
               }
