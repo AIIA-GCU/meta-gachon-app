@@ -46,6 +46,7 @@ class MGcolor {
   static const Color systemError = Color(0xFFE03616);
   static const Color systemOk = Color(0xFF00AF54);
   static const Color barrier = Color(0x40000000);
+  static const Color school = Color(0xFF0D4D91);
 
   static const Color base1 = Color(0xFF000000);
   static const Color base2 = Color(0xFF333232);
@@ -57,6 +58,9 @@ class MGcolor {
   static const Color base8 = Color(0xFFE7E7E7);
   static const Color base9 = Color(0xFFF4F5F8);
   static const Color base10 = Color(0xFFEDEEF1);
+
+  static Color get brand1Primary => _brand1Primary;
+  static Color get brand1Secondary => _brand1Secondary;
 
   static Color primaryColor() {
     switch (service) {
@@ -158,6 +162,7 @@ class ImgPath {
 
   static const String on_boarding = "assets/images/on_boarding.png";
   static const String aiia_color = "assets/images/aiia_color.png";
+  static const String school_symbol = "assets/images/school_symbol.png";
 
   static const String lv_warning = "assets/images/warning.png";
   static const String lv_caution = "assets/images/caution.png";

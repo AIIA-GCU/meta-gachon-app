@@ -95,8 +95,8 @@ class _SignInPageState extends State<SignInPage> {
                                 horizontal: ratio.width * 12,
                                 vertical: ratio.height * 12
                               ),
-                              hintText: '아이디를 입력하세요',
-                              hintStyle: KR.parag1.copyWith(
+                              hintText: '아이디 입력',
+                              hintStyle: KR.subtitle3.copyWith(
                                 color: MGcolor.base4,
                               ),
                               border: InputBorder.none,
@@ -120,13 +120,13 @@ class _SignInPageState extends State<SignInPage> {
                                 controller: pwController,
                                 obscureText: !isPasswordVisible,
                                 decoration: InputDecoration(
-                                  hintText: '비밀번호를 입력하세요',
+                                  hintText: '패스워드 입력',
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: ratio.width * 12,
                                       vertical: ratio.height * 12
                                   ),
-                                  hintStyle: KR.parag1.copyWith(
+                                  hintStyle: KR.subtitle3.copyWith(
                                     color: MGcolor.base4,
                                   ),
                                 ),
@@ -134,23 +134,16 @@ class _SignInPageState extends State<SignInPage> {
                               Positioned(
                                 right: 0,
                                 child: GestureDetector(
-                                  onTapDown: (tapDetails) {
-                                    setState(() => isPasswordVisible = true);
-                                  },
-                                  onTapUp: (tapDetails) {
-                                    setState(() => isPasswordVisible = false);
-                                  },
-                                  onTapCancel: () {
-                                    setState(() => isPasswordVisible = false);
-                                  },
+                                  onTapDown: (tapDetails) => setState(() => isPasswordVisible = true),
+                                  onTapUp: (tapDetails) => setState(() => isPasswordVisible = false),
+                                  onTapCancel: () => setState(() => isPasswordVisible = false),
                                   behavior: HitTestBehavior.translucent,
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: ratio.width * 12,
                                       vertical: 14
                                     ),
-                                    child: Icon(
-                                      isPasswordVisible
+                                    child: Icon(isPasswordVisible
                                           ? AppinIcon.eye_on
                                           : AppinIcon.eye_off,
                                       color: MGcolor.base4,
@@ -180,7 +173,7 @@ class _SignInPageState extends State<SignInPage> {
                       ElevatedButton(
                         onPressed: _buttonEnabled ? tryLogin : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.primaryColor(),
+                          backgroundColor: MGcolor.brand1Primary,
                           disabledBackgroundColor: MGcolor.base6,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -260,7 +253,7 @@ class _SignInPageState extends State<SignInPage> {
                                   ),
                                   child: Text(
                                     '회원가입',
-                                    style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
+                                    style: KR.parag2.copyWith(color: MGcolor.brand1Primary),
                                   )
                               ),
                             ),
