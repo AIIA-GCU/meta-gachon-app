@@ -137,7 +137,7 @@ class CustomListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
           border: isReservation && date.contains(today)
-              ? Border.all(color: MGcolor.brandOrig) : null
+              ? Border.all(color: MGcolor.primaryColor()) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -276,7 +276,7 @@ class CustomDropdown extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(width: 1, color: MGcolor.brandOrig),
+            border: Border.all(width: 1, color: MGcolor.primaryColor()),
           ),
         ),
 
@@ -403,15 +403,15 @@ class CustomTextField extends StatelessWidget {
               errorStyle: TextStyle(fontSize: 0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brandOrig, width: 1),
+                borderSide: BorderSide(color: MGcolor.primaryColor(), width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brandOrig, width: 2),
+                borderSide: BorderSide(color: MGcolor.primaryColor(), width: 2),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGcolor.brandOrig, width: 1),
+                borderSide: BorderSide(color: MGcolor.primaryColor(), width: 1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),

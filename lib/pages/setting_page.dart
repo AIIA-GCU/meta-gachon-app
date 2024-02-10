@@ -69,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
                       Switch(
                         value: _temp1,
                         activeColor: Colors.white,
-                        activeTrackColor: MGcolor.btn_active,
+                        activeTrackColor: MGcolor.primaryColor(),
                         inactiveTrackColor: MGcolor.base6,
                         inactiveThumbColor: Colors.white,
                         onChanged: (val) {
@@ -90,25 +90,19 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           ElevatedButton(
                             onPressed: (){
-                              setState(() {
-                                SelectTheme.changeblue();  
-                              });
+                              setState(() => service = ServiceType.aiSpace);
                             },
                             child: Text('파란색'),
                           ),
                           ElevatedButton(
                             onPressed: (){
-                              setState(() {
-                                SelectTheme.changepurple();
-                              });
+                              setState(() => service = ServiceType.lectureRoom);
                             },
                             child: Text('보라색'),
                           ),
                           ElevatedButton(
                             onPressed: (){
-                              setState(() {
-                                SelectTheme.changeblue_green();
-                              });
+                              setState(() => service = ServiceType.computer);
                             },
                             child: Text('청록색'),
                           ),
@@ -156,7 +150,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                             '학교 홈페이지로 바로 가기',
-                            style: KR.subtitle4.copyWith(color: MGcolor.brandOrig)
+                            style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
                           ),
                           Transform.rotate(
                             angle: pi,
@@ -185,7 +179,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                               '사이버 캠퍼스로 바로 가기',
-                              style: KR.subtitle4.copyWith(color: MGcolor.brandOrig)
+                              style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
                           ),
                           Transform.rotate(
                               angle: pi,

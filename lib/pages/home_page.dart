@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                               child: Ink(
                                 width: ratio.width * 77,
                                 decoration: BoxDecoration(
-                                  color: MGcolor.btn_active,
+                                  color: MGcolor.primaryColor(),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: EdgeInsets.symmetric(
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                               child: Ink(
                                 width: ratio.width * 77,
                                 decoration: BoxDecoration(
-                                  color: MGcolor.btn_active,
+                                  color: MGcolor.primaryColor(),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: EdgeInsets.symmetric(
@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius: BorderRadius.circular(8)),
                                         child: Ink(
                                           decoration: BoxDecoration(
-                                            color: MGcolor.btn_active,
+                                            color: MGcolor.primaryColor(),
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(
@@ -325,7 +325,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         child: Ink(
                                           decoration: BoxDecoration(
-                                            color: MGcolor.btn_active,
+                                            color: MGcolor.primaryColor(),
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(
@@ -406,7 +406,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         child: Ink(
                                           decoration: BoxDecoration(
-                                            color: MGcolor.btn_active,
+                                            color: MGcolor.primaryColor(),
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.symmetric(

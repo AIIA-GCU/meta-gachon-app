@@ -203,11 +203,11 @@ class MyPage extends StatelessWidget {
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(Icons.phonelink_setup, size: ratio.width * 24, color: MGcolor.btn_active),
+                          Icon(Icons.phonelink_setup, size: ratio.width * 24, color: MGcolor.primaryColor()),
                           SizedBox(width: ratio.width * 16),
                           Text(
                               '관리 페이지',
-                              style: KR.subtitle4.copyWith(color: MGcolor.btn_active)
+                              style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
                           )
                         ]
                     )

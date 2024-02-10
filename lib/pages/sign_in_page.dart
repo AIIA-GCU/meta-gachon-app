@@ -180,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                       ElevatedButton(
                         onPressed: _buttonEnabled ? tryLogin : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.btn_active,
+                          backgroundColor: MGcolor.primaryColor(),
                           disabledBackgroundColor: MGcolor.base6,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -260,7 +260,7 @@ class _SignInPageState extends State<SignInPage> {
                                   ),
                                   child: Text(
                                     '회원가입',
-                                    style: KR.parag2.copyWith(color: MGcolor.btn_active),
+                                    style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
                                   )
                               ),
                             ),

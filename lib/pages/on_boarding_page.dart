@@ -56,7 +56,7 @@ class OnBoarding extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _onPressed(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.btn_active,
+                    backgroundColor: MGcolor.primaryColor(),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     minimumSize: Size(ratio.width * 358, ratio.height * 48),
@@ -65,7 +65,7 @@ class OnBoarding extends StatelessWidget {
                     '시작하기',
                     style: EN.subtitle2.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: MGcolor.btn_inactive,
+                      color: MGcolor.tertiaryColor(),
                     ),
                   ),
                 ),

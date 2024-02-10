@@ -1,15 +1,9 @@
-import 'dart:io' show Platform;
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:camera/camera.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/firebase_options.dart';
+import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
@@ -79,6 +73,7 @@ class _MataGachonState extends State<MataGachon> {
       MediaQuery.of(context).size.width  / 390,
       MediaQuery.of(context).size.height / 895
     );
+    service = ServiceType.lectureRoom;
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
@@ -93,20 +88,10 @@ class _MataGachonState extends State<MataGachon> {
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
-            selectedLabelStyle: TextStyle(
-                color: MGcolor.base2,
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Ko'
-            ),
-            selectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_active),
-            unselectedLabelStyle: TextStyle(
-                color: MGcolor.base2,
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Ko'
-            ),
-            unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.btn_inactive),
+            selectedLabelStyle: KR.label3.copyWith(color: MGcolor.base3),
+            selectedIconTheme: IconThemeData(size: 24, color: MGcolor.primaryColor()),
+            unselectedLabelStyle: KR.label3.copyWith(color: MGcolor.base1),
+            unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.base4),
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),

@@ -338,7 +338,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                   SizedBox(width: 12),
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
-                    style: KR.label2.copyWith(color: MGcolor.brandOrig)
+                    style: KR.label2.copyWith(color: MGcolor.primaryColor())
                   )
                 ],
               ),
@@ -370,11 +370,11 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             }
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
-                                color = MGcolor.brandOrig;
+                                color = MGcolor.primaryColor();
                               } else if (index == _begin!+1) {
-                                color = MGcolor.brandOrig.withOpacity(0.2);
+                                color = MGcolor.primaryColor().withOpacity(0.2);
                               } else if (index == _begin!+2 && _availables[index]) {
-                                color = MGcolor.brandOrig.withOpacity(0.2);
+                                color = MGcolor.primaryColor().withOpacity(0.2);
                               }
                             }
                             if (color == null) {
@@ -382,7 +382,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             }
 
                             return GestureDetector(
-                              onTap: color == MGcolor.brandDeep
+                              onTap: color == MGcolor.base6
                                   ? null : () => _onTap(index),
                               child: Container(
                                   width: 24,
@@ -438,7 +438,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.brandOrig)
+                              border: Border.all(color: MGcolor.primaryColor())
                           ),
                           child: beginStr
                       ),
@@ -453,7 +453,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.brandOrig)
+                              border: Border.all(color: MGcolor.primaryColor())
                           ),
                           child: endStr
                       ),

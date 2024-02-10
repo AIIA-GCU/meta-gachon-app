@@ -114,7 +114,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
                   child: ElevatedButton(
                     onPressed: _canNext ? _moveToPage : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.btn_active,
+                      backgroundColor: MGcolor.primaryColor(),
                       disabledBackgroundColor: MGcolor.base6,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
@@ -256,7 +256,7 @@ class _AgreePgeState extends State<AgreePge> {
                     children: [
                       Checkbox(
                         value: _list[0],
-                        activeColor: MGcolor.btn_active,
+                        activeColor: MGcolor.primaryColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                           side: BorderSide(width: 1.6, color: MGcolor.base6)),
@@ -281,7 +281,7 @@ class _AgreePgeState extends State<AgreePge> {
                       children: [
                         Checkbox(
                             value: _list[1],
-                            activeColor: MGcolor.btn_active,
+                            activeColor: MGcolor.primaryColor(),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                                 side: BorderSide(width: 1.6, color: MGcolor.base6)),
@@ -320,7 +320,7 @@ class _AgreePgeState extends State<AgreePge> {
                       children: [
                         Checkbox(
                             value: _list[0] && _list[1],
-                            activeColor: MGcolor.btn_active,
+                            activeColor: MGcolor.primaryColor(),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                                 side: BorderSide(width: 1.6, color: MGcolor.base6)),
@@ -399,7 +399,7 @@ class _AgreePgeState extends State<AgreePge> {
                       ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brandOrig,
+                              backgroundColor: MGcolor.primaryColor(),
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, ratio.height * 48),
                               shape: RoundedRectangleBorder(
@@ -447,7 +447,7 @@ class _AgreePgeState extends State<AgreePge> {
                       ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brandOrig,
+                              backgroundColor: MGcolor.primaryColor(),
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, ratio.height * 48),
                               shape: RoundedRectangleBorder(
@@ -832,7 +832,7 @@ class CompleteSignUpPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _moveToAiiaAuthPage(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.btn_active,
+                    backgroundColor: MGcolor.primaryColor(),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     minimumSize: Size(ratio.width * 358, ratio.height * 48),
@@ -854,13 +854,13 @@ class CompleteSignUpPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _backToSignInPage(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.btn_active.withOpacity(0.7),
+                    backgroundColor: MGcolor.secondaryColor(),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     minimumSize: Size(ratio.width * 358, ratio.height * 48),
                   ),
                   child: Text(
-                    '약관 동의하기',
+                    '인증되지 않은 학생입니다.',
                     style: EN.subtitle2.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.white

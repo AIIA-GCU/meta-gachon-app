@@ -11,22 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 
-class SelectTheme {
-  static String theme = 'blue';
-
-  static void changeblue() {
-    theme = "blue";
-  }
-
-  static void changepurple() {
-    theme = "purple";
-  }
-
-  static void changeblue_green() {
-    theme = "blue-green";
-  }
-}
-
 /// 비율
 late Size ratio;
 
@@ -40,30 +24,24 @@ late final CameraDescription camera;
 const String BARCODE = "http://m.site.naver.com/12XHv";
 
 ///
-/// 색깔
+/// 서비스 종류 & 색깔
 ///
+late ServiceType service;
+enum ServiceType { aiSpace, lectureRoom, computer }
 class MGcolor {
   MGcolor._();
 
-  static Color get brand_orig {
-    return SelectTheme.theme == "blue"
-        ? Color(0xFF1762DB)
-        : SelectTheme.theme == "purple"
-            ? Color(0xFF5C30D9)
-            : Color(0xFF0097C6);
-  }
+  static const Color _brand1Primary = Color(0xFF1762DB);
+  static const Color _brand1Secondary = Color(0xFF4985E6);
+  static const Color _brand1Tertiary = Color(0xFFE3EDFD);
 
-  static Color get btn_active {
-    return SelectTheme.theme == "blue"
-        ? Color(0xFF1762DB)
-        : SelectTheme.theme == "purple"
-            ? Color(0xFF5C30D9)
-            : Color(0xFF0097C6);
-  }
+  static const Color _brand2Primary = Color(0xFF5C30D9);
+  static const Color _brand2Secondary = Color(0xFF7C59E0);
+  static const Color _brand2Tertiary = Color(0xFFE7E0F9);
 
-  static const Color brand_deep = Color(0xFF0B3199);
-  // static Color brand_orig = SelectTheme.theme == "blue" ? Color(0xFF1762DB) : SelectTheme.theme == "purple" ? Color(0xFF5C30D9) : Color(0xFF0097C6);
-  static const Color brand_light = Color(0xFF4AB6F2);
+  static const Color _brand3Primary = Color(0xFF0097C6);
+  static const Color _brand3Secondary = Color(0xFF33ACD2);
+  static const Color _brand3Tertiary = Color(0xFFD9F0F7);
 
   static const Color systemError = Color(0xFFE03616);
   static const Color systemOk = Color(0xFF00AF54);
@@ -80,8 +58,38 @@ class MGcolor {
   static const Color base9 = Color(0xFFF4F5F8);
   static const Color base10 = Color(0xFFEDEEF1);
 
-  static const Color btn_active = Color(0xFF1762DB);
-  static const Color btn_inactive = Color(0xFFE3EDFD);
+  static Color primaryColor() {
+    switch (service) {
+      case ServiceType.aiSpace:
+        return _brand1Primary;
+      case ServiceType.lectureRoom:
+        return _brand2Primary;
+      case ServiceType.computer:
+        return _brand3Primary;
+    }
+  }
+
+  static Color secondaryColor() {
+    switch (service) {
+      case ServiceType.aiSpace:
+        return _brand1Secondary;
+      case ServiceType.lectureRoom:
+        return _brand2Secondary;
+      case ServiceType.computer:
+        return _brand3Secondary;
+    }
+  }
+
+  static Color tertiaryColor() {
+    switch (service) {
+      case ServiceType.aiSpace:
+        return _brand1Tertiary;
+      case ServiceType.lectureRoom:
+        return _brand2Tertiary;
+      case ServiceType.computer:
+        return _brand3Tertiary;
+    }
+  }
 }
 
 ///
@@ -192,8 +200,8 @@ final time_format = DateFormat('HH:mm');
 ///
 /// StreamController
 ///
-final StreamController<StreamType> listListener = StreamController<StreamType>.broadcast();
 enum StreamType { reservate, admit }
+final StreamController<StreamType> listListener = StreamController<StreamType>.broadcast();
 
 /// 약관
 enum Term { usingService, personalInfomationCollection }
@@ -380,6 +388,7 @@ const String PERSONAL_INFORMATION_COLLECTION_TERM = """이용자 식별 및 본�
 
 고객서비스 이용에 관한 통지, 이용자 식별을 위해 연락처 (이메일 및 휴대전화번호)를 회원 탈퇴 시까지 보유한다.""";
 
+/// 쉐이더
 Shader hazySide(Rect rect) {
   return LinearGradient(
     begin: Alignment.topCenter,

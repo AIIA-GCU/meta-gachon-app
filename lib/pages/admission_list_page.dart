@@ -86,14 +86,14 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       onPressed: () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => MyAdmissionPage())),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.btn_inactive,
+                          backgroundColor: MGcolor.tertiaryColor(),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           fixedSize: Size(ratio.width * 159, ratio.height * 40)
                       ),
                       child: Text(
                         '내 인증 확인하기',
-                        style: KR.parag2.copyWith(color: MGcolor.brandOrig),
+                        style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
                       ),
                     ),
                     /// <인증하러 가기>
@@ -102,7 +102,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       // Navigator.of(context)
                       // .push(MaterialPageRoute(builder: (context) => AdmitPage())),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.btn_active,
+                          backgroundColor: MGcolor.primaryColor(),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           fixedSize: Size(ratio.width * 160, ratio.height * 40)

@@ -95,7 +95,7 @@ class _AdmitPageState extends State<AdmitPage> {
                               SizedBox(height: ratio.height * 10),
                               Text(
                                 '회의실 전체가 다 보이도록 사진을 찍어 올려주세요!',
-                                style: KR.label2.copyWith(color: MGcolor.brandOrig),
+                                style: KR.label2.copyWith(color: MGcolor.primaryColor()),
                               ),
                               SizedBox(height: ratio.height * 4),
                               Expanded(
@@ -277,7 +277,7 @@ class _AdmitPageState extends State<AdmitPage> {
                   child: ElevatedButton(
                     onPressed: doubleCheck,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.brandOrig,
+                      backgroundColor: MGcolor.primaryColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                       fixedSize: Size(ratio.width * 358, ratio.height * 48)

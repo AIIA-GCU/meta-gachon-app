@@ -59,7 +59,7 @@ class AlertPopup extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onAgreed,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.btn_active,
+                      backgroundColor: MGcolor.primaryColor(),
                       fixedSize: Size(ratio.width * 147, 40),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))
@@ -109,7 +109,7 @@ class CommentPopup extends StatelessWidget {
             ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: MGcolor.btn_active,
+                backgroundColor: MGcolor.primaryColor(),
                 fixedSize: Size(ratio.width * 302, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)
@@ -232,7 +232,7 @@ class ReservationPopup extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () => _edit(context),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.btn_active,
+                              backgroundColor: MGcolor.primaryColor(),
                               fixedSize: Size(
                                   ratio.width * 145, ratio.height * 40),
                               shape: RoundedRectangleBorder(
@@ -259,7 +259,7 @@ class ReservationPopup extends StatelessWidget {
                     return ElevatedButton(
                         onPressed: () => _qr,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.btn_active,
+                            backgroundColor: MGcolor.primaryColor(),
                             fixedSize: Size(
                                 ratio.width * 145, ratio.height * 40),
                             shape: RoundedRectangleBorder(
@@ -274,7 +274,7 @@ class ReservationPopup extends StatelessWidget {
                     return ElevatedButton(
                         onPressed: () => _prolong,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.btn_active,
+                            backgroundColor: MGcolor.primaryColor(),
                             fixedSize: Size(
                                 ratio.width * 145, ratio.height * 40),
                             shape: RoundedRectangleBorder(
@@ -289,7 +289,7 @@ class ReservationPopup extends StatelessWidget {
                     return ElevatedButton(
                         onPressed: () => _admit(context),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.btn_active,
+                            backgroundColor: MGcolor.primaryColor(),
                             fixedSize: Size(
                                 ratio.width * 145, ratio.height * 40),
                             shape: RoundedRectangleBorder(
@@ -524,8 +524,8 @@ class AdmissionPopup extends StatelessWidget {
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 style: IconButton.styleFrom(
-                  foregroundColor: MGcolor.btn_active,
-                  backgroundColor: MGcolor.btn_inactive,
+                  foregroundColor: MGcolor.primaryColor(),
+                  backgroundColor: MGcolor.tertiaryColor(),
                   fixedSize: Size(ratio.width * 48, ratio.width * 48)
                 ),
                 icon: Icon(AppinIcon.cross)
@@ -575,7 +575,7 @@ class GradePopup extends StatelessWidget {
               if (showDuration)
                 Text(
                   '등급 지속 시간: ${123}일',
-                  style: KR.parag2.copyWith(color: MGcolor.brandOrig),
+                  style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
                 )
             ]
           ),
