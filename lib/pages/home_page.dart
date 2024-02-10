@@ -63,7 +63,6 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(12),
                             child: Image.asset(
                               ImgPath.home_img3,
-                              width: ratio.width * 149,
                               fit: BoxFit.cover, // 이미지의 적절한 크기 조절
                             ),
                           ),
@@ -90,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: ratio.width * 16,
-                                  vertical: ratio.height * 8
+                                  vertical: 8
                                 ),
                                 child: Center(child: Text(
                                   "예약하기",
@@ -135,7 +134,6 @@ class _HomePageState extends State<HomePage> {
                           Text("강의실 이용 후\n인증을 올려주세요!",
                             style: KR.subtitle4.copyWith(
                               color: MGcolor.base1,
-                              fontSize: ratio.height * 16,
                             ),
                           ),
                           SizedBox(height: ratio.height * 12),
@@ -157,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: ratio.height * 16,
-                                    vertical: ratio.height * 8
+                                    vertical: 8
                                 ),
                                 child: Center(child: Text(
                                   "인증하기",
@@ -251,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           padding: EdgeInsets.symmetric(
                                               horizontal: ratio.height * 16,
-                                              vertical: ratio.height * 8
+                                              vertical: 8
                                           ),
                                           child: Center(child: Text(
                                             "등급 확인하기",
@@ -332,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           padding: EdgeInsets.symmetric(
                                               horizontal: ratio.height * 16,
-                                              vertical: ratio.height * 8
+                                              vertical: 8
                                           ),
                                           child: Center(child: Text(
                                             "예약 확인하기",
@@ -413,7 +411,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           padding: EdgeInsets.symmetric(
                                               horizontal: ratio.height * 16,
-                                              vertical: ratio.height * 8
+                                              vertical: 8
                                           ),
                                           child: Center(child: Text(
                                             "내 인증 확인하기",

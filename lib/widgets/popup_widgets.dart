@@ -29,12 +29,12 @@ class AlertPopup extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12)),
       child: Container(
-        height: ratio.height * 180,
+        height: 156,
         padding: EdgeInsets.fromLTRB(
           ratio.width * 12,
-          ratio.height * 40,
+          40,
           ratio.width * 12,
-          ratio.height * 12
+          12
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -49,7 +49,7 @@ class AlertPopup extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MGcolor.base7,
-                    fixedSize: Size(ratio.width * 147, ratio.height * 40),
+                    fixedSize: Size(ratio.width * 147, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))
                   ),
@@ -60,7 +60,7 @@ class AlertPopup extends StatelessWidget {
                   onPressed: onAgreed,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: MGcolor.btn_active,
-                      fixedSize: Size(ratio.width * 147, ratio.height * 40),
+                      fixedSize: Size(ratio.width * 147, 40),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))
                   ),
@@ -93,23 +93,24 @@ class CommentPopup extends StatelessWidget {
       insetPadding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12)),
-      child: Padding(
+      child: Container(
+        height: 156,
         padding: EdgeInsets.fromLTRB(
             ratio.width * 12,
-            ratio.height * 40,
+            40,
             ratio.width * 12,
-            ratio.height * 12
+            12
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title, style: KR.subtitle4),
-            SizedBox(height: ratio.height * 40),
             ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: MGcolor.btn_active,
-                fixedSize: Size(ratio.width * 302, ratio.height * 40),
+                fixedSize: Size(ratio.width * 302, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)
                 )
@@ -145,7 +146,7 @@ class ReservationPopup extends StatelessWidget {
               height: ratio.height * 120,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.fitWidth,
                   image: AssetImage(ImgPath.home_img4)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
@@ -157,7 +158,7 @@ class ReservationPopup extends StatelessWidget {
             /// 장소
             Text(item.room, style: KR.subtitle1),
 
-            SizedBox(height: ratio.height * 24),
+            SizedBox(height: ratio.height * 20),
 
             /// 날짜 및 시간
             Column(
@@ -166,42 +167,36 @@ class ReservationPopup extends StatelessWidget {
                 SizedBox(height: ratio.height * 8),
                 Text(item.time, style: EN.parag2.copyWith(color: MGcolor.base3)),
                 Builder(builder: (context) {
+                  late String msg;
                   switch (status) {
                     case 1:
-                      return Padding(
-                        padding: EdgeInsets.only(top: ratio.height * 8),
-                        child: Text(
-                          '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!',
-                          style: KR.label2.copyWith(color: MGcolor.systemError),
-                          textAlign: TextAlign.center,
-                        )
-                      );
+                      msg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
+                      break;
+                    case 2:
+                      msg = '현재 회의실을 사용 중이에요!';
+                      break;
                     case 3:
-                      return Padding(
-                          padding: EdgeInsets.only(top: ratio.height * 8),
-                          child: Text(
-                            '곧 있음 이용 시간이 끝납니다.',
-                            style: KR.label2.copyWith(color: MGcolor.systemError),
-                            textAlign: TextAlign.center,
-                          )
-                      );
+                      msg = '곧 있음 이용 시간이 끝납니다.';
+                      break;
                     case 4:
-                      return Padding(
-                        padding: EdgeInsets.only(top: ratio.height * 8),
-                        child: Text(
-                          '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!',
-                          style: KR.label2.copyWith(color: MGcolor.systemError),
-                          textAlign: TextAlign.center,
-                        )
-                      );
+                      msg = '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!';
+                      break;
                     default:
                       return SizedBox.shrink();
                   }
+                  return Padding(
+                      padding: EdgeInsets.only(top: ratio.height * 8),
+                      child: Text(
+                        msg,
+                        textAlign: TextAlign.center,
+                        style: KR.label2.copyWith(color: MGcolor.systemError),
+                      )
+                  );
                 })
               ],
             ),
 
-            SizedBox(height: ratio.height * 24),
+            SizedBox(height: ratio.height * 20),
 
             /// 대표자
             Column(
@@ -212,7 +207,19 @@ class ReservationPopup extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: ratio.height * 30),
+            SizedBox(height: ratio.height * 20),
+
+            /// 사용 목적
+            SizedBox(
+              width: ratio.width * 220,
+              child: Text(
+                '나중에 바꾸기',
+                textAlign: TextAlign.center,
+                style: KR.label2.copyWith(color: MGcolor.base3.withOpacity(0.6))
+              )
+            ),
+
+            SizedBox(height: ratio.height * 28),
 
             /// 버튼
             Builder(builder: (context) {
@@ -405,11 +412,12 @@ class AdmissionPopup extends StatelessWidget {
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /// Image
               GestureDetector(
                 onTap: () => enlargePhoto(context),
                 child: Container(
-                  width: ratio.height * 246,
-                  height: ratio.height * 200,
+                  width: ratio.width * 246,
+                  height: 200,
                   decoration: ShapeDecoration(
                       image: DecorationImage(
                           fit: BoxFit.fitWidth,
@@ -419,9 +427,15 @@ class AdmissionPopup extends StatelessWidget {
                   ),
                 ),
               ),
+
               SizedBox(height: ratio.height * 16),
+
+              /// 방
               Text(item.room, style: KR.subtitle1),
+
               SizedBox(height: ratio.height * 24),
+
+              /// 날짜 및 시간
               Column(
                 children: [
                   Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3)),
@@ -429,7 +443,10 @@ class AdmissionPopup extends StatelessWidget {
                   Text(item.time, style: EN.parag2.copyWith(color: MGcolor.base3)),
                 ],
               ),
+
               SizedBox(height: ratio.height * 24),
+
+              /// 대표자
               Column(
                 children: [
                   Text("대표자", style: KR.parag2),
@@ -437,11 +454,14 @@ class AdmissionPopup extends StatelessWidget {
                   Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGcolor.base3)),
                 ],
               ),
+
               SizedBox(height: ratio.height * 24),
+
+              /// 사용 후기
               Container(
                 constraints: BoxConstraints(
                   minWidth: ratio.width * 294,
-                  minHeight: ratio.height * 60
+                  minHeight: 60
                 ),
                 alignment: Alignment.topCenter,
                 child: Text(
@@ -460,6 +480,7 @@ class AdmissionPopup extends StatelessWidget {
   void enlargePhoto(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       barrierColor: Colors.black.withOpacity(0.55),
       builder: (context) {
         return Padding(

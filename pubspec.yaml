@@ -47,7 +47,6 @@ dependencies:
   package_info_plus: ^5.0.1
   qr_code_scanner: ^1.0.1
   url_launcher: ^6.2.4
-  linked_scroll_controller: ^0.2.0
 
 dev_dependencies:
   flutter_test:

@@ -54,11 +54,14 @@ class _ReservatePageState extends State<ReservatePage> {
   void initState() {
     super.initState();
 
+    // init
     this._loading = false;
     this._isSolo = this._canTime = false;
     this._addUserGuideline = MGcolor.brandOrig;
     this._leaderNumber = myInfo.stuNum;
     this._leaderName = myInfo.name;
+
+    // if modifing
     if (widget.reservate != null) {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
@@ -152,7 +155,10 @@ class _ReservatePageState extends State<ReservatePage> {
                               ratio.width * 16,
                               ratio.height * 12
                           ),
-                          padding: EdgeInsets.all(16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ratio.width * 16,
+                            vertical: 16
+                          ),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)),
@@ -240,17 +246,17 @@ class _ReservatePageState extends State<ReservatePage> {
                           CustomContainer(
                             title: "대표자",
                             height: 52,
-                            content: SizedBox.shrink(),
                             margin: EdgeInsets.fromLTRB(
                                 ratio.width * 16,
                                 0,
                                 ratio.width * 16,
                                 ratio.height * 12
                             ),
+                            content: SizedBox.shrink(),
                             additionalContent: [
                               Positioned(
                                   left: 80 * ratio.width,
-                                  top: 16 * ratio.height,
+                                  top: 16,
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -401,9 +407,13 @@ class _ReservatePageState extends State<ReservatePage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Wrap(
-                                        spacing: 8,
-                                        children: _usersWidgets,
+                                      SizedBox(
+                                        width: ratio.width * 274,
+                                        child: Wrap(
+                                          spacing: 8,
+                                          alignment: WrapAlignment.end,
+                                          children: _usersWidgets,
+                                        ),
                                       ),
                                       SizedBox(height: 8 * ratio.height),
                                       Padding(

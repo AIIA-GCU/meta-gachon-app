@@ -37,13 +37,11 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
               future: myAdmits.isEmpty ? RestAPI.getMyAdmission() : null,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Container(
-                      height: ratio.height * 594,
-                      alignment: Alignment.center,
-                      child: Text(
-                          '통신 속도가 너무 느려요!',
-                          style: KR.subtitle4.copyWith(color: MGcolor.base3)
-                      )
+                  return Center(
+                    child: Text(
+                        '통신 속도가 너무 느려요!',
+                        style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                    ),
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,13 +67,11 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
                     );
                   }).toList());
                 } else {
-                  return Container(
-                      height: ratio.height * 594,
-                      alignment: Alignment.center,
-                      child: Text(
-                          '아직 인증이 없어요!',
-                          style: KR.subtitle4.copyWith(color: MGcolor.base3)
-                      )
+                  return Center(
+                    child: Text(
+                        '아직 인증이 없어요!',
+                        style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                    ),
                   );
                 }
               }

@@ -38,13 +38,13 @@ class _ReservationListPageState extends State<ReservationListPage> {
             GestureDetector(
               onTap: doReservation,
               child: Container(
+                height: 56,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: Colors.white,
                 ),
                 padding: EdgeInsets.symmetric(
                     horizontal: ratio.width * 16),
-                height: ratio.height * 60,
                 child: Row(
                   children: [
                     ClipRRect(
@@ -82,8 +82,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Container(
-                            height: ratio.height * 594,
-                            alignment: Alignment.center,
+                            height: 218,
+                            alignment: Alignment.bottomCenter,
                             child: Text(
                                 '통신 속도가 너무 느립니다!',
                                 style: KR.subtitle4.copyWith(

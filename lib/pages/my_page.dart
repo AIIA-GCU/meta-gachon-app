@@ -31,7 +31,7 @@ class MyPage extends StatelessWidget {
           children: [
             /// 프로필
             Padding(
-              padding: EdgeInsets.symmetric(vertical: ratio.height * 8),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: Material(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -110,7 +110,7 @@ class MyPage extends StatelessWidget {
               TileButton(
                   onTap: moveToReserList,
                   padding: EdgeInsets.symmetric(
-                      vertical: ratio.height * 12,
+                      vertical: 11,
                       horizontal: ratio.width * 22
                   ),
                   child: Row(
@@ -130,7 +130,7 @@ class MyPage extends StatelessWidget {
               TileButton(
                 onTap: () => _floatMyAdmissionPage(context),
                 padding: EdgeInsets.symmetric(
-                    vertical: ratio.height * 12,
+                    vertical: 11,
                     horizontal: ratio.width * 22
                 ),
                 child: Row(
@@ -148,9 +148,9 @@ class MyPage extends StatelessWidget {
 
               /// 내 작품 확인
               TileButton(
-                onTap: () {},
+                // onTap: () {},
                 padding: EdgeInsets.symmetric(
-                    vertical: ratio.height * 12,
+                    vertical: 11,
                     horizontal: ratio.width * 22
                 ),
                 child: Row(
@@ -174,7 +174,7 @@ class MyPage extends StatelessWidget {
               TileButton(
                   onTap: () => _floatSettingPage(context),
                   padding: EdgeInsets.symmetric(
-                      vertical: ratio.height * 12,
+                      vertical: 11,
                       horizontal: ratio.width * 22
                   ),
                   child: Row(
@@ -197,7 +197,7 @@ class MyPage extends StatelessWidget {
                 TileButton(
                     onTap: () {},
                     padding: EdgeInsets.symmetric(
-                        vertical: ratio.height * 12,
+                        vertical: 11,
                         horizontal: ratio.width * 22
                     ),
                     child: Row(
@@ -220,7 +220,7 @@ class MyPage extends StatelessWidget {
                 onTap: () => _floatTermPage(context, Term.usingService),
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(
-                    vertical: ratio.height * 12,
+                    vertical: 11,
                     horizontal: ratio.width * 22
                 ),
                 child: Text(
@@ -233,7 +233,7 @@ class MyPage extends StatelessWidget {
                       context, Term.personalInfomationCollection),
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.symmetric(
-                      vertical: ratio.height * 12,
+                      vertical: 11,
                       horizontal: ratio.width * 22
                   ),
                   child: Text(
@@ -243,7 +243,7 @@ class MyPage extends StatelessWidget {
               ),
               TileButton(
                 padding: EdgeInsets.symmetric(
-                    vertical: ratio.height * 12,
+                    vertical: 11,
                     horizontal: ratio.width * 22
                 ),
                 child: Row(

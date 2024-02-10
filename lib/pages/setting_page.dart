@@ -111,9 +111,9 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                       ratio.width * 22,
-                      ratio.height * 12,
+                      12,
                       ratio.width * 18,
-                      ratio.height * 12
+                      12
                     ),
                     child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -140,9 +140,9 @@ class _SettingPageState extends State<SettingPage> {
                     onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                     padding: EdgeInsets.fromLTRB(
                         ratio.width * 22,
-                        ratio.height * 12,
+                        12,
                         ratio.width * 18,
-                        ratio.height * 12
+                        12
                     ),
                     child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -173,7 +173,7 @@ class _SettingPageState extends State<SettingPage> {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.symmetric(
                       horizontal: ratio.width * 22,
-                      vertical: ratio.height * 16
+                      vertical: 16
                     ),
                     borderRadius: BorderRadius.circular(12),
                     child: Text('로그아웃', style: KR.subtitle4)

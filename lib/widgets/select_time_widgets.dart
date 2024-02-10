@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
@@ -83,8 +82,7 @@ class _CustomCalenderState extends State<CustomCalender> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 336 * ratio.width,
+    return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -266,8 +264,7 @@ class CustomTimePicker extends StatefulWidget {
   State<CustomTimePicker> createState() => _CustomTimePickerState();
 }
 class _CustomTimePickerState extends State<CustomTimePicker> {
-  late final LinkedScrollControllerGroup _scrollCtrGroup;
-  late final ScrollController _scrollCtr1, _scrollCtr2;
+  final _scrollCtr = ScrollController();
 
   late List<bool> _availables;
   late bool _reset;
@@ -285,10 +282,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
       _end = _end! - 1;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
-
-    _scrollCtrGroup = LinkedScrollControllerGroup();
-    _scrollCtr1 = _scrollCtrGroup.addAndGet();
-    _scrollCtr2 = _scrollCtrGroup.addAndGet();
   }
 
   @override
@@ -301,13 +294,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
     super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _scrollCtr1.dispose();
-    _scrollCtr2.dispose();
-    super.dispose();
   }
 
   /// Todo: 나중에 애니메이션 추가하기
@@ -361,81 +347,81 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
               if (_reset)
                 ...[
-                  SizedBox(height: 40 + ratio.height * 55)
+                  SizedBox(height: 68 + ratio.height*22)
                 ]
               else
                 ...[
                   /// 마이쮸 시간표
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                    decoration: BoxDecoration(
-                        color: MGcolor.base9,
-                        borderRadius: BorderRadius.circular(4)
-                    ),
-                    child: SingleChildScrollView(
-                        controller: _scrollCtr1,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(children: List.generate(26, (index) {
-                          Color? color;
-                          if (!_availables[index]) {
-                            color = MGcolor.base6;
-                          }
-                          else if (_begin != null && _end != null) {
-                            if (_begin! <= index && index <= _end!) {
-                              color = MGcolor.brandOrig;
-                            } else if (index == _begin!+1) {
-                              color = MGcolor.brandOrig.withOpacity(0.2);
-                            } else if (index == _begin!+2 && _availables[index]) {
-                              color = MGcolor.brandOrig.withOpacity(0.2);
+                  SingleChildScrollView(
+                    controller: _scrollCtr,
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                          decoration: BoxDecoration(
+                              color: MGcolor.base9,
+                              borderRadius: BorderRadius.circular(4)
+                          ),
+                          child: Row(children: List.generate(24, (index) {
+                            Color? color;
+                            if (!_availables[index]) {
+                              color = MGcolor.base6;
                             }
-                          }
-                          if (color == null) {
-                            color = Colors.white;
-                          }
+                            else if (_begin != null && _end != null) {
+                              if (_begin! <= index && index <= _end!) {
+                                color = MGcolor.brandOrig;
+                              } else if (index == _begin!+1) {
+                                color = MGcolor.brandOrig.withOpacity(0.2);
+                              } else if (index == _begin!+2 && _availables[index]) {
+                                color = MGcolor.brandOrig.withOpacity(0.2);
+                              }
+                            }
+                            if (color == null) {
+                              color = Colors.white;
+                            }
 
-                          return GestureDetector(
-                            onTap: color == MGcolor.brandDeep
-                                ? null : () => _onTap(index),
-                            child: Container(
-                                width: 24,
-                                height: 28,
-                                margin: EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(
-                                    color: color,
-                                    borderRadius: BorderRadius.circular(3)
-                                )
-                            ),
-                          );
-                        }))
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: ratio.width * 2
-                    ),
-                    child: SingleChildScrollView(
-                        controller: _scrollCtr2,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(children: List.generate(9, (index) {
-                          if (index == 8) {
-                            return SizedBox(
-                                width: (24 + 3 * 2) * 2,
-                                child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('24', style: EN.label2),
-                                      Text('2', style: EN.label2),
-                                    ]
-                                )
+                            return GestureDetector(
+                              onTap: color == MGcolor.brandDeep
+                                  ? null : () => _onTap(index),
+                              child: Container(
+                                  width: 24,
+                                  height: 28,
+                                  margin: EdgeInsets.symmetric(horizontal: 3),
+                                  decoration: BoxDecoration(
+                                      color: color,
+                                      borderRadius: BorderRadius.circular(3)
+                                  )
+                              ),
                             );
-                          } else {
-                            return SizedBox(
-                                width: (24 + 3 * 2) * 3,
-                                child: Text('${index * 3}', style: EN.label2)
-                            );
-                          }
-                        }))
+                          })),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: ratio.width * 2
+                          ),
+                          child: Row(children: List.generate(8, (index) {
+                            if (index == 7) {
+                              return SizedBox(
+                                  width: (24 + 3 * 2) * 3,
+                                  child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('21', style: EN.label2),
+                                        Text('24', style: EN.label2),
+                                      ]
+                                  )
+                              );
+                            } else {
+                              return SizedBox(
+                                  width: (24 + 3 * 2) * 3,
+                                  child: Text('${index * 3}', style: EN.label2)
+                              );
+                            }
+                          })),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -446,8 +432,8 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          width: ratio.width * 108,
-                          height: ratio.height * 36,
+                          width: ratio.width * 120,
+                          height: 32,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -457,12 +443,12 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           child: beginStr
                       ),
                       SizedBox(
-                          width: 24 * ratio.width,
+                          width: 22 * ratio.width,
                           child: Center(child: Text("~"))
                       ),
                       Container(
-                          width: ratio.width * 108,
-                          height: ratio.height * 36,
+                          width: ratio.width * 120,
+                          height: 32,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -500,17 +486,17 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   /// 서버에서 예약 가능한 시간 확인하기
   Future<void> _availableTime() async {
-    _availables = List.generate(26, (index) => false);
+    _availables = List.generate(24, (index) => false);
     try {
       Map<int, bool>? times = await RestAPI
           .getAvailableTime(room: widget.room, date: widget.date);
-      int a = times!.keys.first, b = times.keys.last;
-      for (a; a <= b; a++) {
-        _availables[a] = !times[a]!;
+      int i;
+      for (i=0; i < 24; i++) {
+        _availables[i] = !times![i]!;
       }
       if (_begin != null && _end != null) {
-        for (a = _begin! - 1; a <= _end!; a++) {
-          _availables[a] = true;
+        for (i = _begin! - 1; i <= _end!; i++) {
+          _availables[i] = true;
         }
       }
     } catch(e) {}

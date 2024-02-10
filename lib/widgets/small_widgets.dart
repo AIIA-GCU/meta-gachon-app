@@ -124,9 +124,9 @@ class CustomListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => showCard(context),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: ratio.height * 4),
+        margin: EdgeInsets.symmetric(vertical: 4),
         padding: EdgeInsets.symmetric(
-            horizontal: ratio.width * 16, vertical: ratio.height * 12),
+            horizontal: ratio.width * 16, vertical: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
@@ -197,7 +197,7 @@ class CustomContainer extends StatelessWidget {
   final Widget content;
   final List<Widget>? additionalContent;
   final String title;
-  final int height;
+  final double height;
 
   const CustomContainer({
     required this.title,
@@ -213,7 +213,7 @@ class CustomContainer extends StatelessWidget {
     return Container(
       margin: margin ?? EdgeInsets.only(bottom: 12 * ratio.height),
       width: 358 * ratio.width,
-      height: height * ratio.height,
+      height: height,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -221,14 +221,14 @@ class CustomContainer extends StatelessWidget {
       child: Stack(children: [
         Positioned(
           left: 16 * ratio.width,
-          top: 16 * ratio.height,
+          top: 16,
           child: Text(title, style: KR.parag1),
         ),
         Positioned(
             left: 80 * ratio.width,
-            top: 10 * ratio.height,
+            top: 10,
             width: 262 * ratio.width,
-            height: 32 * ratio.height,
+            height: 32,
             child: content
         ),
         ...?additionalContent //추가 위젯들 들어가는 곳
@@ -253,63 +253,56 @@ class CustomDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 120 * ratio.width,
-      height: 32 * ratio.height,
-      ///드롭다운메뉴 위젯
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-          isExpanded: true,
-          alignment: Alignment.center,
-          hint: Text(hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
-          items: _addDividersAfterItems(items),
-          value: selectedItem,
-          onChanged: onChanged,
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2<String>(
+        isExpanded: true,
+        alignment: Alignment.center,
+        hint: Text(hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
+        items: _addDividersAfterItems(items),
+        value: selectedItem,
+        onChanged: onChanged,
 
-          ///드롭버튼(선택된 항목) 디자인
-          buttonStyleData: ButtonStyleData(
-            padding: EdgeInsets.all(0),
-            height: 40 * ratio.height,
-            width: 140 * ratio.width,
+        ///드롭버튼(선택된 항목) 디자인
+        buttonStyleData: ButtonStyleData(
+          padding: EdgeInsets.all(0),
+          height: 40,
+          width: 120 * ratio.width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(width: 1, color: MGcolor.brandOrig),
+          ),
+        ),
+
+        ///드롭아이콘 디자인
+        iconStyleData: IconStyleData(iconSize: 0),
+
+        ///메뉴창 디자인
+        dropdownStyleData: DropdownStyleData(
+            offset: Offset(0, -4),
+            //위치조정
+            padding: EdgeInsets.zero,
+            maxHeight: 120,
+            //최대크기
+            elevation: 0,
+            //그림자 없앰
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(width: 1, color: MGcolor.brandOrig),
-            ),
-          ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x19000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                    spreadRadius: 0,
+                  )
+                ],
+                color: Colors.white.withOpacity(0.9) //배경투명도
+            )
+        ),
 
-          ///드롭아이콘 디자인
-          iconStyleData: IconStyleData(
-            iconSize: 0, //아이콘 표시x
-          ),
-
-          ///메뉴창 디자인
-          dropdownStyleData: DropdownStyleData(
-              offset: Offset(0, -4),
-              //위치조정
-              padding: EdgeInsets.all(0),
-              maxHeight: 85 * ratio.height,
-              //최대크기
-              elevation: 0,
-              //그림자 없앰
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x19000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                      spreadRadius: 0,
-                    )
-                  ],
-                  color: Colors.white.withOpacity(0.9) //배경투명도
-              )
-          ),
-
-          ///메뉴들(선택지들) 디자인
-          menuItemStyleData: MenuItemStyleData(
-            padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
-            customHeights: _getCustomItemsHeights(items),
-          ),
+        ///메뉴들(선택지들) 디자인
+        menuItemStyleData: MenuItemStyleData(
+          padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
+          customHeights: _getCustomItemsHeights(items),
         ),
       ),
     );
@@ -356,7 +349,7 @@ class CustomDropdown extends StatelessWidget {
     final List<double> itemsHeights = [];
     for (int i = 0; i < (items.length * 2) - 1; i++) {
       if (i.isEven) {
-        itemsHeights.add(24 * ratio.height);
+        itemsHeights.add(24);
       } else {
         itemsHeights.add(1);
       }
@@ -459,7 +452,7 @@ class TileButtonCard extends StatelessWidget {
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: padding != null ? padding!
-              : EdgeInsets.symmetric(vertical: ratio.height * 8),
+              : EdgeInsets.symmetric(vertical: 8),
           child: Column(children: items),
         ),
       ),
