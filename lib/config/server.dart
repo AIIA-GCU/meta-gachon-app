@@ -606,6 +606,11 @@ class User {
       json['negative'],
       json['positive']
   );
+
+  /// (리더의 정보에 대하여) 유저 정보가 일치하는지
+  bool match(String userInfo) {
+    return '$_stuNum $_name' == userInfo;
+  }
 }
 
 class Reservate {
