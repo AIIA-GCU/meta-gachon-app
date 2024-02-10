@@ -122,7 +122,13 @@ class CustomListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showCard(context),
+      onTap: () async {
+        int? status;
+        if (isReservation) {
+          status = await RestAPI.currentReservationStatus(reservationId: uid);
+        }
+        showCard(context, status);
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 4),
         padding: EdgeInsets.symmetric(
@@ -176,13 +182,13 @@ class CustomListItem extends StatelessWidget {
     );
   }
 
-  void showCard(BuildContext ctx) => showDialog(
+  void showCard(BuildContext ctx, int? status) => showDialog(
       context: ctx,
       builder: (context) {
-        if (photo == null) {
+        if (status != null) {
           return ReservationPopup(
             Reservate(uid, '$stuNum $name', room, date, time, members),
-            0
+            status
           );
         } else {
           return AdmissionPopup(

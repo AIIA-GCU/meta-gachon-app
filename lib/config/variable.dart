@@ -21,7 +21,7 @@ late final String today;
 late final CameraDescription camera;
 
 /// 학교 바코드
-const String BARCODE = "12016091019242582042";
+const String BARCODE = "http://m.site.naver.com/12XHv";
 
 ///
 /// 색깔

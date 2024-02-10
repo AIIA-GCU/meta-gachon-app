@@ -222,66 +222,90 @@ class ReservationPopup extends StatelessWidget {
             SizedBox(height: ratio.height * 28),
 
             /// 버튼
+            /// 리더의 경우에만 됨
             Builder(builder: (context) {
-              switch (status) {
-                case 0:
-                  return Column(children: [
-                    ElevatedButton(
-                        onPressed: () => _edit(context),
+              if (myInfo.match(item.leaderInfo)) {
+                switch (status) {
+                /// 사용 전 (예약 변경 O)
+                  case 1:
+                    return Column(children: [
+                      ElevatedButton(
+                          onPressed: () => _edit(context),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: MGcolor.btn_active,
+                              fixedSize: Size(
+                                  ratio.width * 145, ratio.height * 40),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))
+                          ),
+                          child: Text("예약 수정하기", style: KR.parag1.copyWith(
+                              color: Colors.white))
+                      ),
+                      TextButton(
+                          onPressed: () => _del(context),
+                          style: TextButton.styleFrom(
+                              fixedSize: Size(
+                                  ratio.width * 145, ratio.height * 40),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))
+                          ),
+                          child: Text("예약 취소하기", style: KR.parag1.copyWith(
+                              color: MGcolor.base3))
+                      )
+                    ]);
+
+                /// 사용 전 (예약 변경 X)
+                  case 0:
+                    return ElevatedButton(
+                        onPressed: () => _qr,
                         style: ElevatedButton.styleFrom(
                             backgroundColor: MGcolor.btn_active,
-                            fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                            fixedSize: Size(
+                                ratio.width * 145, ratio.height * 40),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))
                         ),
-                        child: Text("예약 수정하기", style: KR.parag1.copyWith(color: Colors.white))
-                    ),
-                    TextButton(
-                        onPressed: () => _del(context),
-                        style: TextButton.styleFrom(
-                            fixedSize: Size(ratio.width * 145, ratio.height * 40),
+                        child: Text("QR 코드 인증하기",
+                            style: KR.parag1.copyWith(color: Colors.white))
+                    );
+
+                /// 사용 중 (연장 O)
+                  case 3:
+                    return ElevatedButton(
+                        onPressed: () => _prolong,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: MGcolor.btn_active,
+                            fixedSize: Size(
+                                ratio.width * 145, ratio.height * 40),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))
                         ),
-                        child: Text("예약 취소하기", style: KR.parag1.copyWith(color: MGcolor.base3))
-                    )
-                  ]);
-                case 1:
-                  return ElevatedButton(
-                      onPressed: () => _qr,
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.btn_active,
-                          fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))
-                      ),
-                      child: Text("QR 코드 인증하기", style: KR.parag1.copyWith(color: Colors.white))
-                  );
-                case 3:
-                  return ElevatedButton(
-                      onPressed: () => _prolong,
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.btn_active,
-                          fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))
-                      ),
-                      child: Text("예약 연장하기", style: KR.parag1.copyWith(color: Colors.white))
-                  );
-                case 4:
-                  return ElevatedButton(
-                    onPressed: () => _admit(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.btn_active,
-                      fixedSize: Size(ratio.width * 145, ratio.height * 40),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))
-                    ),
-                    child: Text("인증하기", style: KR.parag1.copyWith(color: Colors.white))
-                  );
-                default:
-                  return SizedBox.shrink();
-              }
+                        child: Text("예약 연장하기",
+                            style: KR.parag1.copyWith(color: Colors.white))
+                    );
+
+                /// 사용 끝 (인증 X)
+                  case 4:
+                    return ElevatedButton(
+                        onPressed: () => _admit(context),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: MGcolor.btn_active,
+                            fixedSize: Size(
+                                ratio.width * 145, ratio.height * 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))
+                        ),
+                        child: Text("인증하기",
+                            style: KR.parag1.copyWith(color: Colors.white))
+                    );
+
+                /// 그 외
+                /// - 사용 중 (연장 X)
+                /// - 사용 끝 (인증 O)
+                  default:
+                    return SizedBox.shrink();
+                }
+              } else return SizedBox.shrink();
             })
           ]
         ),
