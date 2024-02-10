@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/animation.dart';
+import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 
@@ -53,13 +54,7 @@ class OnBoarding extends StatelessWidget {
               width: screenSize.width,
               child: Center(
                 child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).push(
-                    PageRouteBuilder(
-                      fullscreenDialog: false,
-                      transitionsBuilder: slideRigth2Left,
-                      pageBuilder: (context, anime, secondAnime) => SignInPage()
-                    )
-                  ),
+                  onPressed: () => _onPressed(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MGcolor.btn_active,
                     shape: RoundedRectangleBorder(
@@ -80,5 +75,24 @@ class OnBoarding extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    if (await FCM.initialize()) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          fullscreenDialog: false,
+          transitionsBuilder: slideRigth2Left,
+          pageBuilder: (context, anime, secondAnime) => SignInPage()
+        )
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(milliseconds: 1200),
+          content: Text('권한을 허용해 주세요!')
+        )
+      );
+    }
   }
 }

@@ -290,8 +290,9 @@ class _SignInPageState extends State<SignInPage> {
         isLoading = true;
       });
       try {
+        final fcmToken = await FCM.getToken();
         User? user = await RestAPI.signIn(
-            id: idController.text, pw: pwController.text);
+            id: idController.text, pw: pwController.text, token: fcmToken);
         if (user != null) {
           // save data local
           myInfo = user;

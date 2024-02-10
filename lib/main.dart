@@ -1,44 +1,65 @@
-import 'package:camera/camera.dart';
+import 'dart:io' show Platform;
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/server.dart';
+import 'package:mata_gachon/config/firebase_options.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
 
 Future<void> main() async {
-  debugPrint("called main()");
+
+  debugPrint("called main()\n");
+
   today = std2_format.format(DateTime.now());
-  WidgetsFlutterBinding.ensureInitialized();
+
+  debugPrint("initializing flutter binding");
+
+  await WidgetsFlutterBinding.ensureInitialized();
+
   debugPrint("determining initial page");
+
   late final Widget start;
-  try {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final bool? first = preferences.getBool('firstTime');
-    if (first == null) {
-      preferences.setBool('firstTime', true);
-      start = OnBoarding();
-    } else if (first == true) {
-      start = OnBoarding();
-    } else {
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn'))!;
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  final bool? first = preferences.getBool('firstTime');
+
+  if (first == null) {
+    preferences.setBool('firstTime', true);
+    start = OnBoarding();
+  } else if (first == true) {
+    start = OnBoarding();
+  } else {
+    try {
+      await FCM.initialize();
+      final fcmToken = await FCM.getToken();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
       reservates = await RestAPI.getAllReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
+
       start = MainFrame();
+    } catch(_) {
+      debugPrint('No token');
+      start = SignInPage();
     }
-  } catch(e) {
-    debugPrint("token is empty");
-    start = SignInPage();
   }
+
   debugPrint("complete camera setting");
+
   camera = await availableCameras().then((value) {
     debugPrint(value.length.toString());
     return value.first;
   });
+
   debugPrint("start to run app");
+
   runApp(MataGachon(start: start));
 }
 
