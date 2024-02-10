@@ -11,6 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 
+class SelectTheme {
+  static String theme = 'blue';
+
+  static void changeblue() {
+    theme = "blue";
+  }
+
+  static void changepurple() {
+    theme = "purple";
+  }
+
+  static void changeblue_green() {
+    theme = "blue-green";
+  }
+}
+
 /// 비율
 late Size ratio;
 
@@ -29,9 +45,25 @@ const String BARCODE = "http://m.site.naver.com/12XHv";
 class MGcolor {
   MGcolor._();
 
-  static const Color brandDeep = Color(0xFF0B3199);
-  static const Color brandOrig = Color(0xFF1762DB);
-  static const Color brandLight = Color(0xFF4AB6F2);
+  static Color get brand_orig {
+    return SelectTheme.theme == "blue"
+        ? Color(0xFF1762DB)
+        : SelectTheme.theme == "purple"
+            ? Color(0xFF5C30D9)
+            : Color(0xFF0097C6);
+  }
+
+  static Color get btn_active {
+    return SelectTheme.theme == "blue"
+        ? Color(0xFF1762DB)
+        : SelectTheme.theme == "purple"
+            ? Color(0xFF5C30D9)
+            : Color(0xFF0097C6);
+  }
+
+  static const Color brand_deep = Color(0xFF0B3199);
+  // static Color brand_orig = SelectTheme.theme == "blue" ? Color(0xFF1762DB) : SelectTheme.theme == "purple" ? Color(0xFF5C30D9) : Color(0xFF0097C6);
+  static const Color brand_light = Color(0xFF4AB6F2);
 
   static const Color systemError = Color(0xFFE03616);
   static const Color systemOk = Color(0xFF00AF54);
