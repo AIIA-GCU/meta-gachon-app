@@ -243,10 +243,9 @@ class CustomContainer extends StatelessWidget {
   }
 }
 
-class CustomDropdown extends StatelessWidget {
+class CustomDropdown extends StatefulWidget {
   final String hint;
   final List<String> items;
-  final String? selectedItem;
   final Function(String?) onChanged;
 
   const CustomDropdown({
@@ -254,8 +253,13 @@ class CustomDropdown extends StatelessWidget {
     required this.hint,
     required this.items,
     required this.onChanged,
-    this.selectedItem,
   }) : super(key: key);
+
+  @override
+  State<CustomDropdown> createState() => _CustomDropdownState();
+}
+class _CustomDropdownState extends State<CustomDropdown> {
+  String? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -263,10 +267,13 @@ class CustomDropdown extends StatelessWidget {
       child: DropdownButton2<String>(
         isExpanded: true,
         alignment: Alignment.center,
-        hint: Text(hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
-        items: _addDividersAfterItems(items),
-        value: selectedItem,
-        onChanged: onChanged,
+        hint: Text(widget.hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
+        items: _addDividersAfterItems(widget.items),
+        value: _selectedItem,
+        onChanged: (val) {
+          widget.onChanged(val);
+          setState(() => _selectedItem = val);
+        },
 
         ///드롭버튼(선택된 항목) 디자인
         buttonStyleData: ButtonStyleData(
@@ -308,7 +315,7 @@ class CustomDropdown extends StatelessWidget {
         ///메뉴들(선택지들) 디자인
         menuItemStyleData: MenuItemStyleData(
           padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
-          customHeights: _getCustomItemsHeights(items),
+          customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
     );
@@ -331,7 +338,7 @@ class CustomDropdown extends StatelessWidget {
                     item,
                     textAlign: TextAlign.center,
                     style: EN.parag2.copyWith(
-                        color: (item == selectedItem)
+                        color: (item == _selectedItem)
                             ? Colors.black
                             : Color(0xFF7C7C7C)
                     )
