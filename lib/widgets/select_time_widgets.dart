@@ -58,7 +58,7 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
   void initState() {
     super.initState();
     if (widget.init != null) {
-      selectedDay = std2_format.parse(widget.init!);
+      selectedDay = std3_format.parse(widget.init!);
     }
 
     rangeFirst = DateTime(widget.first.year, widget.first.month, widget.first.day);
@@ -648,7 +648,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     } else {
       _availables = List.generate(24, (_) => true);
       final current = DateTime.now();
-      if (widget.date == std2_format.format(current)) {
+      if (widget.date == std3_format.format(current)) {
         for (int i=0 ; i <= current.hour ; i++) {
           _availables[i] = false;
         }

@@ -97,7 +97,7 @@ class CustomListItem extends StatelessWidget {
     required this.uid,
     required this.name,
     required this.stuNum,
-    required this.room,
+    required this.place,
     required this.date,
     required this.time,
     required this.members,
@@ -110,7 +110,7 @@ class CustomListItem extends StatelessWidget {
   final int uid;
   final String name;
   final int stuNum;
-  final String room;
+  final String place;
   final String date;
   final String time;
   final String members;
@@ -121,6 +121,47 @@ class CustomListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late EdgeInsetsGeometry margin, padding;
+    late Text firstText, secondText, thirdText;
+
+    if (service == ServiceType.computer) {
+      margin = EdgeInsets.symmetric(vertical: 16);
+      padding = EdgeInsets.symmetric(
+        horizontal: ratio.width * 16, vertical: 26);
+      secondText = Text(
+        '$date - $date',
+        style: KR.parag2.copyWith(color: MGcolor.base3),
+      );
+      thirdText = Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '전담 교수님 ',
+              style: KR.parag2.copyWith(color: MGcolor.base3)
+            ),
+            TextSpan(
+              text: '김철수 교수님',
+              style: KR.parag2.copyWith(color: MGcolor.secondaryColor())
+            ),
+          ],
+        ),
+      );
+    } else {
+      margin = EdgeInsets.symmetric(vertical: 4);
+      padding = EdgeInsets.symmetric(
+        horizontal: ratio.width * 16, vertical: 12);
+      secondText = Text(date,
+          style: KR.parag2.copyWith(color: MGcolor.base3));
+      thirdText = Text(time,
+          style: KR.parag2.copyWith(color: MGcolor.base3));
+    }
+
+    if (service == ServiceType.lectureRoom && place.isEmpty) {
+      firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
+    } else {
+      firstText = Text(place, style: KR.subtitle3);
+    }
+
     return GestureDetector(
       onTap: () async {
         int? status;
@@ -130,9 +171,8 @@ class CustomListItem extends StatelessWidget {
         showCard(context, status);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        padding: EdgeInsets.symmetric(
-            horizontal: ratio.width * 16, vertical: 12),
+        margin: margin,
+        padding: padding,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
@@ -146,10 +186,11 @@ class CustomListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(room, style: KR.subtitle1),
+                firstText,
                 SizedBox(height: ratio.height * 8),
-                Text(date, style: KR.parag2.copyWith(color: MGcolor.base3)),
-                Text(time, style: KR.parag2.copyWith(color: MGcolor.base3))
+                secondText,
+                SizedBox(height: ratio.height * 4),
+                thirdText
               ],
             ),
             if (isReservation)
@@ -187,12 +228,12 @@ class CustomListItem extends StatelessWidget {
       builder: (context) {
         if (status != null) {
           return ReservationPopup(
-            Reservate(uid, '$stuNum $name', room, date, time, members),
+            Reservate(uid, '$stuNum $name', place, date, time, members),
             status
           );
         } else {
           return AdmissionPopup(
-              Admit(uid, '$stuNum $name', room, date, time, members, review!, photo!));
+              Admit(uid, '$stuNum $name', place, date, time, members, review!, photo!));
         }
       }
   );

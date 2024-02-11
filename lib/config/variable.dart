@@ -198,7 +198,8 @@ class MGLogo {
 /// Date Format
 ///
 final std1_format = DateFormat('yyyy-MM-dd-HH:mm');
-final std2_format = DateFormat('yyyy-MM-dd');
+final std2_format = DateFormat('yyyy-MM-dd HH:mm');
+final std3_format = DateFormat('yyyy-MM-dd');
 final alarm_format = DateFormat('MM/dd HH:mm');
 final date1_format = DateFormat('yyyy. MM. dd EEE');
 final date2_format = DateFormat('yyyy.MM.dd');

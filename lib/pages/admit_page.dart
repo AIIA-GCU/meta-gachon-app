@@ -26,9 +26,7 @@ class _AdmitPageState extends State<AdmitPage> {
 
   late String room;
   late String leaderInfo;
-  late String date;
-  late String begin;
-  late String end;
+  late Widget time;
   late bool loading;
 
   String? _picturePath;
@@ -38,15 +36,31 @@ class _AdmitPageState extends State<AdmitPage> {
     super.initState();
     loading = false;
 
-    room = widget.reservate.room;
+    room = widget.reservate.place;
+
     leaderInfo = widget.reservate.leaderInfo;
-    // Todo
-    // 효율성 개편
-    final temp1 = widget.reservate.date.split(' ').first;
-    date = date2_format.format(std2_format.parse(temp1));
-    final temp2 = widget.reservate.time.split(' ~ ');
-    begin = temp2[0];
-    end = temp2[1];
+
+    var temp = widget.reservate.date.split(' ').first;
+    var date = date2_format.format(std3_format.parse(temp));
+    if (service == ServiceType.computer) {
+      time = RichText(text: TextSpan(
+        style: EN.parag2.copyWith(color: MGcolor.base3),
+        children: [
+          TextSpan(text: date),
+          TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGcolor.base1)),
+          TextSpan(text: date)
+        ]
+      ));
+    } else {
+      time = RichText(text: TextSpan(
+        style: EN.parag2.copyWith(color: MGcolor.base3),
+        children: [
+          TextSpan(text: date),
+          TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGcolor.base1)),
+          TextSpan(text: widget.reservate.time)
+        ]
+      ));
+    }
   }
 
   @override
@@ -181,14 +195,7 @@ class _AdmitPageState extends State<AdmitPage> {
                               children: [
                                 Text('사용 일시', style: KR.parag1.copyWith(color: Colors.black)),
                                 SizedBox(width: ratio.width * 10),
-                                RichText(text: TextSpan(
-                                  style: EN.parag2.copyWith(color: MGcolor.base3),
-                                  children: [
-                                    TextSpan(text: date),
-                                    TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGcolor.base1)),
-                                    TextSpan(text: '$begin ~ $end')
-                                  ]
-                                ))
+                                time
                               ],
                             )
                         ),
@@ -360,13 +367,15 @@ class _AdmitPageState extends State<AdmitPage> {
 
     setState(() => loading = true);
 
+    final temp1 = widget.reservate.date.split(' ').first;
+    final temp2 = widget.reservate.time.split(' ~ ');
     final expension = _picturePath!.substring(_picturePath!.lastIndexOf('.'));
     final bytes = await File(_picturePath!).readAsBytes();
     debugPrint("""
       [reservation Info]
         . room: $room
-        . startTime: $date $begin
-        . endTime: $date $end
+        . startTime: $temp1 ${temp2[0]}
+        . endTime: $temp1 ${temp2[1]}
         . leader: $leaderInfo
         . review: ${_textCtr.text}
         . photo: ${bytes}""");

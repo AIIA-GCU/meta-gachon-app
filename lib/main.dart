@@ -12,7 +12,7 @@ Future<void> main() async {
 
   debugPrint("called main()\n");
 
-  today = std2_format.format(DateTime.now());
+  today = std3_format.format(DateTime.now());
 
   debugPrint("initializing flutter binding");
 

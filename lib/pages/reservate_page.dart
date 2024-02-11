@@ -68,7 +68,7 @@ class _ReservatePageState extends State<ReservatePage> {
     if (widget.reservate != null) {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
-      this._selectedRoom = widget.reservate!.room;
+      this._selectedRoom = widget.reservate!.place;
       this._selectedDate = widget.reservate!.date.split(' ')[0];
       temp = widget.reservate!.time.split(' ~ ');
       this._selectedEnter = std1_format.parse('$_selectedDate-${temp[0]}');
@@ -599,7 +599,7 @@ class _ReservatePageState extends State<ReservatePage> {
       }
       _selectedEnd = _selectedEnter!.add(Duration(days: 4));
       debugPrint('${std1_format.format(_selectedEnter!)} ~ ${std1_format.format(_selectedEnd!)}');
-      _selectedDate = std2_format.format(_selectedEnter!);
+      _selectedDate = std3_format.format(_selectedEnter!);
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
               ratio.width * 16,
@@ -690,11 +690,11 @@ class _ReservatePageState extends State<ReservatePage> {
                 borderRadius: BorderRadius.circular(4)),
           ),
           onSelected: (value) {
-            _selectedDate = std2_format.format(value);
+            _selectedDate = std3_format.format(value);
             if ((_selectedRoom != null || service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
                 if (widget.reservate != null
-                    && _selectedRoom == widget.reservate!.room
+                    && _selectedRoom == widget.reservate!.place
                     && _selectedDate == widget.reservate!.date.split(' ')[0]) {
                   final temp = widget.reservate!.time.split(' ~ ');
                   _selectedEnter = std1_format.parse('$_selectedDate-${temp[0]}');
@@ -715,7 +715,7 @@ class _ReservatePageState extends State<ReservatePage> {
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
   bool _isSame() {
-    if (widget.reservate!.room == _selectedRoom) return true;
+    if (widget.reservate!.place == _selectedRoom) return true;
 
     if (widget.reservate!.date.split(' ')[0] == _selectedDate) return true;
 
@@ -811,7 +811,12 @@ class _ReservatePageState extends State<ReservatePage> {
     late String title;
     late Function() onPressed;
 
-    setState(() => _loading = true);
+    setState(() {
+      _loading = true;
+      if (MediaQuery.of(context).viewInsets.bottom > 0) {
+        FocusScope.of(context).unfocus();
+      }
+    });
 
     if (_selectedEnter == null || _selectedEnd == null) {
       title = '예약 시간을 입력해주세요!';
@@ -843,16 +848,16 @@ class _ReservatePageState extends State<ReservatePage> {
             ? await RestAPI.patchReservation(
             reservationId: widget.reservate!.reservationId,
             room: _selectedRoom!,
-            startTime: std1_format.format(_selectedEnter!),
-            endTime: std1_format.format(_selectedEnd!),
+            startTime: std2_format.format(_selectedEnter!),
+            endTime: std2_format.format(_selectedEnd!),
             leader: widget.reservate!.leaderInfo,
             member: member,
             purpose: _purposeCtr.text
         )
             : await RestAPI.addReservation(
             room: _selectedRoom!,
-            startTime: std1_format.format(_selectedEnter!),
-            endTime: std1_format.format(_selectedEnd!),
+            startTime: std2_format.format(_selectedEnter!),
+            endTime: std2_format.format(_selectedEnd!),
             member: member,
             purpose: _purposeCtr.text
         );

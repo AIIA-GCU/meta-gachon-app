@@ -132,6 +132,128 @@ class ReservationPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late Text place, time1, time2;
+    late String statusMsg;
+    late Widget button;
+    
+    if (service == ServiceType.lectureRoom && item.place.isEmpty) {
+      place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
+    } else place = Text(item.place, style: KR.subtitle1);
+
+    if (service == ServiceType.computer) {
+      time1 = Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3));
+      time2 = Text('~ ${item.date}', style: KR.parag2.copyWith(color: MGcolor.base3));
+    } else {
+      time1 = Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3));
+      time2 = Text(item.time, style: KR.parag2.copyWith(color: MGcolor.base3));
+    }
+
+    switch (status) {
+      case 0:
+        statusMsg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
+        break;
+      case 2:
+        statusMsg = '현재 회의실을 사용 중이에요!';
+        break;
+      case 3:
+        statusMsg = '곧 있음 이용 시간이 끝납니다.';
+        break;
+      case 4:
+        statusMsg = '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!';
+        break;
+      default:
+        statusMsg = '';
+        break;
+    }
+
+    if (myInfo.match(item.leaderInfo)) {
+      switch (status) {
+        /// 사용 전 (예약 변경 O)
+        case 1:
+          button = Column(children: [
+            ElevatedButton(
+                onPressed: () => _edit(context),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: MGcolor.primaryColor(),
+                    fixedSize: Size(
+                        ratio.width * 145, ratio.height * 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))
+                ),
+                child: Text("예약 수정하기", style: KR.parag1.copyWith(
+                    color: Colors.white))
+            ),
+            TextButton(
+                onPressed: () => _del(context),
+                style: TextButton.styleFrom(
+                    fixedSize: Size(
+                        ratio.width * 145, ratio.height * 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))
+                ),
+                child: Text("예약 취소하기", style: KR.parag1.copyWith(
+                    color: MGcolor.base3))
+            )
+          ]);
+          break;
+
+        /// 사용 전 (예약 변경 X)
+        case 0:
+          button = ElevatedButton(
+              onPressed: () => _qr,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: MGcolor.primaryColor(),
+                  fixedSize: Size(
+                      ratio.width * 145, ratio.height * 40),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))
+              ),
+              child: Text("QR 코드 인증하기",
+                  style: KR.parag1.copyWith(color: Colors.white))
+          );
+          break;
+
+      /// 사용 중 (연장 O)
+        case 3:
+          button = ElevatedButton(
+              onPressed: () => _prolong,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: MGcolor.primaryColor(),
+                  fixedSize: Size(
+                      ratio.width * 145, ratio.height * 40),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))
+              ),
+              child: Text("예약 연장하기",
+                  style: KR.parag1.copyWith(color: Colors.white))
+          );
+          break;
+
+      /// 사용 끝 (인증 X)
+        case 4:
+          button = ElevatedButton(
+              onPressed: () => _admit(context),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: MGcolor.primaryColor(),
+                  fixedSize: Size(
+                      ratio.width * 145, ratio.height * 40),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))
+              ),
+              child: Text("인증하기",
+                  style: KR.parag1.copyWith(color: Colors.white))
+          );
+          break;
+
+      /// 그 외
+      /// - 사용 중 (연장 X)
+      /// - 사용 끝 (인증 O)
+        default:
+          button = SizedBox.shrink();
+          break;
+      }
+    } else button = SizedBox.shrink();
+
     return Dialog(
       insetPadding: EdgeInsets.zero,
       child: Container(
@@ -156,43 +278,25 @@ class ReservationPopup extends StatelessWidget {
             SizedBox(height: ratio.height * 16),
 
             /// 장소
-            Text(item.room, style: KR.subtitle1),
+            place,
 
             SizedBox(height: ratio.height * 20),
 
             /// 날짜 및 시간
             Column(
               children: [
-                Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3)),
+                time1,
                 SizedBox(height: ratio.height * 8),
-                Text(item.time, style: EN.parag2.copyWith(color: MGcolor.base3)),
-                Builder(builder: (context) {
-                  late String msg;
-                  switch (status) {
-                    case 1:
-                      msg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
-                      break;
-                    case 2:
-                      msg = '현재 회의실을 사용 중이에요!';
-                      break;
-                    case 3:
-                      msg = '곧 있음 이용 시간이 끝납니다.';
-                      break;
-                    case 4:
-                      msg = '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!';
-                      break;
-                    default:
-                      return SizedBox.shrink();
-                  }
-                  return Padding(
-                      padding: EdgeInsets.only(top: ratio.height * 8),
-                      child: Text(
-                        msg,
-                        textAlign: TextAlign.center,
-                        style: KR.label2.copyWith(color: MGcolor.systemError),
-                      )
-                  );
-                })
+                time2,
+                if (statusMsg.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: ratio.height * 8),
+                    child: Text(
+                      statusMsg,
+                      textAlign: TextAlign.center,
+                      style: KR.label2.copyWith(color: MGcolor.systemError),
+                    )
+                  )
               ],
             ),
 
@@ -223,90 +327,7 @@ class ReservationPopup extends StatelessWidget {
 
             /// 버튼
             /// 리더의 경우에만 됨
-            Builder(builder: (context) {
-              if (myInfo.match(item.leaderInfo)) {
-                switch (status) {
-                /// 사용 전 (예약 변경 O)
-                  case 1:
-                    return Column(children: [
-                      ElevatedButton(
-                          onPressed: () => _edit(context),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.primaryColor(),
-                              fixedSize: Size(
-                                  ratio.width * 145, ratio.height * 40),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))
-                          ),
-                          child: Text("예약 수정하기", style: KR.parag1.copyWith(
-                              color: Colors.white))
-                      ),
-                      TextButton(
-                          onPressed: () => _del(context),
-                          style: TextButton.styleFrom(
-                              fixedSize: Size(
-                                  ratio.width * 145, ratio.height * 40),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))
-                          ),
-                          child: Text("예약 취소하기", style: KR.parag1.copyWith(
-                              color: MGcolor.base3))
-                      )
-                    ]);
-
-                /// 사용 전 (예약 변경 X)
-                  case 0:
-                    return ElevatedButton(
-                        onPressed: () => _qr,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.primaryColor(),
-                            fixedSize: Size(
-                                ratio.width * 145, ratio.height * 40),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))
-                        ),
-                        child: Text("QR 코드 인증하기",
-                            style: KR.parag1.copyWith(color: Colors.white))
-                    );
-
-                /// 사용 중 (연장 O)
-                  case 3:
-                    return ElevatedButton(
-                        onPressed: () => _prolong,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.primaryColor(),
-                            fixedSize: Size(
-                                ratio.width * 145, ratio.height * 40),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))
-                        ),
-                        child: Text("예약 연장하기",
-                            style: KR.parag1.copyWith(color: Colors.white))
-                    );
-
-                /// 사용 끝 (인증 X)
-                  case 4:
-                    return ElevatedButton(
-                        onPressed: () => _admit(context),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.primaryColor(),
-                            fixedSize: Size(
-                                ratio.width * 145, ratio.height * 40),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))
-                        ),
-                        child: Text("인증하기",
-                            style: KR.parag1.copyWith(color: Colors.white))
-                    );
-
-                /// 그 외
-                /// - 사용 중 (연장 X)
-                /// - 사용 끝 (인증 O)
-                  default:
-                    return SizedBox.shrink();
-                }
-              } else return SizedBox.shrink();
-            })
+            button
           ]
         ),
       ),

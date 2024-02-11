@@ -671,7 +671,7 @@ class Reservate {
 
   String get leaderInfo => _leaderInfo;
 
-  String get room => _room;
+  String get place => _room;
 
   String get date => _date;
 
