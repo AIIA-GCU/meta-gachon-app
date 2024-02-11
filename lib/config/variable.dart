@@ -58,6 +58,9 @@ class MGcolor {
   static const Color base9 = Color(0xFFF4F5F8);
   static const Color base10 = Color(0xFFEDEEF1);
 
+  static Color get brand1Primary => _brand1Primary;
+  static Color get brand1Secondary => _brand1Secondary;
+
   static Color primaryColor() {
     switch (service) {
       case ServiceType.aiSpace:
@@ -158,6 +161,10 @@ class ImgPath {
 
   static const String on_boarding = "assets/images/on_boarding.png";
   static const String aiia_color = "assets/images/aiia_color.png";
+
+  static const String lecture = "assets/images/lecture.png";
+  static const String ai_space = "assets/images/aispace.png";
+  static const String computer = "assets/images/computer.png";
 
   static const String lv_warning = "assets/images/warning.png";
   static const String lv_caution = "assets/images/caution.png";

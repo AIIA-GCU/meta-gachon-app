@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/pages/select_service_page.dart';
 import 'package:mata_gachon/pages/sign_up_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
@@ -180,7 +181,7 @@ class _SignInPageState extends State<SignInPage> {
                       ElevatedButton(
                         onPressed: _buttonEnabled ? tryLogin : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.primaryColor(),
+                          backgroundColor: MGcolor.brand1Primary,
                           disabledBackgroundColor: MGcolor.base6,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -260,7 +261,7 @@ class _SignInPageState extends State<SignInPage> {
                                   ),
                                   child: Text(
                                     '회원가입',
-                                    style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
+                                    style: KR.parag2.copyWith(color: MGcolor.brand1Primary),
                                   )
                               ),
                             ),
@@ -300,20 +301,15 @@ class _SignInPageState extends State<SignInPage> {
           admits = await RestAPI.getAllAdmission() ?? [];
           myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-          // appaer popup screen
-          setState(() {
-            isLoading = false;
-            showDialog(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
-                builder: (BuildContext context) => CommentPopup(
-                    title: '로그인되었습니다!',
-                    onPressed: () => Navigator.pop(context))).then((_) =>
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainFrame()),
-                    (route) => false));
-          });
+          // appaer selecting service page
+          setState(() => isLoading = false);
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              fullscreenDialog: false,
+              transitionsBuilder: slideRigth2Left,
+              pageBuilder: (context, anime, secondAnime) => SelectingServicePage()
+            )
+          );
         } else {
           setState(() {
             errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
