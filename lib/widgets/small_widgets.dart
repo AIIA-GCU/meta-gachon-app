@@ -97,7 +97,7 @@ class CustomListItem extends StatelessWidget {
     required this.uid,
     required this.name,
     required this.stuNum,
-    required this.room,
+    required this.place,
     required this.date,
     required this.time,
     required this.members,
@@ -110,7 +110,7 @@ class CustomListItem extends StatelessWidget {
   final int uid;
   final String name;
   final int stuNum;
-  final String room;
+  final String place;
   final String date;
   final String time;
   final String members;
@@ -121,6 +121,47 @@ class CustomListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late EdgeInsetsGeometry margin, padding;
+    late Text firstText, secondText, thirdText;
+
+    if (service == ServiceType.computer) {
+      margin = EdgeInsets.symmetric(vertical: 16);
+      padding = EdgeInsets.symmetric(
+        horizontal: ratio.width * 16, vertical: 26);
+      secondText = Text(
+        '$date - $date',
+        style: KR.parag2.copyWith(color: MGcolor.base3),
+      );
+      thirdText = Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '전담 교수님 ',
+              style: KR.parag2.copyWith(color: MGcolor.base3)
+            ),
+            TextSpan(
+              text: '김철수 교수님',
+              style: KR.parag2.copyWith(color: MGcolor.secondaryColor())
+            ),
+          ],
+        ),
+      );
+    } else {
+      margin = EdgeInsets.symmetric(vertical: 4);
+      padding = EdgeInsets.symmetric(
+        horizontal: ratio.width * 16, vertical: 12);
+      secondText = Text(date,
+          style: KR.parag2.copyWith(color: MGcolor.base3));
+      thirdText = Text(time,
+          style: KR.parag2.copyWith(color: MGcolor.base3));
+    }
+
+    if (service == ServiceType.lectureRoom && place.isEmpty) {
+      firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
+    } else {
+      firstText = Text(place, style: KR.subtitle3);
+    }
+
     return GestureDetector(
       onTap: () async {
         int? status;
@@ -130,9 +171,8 @@ class CustomListItem extends StatelessWidget {
         showCard(context, status);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        padding: EdgeInsets.symmetric(
-            horizontal: ratio.width * 16, vertical: 12),
+        margin: margin,
+        padding: padding,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
@@ -146,10 +186,11 @@ class CustomListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(room, style: KR.subtitle1),
+                firstText,
                 SizedBox(height: ratio.height * 8),
-                Text(date, style: KR.parag2.copyWith(color: MGcolor.base3)),
-                Text(time, style: KR.parag2.copyWith(color: MGcolor.base3))
+                secondText,
+                SizedBox(height: ratio.height * 4),
+                thirdText
               ],
             ),
             if (isReservation)
@@ -187,12 +228,12 @@ class CustomListItem extends StatelessWidget {
       builder: (context) {
         if (status != null) {
           return ReservationPopup(
-            Reservate(uid, '$stuNum $name', room, date, time, members),
+            Reservate(uid, '$stuNum $name', place, date, time, members),
             status
           );
         } else {
           return AdmissionPopup(
-              Admit(uid, '$stuNum $name', room, date, time, members, review!, photo!));
+              Admit(uid, '$stuNum $name', place, date, time, members, review!, photo!));
         }
       }
   );
@@ -243,10 +284,9 @@ class CustomContainer extends StatelessWidget {
   }
 }
 
-class CustomDropdown extends StatelessWidget {
+class CustomDropdown extends StatefulWidget {
   final String hint;
   final List<String> items;
-  final String? selectedItem;
   final Function(String?) onChanged;
 
   const CustomDropdown({
@@ -254,8 +294,13 @@ class CustomDropdown extends StatelessWidget {
     required this.hint,
     required this.items,
     required this.onChanged,
-    this.selectedItem,
   }) : super(key: key);
+
+  @override
+  State<CustomDropdown> createState() => _CustomDropdownState();
+}
+class _CustomDropdownState extends State<CustomDropdown> {
+  String? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -263,10 +308,13 @@ class CustomDropdown extends StatelessWidget {
       child: DropdownButton2<String>(
         isExpanded: true,
         alignment: Alignment.center,
-        hint: Text(hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
-        items: _addDividersAfterItems(items),
-        value: selectedItem,
-        onChanged: onChanged,
+        hint: Text(widget.hint, style: EN.parag2.copyWith(color: MGcolor.base3)),
+        items: _addDividersAfterItems(widget.items),
+        value: _selectedItem,
+        onChanged: (val) {
+          widget.onChanged(val);
+          setState(() => _selectedItem = val);
+        },
 
         ///드롭버튼(선택된 항목) 디자인
         buttonStyleData: ButtonStyleData(
@@ -308,7 +356,7 @@ class CustomDropdown extends StatelessWidget {
         ///메뉴들(선택지들) 디자인
         menuItemStyleData: MenuItemStyleData(
           padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
-          customHeights: _getCustomItemsHeights(items),
+          customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
     );
@@ -331,7 +379,7 @@ class CustomDropdown extends StatelessWidget {
                     item,
                     textAlign: TextAlign.center,
                     style: EN.parag2.copyWith(
-                        color: (item == selectedItem)
+                        color: (item == _selectedItem)
                             ? Colors.black
                             : Color(0xFF7C7C7C)
                     )
@@ -366,8 +414,8 @@ class CustomDropdown extends StatelessWidget {
 
 class CustomTextField extends StatelessWidget {
   final bool enabled;
-  final int width;
-  final int height;
+  final double width;
+  final double height;
   final TextEditingController controller;
   final String hint;
   final String? Function(String?)? validator;
@@ -387,8 +435,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width * ratio.width,
-      height: height * ratio.height,
+      width: width,
+      height: height,
       child: TextFormField(
           enabled: enabled,
           validator: validator,

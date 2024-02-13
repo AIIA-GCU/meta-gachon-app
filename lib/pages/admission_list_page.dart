@@ -152,7 +152,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                           uid: e.admissionId,
                           name: temp[1],
                           stuNum: int.parse(temp[0]),
-                          room: e.room,
+                          place: e.room,
                           date: e.date,
                           time: e.time,
                           members: e.memberInfo,

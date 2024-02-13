@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:mata_gachon/pages/select_service_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
 
@@ -12,7 +12,7 @@ Future<void> main() async {
 
   debugPrint("called main()\n");
 
-  today = std2_format.format(DateTime.now());
+  today = std3_format.format(DateTime.now());
 
   debugPrint("initializing flutter binding");
 
@@ -34,11 +34,7 @@ Future<void> main() async {
       await FCM.initialize();
       final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
-      reservates = await RestAPI.getAllReservation() ?? [];
-      admits = await RestAPI.getAllAdmission() ?? [];
-      myAdmits = await RestAPI.getMyAdmission() ?? [];
-
-      start = MainFrame();
+      start = SelectingServicePage();
     } catch(_) {
       debugPrint('No token');
       start = SignInPage();
@@ -73,7 +69,6 @@ class _MataGachonState extends State<MataGachon> {
       MediaQuery.of(context).size.width  / 390,
       MediaQuery.of(context).size.height / 895
     );
-    service = ServiceType.lectureRoom;
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
@@ -89,7 +84,6 @@ class _MataGachonState extends State<MataGachon> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
             selectedLabelStyle: KR.label3.copyWith(color: MGcolor.base3),
-            selectedIconTheme: IconThemeData(size: 24, color: MGcolor.primaryColor()),
             unselectedLabelStyle: KR.label3.copyWith(color: MGcolor.base1),
             unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.base4),
             showSelectedLabels: true,

@@ -164,6 +164,10 @@ class ImgPath {
   static const String aiia_color = "assets/images/aiia_color.png";
   static const String school_symbol = "assets/images/school_symbol.png";
 
+  static const String lecture = "assets/images/lecture.png";
+  static const String ai_space = "assets/images/aispace.png";
+  static const String computer = "assets/images/computer.png";
+
   static const String lv_warning = "assets/images/warning.png";
   static const String lv_caution = "assets/images/caution.png";
   static const String lv_default = "assets/images/default.png";
@@ -196,7 +200,8 @@ class MGLogo {
 /// Date Format
 ///
 final std1_format = DateFormat('yyyy-MM-dd-HH:mm');
-final std2_format = DateFormat('yyyy-MM-dd');
+final std2_format = DateFormat('yyyy-MM-dd HH:mm');
+final std3_format = DateFormat('yyyy-MM-dd');
 final alarm_format = DateFormat('MM/dd HH:mm');
 final date1_format = DateFormat('yyyy. MM. dd EEE');
 final date2_format = DateFormat('yyyy.MM.dd');

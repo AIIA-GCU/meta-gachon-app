@@ -7,6 +7,7 @@ import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/pages/find_id_pw_page.dart';
+import 'package:mata_gachon/pages/select_service_page.dart';
 import 'package:mata_gachon/pages/sign_up_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
@@ -300,27 +301,17 @@ class _SignInPageState extends State<SignInPage> {
         User? user = await RestAPI.signIn(
             id: idController.text, pw: pwController.text, token: fcmToken);
         if (user != null) {
-          // save data local
           myInfo = user;
-          reservates = await RestAPI.getAllReservation() ?? [];
-          admits = await RestAPI.getAllAdmission() ?? [];
-          myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-          // appaer popup screen
-          setState(() {
-            isLoading = false;
-            showDialog(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
-                builder: (BuildContext context) => CommentPopup(
-                    title: '로그인되었습니다!',
-                    buttonColor: MGcolor.brand1Primary,
-                    onPressed: () => Navigator.pop(context))).then((_) =>
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainFrame()),
-                    (route) => false));
-          });
+          // appaer selecting service page
+          setState(() => isLoading = false);
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              fullscreenDialog: false,
+              transitionsBuilder: slideRigth2Left,
+              pageBuilder: (context, anime, secondAnime) => SelectingServicePage()
+            )
+          );
         } else {
           setState(() {
             errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";

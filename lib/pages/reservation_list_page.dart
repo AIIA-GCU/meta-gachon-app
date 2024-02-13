@@ -105,7 +105,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                                 uid: e.reservationId,
                                 name: temp[1],
                                 stuNum: int.parse(temp[0]),
-                                room: e.room,
+                                place: e.place,
                                 date: e.date,
                                 time: e.time,
                                 members: e.memberInfo

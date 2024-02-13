@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 
-class CustomCalender extends StatefulWidget {
-  const CustomCalender({
+class CustomDayCalender extends StatefulWidget {
+  const CustomDayCalender({
     super.key,
     required this.init,
     required this.first,
@@ -22,12 +22,12 @@ class CustomCalender extends StatefulWidget {
   final double rowHeight;
   final double rowWidth;
   final CellStyle cellStyle;
-  final Function(String) onSelected;
+  final Function(DateTime) onSelected;
 
   @override
-  State<CustomCalender> createState() => _CustomCalenderState();
+  State<CustomDayCalender> createState() => _CustomDayCalenderState();
 }
-class _CustomCalenderState extends State<CustomCalender> {
+class _CustomDayCalenderState extends State<CustomDayCalender> {
 
   late String title;
   late DateTime rangeFirst;
@@ -36,7 +36,7 @@ class _CustomCalenderState extends State<CustomCalender> {
   DateTime? selectedDay;
   void toSelect(DateTime day) {
     if (day != selectedDay && cmp(day)) {
-      widget.onSelected(std2_format.format(day));
+      widget.onSelected(day);
       setState(() => selectedDay = day);
     }
   }
@@ -58,7 +58,7 @@ class _CustomCalenderState extends State<CustomCalender> {
   void initState() {
     super.initState();
     if (widget.init != null) {
-      selectedDay = std2_format.parse(widget.init!);
+      selectedDay = std3_format.parse(widget.init!);
     }
 
     rangeFirst = DateTime(widget.first.year, widget.first.month, widget.first.day);
@@ -218,6 +218,150 @@ class _CustomCalenderState extends State<CustomCalender> {
   }
 }
 
+class CustomWeekCalender extends StatefulWidget {
+  const CustomWeekCalender({
+    super.key,
+    required this.first,
+    required this.last,
+    required this.rowHeight,
+    required this.rowWidth,
+    required this.cellStyle,
+  }) ;
+
+  final DateTime first;
+  final DateTime last;
+  final double rowHeight;
+  final double rowWidth;
+  final CellStyle cellStyle;
+
+  @override
+  State<CustomWeekCalender> createState() => _CustomWeekCalenderState();
+}
+class _CustomWeekCalenderState extends State<CustomWeekCalender> {
+
+  late String title;
+  late DateTime rangeFirst;
+  late DateTime rangeLast;
+
+  bool isSameDate(DateTime a, DateTime b) {
+    if (a.month == b.month && a.day == b.day)
+      return true;
+    else return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    rangeFirst = widget.first.subtract(Duration(days: 8));
+    rangeLast = widget.last.add(Duration(days: 8));
+
+    final DateFormat format = DateFormat.MMMM();
+    if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month)
+      title = "${format.format(rangeFirst)} ~ ${format.format(rangeLast)}";
+    else title = "${format.format(rangeFirst)}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: EN.parag1.copyWith(color: MGcolor.base1)),
+            SizedBox(height: 10 * ratio.height),
+            Table(
+              children: <TableRow>[
+                TableRow(
+                    children: ['일', '월', '화', '수', '목', '금', '토']
+                        .map((e) => Padding(
+                        padding: EdgeInsets.only(bottom: 6 * ratio.height),
+                        child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
+                    ))
+                        .toList()
+                ),
+                TableRow(
+                    children: List.generate(7, (index) {
+                      DateTime day = rangeFirst.add(Duration(days: index));
+                      TextStyle textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                      BoxDecoration boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+
+                      return Container(
+                        height: widget.rowHeight,
+                        width: widget.rowWidth,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(
+                            5 * ratio.width,
+                            0,
+                            5 * ratio.width,
+                            10 * ratio.height
+                        ),
+                        decoration: boxDecoration,
+                        child: Text(day.day.toString(), style: textStyle),
+                      );
+                    }).toList()
+                ),
+                TableRow(
+                    children: List.generate(7, (index) {
+                      late TextStyle textStyle;
+                      late BoxDecoration boxDecoration;
+                      DateTime day = rangeFirst.add(Duration(days: 7+index));
+
+                      if (day.isBefore(widget.first)) {
+                        textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                        boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+                      } else if (day.isAfter(widget.last)) {
+                        textStyle = widget.cellStyle.normalDateTextStyle;
+                        boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                      } else {
+                        textStyle = widget.cellStyle.selectedDateTextStyle;
+                        boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                      }
+
+                      return Container(
+                        height: widget.rowHeight,
+                        width: widget.rowWidth,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(
+                            5 * ratio.width,
+                            0,
+                            5 * ratio.width,
+                            10 * ratio.height
+                        ),
+                        decoration: boxDecoration,
+                        child: Text(day.day.toString(), style: textStyle),
+                      );
+                    }).toList()
+                ),
+                TableRow(
+                      children: List.generate(7, (index) {
+                        DateTime day = rangeFirst.add(Duration(days: 14+index));
+                        TextStyle textStyle = widget.cellStyle.normalDateTextStyle;
+                        BoxDecoration boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+
+                        return Container(
+                          height: widget.rowHeight,
+                          width: widget.rowWidth,
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.fromLTRB(
+                              5 * ratio.width,
+                              0,
+                              5 * ratio.width,
+                              10 * ratio.height
+                          ),
+                          decoration: boxDecoration,
+                          child: Text(day.day.toString(), style: textStyle),
+                        );
+                      }).toList()
+                  ),
+              ],
+            ),
+          ],
+        )
+    );
+  }
+}
+
 class CellStyle {
   final TextStyle fieldTextStyle;
   final TextStyle todayTextStyle;
@@ -253,12 +397,12 @@ class CustomTimePicker extends StatefulWidget {
     required this.setEnd
   });
 
-  final String room;
+  final String? room;
   final String date;
   final int? begin;
   final int? end;
-  final Function(int) setStart;
-  final Function(int) setEnd;
+  final void Function(int) setStart;
+  final void Function(int) setEnd;
 
   @override
   State<CustomTimePicker> createState() => _CustomTimePickerState();
@@ -486,20 +630,30 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   /// 서버에서 예약 가능한 시간 확인하기
   Future<void> _availableTime() async {
-    _availables = List.generate(24, (index) => false);
-    try {
-      Map<int, bool>? times = await RestAPI
-          .getAvailableTime(room: widget.room, date: widget.date);
-      int i;
-      for (i=0; i < 24; i++) {
-        _availables[i] = !times![i]!;
-      }
-      if (_begin != null && _end != null) {
-        for (i = _begin! - 1; i <= _end!; i++) {
-          _availables[i] = true;
+    if (service == ServiceType.aiSpace) {
+      _availables = List.generate(24, (_) => false);
+      try {
+        Map<int, bool>? times = await RestAPI
+            .getAvailableTime(room: widget.room!, date: widget.date);
+        int i;
+        for (i = 0; i < 24; i++) {
+          _availables[i] = !times![i]!;
+        }
+        if (_begin != null && _end != null) {
+          for (i = _begin! - 1; i <= _end!; i++) {
+            _availables[i] = true;
+          }
+        }
+      } catch (e) {}
+    } else {
+      _availables = List.generate(24, (_) => true);
+      final current = DateTime.now();
+      if (widget.date == std3_format.format(current)) {
+        for (int i=0 ; i <= current.hour ; i++) {
+          _availables[i] = false;
         }
       }
-    } catch(e) {}
+    }
     debugPrint('available times: $_availables');
     _reset = false;
   }

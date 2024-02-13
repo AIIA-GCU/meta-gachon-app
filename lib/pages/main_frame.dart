@@ -87,7 +87,9 @@ class _MainFrameState extends State<MainFrame> {
               BottomNavigationBarItem(icon: Icon(AppinIcon.res), label: "예약"),
               BottomNavigationBarItem(icon: Icon(AppinIcon.cert), label: "인증"),
               BottomNavigationBarItem(icon: Icon(AppinIcon.my), label: "마이")
-            ]
+            ],
+            selectedIconTheme: IconThemeData(
+              size: 24, color: MGcolor.primaryColor())
         )
     );
   }
