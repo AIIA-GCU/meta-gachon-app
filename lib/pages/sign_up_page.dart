@@ -684,8 +684,12 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
             ),
           ),
 
-          SizedBox(height:
-          ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 24 : 52)),
+          AnimatedSize(
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 300),
+            child: SizedBox(height:
+            ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 24 : 52)),
+          ),
 
           /// Id Input
           Padding(
@@ -760,8 +764,12 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
             ),
           ),
 
-          SizedBox(height:
-          ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 37)),
+          AnimatedSize(
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 300),
+            child: SizedBox(height:
+            ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 37)),
+          ),
 
           /// Pw Input
           Padding(
@@ -1115,7 +1123,12 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                     ],
                   ),
 
-                  SizedBox(height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 72)),
+                  AnimatedSize(
+                    curve: Curves.ease,
+                    duration: Duration(milliseconds: 300),
+                    child: SizedBox(height:
+                    ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 72)),
+                  ),
 
                   /// input
                   Form(
@@ -1162,7 +1175,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                                 controller: pwController,
                                 obscureText: !isPasswordVisible,
                                 decoration: InputDecoration(
-                                  hintText: '패스워드 입력',
+                                  hintText: '비밀번호 입력',
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: ratio.width * 12,
@@ -1206,7 +1219,12 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                     ),
                   ),
 
-                  SizedBox(height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 68)),
+                  AnimatedSize(
+                    curve: Curves.ease,
+                    duration: Duration(milliseconds: 300),
+                    child: SizedBox(height:
+                    ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 68)),
+                  ),
 
                   /// button
                   ElevatedButton(
@@ -1325,7 +1343,7 @@ class SecondCompleteSignUpPage extends StatelessWidget {
                     minimumSize: Size(ratio.width * 358, 48),
                   ),
                   child: Text(
-                    '카테고리 선택',
+                    '로그인',
                     style: EN.subtitle2.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,

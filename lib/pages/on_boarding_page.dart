@@ -56,7 +56,7 @@ class OnBoarding extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _onPressed(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.primaryColor(),
+                    backgroundColor: MGcolor.brand1Primary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     minimumSize: Size(ratio.width * 358, ratio.height * 48),
@@ -79,7 +79,7 @@ class OnBoarding extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async {
     if (await FCM.initialize()) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           fullscreenDialog: false,
           transitionsBuilder: slideRigth2Left,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/animation.dart';
 import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/pages/find_id_pw_page.dart';
 import 'package:mata_gachon/pages/sign_up_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
@@ -120,7 +121,7 @@ class _SignInPageState extends State<SignInPage> {
                                 controller: pwController,
                                 obscureText: !isPasswordVisible,
                                 decoration: InputDecoration(
-                                  hintText: '패스워드 입력',
+                                  hintText: '비밀번호 입력',
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: ratio.width * 12,
@@ -198,6 +199,12 @@ class _SignInPageState extends State<SignInPage> {
                           children: [
                             /// 아이디 찾기
                             GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionsBuilder: slideRigth2Left,
+                                  pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: true)
+                                )
+                              ),
                               behavior: HitTestBehavior.translucent,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -221,6 +228,12 @@ class _SignInPageState extends State<SignInPage> {
 
                             /// 비밀번호 찾기
                             GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionsBuilder: slideRigth2Left,
+                                  pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: false)
+                                )
+                              ),
                               behavior: HitTestBehavior.translucent,
                               child: Padding(
                                   padding: EdgeInsets.symmetric(
@@ -301,6 +314,7 @@ class _SignInPageState extends State<SignInPage> {
                 barrierColor: Colors.black.withOpacity(0.25),
                 builder: (BuildContext context) => CommentPopup(
                     title: '로그인되었습니다!',
+                    buttonColor: MGcolor.brand1Primary,
                     onPressed: () => Navigator.pop(context))).then((_) =>
                 Navigator.pushAndRemoveUntil(
                     context,

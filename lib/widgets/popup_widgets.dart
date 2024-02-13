@@ -76,16 +76,20 @@ class AlertPopup extends StatelessWidget {
 }
 
 class CommentPopup extends StatelessWidget {
-  const CommentPopup({
+  CommentPopup({
     super.key,
     required this.title,
     this.buttonMsg = "확인",
+    Color? buttonColor,
     required this.onPressed
-  });
+  }) {
+    this.buttonBackground = buttonColor ?? MGcolor.primaryColor();
+  }
 
   final String title;
   final String buttonMsg;
   final VoidCallback onPressed;
+  late final Color buttonBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +113,7 @@ class CommentPopup extends StatelessWidget {
             ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: MGcolor.primaryColor(),
+                backgroundColor: buttonBackground,
                 fixedSize: Size(ratio.width * 302, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)
