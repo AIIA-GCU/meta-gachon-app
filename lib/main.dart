@@ -34,10 +34,6 @@ Future<void> main() async {
       await FCM.initialize();
       final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
-      reservates = await RestAPI.getAllReservation() ?? [];
-      admits = await RestAPI.getAllAdmission() ?? [];
-      myAdmits = await RestAPI.getMyAdmission() ?? [];
-
       start = SelectingServicePage();
     } catch(_) {
       debugPrint('No token');

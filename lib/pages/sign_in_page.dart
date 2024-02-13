@@ -295,11 +295,7 @@ class _SignInPageState extends State<SignInPage> {
         User? user = await RestAPI.signIn(
             id: idController.text, pw: pwController.text, token: fcmToken);
         if (user != null) {
-          // save data local
           myInfo = user;
-          reservates = await RestAPI.getAllReservation() ?? [];
-          admits = await RestAPI.getAllAdmission() ?? [];
-          myAdmits = await RestAPI.getMyAdmission() ?? [];
 
           // appaer selecting service page
           setState(() => isLoading = false);
