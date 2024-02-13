@@ -79,41 +79,11 @@ class _SettingPageState extends State<SettingPage> {
                     ]
                   )
                 ),
-                TileButton(
-                    padding: EdgeInsets.symmetric(
-                      // vertical: ratio.height * 10,
-                        horizontal: ratio.width * 22
-                    ),
-                    child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: (){
-                              setState(() => service = ServiceType.aiSpace);
-                            },
-                            child: Text('파란색'),
-                          ),
-                          ElevatedButton(
-                            onPressed: (){
-                              setState(() => service = ServiceType.lectureRoom);
-                            },
-                            child: Text('보라색'),
-                          ),
-                          ElevatedButton(
-                            onPressed: (){
-                              setState(() => service = ServiceType.computer);
-                            },
-                            child: Text('청록색'),
-                          ),
-                        ]
-                    )
-                ),
-                /// 다크 모드
+                // /// 다크 모드
                 // TileButton(
                 //     padding: EdgeInsets.symmetric(
-                //       // vertical: ratio.height * 10,
-                //         horizontal: ratio.width * 22
+                //       vertical: ratio.height * 10,
+                //       horizontal: ratio.width * 22
                 //     ),
                 //     child: Row(
                 //         mainAxisSize: MainAxisSize.max,
@@ -123,7 +93,7 @@ class _SettingPageState extends State<SettingPage> {
                 //           Switch(
                 //               value: _temp2,
                 //               activeColor: Colors.white,
-                //               activeTrackColor: MGcolor.btn_active,
+                //               activeTrackColor: MGcolor.primaryColor(),
                 //               inactiveTrackColor: MGcolor.base6,
                 //               inactiveThumbColor: Colors.white,
                 //               onChanged: (val) {

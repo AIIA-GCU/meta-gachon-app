@@ -59,7 +59,7 @@ class OnBoarding extends StatelessWidget {
                     backgroundColor: MGcolor.brand1Primary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
-                    minimumSize: Size(ratio.width * 358, ratio.height * 48),
+                    minimumSize: Size(ratio.width * 358, 48),
                   ),
                   child: Text(
                     '시작하기',

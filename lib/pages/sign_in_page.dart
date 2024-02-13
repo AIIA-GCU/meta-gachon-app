@@ -54,7 +54,7 @@ class _SignInPageState extends State<SignInPage> {
                 curve: Curves.ease,
                 duration: Duration(milliseconds: 100),
                 transformAlignment: Alignment.topCenter,
-                height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 150 ? 480 : 555),
+                height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 150 ? 520 : 570),
                 padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                 alignment: Alignment.center,
                 child: Column(
@@ -63,21 +63,24 @@ class _SignInPageState extends State<SignInPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     /// logo & text
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(ImgPath.aiia_color),
-                        Text('Login', style: TextStyle(
-                          height: 1.8,
-                          fontSize: 40,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        )),
-                        Text(
-                          '가천대학교 AIIA 아이디로 로그인을 해주세요.',
-                          style: KR.label2.copyWith(color: MGcolor.base4),
-                        ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(bottom: ratio.height * 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(ImgPath.aiia_color),
+                          Text('Login', style: TextStyle(
+                            height: 1.8,
+                            fontSize: 40,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          )),
+                          Text(
+                            '가천대학교 AIIA 아이디로 로그인을 해주세요.',
+                            style: KR.label2.copyWith(color: MGcolor.base4),
+                          ),
+                        ],
+                      ),
                     ),
               
                     /// input
