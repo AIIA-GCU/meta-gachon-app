@@ -414,8 +414,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
 class CustomTextField extends StatelessWidget {
   final bool enabled;
-  final int width;
-  final int height;
+  final double width;
+  final double height;
   final TextEditingController controller;
   final String hint;
   final String? Function(String?)? validator;
@@ -435,8 +435,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width * ratio.width,
-      height: height * ratio.height,
+      width: width,
+      height: height,
       child: TextFormField(
           enabled: enabled,
           validator: validator,

@@ -160,7 +160,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                 /// Textfield
                                 CustomTextField(
                                   enabled: true,
-                                  width: 184,
+                                  width: 184 * ratio.width,
                                   height: 32,
                                   controller: _professerCtr,
                                   hint: 'OOO 교수님',
@@ -276,7 +276,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                             children: [
                                               CustomTextField(
                                                 enabled: !_isSolo,
-                                                width: 122,
+                                                width: 122 * ratio.width,
                                                 height: 32,
                                                 controller: _stuNumCtr,
                                                 hint: '202300001',
@@ -299,7 +299,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               SizedBox(width: 8 * ratio.width),
                                               CustomTextField(
                                                 enabled: !_isSolo,
-                                                width: 92,
+                                                width: 92 * ratio.width,
                                                 height: 32,
                                                 controller: _nameCtr,
                                                 hint: '김가천',
@@ -324,7 +324,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                       BorderRadius.circular(12)),
                                                   child: Ink(
                                                       width: 32 * ratio.width,
-                                                      height: 32 * ratio.height,
+                                                      height: 32 * ratio.width,
                                                       decoration: BoxDecoration(
                                                         color: _isSolo ? MGcolor.base6
                                                             : MGcolor.primaryColor(),
@@ -422,7 +422,7 @@ class _ReservatePageState extends State<ReservatePage> {
                           /// 사용 목적
                           Container(
                             width: ratio.width * 358,
-                            height: ratio.height * 150,
+                            height: 150,
                             margin: EdgeInsets.fromLTRB(
                                 ratio.width * 16,
                                 0,
