@@ -61,6 +61,7 @@ class MGcolor {
 
   static Color get brand1Primary => _brand1Primary;
   static Color get brand1Secondary => _brand1Secondary;
+  static Color get brand1Tertiary => _brand1Tertiary;
 
   static Color primaryColor() {
     switch (service) {

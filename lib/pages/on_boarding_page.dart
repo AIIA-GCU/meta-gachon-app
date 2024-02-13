@@ -65,7 +65,7 @@ class OnBoarding extends StatelessWidget {
                     '시작하기',
                     style: EN.subtitle2.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: MGcolor.tertiaryColor(),
+                      color: MGcolor.brand1Tertiary,
                     ),
                   ),
                 ),
