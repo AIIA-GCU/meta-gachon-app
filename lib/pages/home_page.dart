@@ -8,6 +8,8 @@
 /// 
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mata_gachon/config/server.dart';
 import 'package:mata_gachon/config/variable.dart';
 import 'package:mata_gachon/pages/admit_page.dart';
 import 'package:mata_gachon/pages/my_admission_list_page.dart';
@@ -24,6 +26,16 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
+  late final FToast _fToast;
+  late bool _isShownToast;
+
+  @override
+  void initState() {
+    _fToast = FToast();
+    _fToast.init(context);
+    _isShownToast = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -443,9 +455,51 @@ class _HomePageState extends State<HomePage> {
   }
 
   void doAdmission() {
-    // Navigator.of(context)
-    //   .push(MaterialPageRoute(builder: (context) => AdmitPage()));
-    // widget.movetoAdmisList();
+    late int idx;
+    late String current;
+
+    current = std3_format.format(DateTime.now());
+    idx = reservates.indexWhere((e) => e.date.compareTo(current) > 0);
+    debugPrint('$current $idx');
+
+    if (idx != -1) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
+      widget.movetoAdmisList();
+    } else {
+      if (!_isShownToast) {
+        _isShownToast = true;
+        Future.delayed(Duration(seconds: 2)).then((_) => _isShownToast = false);
+
+        _fToast.showToast(
+            positionedToastBuilder: (context, widget) {
+              return Positioned(
+                bottom: kBottomNavigationBarHeight + 10,
+                width: MediaQuery.of(context).size.width,
+                child: widget,
+              );
+            },
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    vertical: 6, horizontal: ratio.width * 12
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(100)
+                ),
+                child: Text(
+                    '인증해야 하는 이용 내역이 없습니다',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white
+                    )
+                ),
+              ),
+            )
+        );
+      }
+    }
   }
 
   void checkRating() {

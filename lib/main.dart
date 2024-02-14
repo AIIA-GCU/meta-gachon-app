@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mata_gachon/pages/select_service_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,6 +92,7 @@ class _MataGachonState extends State<MataGachon> {
           ),
           useMaterial3: true,
       ),
+      builder: FToastBuilder(),
       home: widget.start,
       // routerConfig: GoRouter(
       //   routes: [
