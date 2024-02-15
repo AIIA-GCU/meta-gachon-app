@@ -412,14 +412,16 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   late List<bool> _availables;
   late bool _reset;
+  late String _date;
 
   int? _begin, _end;
 
   @override
   void initState() {
     super.initState();
-
+    debugPrint("hellow?");
     this._reset = true;
+    this._date = widget.date;
     this._begin = widget.begin;
     this._end = widget.end;
     if (_begin != null && _end != null) {
@@ -430,12 +432,16 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    this._reset = true;
-    this._begin = widget.begin;
-    this._end = widget.end;
-    if (_begin != null && _end != null) {
-      _end = _end! - 1;
-      debugPrint("start: $_begin | end: ${_end!+1}");
+    debugPrint("hang♥");
+    if (_date != widget.date) {
+      _date = widget.date;
+      _reset = true;
+      this._begin = widget.begin;
+      this._end = widget.end;
+      if (_begin != null && _end != null) {
+        _end = _end! - 1;
+        debugPrint("start: $_begin | end: ${_end!+1}");
+      }
     }
     super.didUpdateWidget(oldWidget);
   }
