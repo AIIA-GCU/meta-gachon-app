@@ -143,7 +143,7 @@ class APIRequest {
       }
 
       final httpReturned = await http.Client()
-          .send(request).timeout(Duration(seconds: 5));
+          .send(request).timeout(Duration(seconds: 10));
       if (httpReturned.statusCode == 200) {
         final response = await http.Response.fromStream(httpReturned);
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
