@@ -140,16 +140,16 @@ class ReservationPopup extends StatelessWidget {
     late String statusMsg;
     late Widget button;
     
-    if (service == ServiceType.lectureRoom && item.place.isEmpty) {
+    if (service == ServiceType.lectureRoom && item.place == null) {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
-    } else place = Text(item.place, style: KR.subtitle1);
+    } else place = Text(item.place!, style: KR.subtitle1);
 
     if (service == ServiceType.computer) {
-      time1 = Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3));
-      time2 = Text('~ ${item.date}', style: KR.parag2.copyWith(color: MGcolor.base3));
+      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGcolor.base3));
+      time2 = Text('~ ${item.endToDate()}', style: KR.parag2.copyWith(color: MGcolor.base3));
     } else {
-      time1 = Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3));
-      time2 = Text(item.time, style: KR.parag2.copyWith(color: MGcolor.base3));
+      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGcolor.base3));
+      time2 = Text(item.toDuration(), style: KR.parag2.copyWith(color: MGcolor.base3));
     }
 
     switch (status) {
@@ -480,7 +480,7 @@ class AdmissionPopup extends StatelessWidget {
               SizedBox(height: ratio.height * 16),
 
               /// 방
-              Text(item.room, style: KR.subtitle1),
+              Text(item.place, style: KR.subtitle1),
 
               SizedBox(height: ratio.height * 24),
 

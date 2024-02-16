@@ -94,28 +94,18 @@ class _NotificationIconState extends State<NotificationIcon> {
 
 class CustomListItem extends StatelessWidget {
   CustomListItem({
-    required this.uid,
-    required this.name,
-    required this.stuNum,
-    required this.place,
-    required this.date,
-    required this.time,
-    required this.members,
-    this.review,
-    this.photo
+    this.reservate,
+    this.admit
   }) {
-    isReservation = photo == null;
+    assert(
+      ((reservate != null) ^ (admit != null)),
+      'This widget can own "only" reservation or admission'
+    );
+    isReservation = reservate != null;
   }
 
-  final int uid;
-  final String name;
-  final int stuNum;
-  final String place;
-  final String date;
-  final String time;
-  final String members;
-  final String? review;
-  final Uint8List? photo;
+  final Reservate? reservate;
+  final Admit? admit;
 
   late final bool isReservation;
 
@@ -124,12 +114,12 @@ class CustomListItem extends StatelessWidget {
     late EdgeInsetsGeometry margin, padding;
     late Text firstText, secondText, thirdText;
 
-    if (service == ServiceType.computer) {
+    if (isReservation && service == ServiceType.computer) {
       margin = EdgeInsets.symmetric(vertical: 16);
       padding = EdgeInsets.symmetric(
         horizontal: ratio.width * 16, vertical: 26);
       secondText = Text(
-        '$date - $date',
+        '${reservate!.startToDate()} ~ ${reservate!.endToDate()}',
         style: KR.parag2.copyWith(color: MGcolor.base3),
       );
       thirdText = Text.rich(
@@ -140,7 +130,7 @@ class CustomListItem extends StatelessWidget {
               style: KR.parag2.copyWith(color: MGcolor.base3)
             ),
             TextSpan(
-              text: '김철수 교수님',
+              text: reservate!.professor,
               style: KR.parag2.copyWith(color: MGcolor.secondaryColor())
             ),
           ],
@@ -150,23 +140,34 @@ class CustomListItem extends StatelessWidget {
       margin = EdgeInsets.symmetric(vertical: 4);
       padding = EdgeInsets.symmetric(
         horizontal: ratio.width * 16, vertical: 12);
-      secondText = Text(date,
-          style: KR.parag2.copyWith(color: MGcolor.base3));
-      thirdText = Text(time,
-          style: KR.parag2.copyWith(color: MGcolor.base3));
+      if (isReservation) {
+        secondText = Text(reservate!.startToDate(),
+            style: KR.parag2.copyWith(color: MGcolor.base3));
+        thirdText = Text(reservate!.toDuration(),
+            style: KR.parag2.copyWith(color: MGcolor.base3));
+      } else {
+        secondText = Text(admit!.date,
+            style: KR.parag2.copyWith(color: MGcolor.base3));
+        thirdText = Text(admit!.time,
+            style: KR.parag2.copyWith(color: MGcolor.base3));
+      }
     }
 
-    if (service == ServiceType.lectureRoom && place.isEmpty) {
+    if (isReservation && service == ServiceType.lectureRoom && reservate!.place == null) {
       firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
     } else {
-      firstText = Text(place, style: KR.subtitle3);
+      firstText = Text(
+        isReservation ? reservate!.place! : admit!.place,
+        style: KR.subtitle3
+      );
     }
 
     return GestureDetector(
       onTap: () async {
         int? status;
         if (isReservation) {
-          status = await RestAPI.currentReservationStatus(reservationId: uid);
+          status = await RestAPI
+              .currentReservationStatus(reservationId: reservate!.reservationId);
         }
         showCard(context, status);
       },
@@ -176,7 +177,7 @@ class CustomListItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           color: Colors.white,
-          border: isReservation && date.contains(today)
+          border: isReservation && reservate!.startToDate() == today
               ? Border.all(color: MGcolor.primaryColor()) : null
         ),
         child: Row(
@@ -212,7 +213,7 @@ class CustomListItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: MemoryImage(photo!),
+                      image: MemoryImage(admit!.photo),
                       fit: BoxFit.fill
                     )
                   )
@@ -226,15 +227,8 @@ class CustomListItem extends StatelessWidget {
   void showCard(BuildContext ctx, int? status) => showDialog(
       context: ctx,
       builder: (context) {
-        if (status != null) {
-          return ReservationPopup(
-            Reservate(uid, '$stuNum $name', place, date, time, members),
-            status
-          );
-        } else {
-          return AdmissionPopup(
-              Admit(uid, '$stuNum $name', place, date, time, members, review!, photo!));
-        }
+        if (status != null) return ReservationPopup(reservate!, status);
+        else return AdmissionPopup(admit!);
       }
   );
 }

@@ -54,17 +54,7 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
                   return Column(
                       children: myAdmits.map((e) {
                     List<String> temp = e.leaderInfo.split(' ');
-                    return CustomListItem(
-                      uid: e.admissionId,
-                      name: temp[1],
-                      stuNum: int.parse(temp[0]),
-                      place: e.room,
-                      date: e.date,
-                      time: e.time,
-                      members: e.memberInfo,
-                      photo: e.photo,
-                      review: e.review,
-                    );
+                    return CustomListItem(admit: e);
                   }).toList());
                 } else {
                   return Center(

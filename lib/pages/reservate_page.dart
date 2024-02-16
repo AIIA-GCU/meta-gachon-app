@@ -69,10 +69,9 @@ class _ReservatePageState extends State<ReservatePage> {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
       this._selectedRoom = widget.reservate!.place;
-      this._selectedDate = widget.reservate!.date.split(' ')[0];
-      temp = widget.reservate!.time.split(' ~ ');
-      this._selectedEnter = std1_format.parse('$_selectedDate-${temp[0]}');
-      this._selectedEnd = std1_format.parse('$_selectedDate-${temp[1]}');
+      this._selectedDate = widget.reservate!.startToDate();
+      this._selectedEnter = widget.reservate!.startTime;
+      this._selectedEnd = widget.reservate!.endTime;
       if (widget.reservate!.memberInfo.isNotEmpty) {
         this._isSolo = false;
         temp = widget.reservate!.memberInfo.split(' ');
@@ -695,10 +694,9 @@ class _ReservatePageState extends State<ReservatePage> {
               setState(() {
                 if (widget.reservate != null
                     && _selectedRoom == widget.reservate!.place
-                    && _selectedDate == widget.reservate!.date.split(' ')[0]) {
-                  final temp = widget.reservate!.time.split(' ~ ');
-                  _selectedEnter = std1_format.parse('$_selectedDate-${temp[0]}');
-                  _selectedEnd = std1_format.parse('$_selectedDate-${temp[1]}');
+                    && _selectedDate == widget.reservate!.startToDate()) {
+                  _selectedEnter = widget.reservate!.startTime;
+                  _selectedEnd = widget.reservate!.endTime;
                 } else {
                   _selectedEnter = _selectedEnd = value;
                 }
@@ -717,11 +715,10 @@ class _ReservatePageState extends State<ReservatePage> {
   bool _isSame() {
     if (widget.reservate!.place == _selectedRoom) return true;
 
-    if (widget.reservate!.date.split(' ')[0] == _selectedDate) return true;
+    if (widget.reservate!.startToDate() == _selectedDate) return true;
 
-    final temp = widget.reservate!.time.split(' ~ ');
-    if (temp[0] == time_format.format(_selectedEnter!)) return true;
-    if (temp[1] == time_format.format(_selectedEnd!)) return true;
+    if (widget.reservate!.startTime.compareTo(_selectedEnd!) == 0) return true;
+    if (widget.reservate!.endTime.compareTo(_selectedEnter!) == 0) return true;
 
     return false;
   }
@@ -837,8 +834,8 @@ class _ReservatePageState extends State<ReservatePage> {
       debugPrint("""
       [reservation Info]
         . room: $_selectedRoom
-        . startTime: ${std1_format.format(_selectedEnter!)}
-        . endTime: ${std1_format.format(_selectedEnd!)}
+        . startTime: ${std2_format.format(_selectedEnter!)}
+        . endTime: ${std2_format.format(_selectedEnd!)}
         . leader: $_leaderNumber $_leaderName
         . member: $member
         . purpose: ${_purposeCtr.text}""");
@@ -847,19 +844,21 @@ class _ReservatePageState extends State<ReservatePage> {
         int? uid = widget.reservate != null
             ? await RestAPI.patchReservation(
             reservationId: widget.reservate!.reservationId,
-            room: _selectedRoom!,
+            place: _selectedRoom!,
             startTime: std2_format.format(_selectedEnter!),
             endTime: std2_format.format(_selectedEnd!),
             leader: widget.reservate!.leaderInfo,
             member: member,
-            purpose: _purposeCtr.text
+            purpose: _purposeCtr.text,
+            professor: _professerCtr.text
         )
             : await RestAPI.addReservation(
-            room: _selectedRoom!,
+            place: _selectedRoom!,
             startTime: std2_format.format(_selectedEnter!),
             endTime: std2_format.format(_selectedEnd!),
             member: member,
-            purpose: _purposeCtr.text
+            purpose: _purposeCtr.text,
+            professor: _professerCtr.text
         );
         if (uid == null) {
           title = 'Not found';
@@ -876,7 +875,7 @@ class _ReservatePageState extends State<ReservatePage> {
         title = '통신 속도가 너무 느립니다!';
         onPressed = () => Navigator.pop(context);
       } catch(_) {
-        title = '[400] 서버와의 통신에 문제가 있습니다.';
+        title = '예약할 수 없는 상태입니다.';
         onPressed = () => Navigator.pop(context);
       }
     }

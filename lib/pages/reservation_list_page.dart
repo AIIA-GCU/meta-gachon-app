@@ -101,15 +101,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                         return Column(
                             children: reservates.map((e) {
                               List<String> temp = e.leaderInfo.split(' ');
-                              return CustomListItem(
-                                uid: e.reservationId,
-                                name: temp[1],
-                                stuNum: int.parse(temp[0]),
-                                place: e.place,
-                                date: e.date,
-                                time: e.time,
-                                members: e.memberInfo
-                              );
+                              return CustomListItem(reservate: e);
                             }).toList()
                         );
                       } else {
