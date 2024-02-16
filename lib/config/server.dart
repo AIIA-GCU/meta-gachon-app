@@ -479,6 +479,7 @@ class RestAPI {
   /// 인증 추가
   /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
   static Future<int?> addAdmission({
+    required int reservationId,
     required String review,
     required String photo,
     required String photoExtension
@@ -486,6 +487,7 @@ class RestAPI {
     try {
       final api = APIRequest('admit');
       Map<String, dynamic> response = await api.send(HTTPMethod.POST, params: {
+        'reservationId': reservationId,
         'review': review,
         'photo': photo,
         'photoExtension': photoExtension

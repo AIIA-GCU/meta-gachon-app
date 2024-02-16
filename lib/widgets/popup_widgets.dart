@@ -83,7 +83,7 @@ class CommentPopup extends StatelessWidget {
     Color? buttonColor,
     required this.onPressed
   }) {
-    this.buttonBackground = buttonColor ?? MGcolor.primaryColor();
+    this.buttonBackground = buttonColor ?? MGcolor.brand1Primary;
   }
 
   final String title;

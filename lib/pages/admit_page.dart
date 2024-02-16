@@ -389,6 +389,7 @@ class _AdmitPageState extends State<AdmitPage> {
 
     try {
       int? uid = await RestAPI.addAdmission(
+          reservationId: widget.reservate.reservationId,
           review: _textCtr.text,
           photo: base64Encode(bytes),
           photoExtension: expension
