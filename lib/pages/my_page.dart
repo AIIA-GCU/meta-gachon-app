@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/pages/select_service_page.dart';
 
 import 'term_page.dart';
 import 'setting_page.dart';
@@ -154,9 +155,9 @@ class MyPage extends StatelessWidget {
                 ),
               ),
 
-              /// 내 작품 확인
+              /// 서비스 변경
               TileButton(
-                // onTap: () {},
+                onTap: () => _backToSelectingPage(context),
                 padding: EdgeInsets.symmetric(
                     vertical: 11,
                     horizontal: ratio.width * 22
@@ -164,16 +165,9 @@ class MyPage extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Icon(
-                        Icons.photo,
-                        size: ratio.width * 24,
-                        color: MGColor.base5
-                    ),
+                    Icon(Icons.arrow_circle_left, size: ratio.width * 24),
                     SizedBox(width: ratio.width * 16),
-                    Text(
-                        '내 작품 확인',
-                        style: KR.subtitle4.copyWith(color: MGColor.base5)
-                    )
+                    Text('서비스 변경', style: KR.subtitle4)
                   ],
                 ),
               ),
@@ -198,29 +192,6 @@ class MyPage extends StatelessWidget {
                   )
               )
             ]),
-
-            /// 관리자 페이지
-            if (manager)
-              TileButtonCard(items: [
-                TileButton(
-                    onTap: () {},
-                    padding: EdgeInsets.symmetric(
-                        vertical: 11,
-                        horizontal: ratio.width * 22
-                    ),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.phonelink_setup, size: ratio.width * 24, color: MGColor.primaryColor()),
-                          SizedBox(width: ratio.width * 16),
-                          Text(
-                              '관리 페이지',
-                              style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
-                          )
-                        ]
-                    )
-                )
-              ]),
 
             /// 앱 정보
             TileButtonCard(items: [
@@ -283,6 +254,11 @@ class MyPage extends StatelessWidget {
   void _floatMyAdmissionPage(BuildContext context) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
+  }
+  
+  void _backToSelectingPage(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const SelectingServicePage()));
   }
 
   void _floatSettingPage(BuildContext context) {

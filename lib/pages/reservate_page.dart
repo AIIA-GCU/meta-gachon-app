@@ -102,6 +102,18 @@ class _ReservatePageState extends State<ReservatePage> {
 
   @override
   Widget build(BuildContext context) {
+    late String title;
+    switch (service) {
+      case ServiceType.aiSpace:
+        title = "회의실 예약하기";
+        break;
+      case ServiceType.computer:
+        title = "GPU 컴퓨터 예약하기";
+        break;
+      case ServiceType.lectureRoom:
+        title = "강의실 예약하기";
+        break;
+    }
     return GestureDetector(
       onTap: () {
         if (MediaQuery.of(context).viewInsets.bottom > 0) {
@@ -122,7 +134,7 @@ class _ReservatePageState extends State<ReservatePage> {
                       icon: const Icon(MGIcon.back),
                       iconSize: 24,
                     ),
-                    title: Text("강의실 예약하기",
+                    title: Text(title,
                         style: KR.subtitle1.copyWith(color: MGColor.base1))),
                 body: CustomScrollView(
                   slivers: [
@@ -185,23 +197,15 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: CustomTimePicker(
                               room: _selectedRoom,
                               date: _selectedDate!,
-                              begin: _selectedEnter!.hour,
-                              end: _selectedEnd!.hour,
+                              begin: _selectedEnter?.hour,
+                              end: _selectedEnd?.hour,
                               setStart: (index) {
-                                _selectedEnter = DateTime(
-                                    _selectedEnter!.year,
-                                    _selectedEnter!.month,
-                                    _selectedEnter!.day,
-                                    index
-                                );
+                                DateTime temp = stdFormat3.parse(_selectedDate!);
+                                _selectedEnter = DateTime(temp.year, temp.month, temp.day, index);
                               },
                               setEnd: (index) {
-                                _selectedEnd = DateTime(
-                                    _selectedEnter!.year,
-                                    _selectedEnter!.month,
-                                    _selectedEnter!.day,
-                                    index + 1
-                                );
+                                DateTime temp = stdFormat3.parse(_selectedDate!);
+                                _selectedEnd = DateTime(temp.year, temp.month, temp.day, index+1);
                               },
                             )
                           ));
@@ -262,7 +266,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                 /// Input
                                 SizedBox(
                                   width: 358 * ratio.width,
-                                  height: 63 * ratio.height,
+                                  height: 32 + 31 * ratio.height,
                                   child: Stack(children: [
                                     Positioned(
                                       left: 16 * ratio.width,
@@ -350,7 +354,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                     ),
                                     Positioned(
                                         left: 80 * ratio.width,
-                                        top: 46 * ratio.height,
+                                        top: 32 + ratio.height * 14,
                                         child: Text(
                                             alertMessege,
                                             style: KR.label2.copyWith(
@@ -397,8 +401,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                                 backgroundColor: Colors.transparent,
                                                 child: Checkbox(
                                                     value: _isSolo,
-                                                    shape: CircleBorder(),
-                                                    side: BorderSide(
+                                                    shape: const CircleBorder(),
+                                                    side: const BorderSide(
                                                         color: MGColor.base3,
                                                         width: 1.6
                                                     ),
@@ -446,7 +450,7 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: CustomButtons.bottomButton(
                               '예약하기',
                               MGColor.primaryColor(),
-                              () => _canTime ? _reservate : null,
+                              () => _canTime ? _reservate() : null,
                               MGColor.base6
                             )
                           ),
@@ -641,7 +645,7 @@ class _ReservatePageState extends State<ReservatePage> {
                   _selectedEnter = widget.reservate!.startTime;
                   _selectedEnd = widget.reservate!.endTime;
                 } else {
-                  _selectedEnter = _selectedEnd = value;
+                  _selectedEnter = _selectedEnd = null;
                 }
                 if (!_canTime) {
                   _canTime = true;

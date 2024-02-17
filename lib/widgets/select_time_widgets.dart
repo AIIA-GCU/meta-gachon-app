@@ -405,8 +405,8 @@ class CustomTimePicker extends StatefulWidget {
 
   final String? room;
   final String date;
-  final int begin;
-  final int end;
+  final int? begin;
+  final int? end;
   final void Function(int) setStart;
   final void Function(int) setEnd;
 
@@ -419,6 +419,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   late List<bool> _availables;
   late bool _reset;
   late String _date;
+  late String? _place;
 
   int? _begin, _end;
 
@@ -426,12 +427,11 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   void initState() {
     _reset = true;
     _date = widget.date;
-    if (widget.end == 0) {
-      _begin = null;
-      _end = null;
-    } else {
+    _place = widget.room;
+    debugPrint('${widget.begin} ${widget.end}');
+    if (widget.begin != null && widget.end != null) {
       _begin = widget.begin;
-      _end = widget.end - 1;
+      _end = widget.end! - 1;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
     super.initState();
@@ -439,15 +439,15 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    if (_date != widget.date) {
-      _date = widget.date;
+    if (_place != widget.room || _date != widget.date) {
       _reset = true;
-      if (widget.end == 0) {
-        _begin = null;
-        _end = null;
-      } else {
+      _date = widget.date;
+      _place = widget.room;
+      _begin = _end = null;
+      debugPrint('${widget.begin} ${widget.end}');
+      if (widget.begin != null && widget.end != null) {
         _begin = widget.begin;
-        _end = widget.end - 1;
+        _end = widget.end! - 1;
         debugPrint("start: $_begin | end: ${_end!+1}");
       }
     }
@@ -529,9 +529,9 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
                                 color = MGColor.primaryColor();
-                              } else if (index == _begin!+1) {
+                              } else if (index < 23 && index == _begin!+1) {
                                 color = MGColor.primaryColor().withOpacity(0.2);
-                              } else if (index == _begin!+2 && _availables[index]) {
+                              } else if (index < 22 && index == _begin!+2 && _availables[index-1]) {
                                 color = MGColor.primaryColor().withOpacity(0.2);
                               }
                             }

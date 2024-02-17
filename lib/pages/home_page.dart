@@ -73,8 +73,7 @@ class _HomePageState extends State<HomePage> {
                 "내 정보를 빠르게 확인해요!",
                 style: KR.subtitle1.copyWith(color: MGColor.base1),
               ),
-              Container(
-                height: ratio.height * 444,
+              Padding(
                 padding: EdgeInsets.only(top: ratio.height * 8),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,6 +87,8 @@ class _HomePageState extends State<HomePage> {
                           checkRating
                       ),
 
+                      SizedBox(height: ratio.height * 12),
+
                       /// <예약 확인하기>
                       _largeCard(
                           "내가 언제 예약했더라?",
@@ -96,6 +97,8 @@ class _HomePageState extends State<HomePage> {
                           ImgPath.home4,
                           widget.movetoReserList
                       ),
+
+                      SizedBox(height: ratio.height * 12),
 
                       /// <내 인증 확인하기>
                       _largeCard(
@@ -199,7 +202,7 @@ class _HomePageState extends State<HomePage> {
               /// Text
               Positioned(
                 top: 0,
-                left: ratio.width * 128,
+                left: constrains.maxHeight + ratio.width * 12,
                 child: Text(title,
                   style: KR.label2.copyWith(
                       color: MGColor.base1,
@@ -209,14 +212,14 @@ class _HomePageState extends State<HomePage> {
               ),
               Positioned(
                 top: ratio.height * 27,
-                left: ratio.width * 128,
+                left: constrains.maxHeight + ratio.width * 12,
                 child: Text(paragraph, style: KR.label2.copyWith(color: MGColor.base3)),
               ),
 
               /// Button
               Positioned(
                   bottom: 0,
-                  left: ratio.width * 128,
+                  left: constrains.maxHeight + ratio.width * 12,
                   child: Material(
                     child: InkWell(
                       onTap: onTap,

@@ -77,7 +77,7 @@ class _AdmitPageState extends State<AdmitPage> {
                   icon: const Icon(MGIcon.back),
                   iconSize: 24,
                 ),
-                title: Text("강의실 인증하기",
+                title: Text('사용 인증하기',
                     style: KR.subtitle1.copyWith(color: MGColor.base1))),
             body: SingleChildScrollView(
               child: SizedBox(
