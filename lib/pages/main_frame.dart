@@ -101,11 +101,12 @@ class _MainFrameState extends State<MainFrame> {
 
   void onPageChanged(int index) => setState(() => currentPageIndex = index);
 
-  void movetoReserList() => pageController
+  void movetoReserList() {
+    pageController
       .animateToPage(1, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  }
 
-  void movetoAdmisList() => pageController
-      .animateToPage(2, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  void movetoAdmisList() => pageController.jumpToPage(2);
 
   void movetoMyAdmis() => Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()));

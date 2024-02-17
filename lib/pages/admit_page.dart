@@ -42,16 +42,16 @@ class _AdmitPageState extends State<AdmitPage> {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [
-          TextSpan(text: widget.reservate.startToDate()),
+          TextSpan(text: widget.reservate.startToDate2()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGColor.base1)),
-          TextSpan(text: widget.reservate.endToDate())
+          TextSpan(text: widget.reservate.endToDate2())
         ]
       ));
     } else {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [
-          TextSpan(text: widget.reservate.startToDate()),
+          TextSpan(text: widget.reservate.startToDate2()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGColor.base1)),
           TextSpan(text: widget.reservate.toDuration())
         ]
@@ -361,8 +361,8 @@ class _AdmitPageState extends State<AdmitPage> {
     debugPrint("""
       [reservation Info]
         . room: $place
-        . startTime: ${widget.reservate.startToDate()}
-        . endTime: ${widget.reservate.endToDate()}
+        . startTime: ${widget.reservate.startToDate1()}
+        . endTime: ${widget.reservate.endToDate1()}
         . leader: $leaderInfo
         . review: ${_textCtr.text}
         . photo: $bytes""");

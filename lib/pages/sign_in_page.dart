@@ -69,7 +69,7 @@ class _SignInPageState extends State<SignInPage> {
                             fontWeight: FontWeight.w700,
                           )),
                           Text(
-                            '가천대학교 AIIA 아이디로 로그인을 해주세요.',
+                            '가천대학교 아이디로 로그인을 해주세요.',
                             style: KR.label2.copyWith(color: MGColor.base4),
                           ),
                         ],
@@ -172,7 +172,7 @@ class _SignInPageState extends State<SignInPage> {
                         CustomButtons.bottomButton(
                           '로그인',
                           MGColor.brand1Primary,
-                          () => _buttonEnabled ? trySignIn : null,
+                          () => _buttonEnabled ? trySignIn() : null,
                           MGColor.base6
                         ),
               

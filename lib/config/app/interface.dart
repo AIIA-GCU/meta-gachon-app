@@ -201,7 +201,7 @@ final stdFormat1 = DateFormat('yyyy-MM-dd-HH:mm');
 final stdFormat2 = DateFormat('yyyy-MM-dd HH:mm');
 final stdFormat3 = DateFormat('yyyy-MM-dd');
 final alarmFormat = DateFormat('MM/dd HH:mm');
-final dateFormat1 = DateFormat('yyyy. MM. dd EEE');
+final dateFormat1 = DateFormat('yyyy. MM. dd EEEE', 'ko');
 final dateFormat2 = DateFormat('yyyy. MM. dd');
 final timeFormat = DateFormat('HH:mm');
 

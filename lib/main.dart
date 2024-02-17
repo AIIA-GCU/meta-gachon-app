@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -11,13 +14,16 @@ import 'pages/select_service_page.dart';
 
 Future<void> main() async {
 
-  debugPrint("called main()\n");
-
-  today = stdFormat3.format(DateTime.now());
+  debugPrint("called main()");
 
   debugPrint("initializing flutter binding");
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  debugPrint("initializing local date time");
+
+  await initializeDateFormatting();
+  today = stdFormat3.format(DateTime.now());
 
   debugPrint("determining initial page");
 

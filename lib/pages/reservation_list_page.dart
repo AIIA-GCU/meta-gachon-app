@@ -129,7 +129,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
       padding = EdgeInsets.symmetric(
           horizontal: ratio.width * 16, vertical: 26);
       secondText = Text(
-        '${reservate.startToDate()} ~ ${reservate.endToDate()}',
+        '${reservate.startToDate2()} ~ ${reservate.endToDate2()}',
         style: KR.parag2.copyWith(color: MGColor.base3),
       );
       thirdText = Text.rich(
@@ -140,7 +140,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 style: KR.parag2.copyWith(color: MGColor.base3)
             ),
             TextSpan(
-                text: reservate!.professor,
+                text: reservate.professor,
                 style: KR.parag2.copyWith(color: MGColor.secondaryColor())
             ),
           ],
@@ -150,7 +150,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
       margin = const EdgeInsets.symmetric(vertical: 4);
       padding = EdgeInsets.symmetric(
           horizontal: ratio.width * 16, vertical: 12);
-      secondText = Text(reservate.startToDate(),
+      secondText = Text(reservate.startToDate1(),
           style: KR.parag2.copyWith(color: MGColor.base3));
       thirdText = Text(reservate.toDuration(),
           style: KR.parag2.copyWith(color: MGColor.base3));
@@ -176,7 +176,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
-            border: reservate.startToDate() == today
+            border: stdFormat3.format(reservate.startTime) == today
                 ? Border.all(color: MGColor.primaryColor()) : null
         ),
         child: Row(

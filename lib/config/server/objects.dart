@@ -126,9 +126,13 @@ class Reservate {
 
   String? get professor => _professor;
 
-  String startToDate() => dateFormat2.format(_startTime);
+  String startToDate1() => dateFormat1.format(_startTime);
 
-  String endToDate() => dateFormat2.format(_endTime);
+  String startToDate2() => dateFormat2.format(_startTime);
+
+  String endToDate1() => dateFormat1.format(_endTime);
+
+  String endToDate2() => dateFormat2.format(_endTime);
 
   String toDuration() {
     if (service == ServiceType.computer) {
@@ -212,7 +216,8 @@ class Admit {
   /// - "review": "잘 썼습니다!"
   /// - "photo": "9 9JdiONJDJIOFofjdijf...." (base64 포멧)
   ///
-  factory Admit.fromJson(Map<String, dynamic> json) => Admit(
+  factory Admit.fromJson(Map<String, dynamic> json) {
+    return Admit(
       json['admissionID'],
       json['leaderInfo'],
       json['room'],
@@ -221,7 +226,8 @@ class Admit {
       json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo'])
-  );
+    );
+  }
 }
 
 class Notice {

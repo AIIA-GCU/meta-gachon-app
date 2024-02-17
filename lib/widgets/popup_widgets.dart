@@ -147,10 +147,10 @@ class ReservationPopup extends StatelessWidget {
     }
 
     if (service == ServiceType.computer) {
-      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGColor.base3));
-      time2 = Text('~ ${item.endToDate()}', style: KR.parag2.copyWith(color: MGColor.base3));
+      time1 = Text(item.startToDate2(), style: KR.parag2.copyWith(color: MGColor.base3));
+      time2 = Text('~ ${item.endToDate2()}', style: KR.parag2.copyWith(color: MGColor.base3));
     } else {
-      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGColor.base3));
+      time1 = Text(item.startToDate2(), style: KR.parag2.copyWith(color: MGColor.base3));
       time2 = Text(item.toDuration(), style: KR.parag2.copyWith(color: MGColor.base3));
     }
 

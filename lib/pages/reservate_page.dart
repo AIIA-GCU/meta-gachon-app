@@ -72,7 +72,7 @@ class _ReservatePageState extends State<ReservatePage> {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
       _selectedRoom = widget.reservate!.place;
-      _selectedDate = widget.reservate!.startToDate();
+      _selectedDate = stdFormat3.format(widget.reservate!.startTime);
       _selectedEnter = widget.reservate!.startTime;
       _selectedEnd = widget.reservate!.endTime;
       if (widget.reservate!.memberInfo.isNotEmpty) {
@@ -185,8 +185,8 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: CustomTimePicker(
                               room: _selectedRoom,
                               date: _selectedDate!,
-                              begin: _selectedEnter?.hour,
-                              end: _selectedEnd?.hour,
+                              begin: _selectedEnter!.hour,
+                              end: _selectedEnd!.hour,
                               setStart: (index) {
                                 _selectedEnter = DateTime(
                                     _selectedEnter!.year,
@@ -425,7 +425,7 @@ class _ReservatePageState extends State<ReservatePage> {
                           LargeTextField(
                             title: '사용 목적',
                             hint: '이용 목적을 간단하게 기술해주세요',
-                            controller: _professerCtr
+                            controller: _purposeCtr
                           )
                         ]);
 
@@ -637,7 +637,7 @@ class _ReservatePageState extends State<ReservatePage> {
               setState(() {
                 if (widget.reservate != null
                     && _selectedRoom == widget.reservate!.place
-                    && _selectedDate == widget.reservate!.startToDate()) {
+                    && _selectedDate == widget.reservate!.startToDate2()) {
                   _selectedEnter = widget.reservate!.startTime;
                   _selectedEnd = widget.reservate!.endTime;
                 } else {
@@ -659,7 +659,7 @@ class _ReservatePageState extends State<ReservatePage> {
   bool _isSame() {
     if (widget.reservate!.place == _selectedRoom) return true;
 
-    if (widget.reservate!.startToDate() == _selectedDate) return true;
+    if (widget.reservate!.startToDate2() == _selectedDate) return true;
 
     if (widget.reservate!.startTime.compareTo(_selectedEnd!) == 0) return true;
     if (widget.reservate!.endTime.compareTo(_selectedEnter!) == 0) return true;

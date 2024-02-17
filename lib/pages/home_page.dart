@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void doAdmission() {
-    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) > 0);
+    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));

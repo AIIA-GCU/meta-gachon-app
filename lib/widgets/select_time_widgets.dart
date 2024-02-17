@@ -397,16 +397,16 @@ class CustomTimePicker extends StatefulWidget {
     super.key,
     required this.room,
     required this.date,
-    this.begin,
-    this.end,
+    required this.begin,
+    required this.end,
     required this.setStart,
     required this.setEnd
   });
 
   final String? room;
   final String date;
-  final int? begin;
-  final int? end;
+  final int begin;
+  final int end;
   final void Function(int) setStart;
   final void Function(int) setEnd;
 
@@ -424,15 +424,17 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   void initState() {
-    super.initState();
     _reset = true;
     _date = widget.date;
-    _begin = widget.begin;
-    _end = widget.end;
-    if (_begin != null && _end != null) {
-      _end = _end! - 1;
+    if (widget.end == 0) {
+      _begin = null;
+      _end = null;
+    } else {
+      _begin = widget.begin;
+      _end = widget.end - 1;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
+    super.initState();
   }
 
   @override
@@ -440,10 +442,12 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     if (_date != widget.date) {
       _date = widget.date;
       _reset = true;
-      _begin = widget.begin;
-      _end = widget.end;
-      if (_begin != null && _end != null) {
-        _end = _end! - 1;
+      if (widget.end == 0) {
+        _begin = null;
+        _end = null;
+      } else {
+        _begin = widget.begin;
+        _end = widget.end - 1;
         debugPrint("start: $_begin | end: ${_end!+1}");
       }
     }

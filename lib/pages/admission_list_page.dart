@@ -174,7 +174,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
             horizontal: ratio.width * 16, vertical: 12),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(14),), 
+            borderRadius: BorderRadius.circular(14)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -207,7 +207,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   }
 
   void _doAdmission() {
-    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) > 0);
+    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
