@@ -182,8 +182,8 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: CustomTimePicker(
                               room: _selectedRoom,
                               date: _selectedDate!,
-                              begin: widget.reservate != null ? _selectedEnter!.hour : null,
-                              end: widget.reservate != null ? _selectedEnd!.hour : null,
+                              begin: _selectedEnter != null ? _selectedEnter!.hour : null,
+                              end: _selectedEnd != null ? _selectedEnd!.hour : null,
                               setStart: (index) {
                                 _selectedEnter = DateTime(
                                     _selectedEnter!.year,
