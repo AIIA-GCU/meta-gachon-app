@@ -458,9 +458,7 @@ class _HomePageState extends State<HomePage> {
     late int idx;
     late String current;
 
-    current = std3_format.format(DateTime.now());
-    idx = reservates.indexWhere((e) => e.date.compareTo(current) > 0);
-    debugPrint('$current $idx');
+    idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) > 0);
 
     if (idx != -1) {
       Navigator.of(context).push(

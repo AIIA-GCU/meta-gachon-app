@@ -419,7 +419,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   @override
   void initState() {
     super.initState();
-    debugPrint("hellow?");
     this._reset = true;
     this._date = widget.date;
     this._begin = widget.begin;
@@ -432,7 +431,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    debugPrint("hang♥");
     if (_date != widget.date) {
       _date = widget.date;
       _reset = true;
