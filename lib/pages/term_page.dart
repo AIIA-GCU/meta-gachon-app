@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-
-import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/app/_export.dart';
 
 class TermPage extends StatelessWidget {
   TermPage({super.key, required Term term}) {
     switch (term) {
       case Term.usingService:
-        this.title = "이용약관 동의 전문";
-        this.content = USING_SERVICE_TERM;
+        title = "이용약관 동의 전문";
+        content = usingServiceTerm;
         break;
       case Term.personalInfomationCollection:
-        this.title = "개인정보 수집 및 이용 동의 전문";
-        this.content = PERSONAL_INFORMATION_COLLECTION_TERM;
+        title = "개인정보 수집 및 이용 동의 전문";
+        content = personalInformationCollectionTerm;
         break;
     }
   }
@@ -26,9 +25,9 @@ class TermPage extends StatelessWidget {
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
               icon: Icon(
-                  AppinIcon.back,
+                  MGIcon.back,
                   size: ratio.width * 24,
-                  color: MGcolor.base4
+                  color: MGColor.base4
               ),
             )
         ),
@@ -45,14 +44,14 @@ class TermPage extends StatelessWidget {
                   shaderCallback: hazySide,
                   blendMode: BlendMode.dstOut,
                   child: SingleChildScrollView(
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     padding: EdgeInsets.symmetric(
                         horizontal: ratio.width * 36,
                         vertical: ratio.height * 63
                     ),
                     child: Text(
                         content,
-                        style: KR.parag2.copyWith(color: MGcolor.base3),
+                        style: KR.parag2.copyWith(color: MGColor.base3),
                         softWrap: true
                     ),
                   ),

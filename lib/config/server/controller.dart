@@ -1,0 +1,392 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../app/enum.dart';
+import '../app/interface.dart';
+import 'objects.dart';
+import 'rest_api.dart';
+
+class RestAPI {
+  RestAPI._();
+
+  /// 아이디 중복
+  /// Todo: 통합 로그인용
+  static Future<bool> checkOverlappingId({
+    required String id
+  }) async {
+    try {
+      final api = APIRequest('user/overlap');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.get,
+          params: {"ID" : id}
+      );
+      return response['overlapping'];
+    } catch(_) {
+      return false;
+    }
+  }
+
+  /// 회원가입
+  /// Todo: 통합 로그인용
+  static Future<bool> signUp({
+    required String name,
+    required String id,
+    required String pw
+  }) async {
+    try {
+      final api = APIRequest('user/signUp');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.get,
+          params: {'name' : name, 'ID' : id, 'PW' : pw}
+      );
+      return response['result'];
+    } catch(_) {
+      return true;
+    }
+  }
+
+  /// 로그인
+  /// Todo: 추후 통합 로그인용으로 바꿔야 함
+  static Future<User?> signIn({
+    required String id,
+    required String pw,
+    required String token,
+  }) async {
+    try {
+      final api = APIRequest('user');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.post,
+          params: {"ID": id, "PW": pw, "fcmToken": token}
+      );
+      final preference = await SharedPreferences.getInstance();
+      if (preference.getBool('firstTime')! == true) {
+        preference.setBool('firstTime', false);
+        debugPrint("You logined at first!");
+      }
+      return User.fromJson(response);
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    } catch(_) {
+      return null;
+    }
+  }
+
+  /// 내 모든 예약
+  static Future<List<Reservate>?> getAllReservation() async {
+    try {
+      final api = APIRequest('books');
+      List<dynamic> response = await api.send(HTTPMethod.get);
+
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Reservate> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Reservate.fromJson(temp);
+        }).toList();
+        result.sort((a, b) => a.startTime.compareTo(b.startTime));
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 추가
+  static Future<int?> addReservation({
+    required String? place,
+    required String startTime,
+    required String endTime,
+    required String? professor,
+    required String member,
+    required String purpose
+  }) async {
+    try {
+      late String path;
+      late Map<String, dynamic> params;
+      switch (service) {
+        case ServiceType.aiSpace:
+        // path = "book/meta";
+          path = "book";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.computer:
+          path = "book/gpu";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'professor': professor,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.lectureRoom:
+          path = 'book/lecture';
+          params = {
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose,
+          };
+          break;
+      }
+      final api = APIRequest(path);
+      Map<String, dynamic> response = await api
+          .send(HTTPMethod.post, params: params);
+      return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 수정
+  /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
+  static Future<int?> patchReservation({
+    required int reservationId,
+    required String? place,
+    required String startTime,
+    required String endTime,
+    required String leader,
+    required String member,
+    required String purpose,
+    required String? professor
+  }) async {
+    try {
+      late String path;
+      late Map<String, dynamic> params;
+      switch (service) {
+        case ServiceType.aiSpace:
+        // path = "book/meta";
+          path = "book";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.computer:
+          path = "book/gpu";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'professor': professor,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.lectureRoom:
+          path = 'book/lecture';
+          params = {
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose,
+          };
+          break;
+      }
+      final api = APIRequest(path);
+      Map<String, dynamic> response = await api
+          .send(HTTPMethod.post, params: params);
+      return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 삭제
+  static Future<int?> delReservation({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.delete);
+      return response['reservationID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 연장
+  static Future<int?> prolongReservation({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/prolong/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.patch);
+      return response['reservationId'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 현재 예약의 상태
+  /// . 0: 사용 전 (예약 변경 O)
+  /// . 1: 사용 전 (예약 변경 X)
+  /// . 2: 사용 중 (연장 X)
+  /// . 3: 사용 중 (연장 O)
+  /// . 4: 사용 끝 (인증 X)
+  /// . 5: 사용 끝 (인증 O)
+  /// Todo: 아직 추가 안 됨
+  static Future<int?> currentReservationStatus({
+    required int reservationId
+  }) async {
+    try {
+      final api = APIRequest('book/$reservationId');
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      return response['status'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 예약 가능한 시간대
+  static Future<Map<int, bool>?> getAvailableTime({
+    required String room,
+    required String date
+  }) async {
+    try {
+      final api = APIRequest('books/available?room=${room}&date=${date}');
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        Map<String, dynamic> result = response['disableTime'];
+        return result.map((key, value) => MapEntry(int.parse(key), value));
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 서비스에 따른 예약 장소 반환
+  static Future<List<String>?> placeForService({
+    required int service
+  }) async {
+    try {
+      final api = APIRequest('book/place');
+      Map<String, dynamic> response = await api.send(
+          HTTPMethod.get,
+          params: {'service': service}
+      );
+      if (response.isEmpty) {
+        return null;
+      } else {
+        return response['places'];
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 모든 인증
+  static Future<List<Admit>?> getAllAdmission() async {
+    try {
+      final api = APIRequest('admits');
+      List<dynamic> response = await api.send(HTTPMethod.get);
+
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Admit> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Admit.fromJson(temp);
+        }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 내 인증
+  static Future<List<Admit>?> getMyAdmission() async {
+    try {
+      final api = APIRequest('admits/me');
+      List<dynamic> response = await api.send(HTTPMethod.get);
+
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Admit> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Admit.fromJson(temp);
+        }).toList();
+        result.sort((a, b) {
+          late int temp;
+          if ((temp = a.date.compareTo(b.date)) == 0) {
+            return a.time.compareTo(b.time);
+          } else return temp;
+        });
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 인증 추가
+  /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
+  static Future<int?> addAdmission({
+    required int reservationId,
+    required String review,
+    required String photo,
+    required String photoExtension
+  }) async {
+    try {
+      final api = APIRequest('admit');
+      Map<String, dynamic> response = await api.send(HTTPMethod.post, params: {
+        'reservationId': reservationId,
+        'review': review,
+        'photo': photo,
+        'photoExtension': photoExtension
+      });
+      return response['admissionID'];
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 열람하지 않은 알림의 여부
+  static Future<bool?> hasUnopendNotice() async {
+    try {
+      final api = APIRequest('notice');
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      return response['hasNotice'];
+    } on TimeoutException {
+      return null;
+    }
+  }
+
+  /// 내 모든 알림
+  static Future<List<Notice>?> getNotices() async {
+    try {
+      final api = APIRequest('notices');
+      List<Map<String, dynamic>> response = await api.send(HTTPMethod.get);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        return response.map((e) => Notice.fromJson(e)).toList();
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+}

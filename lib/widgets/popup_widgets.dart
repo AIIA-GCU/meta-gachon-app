@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/admit_page.dart';
-import 'package:mata_gachon/pages/reservate_page.dart';
-import 'package:mata_gachon/pages/using_camera_page.dart';
+import '../pages/admit_page.dart';
+import '../pages/reservate_page.dart';
+import '../pages/using_camera_page.dart';
 
 class AlertPopup extends StatelessWidget {
   const AlertPopup({
@@ -48,18 +48,18 @@ class AlertPopup extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.base7,
+                    backgroundColor: MGColor.base7,
                     fixedSize: Size(ratio.width * 147, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))
                   ),
-                  child: Text("닫기", style: KR.parag2.copyWith(color: MGcolor.base3)),
+                  child: Text("닫기", style: KR.parag2.copyWith(color: MGColor.base3)),
                 ),
                 SizedBox(width: ratio.width * 8),
                 ElevatedButton(
                   onPressed: onAgreed,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.primaryColor(),
+                      backgroundColor: MGColor.primaryColor(),
                       fixedSize: Size(ratio.width * 147, 40),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))
@@ -83,7 +83,7 @@ class CommentPopup extends StatelessWidget {
     Color? buttonColor,
     required this.onPressed
   }) {
-    this.buttonBackground = buttonColor ?? MGcolor.brand1Primary;
+    buttonBackground = buttonColor ?? MGColor.brand1Primary;
   }
 
   final String title;
@@ -142,14 +142,16 @@ class ReservationPopup extends StatelessWidget {
     
     if (service == ServiceType.lectureRoom && item.place == null) {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
-    } else place = Text(item.place!, style: KR.subtitle1);
+    } else {
+      place = Text(item.place!, style: KR.subtitle1);
+    }
 
     if (service == ServiceType.computer) {
-      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGcolor.base3));
-      time2 = Text('~ ${item.endToDate()}', style: KR.parag2.copyWith(color: MGcolor.base3));
+      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGColor.base3));
+      time2 = Text('~ ${item.endToDate()}', style: KR.parag2.copyWith(color: MGColor.base3));
     } else {
-      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGcolor.base3));
-      time2 = Text(item.toDuration(), style: KR.parag2.copyWith(color: MGcolor.base3));
+      time1 = Text(item.startToDate(), style: KR.parag2.copyWith(color: MGColor.base3));
+      time2 = Text(item.toDuration(), style: KR.parag2.copyWith(color: MGColor.base3));
     }
 
     switch (status) {
@@ -178,7 +180,7 @@ class ReservationPopup extends StatelessWidget {
             ElevatedButton(
                 onPressed: () => _edit(context),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.primaryColor(),
+                    backgroundColor: MGColor.primaryColor(),
                     fixedSize: Size(
                         ratio.width * 145, ratio.height * 40),
                     shape: RoundedRectangleBorder(
@@ -196,7 +198,7 @@ class ReservationPopup extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10))
                 ),
                 child: Text("예약 취소하기", style: KR.parag1.copyWith(
-                    color: MGcolor.base3))
+                    color: MGColor.base3))
             )
           ]);
           break;
@@ -206,7 +208,7 @@ class ReservationPopup extends StatelessWidget {
           button = ElevatedButton(
               onPressed: () => _qr,
               style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.primaryColor(),
+                  backgroundColor: MGColor.primaryColor(),
                   fixedSize: Size(
                       ratio.width * 145, ratio.height * 40),
                   shape: RoundedRectangleBorder(
@@ -222,7 +224,7 @@ class ReservationPopup extends StatelessWidget {
           button = ElevatedButton(
               onPressed: () => _prolong,
               style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.primaryColor(),
+                  backgroundColor: MGColor.primaryColor(),
                   fixedSize: Size(
                       ratio.width * 145, ratio.height * 40),
                   shape: RoundedRectangleBorder(
@@ -238,7 +240,7 @@ class ReservationPopup extends StatelessWidget {
           button = ElevatedButton(
               onPressed: () => _admit(context),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: MGcolor.primaryColor(),
+                  backgroundColor: MGColor.primaryColor(),
                   fixedSize: Size(
                       ratio.width * 145, ratio.height * 40),
                   shape: RoundedRectangleBorder(
@@ -253,10 +255,12 @@ class ReservationPopup extends StatelessWidget {
       /// - 사용 중 (연장 X)
       /// - 사용 끝 (인증 O)
         default:
-          button = SizedBox.shrink();
+          button = const SizedBox.shrink();
           break;
       }
-    } else button = SizedBox.shrink();
+    } else {
+      button = const SizedBox.shrink();
+    }
 
     return Dialog(
       insetPadding: EdgeInsets.zero,
@@ -271,9 +275,9 @@ class ReservationPopup extends StatelessWidget {
               width: ratio.height * 120,
               height: ratio.height * 120,
               decoration: ShapeDecoration(
-                image: DecorationImage(
+                image: const DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage(ImgPath.home_img4)),
+                  image: AssetImage(ImgPath.home4)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),
@@ -298,7 +302,7 @@ class ReservationPopup extends StatelessWidget {
                     child: Text(
                       statusMsg,
                       textAlign: TextAlign.center,
-                      style: KR.label2.copyWith(color: MGcolor.systemError),
+                      style: KR.label2.copyWith(color: MGColor.systemError),
                     )
                   )
               ],
@@ -311,7 +315,7 @@ class ReservationPopup extends StatelessWidget {
               children: [
                 Text("대표자", style: KR.parag2),
                 SizedBox(height: ratio.height * 8),
-                Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGcolor.base3)),
+                Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
               ],
             ),
 
@@ -323,7 +327,7 @@ class ReservationPopup extends StatelessWidget {
               child: Text(
                 '나중에 바꾸기',
                 textAlign: TextAlign.center,
-                style: KR.label2.copyWith(color: MGcolor.base3.withOpacity(0.6))
+                style: KR.label2.copyWith(color: MGColor.base3.withOpacity(0.6))
               )
             ),
 
@@ -338,56 +342,57 @@ class ReservationPopup extends StatelessWidget {
     );
   }
 
-  // 예약 수정
+  /// 예약 수정
   void _edit(BuildContext context) {
     Navigator.pop(context);
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => ReservatePage(reservate: item)));
   }
 
-  // 예약 삭제
+  /// 예약 삭제
   void _del(BuildContext context) {
     Navigator.pop(context);
     showDialog(
       context: context,
-      builder: (context) => AlertPopup(
+      barrierColor: MGColor.barrier,
+      builder: (context1) => AlertPopup(
           title: "예약을 취소하시겠습니까?",
           agreeMsg: "취소하기",
           onAgreed: () async {
-            Navigator.pop(context);
+            Navigator.pop(context1);
             try {
                 int? uid = await RestAPI.delReservation(
                     reservationId: item.reservationId);
                 if (uid == null) {
                   showDialog(
                       context: context,
-                      barrierColor: MGcolor.barrier,
-                      builder: (context) => CommentPopup(
+                      barrierColor: MGColor.barrier,
+                      builder: (context2) => CommentPopup(
                           title: "[Error] deleting reservation",
-                          onPressed: () => Navigator.pop(context)));
+                          onPressed: () => Navigator.pop(context2)));
                 } else {
                   showDialog(
                           context: context,
-                          builder: (context) => CommentPopup(
+                          builder: (context2) => CommentPopup(
                               title: "예약이 취소되었습니다!",
-                              onPressed: () => Navigator.pop(context)))
+                              onPressed: () => Navigator.pop(context2)))
                       .then((_) => listListener.add(StreamType.reservate));
                 }
             } on TimeoutException {
               showDialog(
                   context: context,
-                  barrierColor: MGcolor.barrier,
-                  builder: (context) => CommentPopup(
+                  barrierColor: MGColor.barrier,
+                  builder: (context2) => CommentPopup(
                       title: "통신 속도가 너무 느립니다!",
-                      onPressed: () => Navigator.pop(context)));
+                      onPressed: () => Navigator.pop(context2)));
             }
           }
       )
     );
   }
 
-  // QR 확인
-  // Todo: QR을 했다는 사실을 서버에 전송할 필요가 있지 않을까?
+  /// QR 확인
+  /// Todo: QR을 했다는 사실을 서버에 전송할 필요가 있지 않을까?
   void _qr(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context)
@@ -395,49 +400,49 @@ class ReservationPopup extends StatelessWidget {
     );
   }
 
-  // 예약 연장
+  /// 예약 연장
   void _prolong(BuildContext context) {
     Navigator.pop(context);
     showDialog(
       context: context,
-      barrierColor: MGcolor.barrier,
-      builder: (context) => AlertPopup(
+      barrierColor: MGColor.barrier,
+      builder: (context1) => AlertPopup(
         title: '1시간 연장하시겠습니까?',
         agreeMsg: '연장하기',
         onAgreed: () async {
-          Navigator.pop(context);
+          Navigator.pop(context1);
           try {
             int? uid = await RestAPI.prolongReservation(
                 reservationId: item.reservationId);
             if (uid == null) {
               showDialog(
                   context: context,
-                  barrierColor: MGcolor.barrier,
-                  builder: (context) => CommentPopup(
+                  barrierColor: MGColor.barrier,
+                  builder: (context2) => CommentPopup(
                       title: "[Error] prolonging reservation",
-                      onPressed: () => Navigator.pop(context)));
+                      onPressed: () => Navigator.pop(context2)));
             } else {
               showDialog(
                   context: context,
-                  builder: (context) => CommentPopup(
+                  builder: (context2) => CommentPopup(
                       title: "연장하기",
-                      onPressed: () => Navigator.pop(context)))
+                      onPressed: () => Navigator.pop(context2)))
                   .then((_) => listListener.add(StreamType.reservate));
             }
           } on TimeoutException {
             showDialog(
                 context: context,
-                barrierColor: MGcolor.barrier,
-                builder: (context) => CommentPopup(
+                barrierColor: MGColor.barrier,
+                builder: (context2) => CommentPopup(
                     title: "통신 속도가 너무 느립니다!",
-                    onPressed: () => Navigator.pop(context)));
+                    onPressed: () => Navigator.pop(context2)));
           }
         }
       )
     );
   }
 
-  // 인증으로
+  /// 인증으로
   void _admit(BuildContext context) {
     Navigator.pop(context);
     Navigator.push(context,
@@ -487,9 +492,9 @@ class AdmissionPopup extends StatelessWidget {
               /// 날짜 및 시간
               Column(
                 children: [
-                  Text(item.date, style: KR.parag2.copyWith(color: MGcolor.base3)),
+                  Text(item.date, style: KR.parag2.copyWith(color: MGColor.base3)),
                   SizedBox(height: ratio.height * 8),
-                  Text(item.time, style: EN.parag2.copyWith(color: MGcolor.base3)),
+                  Text(item.time, style: EN.parag2.copyWith(color: MGColor.base3)),
                 ],
               ),
 
@@ -500,7 +505,7 @@ class AdmissionPopup extends StatelessWidget {
                 children: [
                   Text("대표자", style: KR.parag2),
                   SizedBox(height: ratio.height * 8),
-                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGcolor.base3)),
+                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
                 ],
               ),
 
@@ -549,11 +554,11 @@ class AdmissionPopup extends StatelessWidget {
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 style: IconButton.styleFrom(
-                  foregroundColor: MGcolor.primaryColor(),
-                  backgroundColor: MGcolor.tertiaryColor(),
+                  foregroundColor: MGColor.primaryColor(),
+                  backgroundColor: MGColor.tertiaryColor(),
                   fixedSize: Size(ratio.width * 48, ratio.width * 48)
                 ),
-                icon: Icon(AppinIcon.cross)
+                icon: Icon(MGIcon.cross)
               )
             ]
           ),
@@ -593,14 +598,14 @@ class GradePopup extends StatelessWidget {
               SizedBox(height: ratio.height * 40),
               Text(
                 '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔하네요!',
-                style: KR.parag2.copyWith(color: MGcolor.base2),
+                style: KR.parag2.copyWith(color: MGColor.base2),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: ratio.height * 16),
               if (showDuration)
                 Text(
                   '등급 지속 시간: ${123}일',
-                  style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
+                  style: KR.parag2.copyWith(color: MGColor.primaryColor()),
                 )
             ]
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/widgets/small_widgets.dart';
 
@@ -54,7 +54,7 @@ class _SelectingServicePageState extends State<SelectingServicePage> {
         ),
 
         if (_loading)
-          ProgressScreen()
+          const ProgressScreen()
       ],
     );
   }
@@ -63,7 +63,7 @@ class _SelectingServicePageState extends State<SelectingServicePage> {
     late String path, name;
     switch (type) {
       case ServiceType.aiSpace:
-        path = ImgPath.ai_space;
+        path = ImgPath.aiSpace;
         name = "AI 스페이스";
         break;
       case ServiceType.lectureRoom:
@@ -91,7 +91,7 @@ class _SelectingServicePageState extends State<SelectingServicePage> {
         child: Center(
           child: Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontFamily: 'Ko',
               color: Colors.white,
@@ -112,7 +112,7 @@ class _SelectingServicePageState extends State<SelectingServicePage> {
     setState(() {
       _loading = false;
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MainFrame()));
+          MaterialPageRoute(builder: (context) => const MainFrame()));
     });
   }
 }

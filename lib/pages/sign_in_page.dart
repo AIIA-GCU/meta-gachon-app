@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/button.dart';
 
-import 'package:mata_gachon/config/animation.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/find_id_pw_page.dart';
-import 'package:mata_gachon/pages/select_service_page.dart';
-import 'package:mata_gachon/pages/sign_up_page.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'find_id_pw_page.dart';
+import 'sign_up_page.dart';
+import 'select_service_page.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -30,15 +30,8 @@ class _SignInPageState extends State<SignInPage> {
   @override
   void initState() {
     super.initState();
-    idController.addListener(updateLoginButtonState);
-    pwController.addListener(updateLoginButtonState);
-  }
-
-  void updateLoginButtonState() {
-    setState(() {
-      _buttonEnabled =
-          idController.text.isNotEmpty && pwController.text.isNotEmpty;
-    });
+    idController.addListener(_updateLoginButtonState);
+    pwController.addListener(_updateLoginButtonState);
   }
 
   @override
@@ -47,14 +40,14 @@ class _SignInPageState extends State<SignInPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Stack(
         children: [
-          ///
           Scaffold(
             body: Center(
               child: AnimatedContainer(
                 curve: Curves.ease,
-                duration: Duration(milliseconds: 100),
+                duration: const Duration(milliseconds: 100),
                 transformAlignment: Alignment.topCenter,
-                height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 150 ? 520 : 570),
+                // height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 150 ? 520 : 570),
+                height: ratio.height * (MediaQuery.of(context).viewInsets.bottom > 150 ? 470 : 520),
                 padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                 alignment: Alignment.center,
                 child: Column(
@@ -68,8 +61,8 @@ class _SignInPageState extends State<SignInPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(ImgPath.aiia_color),
-                          Text('Login', style: TextStyle(
+                          Image.asset(ImgPath.aiiaColor),
+                          const Text('Login', style: TextStyle(
                             height: 1.8,
                             fontSize: 40,
                             color: Colors.black,
@@ -77,7 +70,7 @@ class _SignInPageState extends State<SignInPage> {
                           )),
                           Text(
                             '가천대학교 AIIA 아이디로 로그인을 해주세요.',
-                            style: KR.label2.copyWith(color: MGcolor.base4),
+                            style: KR.label2.copyWith(color: MGColor.base4),
                           ),
                         ],
                       ),
@@ -94,7 +87,7 @@ class _SignInPageState extends State<SignInPage> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: MGcolor.base6),
+                              border: Border.all(color: MGColor.base6),
                             ),
                             child: TextFormField(
                               controller: idController,
@@ -105,7 +98,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 hintText: '아이디 입력',
                                 hintStyle: KR.subtitle3.copyWith(
-                                  color: MGcolor.base4,
+                                  color: MGColor.base4,
                                 ),
                                 border: InputBorder.none,
                               ),
@@ -120,7 +113,7 @@ class _SignInPageState extends State<SignInPage> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: MGcolor.base6),
+                              border: Border.all(color: MGColor.base6),
                             ),
                             child: Stack(
                               children: [
@@ -135,7 +128,7 @@ class _SignInPageState extends State<SignInPage> {
                                         vertical: ratio.height * 12
                                     ),
                                     hintStyle: KR.subtitle3.copyWith(
-                                      color: MGcolor.base4,
+                                      color: MGColor.base4,
                                     ),
                                   ),
                                 ),
@@ -152,9 +145,9 @@ class _SignInPageState extends State<SignInPage> {
                                         vertical: 14
                                       ),
                                       child: Icon(isPasswordVisible
-                                            ? AppinIcon.eye_on
-                                            : AppinIcon.eye_off,
-                                        color: MGcolor.base4,
+                                            ? MGIcon.eyeOn
+                                            : MGIcon.eyeOff,
+                                        color: MGColor.base4,
                                         size: ratio.width * 20,
                                       ),
                                     ),
@@ -166,7 +159,7 @@ class _SignInPageState extends State<SignInPage> {
                           SizedBox(height: ratio.height * 4),
                           Text(
                               errorMessage,
-                              style: KR.label2.copyWith(color: MGcolor.systemError)
+                              style: KR.label2.copyWith(color: MGColor.systemError)
                           ),
                         ],
                       ),
@@ -176,108 +169,97 @@ class _SignInPageState extends State<SignInPage> {
                     Column(
                       children: [
                         /// 로그인
-                        ElevatedButton(
-                          onPressed: _buttonEnabled ? tryLogin : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: MGcolor.brand1Primary,
-                            disabledBackgroundColor: MGcolor.base6,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            minimumSize: Size(ratio.width * 358, ratio.height * 56),
-                          ),
-                          child: Text(
-                            '로그인',
-                            style: EN.subtitle2.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
+                        CustomButtons.bottomButton(
+                          '로그인',
+                          MGColor.brand1Primary,
+                          () => _buttonEnabled ? trySignIn : null,
+                          MGColor.base6
                         ),
               
-                        SizedBox(height: ratio.height * 12),
+                        // SizedBox(height: ratio.height * 12),
               
                         /// 로그인 외
-                        IntrinsicHeight(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              /// 아이디 찾기
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    transitionsBuilder: slideRigth2Left,
-                                    pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: true)
-                                  )
-                                ),
-                                behavior: HitTestBehavior.translucent,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: ratio.width * 10,
-                                    vertical: ratio.height * 12
-                                  ),
-                                  child: Text(
-                                    '아이디 찾기',
-                                    style: KR.parag2.copyWith(color: MGcolor.base4),
-                                  )
-                                ),
-                              ),
-              
-                              VerticalDivider(
-                                width: 1,
-                                thickness: 1,
-                                indent: 15,
-                                endIndent: 13,
-                                color: MGcolor.base4,
-                              ),
-              
-                              /// 비밀번호 찾기
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    transitionsBuilder: slideRigth2Left,
-                                    pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: false)
-                                  )
-                                ),
-                                behavior: HitTestBehavior.translucent,
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 10,
-                                        vertical: ratio.height * 12
-                                    ),
-                                    child: Text(
-                                      '비밀번호 찾기',
-                                      style: KR.parag2.copyWith(color: MGcolor.base4),
-                                    )
-                                ),
-                              ),
-              
-                              VerticalDivider(
-                                width: 1,
-                                thickness: 1,
-                                indent: 15,
-                                endIndent: 13,
-                                color: MGcolor.base4,
-                              ),
-              
-                              /// 회원가입
-                              GestureDetector(
-                                onTap: _floatSignUpPage,
-                                behavior: HitTestBehavior.translucent,
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 10,
-                                        vertical: ratio.height * 12
-                                    ),
-                                    child: Text(
-                                      '회원가입',
-                                      style: KR.parag2.copyWith(color: MGcolor.brand1Primary),
-                                    )
-                                ),
-                              ),
-                            ]
-                          ),
-                        )
+                        // IntrinsicHeight(
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       /// 아이디 찾기
+                        //       GestureDetector(
+                        //         onTap: () => Navigator.of(context).push(
+                        //           PageRouteBuilder(
+                        //             transitionsBuilder: slideRigth2Left,
+                        //             pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: true)
+                        //           )
+                        //         ),
+                        //         behavior: HitTestBehavior.translucent,
+                        //         child: Padding(
+                        //           padding: EdgeInsets.symmetric(
+                        //             horizontal: ratio.width * 10,
+                        //             vertical: ratio.height * 12
+                        //           ),
+                        //           child: Text(
+                        //             '아이디 찾기',
+                        //             style: KR.parag2.copyWith(color: MGcolor.base4),
+                        //           )
+                        //         ),
+                        //       ),
+                        //
+                        //       VerticalDivider(
+                        //         width: 1,
+                        //         thickness: 1,
+                        //         indent: 15,
+                        //         endIndent: 13,
+                        //         color: MGcolor.base4,
+                        //       ),
+                        //
+                        //       /// 비밀번호 찾기
+                        //       GestureDetector(
+                        //         onTap: () => Navigator.of(context).push(
+                        //           PageRouteBuilder(
+                        //             transitionsBuilder: slideRigth2Left,
+                        //             pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: false)
+                        //           )
+                        //         ),
+                        //         behavior: HitTestBehavior.translucent,
+                        //         child: Padding(
+                        //             padding: EdgeInsets.symmetric(
+                        //                 horizontal: ratio.width * 10,
+                        //                 vertical: ratio.height * 12
+                        //             ),
+                        //             child: Text(
+                        //               '비밀번호 찾기',
+                        //               style: KR.parag2.copyWith(color: MGcolor.base4),
+                        //             )
+                        //         ),
+                        //       ),
+                        //
+                        //       VerticalDivider(
+                        //         width: 1,
+                        //         thickness: 1,
+                        //         indent: 15,
+                        //         endIndent: 13,
+                        //         color: MGcolor.base4,
+                        //       ),
+                        //
+                        //       /// 회원가입
+                        //       GestureDetector(
+                        //         onTap: _floatSignUpPage,
+                        //         behavior: HitTestBehavior.translucent,
+                        //         child: Padding(
+                        //             padding: EdgeInsets.symmetric(
+                        //                 horizontal: ratio.width * 10,
+                        //                 vertical: ratio.height * 12
+                        //             ),
+                        //             child: Text(
+                        //               '회원가입',
+                        //               style: KR.parag2.copyWith(color: MGcolor.brand1Primary),
+                        //             )
+                        //         ),
+                        //       ),
+                        //     ]
+                        //   ),
+                        // )
                       ],
                     )
                   ],
@@ -286,66 +268,70 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
 
-          ///
           if (isLoading)
-            ProgressScreen()
+            const ProgressScreen()
         ],
       ),
     );
   }
 
-  /// using api
-  Future<void> tryLogin() async {
-    if (_buttonEnabled) {
-      setState(() {
-        FocusScope.of(context).unfocus();
-        isLoading = true;
-      });
-      try {
-        final fcmToken = await FCM.getToken();
-        User? user = await RestAPI.signIn(
-            id: idController.text, pw: pwController.text, token: fcmToken);
-        if (user != null) {
-          myInfo = user;
-
-          // appaer selecting service page
-          setState(() => isLoading = false);
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              fullscreenDialog: false,
-              transitionsBuilder: slideRigth2Left,
-              pageBuilder: (context, anime, secondAnime) => SelectingServicePage()
-            )
-          );
-        } else {
-          setState(() {
-            errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
-            isLoading = false;
-          });
-        }
-      } on TimeoutException {
-        setState(() {
-          isLoading = false;
-          showDialog(
-              context: context,
-              barrierColor: Colors.black.withOpacity(0.25),
-              builder: (context) => CommentPopup(
-                  title: "통신 속도가 너무 느립니다!",
-                  onPressed: () => Navigator.pop(context)
-              )
-          );
-        });
-      }
-    }
+  void _updateLoginButtonState() {
+    setState(() {
+      _buttonEnabled =
+          idController.text.isNotEmpty && pwController.text.isNotEmpty;
+    });
   }
 
-  void _floatSignUpPage() {
+  /// move page with sliding animation
+  void _floatPage(Widget page) {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        fullscreenDialog: false,
-        transitionsBuilder: slideRigth2Left,
-        pageBuilder: (context, anime, secondAnime) => SignUpFrame(),
-      )
+        PageRouteBuilder(
+          fullscreenDialog: false,
+          transitionsBuilder: slideRigth2Left,
+          pageBuilder: (context, anime, secondAnime) => page,
+        )
     );
+  }
+
+  /// try sign-in method
+  Future<void> trySignIn() async {
+    setState(() {
+      FocusScope.of(context).unfocus();
+      isLoading = true;
+    });
+    try {
+      // try sign in
+      final fcmToken = await FCM.getToken();
+      User? user = await RestAPI.signIn(
+          id: idController.text, pw: pwController.text, token: fcmToken);
+
+      // if sign-in success
+      if (user != null) {
+        // save data
+        myInfo = user;
+
+        // appaer selecting service page
+        setState(() => isLoading = false);
+        _floatPage(const SelectingServicePage());
+      } else {
+        // show error message
+        setState(() {
+          errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
+          isLoading = false;
+        });
+      }
+    } on TimeoutException {
+      setState(() {
+        isLoading = false;
+        showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            builder: (context) => CommentPopup(
+                title: "통신 속도가 너무 느립니다!",
+                onPressed: () => Navigator.pop(context)
+            )
+        );
+      });
+    }
   }
 }

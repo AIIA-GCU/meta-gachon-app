@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/server.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/button.dart';
+import 'package:mata_gachon/widgets/text_field.dart';
 
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
-enum FindProcess { certificateStudent, findingId, foundId, changePw }
+enum _FindProcess { certificateStudent, findingId, foundId, changePw }
 
 class FindIdPwFrame extends StatefulWidget {
   const FindIdPwFrame({
@@ -28,7 +30,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
   late List<Widget> _items;
   late int _index;
   late bool _canNext, _loading;
-  late FindProcess _current;
+  late _FindProcess _current;
 
   String? _aiiaId, _aiiaPw, _gachonId, _gachonPw;
 
@@ -38,33 +40,33 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
     _canNext = _loading = false;
 
     if (widget.isFindingId) {
-      _current = FindProcess.certificateStudent;
+      _current = _FindProcess.certificateStudent;
       _items = [
-        CertificateStudentPage(
+        _CertificateStudentPage(
           idEditCtr: _idEditCtr,
           pwEditCtr: _pwEditCtr,
           allowToMovePage: _allowToMovePage
         ),
-        FoundIdPage(aiiaId: _aiiaId),
-        ChangePwPage(
+        _FoundIdPage(aiiaId: _aiiaId),
+        _ChangePwPage(
           aiiaId: _aiiaId,
           pwEditCtr: _pwEditCtr,
           allowToMovePage: _allowToMovePage
         )
       ];
     } else {
-      _current = FindProcess.certificateStudent;
+      _current = _FindProcess.certificateStudent;
       _items = [
-        FindingIdPage(
+        _FindingIdPage(
             idEditCtr: _idEditCtr,
             allowToMovePage: _allowToMovePage
         ),
-        CertificateStudentPage(
+        _CertificateStudentPage(
             idEditCtr: _idEditCtr,
             pwEditCtr: _pwEditCtr,
             allowToMovePage: _allowToMovePage
         ),
-        ChangePwPage(
+        _ChangePwPage(
             aiiaId: _aiiaId,
             pwEditCtr: _pwEditCtr,
             allowToMovePage: _allowToMovePage
@@ -88,7 +90,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
     late double containerHeight;
     late String buttonText;
 
-    if (_current == FindProcess.foundId) {
+    if (_current == _FindProcess.foundId) {
       containerHeight = 112;
       buttonText = '로그인';
     } else {
@@ -98,7 +100,6 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
 
     return Stack(
       children: [
-        ///
         GestureDetector(
           onTap: () {
             if (MediaQuery.of(context).viewInsets.bottom > 0) {
@@ -119,9 +120,9 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: Icon(
-                            AppinIcon.back,
+                            MGIcon.back,
                             size: ratio.width * 24,
-                            color: MGcolor.base4
+                            color: MGColor.base4
                         ),
                       )
                   )
@@ -134,7 +135,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                       key: _formKey,
                       child: Expanded(child: PageView(
                           controller: _pageCtr,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           children: _items
                       )),
                     ),
@@ -142,7 +143,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                     /// 버튼
                     AnimatedContainer(
                       curve: Curves.ease,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       height: containerHeight,
                       margin: EdgeInsets.only(
                           top: ratio.height * 10,
@@ -152,51 +153,29 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                         children: [
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() => _current = FindProcess.changePw);
+                            child: CustomButtons.bottomButton(
+                              '비밀번호 찾기',
+                              MGColor.brand1Primary,
+                              () {
+                                setState(() => _current = _FindProcess.changePw);
                                 _pageCtr.animateToPage(
                                   ++_index,
-                                  duration: Duration(milliseconds: 300),
+                                  duration: const Duration(milliseconds: 300),
                                   curve: Curves.ease
                                 );
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MGcolor.brand1Secondary,
-                                disabledBackgroundColor: MGcolor.base6,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                minimumSize: Size(ratio.width * 358, 48),
-                              ),
-                              child: Text(
-                                '비밀번호 찾기',
-                                style: EN.subtitle2.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                              MGColor.base6
+                            )
                           ),
                           
                           Align(
                             alignment: Alignment.topCenter,
-                            child: ElevatedButton(
-                              onPressed: _canNext ? _moveToPage : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MGcolor.brand1Primary,
-                                disabledBackgroundColor: MGcolor.base6,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                minimumSize: Size(ratio.width * 358, 48),
-                              ),
-                              child: Text(
-                                buttonText,
-                                style: EN.subtitle2.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            child: CustomButtons.bottomButton(
+                              buttonText,
+                              MGColor.brand1Primary,
+                              () => _canNext ? _moveToPage() : null,
+                              MGColor.base6
+                            )
                           )
                         ],
                       ),
@@ -206,9 +185,8 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
           ),
         ),
 
-        ///
         if (_loading)
-          ProgressScreen()
+          const ProgressScreen()
       ],
     );
   }
@@ -222,18 +200,18 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
     }
 
     switch (_current) {
-      case FindProcess.certificateStudent:
+      case _FindProcess.certificateStudent:
         setState(() => _loading = true);
         _certificateStudent();
         break;
-      case FindProcess.findingId:
+      case _FindProcess.findingId:
         setState(() => _loading = true);
         _certificateAiiaId();
         break;
-      case FindProcess.foundId:
+      case _FindProcess.foundId:
         Navigator.popUntil(context, (route) => route.isFirst);
         break;
-      case FindProcess.changePw:
+      case _FindProcess.changePw:
         setState(() => _loading = true);
         _changePw();
         break;
@@ -249,12 +227,12 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
         _loading = false;
         _pageCtr.animateToPage(
           ++_index,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.ease
         );
         _current = widget.isFindingId
-            ? FindProcess.foundId
-            : FindProcess.changePw;
+            ? _FindProcess.foundId
+            : _FindProcess.changePw;
         _idEditCtr.clear();
         _pwEditCtr.clear();
       });
@@ -262,7 +240,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
       setState(() => _loading = false);
       showDialog(
         context: context,
-        barrierColor: MGcolor.barrier,
+        barrierColor: MGColor.barrier,
         builder: (context) => CommentPopup(
           title: '확인되지 않은 학생 정보입니다.',
           onPressed: () => Navigator.pop(context)
@@ -279,17 +257,17 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
         _loading = false;
         _pageCtr.animateToPage(
           ++_index,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.ease
         );
-        _current = FindProcess.certificateStudent;
+        _current = _FindProcess.certificateStudent;
         _idEditCtr.clear();
       });
     } else {
       setState(() => _loading = false);
       showDialog(
           context: context,
-          barrierColor: MGcolor.barrier,
+          barrierColor: MGColor.barrier,
           builder: (context) => CommentPopup(
               title: '확인되지 않은 아이디입니다.',
               onPressed: () => Navigator.pop(context)
@@ -303,10 +281,10 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
       setState(() => _loading = false);
       showDialog(
         context: context,
-        barrierColor: MGcolor.barrier,
+        barrierColor: MGColor.barrier,
         builder: (context) => CommentPopup(
           title: '비밀번호가 재설정 되었습니다.',
-          buttonColor: MGcolor.brand1Primary,
+          buttonColor: MGColor.brand1Primary,
           onPressed: () => Navigator.popUntil(context, (route) => route.isFirst)
         )
       );
@@ -314,8 +292,8 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
   }
 }
 
-class CertificateStudentPage extends StatefulWidget {
-  const CertificateStudentPage({
+class _CertificateStudentPage extends StatefulWidget {
+  const _CertificateStudentPage({
     super.key,
     required this.idEditCtr,
     required this.pwEditCtr,
@@ -326,9 +304,9 @@ class CertificateStudentPage extends StatefulWidget {
   final void Function(bool) allowToMovePage;
 
   @override
-  State<CertificateStudentPage> createState() => _CertificateStudentPageState();
+  State<_CertificateStudentPage> createState() => _CertificateStudentPageState();
 }
-class _CertificateStudentPageState extends State<CertificateStudentPage> {
+class _CertificateStudentPageState extends State<_CertificateStudentPage> {
 
   static String? _tempId, _tempPw;
   static String? _idError, _pwError;
@@ -362,7 +340,7 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
                 Text('아이디', style: KR.subtitle3),
                 Text(
                     _idError ?? '',
-                    style: KR.label2.copyWith(color: MGcolor.systemError)
+                    style: KR.label2.copyWith(color: MGColor.systemError)
                 )
               ],
             ),
@@ -374,33 +352,12 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
                 ratio.height * 16,
                 0
             ),
-            child: TextFormField(
+            child:
+            LongTextField(
                 controller: widget.idEditCtr,
-                style: KR.subtitle1,
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: ratio.width * 16,
-                      vertical: ratio.height * 12
-                  ),
-                  hintText: '가천대학교 아이디 입력',
-                  hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                  errorText: _pwError,
-                  errorStyle: TextStyle(fontSize: 0),
-                  border: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.base5)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.base6, width: 2)),
-                  errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.systemError)),
-                  focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                ),
+                password: false,
+                hint: '가천대학교 아이디 입력',
+                error: _idError,
                 onChanged: (val) {
                   _tempId = val;
                   _allowToMovePage();
@@ -420,7 +377,7 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
                     });
                     return _idError;
                   });
-                }
+                },
             ),
           ),
 
@@ -437,7 +394,7 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
                 Text('비밀번호', style: KR.subtitle3),
                 Text(
                     _pwError ?? '',
-                    style: KR.label2.copyWith(color: MGcolor.systemError)
+                    style: KR.label2.copyWith(color: MGColor.systemError)
                 )
               ],
             ),
@@ -449,69 +406,25 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
                 ratio.height * 16,
                 0
             ),
-            child: Stack(
-              children: [
-                TextFormField(
-                  controller: widget.pwEditCtr,
-                  obscureText: pw,
-                  style: KR.subtitle1,
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: ratio.width * 16,
-                        vertical: ratio.height * 12
-                    ),
-                    hintText: '가천대학교 비밀번호 입력',
-                    hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                    errorText: _pwError,
-                    errorStyle: TextStyle(fontSize: 0),
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.systemError)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                  ),
-                  onChanged: (val) {
-                    _tempPw = val;
-                    _allowToMovePage();
-                  },
-                  validator: (val) {
-                    if (!(8 <= val!.length && val.length <= 16)) {
-                      return _pwError = "비밀번호는 8 ~ 16자입니다.";
-                    }  else return null;
-                  },
-                ),
-                Positioned(
-                  right: 0,
-                  child: GestureDetector(
-                    onTapDown: (tapDetails) => setState(() => pw = true),
-                    onTapUp: (tapDetails) => setState(() => pw = false),
-                    onTapCancel: () => setState(() => pw = false),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 12,
-                          vertical: 14
-                      ),
-                      child: Icon(pw
-                          ? AppinIcon.eye_on
-                          : AppinIcon.eye_off,
-                        color: MGcolor.base4,
-                        size: ratio.width * 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: LongTextField(
+              controller: widget.pwEditCtr,
+              password: true,
+              shownPassword: pw,
+              hint: '가천대학교 비밀번호 입력',
+              error: _pwError,
+              onTapToShowPassword: (val) => setState(() => pw = val),
+              onChanged: (val) {
+                _tempPw = val;
+                _allowToMovePage();
+              },
+              validator: (val) {
+                if (!(8 <= val!.length && val.length <= 16)) {
+                  return _pwError = "비밀번호는 8 ~ 16자입니다.";
+                }  else {
+                  return null;
+                }
+              },
+            )
           ),
         ]
     );
@@ -525,8 +438,8 @@ class _CertificateStudentPageState extends State<CertificateStudentPage> {
   }
 }
 
-class FindingIdPage extends StatefulWidget {
-  const FindingIdPage({
+class _FindingIdPage extends StatefulWidget {
+  const _FindingIdPage({
     super.key,
     required this.idEditCtr,
     required this.allowToMovePage
@@ -536,9 +449,9 @@ class FindingIdPage extends StatefulWidget {
   final void Function(bool) allowToMovePage;
 
   @override
-  State<FindingIdPage> createState() => _FindingIdPageState();
+  State<_FindingIdPage> createState() => _FindingIdPageState();
 }
-class _FindingIdPageState extends State<FindingIdPage> {
+class _FindingIdPageState extends State<_FindingIdPage> {
   static String? _tempId;
   static String? _idError;
 
@@ -570,7 +483,7 @@ class _FindingIdPageState extends State<FindingIdPage> {
               Text('아이디', style: KR.subtitle3),
               Text(
                   _idError ?? '',
-                  style: KR.label2.copyWith(color: MGcolor.systemError)
+                  style: KR.label2.copyWith(color: MGColor.systemError)
               )
             ],
           ),
@@ -582,33 +495,11 @@ class _FindingIdPageState extends State<FindingIdPage> {
               ratio.height * 16,
               0
           ),
-          child: TextFormField(
+          child: LongTextField(
               controller: widget.idEditCtr,
-              style: KR.subtitle1,
-              cursorColor: Colors.black,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: ratio.width * 16,
-                    vertical: ratio.height * 12
-                ),
-                hintText: 'AIIA 아이디 입력',
-                hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                errorText: _idError,
-                errorStyle: TextStyle(fontSize: 0),
-                border: InputBorder.none,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: MGcolor.base5)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: MGcolor.systemError)),
-                focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-              ),
+              password: false,
+              hint: 'AIIA 아이디 입력',
+              error: _idError,
               onChanged: (val) {
                 _tempId = val;
                 _allowToMovePage();
@@ -640,8 +531,8 @@ class _FindingIdPageState extends State<FindingIdPage> {
   }
 }
 
-class FoundIdPage extends StatelessWidget {
-  const FoundIdPage({super.key, required this.aiiaId});
+class _FoundIdPage extends StatelessWidget {
+  const _FoundIdPage({super.key, required this.aiiaId});
 
   final String? aiiaId;
 
@@ -673,11 +564,11 @@ class FoundIdPage extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: MGcolor.base5)
+            border: Border.all(color: MGColor.base5)
           ),
           child: Text(
             aiiaId ?? 'hello world',
-            style: EN.subtitle1.copyWith(color: MGcolor.brand1Primary)
+            style: EN.subtitle1.copyWith(color: MGColor.brand1Primary)
           )
         ),
       ],
@@ -685,8 +576,8 @@ class FoundIdPage extends StatelessWidget {
   }
 }
 
-class ChangePwPage extends StatefulWidget {
-  const ChangePwPage({
+class _ChangePwPage extends StatefulWidget {
+  const _ChangePwPage({
     super.key,
     required this.aiiaId,
     required this.pwEditCtr,
@@ -698,9 +589,9 @@ class ChangePwPage extends StatefulWidget {
   final void Function(bool) allowToMovePage;
 
   @override
-  State<ChangePwPage> createState() => _ChangePwPageState();
+  State<_ChangePwPage> createState() => _ChangePwPageState();
 }
-class _ChangePwPageState extends State<ChangePwPage> {
+class _ChangePwPageState extends State<_ChangePwPage> {
   String? _tempPw, _tempPwCheck;
   String? _pwError;
   bool pw1 = false, pw2 = false;
@@ -722,7 +613,7 @@ class _ChangePwPageState extends State<ChangePwPage> {
 
           AnimatedSize(
             curve: Curves.ease,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: SizedBox(height:
             ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 24 : 52)),
           ),
@@ -746,19 +637,19 @@ class _ChangePwPageState extends State<ChangePwPage> {
                   vertical: ratio.height * 10
               ),
               decoration: BoxDecoration(
-                  color: MGcolor.base8,
+                  color: MGColor.base8,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: MGcolor.base5)
+                  border: Border.all(color: MGColor.base5)
               ),
               child: Text(
                   widget.aiiaId ?? 'hello world',
-                  style: EN.subtitle1.copyWith(color: MGcolor.base4)
+                  style: EN.subtitle1.copyWith(color: MGColor.base4)
               )
           ),
 
           AnimatedSize(
             curve: Curves.ease,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: SizedBox(height:
             ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 37)),
           ),
@@ -774,7 +665,7 @@ class _ChangePwPageState extends State<ChangePwPage> {
                 Text('비밀번호', style: KR.subtitle3),
                 Text(
                     _pwError ?? '',
-                    style: KR.label2.copyWith(color: MGcolor.systemError)
+                    style: KR.label2.copyWith(color: MGColor.systemError)
                 )
               ],
             ),
@@ -786,74 +677,28 @@ class _ChangePwPageState extends State<ChangePwPage> {
                 ratio.height * 16,
                 0
             ),
-            child: Stack(
-              children: [
-                TextFormField(
-                  controller: widget.pwEditCtr,
-                  obscureText: !pw1,
-                  style: KR.subtitle1,
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: ratio.width * 16,
-                        vertical: ratio.height * 12
-                    ),
-                    hintText: '새 비밀번호',
-                    hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                    errorText: _pwError,
-                    errorStyle: TextStyle(fontSize: 0),
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.systemError)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                  ),
-                  onChanged: (val) {
-                    _tempPw = val;
-                    _allowToMovePage();
-                  },
-                  validator: (val) {
-                    if (!(8 <= val!.length && val.length <= 16)) {
-                      return _pwError = "비밀번호는 8 ~ 16자입니다.";
-                    } else if (_tempPw != _tempPwCheck) {
-                      debugPrint("$_tempPw != $_tempPwCheck");
-                      return _pwError = "비밀번호가 동일하지 않습니다.";
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-                Positioned(
-                  right: 0,
-                  child: GestureDetector(
-                    onTapDown: (tapDetails) => setState(() => pw1 = true),
-                    onTapUp: (tapDetails) => setState(() => pw1 = false),
-                    onTapCancel: () => setState(() => pw1 = false),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 12,
-                          vertical: 14
-                      ),
-                      child: Icon(pw1
-                          ? AppinIcon.eye_on
-                          : AppinIcon.eye_off,
-                        color: MGcolor.base4,
-                        size: ratio.width * 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: LongTextField(
+              controller: widget.pwEditCtr,
+              password: true,
+              shownPassword: pw1,
+              hint: '새 비밀번호',
+              error: _pwError,
+              onTapToShowPassword: (val) => setState(() => pw1 = val),
+              onChanged: (val) {
+                _tempPw = val;
+                _allowToMovePage();
+              },
+              validator: (val) {
+                if (!(8 <= val!.length && val.length <= 16)) {
+                  return _pwError = "비밀번호는 8 ~ 16자입니다.";
+                } else if (_tempPw != _tempPwCheck) {
+                  debugPrint("$_tempPw != $_tempPwCheck");
+                  return _pwError = "비밀번호가 동일하지 않습니다.";
+                } else {
+                  return null;
+                }
+              },
+            )
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(
@@ -862,72 +707,27 @@ class _ChangePwPageState extends State<ChangePwPage> {
                 ratio.height * 16,
                 0
             ),
-            child: Stack(
-              children: [
-                TextFormField(
-                    obscureText: !pw2,
-                    style: KR.subtitle1,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 16,
-                          vertical: ratio.height * 12
-                      ),
-                      hintText: '새 비밀번호 재입력',
-                      hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                      errorText: _pwError,
-                      errorStyle: TextStyle(fontSize: 0),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.base5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                    ),
-                    onChanged: (val) => setState(() {
-                      _tempPwCheck = val;
-                      _allowToMovePage();
-                    }),
-                    validator: (val) {
-                      if (!(8 <= val!.length && val.length <= 16)) {
-                        return _pwError = "비밀번호는 8 ~ 16자입니다.";
-                      } else if (_tempPw != _tempPwCheck) {
-                        debugPrint("$_tempPw != $_tempPwCheck");
-                        return _pwError = "비밀번호가 동일하지 않습니다.";
-                      } else {
-                        return null;
-                      }
-                    }
-                ),
-                Positioned(
-                  right: 0,
-                  child: GestureDetector(
-                    onTapDown: (tapDetails) => setState(() => pw2 = true),
-                    onTapUp: (tapDetails) => setState(() => pw2 = false),
-                    onTapCancel: () => setState(() => pw2 = false),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 12,
-                          vertical: 14
-                      ),
-                      child: Icon(pw2
-                          ? AppinIcon.eye_on
-                          : AppinIcon.eye_off,
-                        color: MGcolor.base4,
-                        size: ratio.width * 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: LongTextField(
+              password: true,
+              shownPassword: pw2,
+              hint: '새 비밀번호 재입력',
+              error: _pwError,
+              onTapToShowPassword: (val) => setState(() => pw2 = val),
+              onChanged: (val) {
+                _tempPwCheck = val;
+                _allowToMovePage();
+              },
+              validator: (val) {
+                if (!(8 <= val!.length && val.length <= 16)) {
+                  return _pwError = "비밀번호는 8 ~ 16자입니다.";
+                } else if (_tempPw != _tempPwCheck) {
+                  debugPrint("$_tempPw != $_tempPwCheck");
+                  return _pwError = "비밀번호가 동일하지 않습니다.";
+                } else {
+                  return null;
+                }
+              },
+            )
           ),
         ]
     );

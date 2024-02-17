@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/sign_in_page.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import '../config/server/session.dart';
+import '../widgets/button.dart';
+import '../widgets/layout.dart';
+import 'sign_in_page.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -17,8 +20,8 @@ class SettingPage extends StatefulWidget {
 }
 class _SettingPageState extends State<SettingPage> {
   bool _loading = false;
-  bool _temp1 = false;
-  bool _temp2 = false;
+  bool _alarmOnOff = false;
+  // bool _temp2 = false;
   
   @override
   Widget build(BuildContext context) {
@@ -41,9 +44,9 @@ class _SettingPageState extends State<SettingPage> {
                 IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(
-                    AppinIcon.back,
+                    MGIcon.back,
                     size: ratio.width * 24,
-                    color: MGcolor.base4
+                    color: MGColor.base4
                   ),
                 ),
                 SizedBox(width: ratio.width * 8),
@@ -67,13 +70,13 @@ class _SettingPageState extends State<SettingPage> {
                     children: [
                       Text('알림 설정', style: KR.subtitle4),
                       Switch(
-                        value: _temp1,
+                        value: _alarmOnOff,
                         activeColor: Colors.white,
-                        activeTrackColor: MGcolor.primaryColor(),
-                        inactiveTrackColor: MGcolor.base6,
+                        activeTrackColor: MGColor.primaryColor(),
+                        inactiveTrackColor: MGColor.base6,
                         inactiveThumbColor: Colors.white,
                         onChanged: (val) {
-                          setState(() => _temp1 = val);
+                          setState(() => _alarmOnOff = val);
                         }
                       )
                     ]
@@ -120,14 +123,14 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                             '학교 홈페이지로 바로 가기',
-                            style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
+                            style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
                           ),
                           Transform.rotate(
                             angle: pi,
                             child: Icon(
-                                AppinIcon.back,
+                                MGIcon.back,
                                 size: ratio.width * 24,
-                                color: MGcolor.base4
+                                color: MGColor.base4
                             )
                           )
                         ]
@@ -149,14 +152,14 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                               '사이버 캠퍼스로 바로 가기',
-                              style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
+                              style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
                           ),
                           Transform.rotate(
                               angle: pi,
                               child: Icon(
-                                  AppinIcon.back,
+                                  MGIcon.back,
                                   size: ratio.width * 24,
-                                  color: MGcolor.base4
+                                  color: MGColor.base4
                               )
                           )
                         ]
@@ -184,7 +187,7 @@ class _SettingPageState extends State<SettingPage> {
         ),
 
         if (_loading)
-          ProgressScreen()
+          const ProgressScreen()
       ],
     );
   }
@@ -204,16 +207,16 @@ class _SettingPageState extends State<SettingPage> {
 
           late Future func;
           try {
-            if (!await new Session().clear()) {
+            if (!await Session().clear()) {
               throw Exception('\n[Error] about Session');
             }
             func = showDialog(
               context: context,
               barrierColor: Colors.black.withOpacity(0.25),
-              builder: (context) => CommentPopup(
+              builder: (ctx) => CommentPopup(
                 title: "로그아웃 되었습니다!",
-                onPressed: () =>Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => SignInPage()),
+                onPressed: () => Navigator.of(ctx).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => SignInPage()),
                     (route) => false
                 )
               )
@@ -222,9 +225,9 @@ class _SettingPageState extends State<SettingPage> {
             func = showDialog(
                 context: context,
                 barrierColor: Colors.black.withOpacity(0.25),
-                builder: (context) => CommentPopup(
+                builder: (ctx) => CommentPopup(
                   title: "[400] 서버 통신에 문제가 있습니다",
-                  onPressed: () => Navigator.pop(context)
+                  onPressed: () => Navigator.pop(ctx)
                 )
             );
           }

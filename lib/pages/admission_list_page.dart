@@ -1,18 +1,12 @@
-///
-/// 인증 홈 페이지
-/// - 홈 프레임
-/// - 페이지 이동 버튼
-/// - 카드
-///
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mata_gachon/config/server.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
 
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/admit_page.dart';
-import 'package:mata_gachon/pages/my_admission_list_page.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'admit_page.dart';
+import 'my_admission_list_page.dart';
+import '../widgets/small_widgets.dart';
 
 class AdmissionListPage extends StatefulWidget {
   const AdmissionListPage({super.key});
@@ -61,7 +55,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
-                        ImgPath.home_img5,
+                        ImgPath.home5,
                         height: ratio.width * 48,
                       ),
                     ),
@@ -72,7 +66,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       children: [
                         Text(
                             '강의실 이용 끝!',
-                            style: KR.parag2.copyWith(color: MGcolor.base3)
+                            style: KR.parag2.copyWith(color: MGColor.base3)
                         ),
                         Text(
                             '이제 인증하러 가볼까요?',
@@ -91,23 +85,23 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     /// <내 인증 확인하기>
                     ElevatedButton(
                       onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => MyAdmissionPage())),
+                          .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage())),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.tertiaryColor(),
+                          backgroundColor: MGColor.tertiaryColor(),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           fixedSize: Size(ratio.width * 159, ratio.height * 40)
                       ),
                       child: Text(
                         '내 인증 확인하기',
-                        style: KR.parag2.copyWith(color: MGcolor.primaryColor()),
+                        style: KR.parag2.copyWith(color: MGColor.primaryColor()),
                       ),
                     ),
                     /// <인증하러 가기>
                     ElevatedButton(
                       onPressed: _doAdmission,
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: MGcolor.primaryColor(),
+                          backgroundColor: MGColor.primaryColor(),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           fixedSize: Size(ratio.width * 160, ratio.height * 40)
@@ -123,7 +117,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
             ),
           ),
 
-          // 리스트
+          /// 리스트
           Padding(
               padding: EdgeInsets.only(top: ratio.height * 30),
               child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
@@ -139,29 +133,23 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                           alignment: Alignment.center,
                           child: Text(
                               '통신 속도가 너무 느립니다!',
-                              style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                              style: KR.subtitle4.copyWith(color: MGColor.base3)
                           )
                       );
                     }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return ProgressWidget();
-                    }
-                    if (snapshot.hasData) {
-                      admits = snapshot.data!;
-                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+
+                    if (snapshot.hasData) admits = snapshot.data!;
+
                     if (admits.isNotEmpty) {
-                      return Column(
-                          children: admits.map((e) {
-                        List<String> temp = e.leaderInfo.split(' ');
-                        return CustomListItem(admit: e);
-                      }).toList());
+                      return Column(children: admits.map((e) => _listItem(e)).toList());
                     } else {
                       return Container(
                           height: ratio.height * 218,
                           alignment: Alignment.bottomCenter,
                           child: Text(
                               '아직 인증이 없어요!',
-                              style: KR.subtitle4.copyWith(color: MGcolor.base3)
+                              style: KR.subtitle4.copyWith(color: MGColor.base3)
                           )
                       );
                     }
@@ -172,44 +160,79 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       ),
     );
   }
+  
+  Widget _listItem(Admit admit) {
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        barrierColor: MGColor.barrier,
+        builder: (ctx) => AdmissionPopup(admit)
+      ),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding: EdgeInsets.symmetric(
+            horizontal: ratio.width * 16, vertical: 12),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),), 
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(admit.place, style: KR.subtitle3),
+                SizedBox(height: ratio.height * 8),
+                Text(admit.date, style: KR.parag2.copyWith(color: MGColor.base3)),
+                SizedBox(height: ratio.height * 4),
+                Text(admit.time, style: KR.parag2.copyWith(color: MGColor.base3))
+              ],
+            ),
+            Container(
+              width: ratio.height * 74,
+              height: ratio.height * 74,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: MemoryImage(admit.photo),
+                  fit: BoxFit.fill
+                )
+              )
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   void _doAdmission() {
-    late int idx;
-    late String current;
-
-    idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) > 0);
-
+    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) > 0);
     if (idx != -1) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
     } else {
       if (!_isShownToast) {
+        /// show toast during 2s
         _isShownToast = true;
-        Future.delayed(Duration(seconds: 2)).then((_) => _isShownToast = false);
+        Future.delayed(const Duration(seconds: 2)).then((_) => _isShownToast = false);
 
         _fToast.showToast(
-          positionedToastBuilder: (context, widget) {
-            return Positioned(
+          positionedToastBuilder: (context, widget) => Positioned(
               bottom: kBottomNavigationBarHeight + 10,
               width: MediaQuery.of(context).size.width,
               child: widget,
-            );
-          },
+            ),
           child: Center(
             child: Container(
               padding: EdgeInsets.symmetric(
-                vertical: 6, horizontal: ratio.width * 12
-              ),
+                vertical: 6, horizontal: ratio.width * 12),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(100)
-              ),
-              child: Text(
+                borderRadius: BorderRadius.circular(100)),
+              child: const Text(
                 '인증해야 하는 이용 내역이 없습니다',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white
-                )
+                style: TextStyle(fontSize: 16, color: Colors.white)
               ),
             ),
           )

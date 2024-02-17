@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mata_gachon/pages/select_service_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/sign_in_page.dart';
-import 'package:mata_gachon/pages/on_boarding_page.dart';
+import 'pages/on_boarding_page.dart';
+import 'pages/sign_in_page.dart';
+import 'pages/select_service_page.dart';
 
 Future<void> main() async {
 
   debugPrint("called main()\n");
 
-  today = std3_format.format(DateTime.now());
+  today = stdFormat3.format(DateTime.now());
 
   debugPrint("initializing flutter binding");
 
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   debugPrint("determining initial page");
 
@@ -35,10 +35,10 @@ Future<void> main() async {
       await FCM.initialize();
       final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
-      start = SelectingServicePage();
+      start = const SelectingServicePage();
     } catch(_) {
       debugPrint('No token');
-      start = SignInPage();
+      start = const SignInPage();
     }
   }
 
@@ -73,20 +73,20 @@ class _MataGachonState extends State<MataGachon> {
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
-          scaffoldBackgroundColor: MGcolor.base9,
-          appBarTheme: AppBarTheme(
-              backgroundColor: MGcolor.base9,
+          scaffoldBackgroundColor: MGColor.base9,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: MGColor.base9,
               elevation: 0,
-              foregroundColor: MGcolor.base4,
+              foregroundColor: MGColor.base4,
               toolbarHeight: 56,
               scrolledUnderElevation: 0.0
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
-            selectedLabelStyle: KR.label3.copyWith(color: MGcolor.base3),
-            unselectedLabelStyle: KR.label3.copyWith(color: MGcolor.base1),
-            unselectedIconTheme: IconThemeData(size: 24, color: MGcolor.base4),
+            selectedLabelStyle: KR.label3.copyWith(color: MGColor.base3),
+            unselectedLabelStyle: KR.label3.copyWith(color: MGColor.base1),
+            unselectedIconTheme: const IconThemeData(size: 24, color: MGColor.base4),
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),
@@ -94,15 +94,6 @@ class _MataGachonState extends State<MataGachon> {
       ),
       builder: FToastBuilder(),
       home: widget.start,
-      // routerConfig: GoRouter(
-      //   routes: [
-      //     GoRoute(path: '/', name: 'home', builder: (context, _) => MainFrame()),
-      //     GoRoute(path: '/alarm', name: 'alarm', builder: (context, _) => Alarm()),
-      //     GoRoute(path: '/reservation', name: 'reservation', builder: (context, _) => Reservation()),
-      //     GoRoute(path: '/add_admission', name: 'add_admission', builder: (context, _) => Container()),
-      //     GoRoute(path: '/my_admission', name: 'my_admission', builder: (context, _) => MyAdmission())
-      //   ]
-      // ),
     );
   }
 }

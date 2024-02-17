@@ -1,6 +1,3 @@
-///
-/// 애니메이션 폴더
-///
 
 import 'package:flutter/material.dart';
 
@@ -11,15 +8,11 @@ Widget slideLeft2Right(
     Widget child
     ) {
   return SlideTransition(
-      child: child,
       position: animation.drive(
-          Tween(
-              begin: Offset(-1.0, 0.0),
-              end: Offset.zero
-          ).chain(
-              CurveTween(curve: Curves.ease)
-          )
-      )
+          Tween(begin: const Offset(-1.0, 0.0), end: Offset.zero)
+              .chain(CurveTween(curve: Curves.ease))
+      ),
+      child: child
   );
 }
 
@@ -30,14 +23,10 @@ Widget slideRigth2Left(
     Widget child
     ) {
   return SlideTransition(
-      child: child,
       position: animation.drive(
-          Tween(
-              begin: Offset(1.0, 0.0),
-              end: Offset.zero
-          ).chain(
-              CurveTween(curve: Curves.ease)
-          )
-      )
+          Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+              .chain(CurveTween(curve: Curves.ease))
+      ),
+      child: child
   );
 }

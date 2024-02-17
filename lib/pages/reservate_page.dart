@@ -2,21 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/text_field.dart';
 
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widgets/select_time_widgets.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import '../widgets/button.dart';
+import '../widgets/layout.dart';
+import '../widgets/select_time_widgets.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
 class ReservatePage extends StatefulWidget {
   const ReservatePage({
     Key? key,
-    // required this.service,
     this.reservate
   }) : super(key: key);
 
-  // final int service;
   final Reservate? reservate;
 
   @override
@@ -46,8 +47,8 @@ class _ReservatePageState extends State<ReservatePage> {
   String? _selectedRoom; //강의실
   String? _selectedDate; //날짜
   DateTime? _selectedEnter, _selectedEnd; // 이용 시작, 끝
-  List<String> _usersList = []; //이용자리스트
-  List<Widget> _usersWidgets = []; // └> 를 위한 위젯
+  late List<String> _usersList; //이용자리스트
+  late List<Widget> _usersWidgets; // └> 를 위한 위젯
 
   ///이용자 컨데이너 안내메세지
   String alertMessege = "대표자를 제외한 이용자의 학번과 이름을 입력해주세요!";
@@ -57,35 +58,36 @@ class _ReservatePageState extends State<ReservatePage> {
     super.initState();
 
     // init
-    this._loading = false;
-    this._isSolo = this._canTime = false;
-    this._addUserGuideline = MGcolor.primaryColor();
-    this._leaderNumber = myInfo.stuNum;
-    this._leaderName = myInfo.name;
+    _loading = false;
+    _isSolo = _canTime = false;
+    _addUserGuideline = MGColor.primaryColor();
+    _leaderNumber = myInfo.stuNum;
+    _leaderName = myInfo.name;
+    _usersList = [];
+    _usersWidgets = [];
     _initPage();
 
     // if modifing
     if (widget.reservate != null) {
       List<String> temp;
       temp = widget.reservate!.leaderInfo.split(' ');
-      this._selectedRoom = widget.reservate!.place;
-      this._selectedDate = widget.reservate!.startToDate();
-      this._selectedEnter = widget.reservate!.startTime;
-      this._selectedEnd = widget.reservate!.endTime;
+      _selectedRoom = widget.reservate!.place;
+      _selectedDate = widget.reservate!.startToDate();
+      _selectedEnter = widget.reservate!.startTime;
+      _selectedEnd = widget.reservate!.endTime;
       if (widget.reservate!.memberInfo.isNotEmpty) {
-        this._isSolo = false;
+        _isSolo = false;
         temp = widget.reservate!.memberInfo.split(' ');
         for (int i=0 ; i < temp.length ; i+=2) {
           _usersList.add('${temp[i]} ${temp[i+1]}');
         }
-        _usersWidgets = _usersList.map((e) => _MyUserBox(e)).toList();
+        _usersWidgets = _usersList.map((e) => _myUserBox(e)).toList();
       } else {
-        this._isSolo = true;
+        _isSolo = true;
       }
       // Todo: 나중에 바꾸기
-      this._purposeCtr.text = 'late change!';
-      // 위젯
-      this._canTime = true;
+      _purposeCtr.text = 'late change!';
+      _canTime = true;
     }
   }
 
@@ -117,11 +119,11 @@ class _ReservatePageState extends State<ReservatePage> {
                     titleSpacing: 0,
                     leading: IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(AppinIcon.back),
+                      icon: const Icon(MGIcon.back),
                       iconSize: 24,
                     ),
                     title: Text("강의실 예약하기",
-                        style: KR.subtitle1.copyWith(color: MGcolor.base1))),
+                        style: KR.subtitle1.copyWith(color: MGColor.base1))),
                 body: CustomScrollView(
                   slivers: [
                     SliverList.list(children: _firstWidgets),
@@ -163,27 +165,28 @@ class _ReservatePageState extends State<ReservatePage> {
                                   height: 32,
                                   controller: _professerCtr,
                                   hint: 'OOO 교수님',
-                                  format: [_ProfesserFormat()],
+                                  format: [ProfesserFormat()],
                                 )
                               ]
                             )
                           ));
-                        } else temp.add(Container(
+                        } else {
+                          temp.add(Container(
                             margin: EdgeInsets.fromLTRB(
                                 ratio.width * 16,
                                 0,
                                 ratio.width * 16,
                                 ratio.height * 12
                             ),
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12)),
                             child: CustomTimePicker(
                               room: _selectedRoom,
                               date: _selectedDate!,
-                              begin: _selectedEnter != null ? _selectedEnter!.hour : null,
-                              end: _selectedEnd != null ? _selectedEnd!.hour : null,
+                              begin: _selectedEnter?.hour,
+                              end: _selectedEnd?.hour,
                               setStart: (index) {
                                 _selectedEnter = DateTime(
                                     _selectedEnter!.year,
@@ -201,7 +204,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                 );
                               },
                             )
-                        ));
+                          ));
+                        }
 
                         /// 나머지 모두
                         temp.addAll([
@@ -215,7 +219,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                 ratio.width * 16,
                                 ratio.height * 12
                             ),
-                            content: SizedBox.shrink(),
+                            content: const SizedBox.shrink(),
                             additionalContent: [
                               Positioned(
                                   left: 80 * ratio.width,
@@ -225,13 +229,12 @@ class _ReservatePageState extends State<ReservatePage> {
                                     children: [
                                       Text(
                                         "$_leaderNumber",
-                                        style:
-                                        KR.parag2.copyWith(color: MGcolor.base3),
+                                        style: KR.parag2.copyWith(color: MGColor.base3),
                                       ),
                                       SizedBox(width: 4 * ratio.width),
                                       Text(
                                         _leaderName,
-                                        style: KR.parag2.copyWith(color: MGcolor.base3),
+                                        style: KR.parag2.copyWith(color: MGColor.base3),
                                       ),
                                     ],
                                   )
@@ -264,7 +267,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                     Positioned(
                                       left: 16 * ratio.width,
                                       top: 16 * ratio.height,
-                                      child: Text('이용자', style: KR.parag1.copyWith(color: MGcolor.base1)),
+                                      child: Text('이용자', style: KR.parag1.copyWith(color: MGColor.base1)),
                                     ),
                                     Positioned(
                                       left: 80 * ratio.width,
@@ -325,16 +328,16 @@ class _ReservatePageState extends State<ReservatePage> {
                                                       width: 32 * ratio.width,
                                                       height: 32 * ratio.width,
                                                       decoration: BoxDecoration(
-                                                        color: _isSolo ? MGcolor.base6
-                                                            : MGcolor.primaryColor(),
+                                                        color: _isSolo ? MGColor.base6
+                                                            : MGColor.primaryColor(),
                                                         borderRadius:
                                                         BorderRadius.circular(12),
                                                       ),
                                                       child: Center(
                                                           child: Icon(
-                                                            AppinIcon.plus,
+                                                            MGIcon.plus,
                                                             size: 16,
-                                                            color: _isSolo ? MGcolor.base4
+                                                            color: _isSolo ? MGColor.base4
                                                                 : Colors.white,
                                                           )
                                                       )
@@ -352,7 +355,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                             alertMessege,
                                             style: KR.label2.copyWith(
                                                 color: _isSolo
-                                                    ? MGcolor.base4
+                                                    ? MGColor.base4
                                                     : _addUserGuideline
                                             )
                                         )
@@ -396,17 +399,17 @@ class _ReservatePageState extends State<ReservatePage> {
                                                     value: _isSolo,
                                                     shape: CircleBorder(),
                                                     side: BorderSide(
-                                                        color: MGcolor.base3,
+                                                        color: MGColor.base3,
                                                         width: 1.6
                                                     ),
-                                                    activeColor: MGcolor.primaryColor(),
+                                                    activeColor: MGColor.primaryColor(),
                                                     onChanged: (bool? value) {
                                                       setState(() => _isSolo = value!);
                                                     }),
                                               ),
                                               SizedBox(width: 6 * ratio.width),
                                               Text('추가 이용자가 없습니다.',
-                                                  style: KR.label2.copyWith(color: MGcolor.base3)),
+                                                  style: KR.label2.copyWith(color: MGColor.base3)),
                                             ],
                                           ),
                                         ),
@@ -419,60 +422,10 @@ class _ReservatePageState extends State<ReservatePage> {
                           ),
 
                           /// 사용 목적
-                          Container(
-                            width: ratio.width * 358,
-                            height: 150,
-                            margin: EdgeInsets.fromLTRB(
-                                ratio.width * 16,
-                                0,
-                                ratio.width * 16,
-                                ratio.height * 12
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: ratio.width * 16,
-                                vertical: ratio.height * 16
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            alignment: Alignment.center,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                /// Title
-                                Text('사용 목적', style: KR.subtitle3.copyWith(color: Colors.black)),
-
-                                SizedBox(height: ratio.height * 10),
-
-                                /// TextField
-                                Expanded(child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 10
-                                    ),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(color: MGcolor.primaryColor())
-                                    ),
-                                    alignment: Alignment.topLeft,
-                                    child: TextField(
-                                      controller: _purposeCtr,
-                                      maxLength: 70,
-                                      textAlign: TextAlign.start,
-                                      maxLines: 2,
-                                      style: KR.parag2,
-                                      decoration: InputDecoration(
-                                          hintText: '회의실을 예약하는 목적을 입력해주세요.',
-                                          counterText: '',
-                                          contentPadding: EdgeInsets.zero,
-                                          border: InputBorder.none,
-                                          hintStyle: KR.parag2.copyWith(color: MGcolor.base5)
-                                      ),
-                                    )
-                                ))
-                              ],
-                            ),
+                          LargeTextField(
+                            title: '사용 목적',
+                            hint: '이용 목적을 간단하게 기술해주세요',
+                            controller: _professerCtr
                           )
                         ]);
 
@@ -485,30 +438,17 @@ class _ReservatePageState extends State<ReservatePage> {
                     SliverFillRemaining(
                         hasScrollBody: false,
                         child: Column(children: [
-                          Spacer(),
+                          const Spacer(),
 
                           ///예약하기 버튼
                           Padding(
                             padding: EdgeInsets.only(bottom: ratio.height * 10),
-                            child: ElevatedButton(
-                                onPressed: _canTime ? _reservate : null,
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: MGcolor.primaryColor(),
-                                    disabledBackgroundColor: MGcolor.base5,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12)),
-                                    fixedSize: Size(ratio.width * 358, ratio.height * 48)
-                                ),
-                                child: Text(
-                                  "예약하기",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16 * ratio.height,
-                                    fontFamily: 'Noto Sans KR',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                )
-                            ),
+                            child: CustomButtons.bottomButton(
+                              '예약하기',
+                              MGColor.primaryColor(),
+                              () => _canTime ? _reservate : null,
+                              MGColor.base6
+                            )
                           ),
                         ])
                     )
@@ -520,13 +460,13 @@ class _ReservatePageState extends State<ReservatePage> {
 
           /// 로딩 중
           if (_loading)
-            ProgressScreen()
+            const ProgressScreen()
         ],
       ),
     );
   }
 
-  ///
+  /// 맨 처음 보이는 위젯
   void _initPage() {
     /// 장소 선택란
     if (service == ServiceType.lectureRoom) {
@@ -539,12 +479,13 @@ class _ReservatePageState extends State<ReservatePage> {
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
             fontSize: 11,
-            color: MGcolor.primaryColor(),
+            color: MGColor.primaryColor(),
             fontFamily: 'Ko'
           ),
         ),
       ));
-    } else _firstWidgets.add(CustomContainer(
+    } else {
+      _firstWidgets.add(CustomContainer(
         title: service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
         height: 52,
         margin: EdgeInsets.fromLTRB(
@@ -559,7 +500,7 @@ class _ReservatePageState extends State<ReservatePage> {
                 hint: "선택",
                 items: _places,
                 onChanged: (value) {
-                  this._selectedRoom = value;
+                  _selectedRoom = value;
                   if (_selectedRoom != null && _selectedDate != null) {
                     setState(() {
                       _selectedEnter = _selectedEnd = null;
@@ -573,7 +514,8 @@ class _ReservatePageState extends State<ReservatePage> {
               )
             ]
         )
-    ));
+      ));
+    }
 
     /// 날짜 선택란
     if (service == ServiceType.computer) {
@@ -582,23 +524,23 @@ class _ReservatePageState extends State<ReservatePage> {
         case 1:
           break;
         case 2:
-          _selectedEnter!.subtract(Duration(days: 1));
+          _selectedEnter!.subtract(const Duration(days: 1));
         case 3:
-          _selectedEnter!.subtract(Duration(days: 1));
+          _selectedEnter!.subtract(const Duration(days: 1));
         case 4:
-          _selectedEnter!.subtract(Duration(days: 1));
+          _selectedEnter!.subtract(const Duration(days: 1));
         case 5:
-          _selectedEnter!.subtract(Duration(days: 1));
+          _selectedEnter!.subtract(const Duration(days: 1));
           break;
         case 6:
-          _selectedEnter!.add(Duration(days: 1));
+          _selectedEnter!.add(const Duration(days: 1));
         case 7:
-          _selectedEnter!.add(Duration(days: 1));
+          _selectedEnter!.add(const Duration(days: 1));
           break;
       }
-      _selectedEnd = _selectedEnter!.add(Duration(days: 4));
-      debugPrint('${std1_format.format(_selectedEnter!)} ~ ${std1_format.format(_selectedEnd!)}');
-      _selectedDate = std3_format.format(_selectedEnter!);
+      _selectedEnd = _selectedEnter!.add(const Duration(days: 4));
+      debugPrint('${stdFormat1.format(_selectedEnter!)} ~ ${stdFormat1.format(_selectedEnd!)}');
+      _selectedDate = stdFormat3.format(_selectedEnter!);
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
               ratio.width * 16,
@@ -620,31 +562,32 @@ class _ReservatePageState extends State<ReservatePage> {
             rowWidth: 38 * ratio.width,
             cellStyle: CellStyle(
               fieldTextStyle:
-              EN.label1.copyWith(color: MGcolor.base3),
+              EN.label1.copyWith(color: MGColor.base3),
               normalDateTextStyle:
-              EN.parag1.copyWith(color: MGcolor.base1),
+              EN.parag1.copyWith(color: MGColor.base1),
               normalDateBoxDecoration: BoxDecoration(
-                  color: MGcolor.base10,
+                  color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
               selectedDateTextStyle:
               EN.parag1.copyWith(color: Colors.white),
               selelctedDateBoxDecoration: BoxDecoration(
-                  color: MGcolor.primaryColor(),
+                  color: MGColor.primaryColor(),
                   borderRadius: BorderRadius.circular(4)),
               todayTextStyle:
-              EN.parag1.copyWith(color: MGcolor.primaryColor()),
+              EN.parag1.copyWith(color: MGColor.primaryColor()),
               todayBoxDecoration: BoxDecoration(
-                  color: MGcolor.base10,
+                  color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
               rangeOutDateTextStyle:
-              EN.parag1.copyWith(color: MGcolor.base6),
+              EN.parag1.copyWith(color: MGColor.base6),
               rangeOutDateBoxDecoration: BoxDecoration(
-                  color: MGcolor.base10,
+                  color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
             ),
           )
       ));
-    } else _firstWidgets.add(Container(
+    } else {
+      _firstWidgets.add(Container(
         margin: EdgeInsets.fromLTRB(
             ratio.width * 16,
             0,
@@ -661,35 +604,35 @@ class _ReservatePageState extends State<ReservatePage> {
         child: CustomDayCalender(
           init: _selectedDate,
           first: DateTime.now(),
-          last: DateTime.now().add(Duration(days: 13)),
+          last: DateTime.now().add(const Duration(days: 13)),
           rowHeight: 32,
           rowWidth: 38 * ratio.width,
           cellStyle: CellStyle(
             fieldTextStyle:
-            EN.label1.copyWith(color: MGcolor.base3),
+            EN.label1.copyWith(color: MGColor.base3),
             normalDateTextStyle:
-            EN.parag1.copyWith(color: MGcolor.base1),
+            EN.parag1.copyWith(color: MGColor.base1),
             normalDateBoxDecoration: BoxDecoration(
-                color: MGcolor.base10,
+                color: MGColor.base10,
                 borderRadius: BorderRadius.circular(4)),
             selectedDateTextStyle:
             EN.parag1.copyWith(color: Colors.white),
             selelctedDateBoxDecoration: BoxDecoration(
-                color: MGcolor.primaryColor(),
+                color: MGColor.primaryColor(),
                 borderRadius: BorderRadius.circular(4)),
             todayTextStyle:
-            EN.parag1.copyWith(color: MGcolor.primaryColor()),
+            EN.parag1.copyWith(color: MGColor.primaryColor()),
             todayBoxDecoration: BoxDecoration(
-                color: MGcolor.base10,
+                color: MGColor.base10,
                 borderRadius: BorderRadius.circular(4)),
             rangeOutDateTextStyle:
-            EN.parag1.copyWith(color: MGcolor.base6),
+            EN.parag1.copyWith(color: MGColor.base6),
             rangeOutDateBoxDecoration: BoxDecoration(
-                color: MGcolor.base10,
+                color: MGColor.base10,
                 borderRadius: BorderRadius.circular(4)),
           ),
           onSelected: (value) {
-            _selectedDate = std3_format.format(value);
+            _selectedDate = stdFormat3.format(value);
             if ((_selectedRoom != null || service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
                 if (widget.reservate != null
@@ -708,7 +651,8 @@ class _ReservatePageState extends State<ReservatePage> {
             }
           },
         )
-    ));
+      ));
+    }
   }
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
@@ -731,57 +675,53 @@ class _ReservatePageState extends State<ReservatePage> {
           FocusScope.of(context).unfocus();
         }
         alertMessege = "정상적으로 추가됐습니다";
-        _addUserGuideline = MGcolor.primaryColor();
+        _addUserGuideline = MGColor.primaryColor();
         _usersList.add("${_stuNumCtr.text} ${_nameCtr.text}");
-        _usersWidgets.add(_MyUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
+        _usersWidgets.add(_myUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
         _stuNumCtr.clear();
         _nameCtr.clear();
       } else {
-        _addUserGuideline = MGcolor.systemError;
+        _addUserGuideline = MGColor.systemError;
       }
     });
   }
 
   /// 추가 이용자를 나타내는 위젯
-  Widget _MyUserBox(String memberInfo) {
+  Widget _myUserBox(String memberInfo) {
     return Container(
       key: ValueKey<String>(memberInfo),
       width: 133 * ratio.width,
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
+      padding: EdgeInsets.only(
+        left: ratio.width * 10,
+        right: ratio.width * 5
+      ),
       decoration: ShapeDecoration(
-        color: MGcolor.secondaryColor(),
+        color: MGColor.secondaryColor(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      child: Stack(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned(
-            top: 4 * ratio.height,
-            left: 10 * ratio.width,
-            width: 93 * ratio.width,
+          Expanded(
             child: Text(
               memberInfo,
-              overflow: TextOverflow.ellipsis,
               maxLines: 1,
               softWrap: false,
+              overflow: TextOverflow.ellipsis,
               style: KR.label2.copyWith(color: Colors.white)
             ),
           ),
-          Positioned(
-            top: 3 * ratio.height,
-            right: 5 * ratio.width,
-            child: GestureDetector(
-                onTap: () {
-                  setState(() => _usersWidgets
-                      .removeWhere((widget) => widget.key == Key(memberInfo)));
-                },
-                child: Icon(
-                  AppinIcon.cross,
-                  size: 20,
-                  color: Colors.white,
-                )),
+          GestureDetector(
+            onTap: () {
+              setState(() => _usersWidgets
+                  .removeWhere((widget) => widget.key == Key(memberInfo)));
+            },
+            child: const Icon(MGIcon.cross, size: 20, color: Colors.white)
           ),
         ],
       ),
@@ -834,8 +774,8 @@ class _ReservatePageState extends State<ReservatePage> {
       debugPrint("""
       [reservation Info]
         . room: $_selectedRoom
-        . startTime: ${std2_format.format(_selectedEnter!)}
-        . endTime: ${std2_format.format(_selectedEnd!)}
+        . startTime: ${stdFormat2.format(_selectedEnter!)}
+        . endTime: ${stdFormat2.format(_selectedEnd!)}
         . leader: $_leaderNumber $_leaderName
         . member: $member
         . purpose: ${_purposeCtr.text}""");
@@ -845,8 +785,8 @@ class _ReservatePageState extends State<ReservatePage> {
             ? await RestAPI.patchReservation(
             reservationId: widget.reservate!.reservationId,
             place: _selectedRoom!,
-            startTime: std2_format.format(_selectedEnter!),
-            endTime: std2_format.format(_selectedEnd!),
+            startTime: stdFormat2.format(_selectedEnter!),
+            endTime: stdFormat2.format(_selectedEnd!),
             leader: widget.reservate!.leaderInfo,
             member: member,
             purpose: _purposeCtr.text,
@@ -854,8 +794,8 @@ class _ReservatePageState extends State<ReservatePage> {
         )
             : await RestAPI.addReservation(
             place: _selectedRoom!,
-            startTime: std2_format.format(_selectedEnter!),
-            endTime: std2_format.format(_selectedEnd!),
+            startTime: stdFormat2.format(_selectedEnter!),
+            endTime: stdFormat2.format(_selectedEnd!),
             member: member,
             purpose: _purposeCtr.text,
             professor: _professerCtr.text
@@ -884,7 +824,7 @@ class _ReservatePageState extends State<ReservatePage> {
       _loading = false;
       showDialog(
           context: context,
-          barrierColor: MGcolor.barrier,
+          barrierColor: MGColor.barrier,
           builder: (context) => CommentPopup(
               title: title, onPressed: onPressed)
       ).then((_) {
@@ -893,19 +833,5 @@ class _ReservatePageState extends State<ReservatePage> {
         }
       });
     });
-  }
-}
-
-class _ProfesserFormat extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.selection.baseOffset == 0) {
-      return TextEditingValue();
-    }
-    String temp = newValue.text.split(' ')[0];
-    return newValue.copyWith(
-      text: '$temp 교수님',
-      selection: TextSelection.collapsed(offset: temp.length)
-    );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/pages/my_admission_list_page.dart';
-import 'package:mata_gachon/pages/setting_page.dart';
-import 'package:mata_gachon/pages/term_page.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+
+import 'term_page.dart';
+import 'setting_page.dart';
+import 'my_admission_list_page.dart';
+import '../widgets/button.dart';
+import '../widgets/layout.dart';
+import '../widgets/popup_widgets.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({
@@ -20,7 +22,7 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.fromLTRB(
           ratio.width * 16,
           ratio.height * 31,
@@ -31,7 +33,7 @@ class MyPage extends StatelessWidget {
           children: [
             /// 프로필
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Material(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -62,17 +64,23 @@ class MyPage extends StatelessWidget {
                           children: [
                             Text(myInfo.name, style: KR.title3),
                             SizedBox(height: ratio.height * 20),
-                            Text('?????전공', style: KR.parag2.copyWith(color: MGcolor.base3)),
+                            Text(
+                              'AI소프트웨어학과',
+                              style: KR.parag2.copyWith(
+                                color: MGColor.base3,
+                                letterSpacing: 0.32
+                              )
+                            ),
                             Text(
                                 myInfo.stuNum.toString(),
-                                style: KR.parag2.copyWith(color: MGcolor.base3)
+                                style: KR.parag2.copyWith(color: MGColor.base3)
                             ),
                             SizedBox(height: ratio.height * 20),
                             Row(
                                 children: [
                                   Text(
                                       myInfo.ratingName,
-                                      style: KR.parag1.copyWith(color: MGcolor.base3)
+                                      style: KR.parag1.copyWith(color: MGColor.base3)
                                   ),
                                   SizedBox(width: ratio.width * 11),
                                   InkWell(
@@ -86,7 +94,7 @@ class MyPage extends StatelessWidget {
                                           horizontal: ratio.width * 11
                                       ),
                                       decoration: BoxDecoration(
-                                          color: MGcolor.base4.withOpacity(0.5),
+                                          color: MGColor.base4.withOpacity(0.5),
                                           borderRadius: BorderRadius.circular(100)
                                       ),
                                       child: Text(
@@ -120,7 +128,7 @@ class MyPage extends StatelessWidget {
                       SizedBox(width: ratio.width * 16),
                       Text(
                           '예약 정보 확인',
-                          style: KR.subtitle4.copyWith(color: MGcolor.base2)
+                          style: KR.subtitle4.copyWith(color: MGColor.base2)
                       )
                     ],
                   )
@@ -140,7 +148,7 @@ class MyPage extends StatelessWidget {
                     SizedBox(width: ratio.width * 16),
                     Text(
                         '내 인증 확인',
-                        style: KR.subtitle4.copyWith(color: MGcolor.base2)
+                        style: KR.subtitle4.copyWith(color: MGColor.base2)
                     )
                   ],
                 ),
@@ -159,12 +167,12 @@ class MyPage extends StatelessWidget {
                     Icon(
                         Icons.photo,
                         size: ratio.width * 24,
-                        color: MGcolor.base5
+                        color: MGColor.base5
                     ),
                     SizedBox(width: ratio.width * 16),
                     Text(
                         '내 작품 확인',
-                        style: KR.subtitle4.copyWith(color: MGcolor.base5)
+                        style: KR.subtitle4.copyWith(color: MGColor.base5)
                     )
                   ],
                 ),
@@ -184,7 +192,7 @@ class MyPage extends StatelessWidget {
                       SizedBox(width: ratio.width * 16),
                       Text(
                           '설정',
-                          style: KR.subtitle4.copyWith(color: MGcolor.base2)
+                          style: KR.subtitle4.copyWith(color: MGColor.base2)
                       )
                     ],
                   )
@@ -203,11 +211,11 @@ class MyPage extends StatelessWidget {
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(Icons.phonelink_setup, size: ratio.width * 24, color: MGcolor.primaryColor()),
+                          Icon(Icons.phonelink_setup, size: ratio.width * 24, color: MGColor.primaryColor()),
                           SizedBox(width: ratio.width * 16),
                           Text(
                               '관리 페이지',
-                              style: KR.subtitle4.copyWith(color: MGcolor.primaryColor())
+                              style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
                           )
                         ]
                     )
@@ -225,7 +233,7 @@ class MyPage extends StatelessWidget {
                 ),
                 child: Text(
                     '이용약관',
-                    style: KR.parag2.copyWith(color: MGcolor.base3)
+                    style: KR.parag2.copyWith(color: MGColor.base3)
                 ),
               ),
               TileButton(
@@ -238,7 +246,7 @@ class MyPage extends StatelessWidget {
                   ),
                   child: Text(
                       '개인정보 수집 및 이용',
-                      style: KR.parag2.copyWith(color: MGcolor.base3)
+                      style: KR.parag2.copyWith(color: MGColor.base3)
                   )
               ),
               TileButton(
@@ -250,10 +258,10 @@ class MyPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('버전', style: KR.parag2.copyWith(color: MGcolor.base3)),
+                    Text('버전', style: KR.parag2.copyWith(color: MGColor.base3)),
                     Text(
                         '1.0.0',
-                        style: EN.parag2.copyWith(color: MGcolor.base3)
+                        style: EN.parag2.copyWith(color: MGColor.base3)
                     ),
                   ],
                 ),
@@ -268,18 +276,18 @@ class MyPage extends StatelessWidget {
     showDialog(
         context: context,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => GradePopup()
+        builder: (context) => const GradePopup()
     );
   }
 
   void _floatMyAdmissionPage(BuildContext context) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MyAdmissionPage()));
+        MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
   }
 
   void _floatSettingPage(BuildContext context) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => SettingPage()));
+        MaterialPageRoute(builder: (context) => const SettingPage()));
   }
 
   void _floatTermPage(BuildContext context, Term term) {

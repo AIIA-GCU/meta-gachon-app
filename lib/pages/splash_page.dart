@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
-import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/pages/on_boarding_page.dart';
 
 class Splash extends StatefulWidget {
+  const Splash({super.key});
+
   @override
   _SplashState createState() => _SplashState();
 }
@@ -16,7 +17,7 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     //3초 후에 다음 화면으로 이동
-    Timer(Duration(milliseconds: 1000), () {
+    Timer(const Duration(milliseconds: 1000), () {
      Navigator.push(
        context, MaterialPageRoute(builder:(context)=>OnBoarding())
       );
@@ -42,20 +43,20 @@ class _SplashState extends State<Splash> {
           Positioned(
             left: logoX,
             top: logoY,
-            child: Icon(MGLogo.logo, color: MGcolor.primaryColor(), size: 120),
+            child: Icon(MGLogo.logo, color: MGColor.primaryColor(), size: 120),
           ),
           Positioned(
             left: logoX - 45,
             top: logoY + 160,
-            child: Icon(MGLogo.logo_typo_only, color: MGcolor.primaryColor(), size: 29),
+            child: Icon(MGLogo.logoTypoOnly, color: MGColor.primaryColor(), size: 29),
           ),
           Positioned(
             left: logoX + 44,
             top: logoY + 330,
-            child: Text(
+            child: const Text(
               'ver. 1.1.0',
               style: TextStyle(
-                color: MGcolor.base3,
+                color: MGColor.base3,
                 fontSize: 14,
               ),
             ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 
 class CustomDayCalender extends StatefulWidget {
   const CustomDayCalender({
@@ -42,42 +41,45 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
   }
 
   bool isSameDate(DateTime a, DateTime b) {
-    if (a.month == b.month && a.day == b.day)
+    if (a.month == b.month && a.day == b.day) {
       return true;
-    else return false;
+    } else {
+      return false;
+    }
   }
 
   bool cmp(DateTime d) {
     if (!d.isBefore(DateTime(widget.first.year, widget.first.month, widget.first.day))
-        && !d.isAfter(DateTime(widget.last.year, widget.last.month, widget.last.day)))
+        && !d.isAfter(DateTime(widget.last.year, widget.last.month, widget.last.day))) {
       return true;
-    else return false;
+    } else {
+      return false;
+    }
   }
 
   @override
   void initState() {
     super.initState();
     if (widget.init != null) {
-      selectedDay = std3_format.parse(widget.init!);
+      selectedDay = stdFormat3.parse(widget.init!);
     }
 
     rangeFirst = DateTime(widget.first.year, widget.first.month, widget.first.day);
     rangeLast = DateTime(widget.last.year, widget.last.month, widget.last.day);
 
-    while (rangeFirst.weekday != DateTime.sunday)
-      rangeFirst = rangeFirst.subtract(Duration(days: 1));
-    while (rangeLast.weekday != DateTime.saturday)
-      rangeLast = rangeLast.add(Duration(days: 1));
+    while (rangeFirst.weekday != DateTime.sunday) {
+      rangeFirst = rangeFirst.subtract(const Duration(days: 1));
+    }
+    while (rangeLast.weekday != DateTime.saturday) {
+      rangeLast = rangeLast.add(const Duration(days: 1));
+    }
 
     final DateFormat format = DateFormat.MMMM();
-    if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month)
+    if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month) {
       title = "${format.format(rangeFirst)} ~ ${format.format(rangeLast)}";
-    else title = "${format.format(rangeFirst)}";
-
-    // print(widget.first);
-    // print(widget.last);
-    // print(rangeFirst);
-    // print(rangeLast);
+    } else {
+      title = format.format(rangeFirst);
+    }
   }
 
   @override
@@ -86,7 +88,7 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: EN.parag1.copyWith(color: MGcolor.base1)),
+          Text(title, style: EN.parag1.copyWith(color: MGColor.base1)),
           SizedBox(height: 10 * ratio.height),
           Table(
             children: <TableRow>[
@@ -244,22 +246,26 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
   late DateTime rangeLast;
 
   bool isSameDate(DateTime a, DateTime b) {
-    if (a.month == b.month && a.day == b.day)
+    if (a.month == b.month && a.day == b.day) {
       return true;
-    else return false;
+    } else {
+      return false;
+    }
   }
 
   @override
   void initState() {
     super.initState();
 
-    rangeFirst = widget.first.subtract(Duration(days: 8));
-    rangeLast = widget.last.add(Duration(days: 8));
+    rangeFirst = widget.first.subtract(const Duration(days: 8));
+    rangeLast = widget.last.add(const Duration(days: 8));
 
     final DateFormat format = DateFormat.MMMM();
-    if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month)
+    if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month) {
       title = "${format.format(rangeFirst)} ~ ${format.format(rangeLast)}";
-    else title = "${format.format(rangeFirst)}";
+    } else {
+      title = format.format(rangeFirst);
+    }
   }
 
   @override
@@ -268,7 +274,7 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: EN.parag1.copyWith(color: MGcolor.base1)),
+            Text(title, style: EN.parag1.copyWith(color: MGColor.base1)),
             SizedBox(height: 10 * ratio.height),
             Table(
               children: <TableRow>[
@@ -419,10 +425,10 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   @override
   void initState() {
     super.initState();
-    this._reset = true;
-    this._date = widget.date;
-    this._begin = widget.begin;
-    this._end = widget.end;
+    _reset = true;
+    _date = widget.date;
+    _begin = widget.begin;
+    _end = widget.end;
     if (_begin != null && _end != null) {
       _end = _end! - 1;
       debugPrint("start: $_begin | end: ${_end!+1}");
@@ -434,8 +440,8 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     if (_date != widget.date) {
       _date = widget.date;
       _reset = true;
-      this._begin = widget.begin;
-      this._end = widget.end;
+      _begin = widget.begin;
+      _end = widget.end;
       if (_begin != null && _end != null) {
         _end = _end! - 1;
         debugPrint("start: $_begin | end: ${_end!+1}");
@@ -469,9 +475,9 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
           }
         } else {
           beginStr = Text('00:00',
-              style: EN.subtitle2.copyWith(color: MGcolor.base5));
+              style: EN.subtitle2.copyWith(color: MGColor.base5));
           endStr = Text('00:00',
-              style: EN.subtitle2.copyWith(color: MGcolor.base5));
+              style: EN.subtitle2.copyWith(color: MGColor.base5));
         }
 
         return SizedBox(
@@ -483,10 +489,10 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text("예약 시간", style: KR.parag1),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
-                    style: KR.label2.copyWith(color: MGcolor.primaryColor())
+                    style: KR.label2.copyWith(color: MGColor.primaryColor())
                   )
                 ],
               ),
@@ -506,36 +512,34 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                           decoration: BoxDecoration(
-                              color: MGcolor.base9,
+                              color: MGColor.base9,
                               borderRadius: BorderRadius.circular(4)
                           ),
                           child: Row(children: List.generate(24, (index) {
                             Color? color;
                             if (!_availables[index]) {
-                              color = MGcolor.base6;
+                              color = MGColor.base6;
                             }
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
-                                color = MGcolor.primaryColor();
+                                color = MGColor.primaryColor();
                               } else if (index == _begin!+1) {
-                                color = MGcolor.primaryColor().withOpacity(0.2);
+                                color = MGColor.primaryColor().withOpacity(0.2);
                               } else if (index == _begin!+2 && _availables[index]) {
-                                color = MGcolor.primaryColor().withOpacity(0.2);
+                                color = MGColor.primaryColor().withOpacity(0.2);
                               }
                             }
-                            if (color == null) {
-                              color = Colors.white;
-                            }
+                            color ??= Colors.white;
 
                             return GestureDetector(
-                              onTap: color == MGcolor.base6
+                              onTap: color == MGColor.base6
                                   ? null : () => _onTap(index),
                               child: Container(
                                   width: 24,
                                   height: 28,
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
+                                  margin: const EdgeInsets.symmetric(horizontal: 3),
                                   decoration: BoxDecoration(
                                       color: color,
                                       borderRadius: BorderRadius.circular(3)
@@ -586,13 +590,13 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.primaryColor())
+                              border: Border.all(color: MGColor.primaryColor())
                           ),
                           child: beginStr
                       ),
                       SizedBox(
                           width: 22 * ratio.width,
-                          child: Center(child: Text("~"))
+                          child: const Center(child: Text("~"))
                       ),
                       Container(
                           width: ratio.width * 120,
@@ -601,7 +605,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGcolor.primaryColor())
+                              border: Border.all(color: MGColor.primaryColor())
                           ),
                           child: endStr
                       ),
@@ -648,11 +652,13 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
             _availables[i] = true;
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     } else {
       _availables = List.generate(24, (_) => true);
       final current = DateTime.now();
-      if (widget.date == std3_format.format(current)) {
+      if (widget.date == stdFormat3.format(current)) {
         for (int i=0 ; i <= current.hour ; i++) {
           _availables[i] = false;
         }

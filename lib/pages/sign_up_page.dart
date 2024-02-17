@@ -3,12 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/text_field.dart';
 
-import 'package:mata_gachon/config/animation.dart';
-import 'package:mata_gachon/config/server.dart';
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import '../widgets/button.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
 /// 회원가입 프로세스를 위한 프레임
 class SignUpFrame extends StatefulWidget {
@@ -35,13 +36,13 @@ class _SignUpFrameState extends State<SignUpFrame> {
     _index = 0;
     _canNext = _loading = false;
     _items = [
-      AgreePge(allowToMovePage: (valid)
+      _AgreePge(allowToMovePage: (valid)
       => setState(() => _canNext = valid)),
-      EnterNamePage(
+      _EnterNamePage(
         nameEditCtr: _nameEditCtr,
         allowToMovePage: (valid) => setState(() => _canNext = valid)
       ),
-      EnterIdPwPage(
+      _EnterIdPwPage(
         idEditCtr: _idEditCtr,
         pwEditCtr: _pwEditCtr,
         allowToMovePage: (valid) {
@@ -86,9 +87,9 @@ class _SignUpFrameState extends State<SignUpFrame> {
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(
-                      AppinIcon.back,
+                      MGIcon.back,
                       size: ratio.width * 24,
-                      color: MGcolor.base4
+                      color: MGColor.base4
                   ),
                 )
               )
@@ -101,7 +102,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
                   key: _formKey,
                   child: Expanded(child: PageView(
                     controller: _pageCtr,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: _items
                   )),
                 ),
@@ -112,23 +113,12 @@ class _SignUpFrameState extends State<SignUpFrame> {
                     top: ratio.height * 10,
                     bottom: ratio.height * 50
                   ),
-                  child: ElevatedButton(
-                    onPressed: _canNext ? _moveToPage : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.brand1Primary,
-                      disabledBackgroundColor: MGcolor.base6,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      minimumSize: Size(ratio.width * 358, 48),
-                    ),
-                    child: Text(
-                      '다음 단계',
-                      style: EN.subtitle2.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  child: CustomButtons.bottomButton(
+                    '다음 단계',
+                    MGColor.brand1Primary,
+                    () => _canNext ? _moveToPage() : null,
+                    MGColor.base6
+                  )
                 )
               ]
             )
@@ -137,7 +127,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
 
         ///
         if (_loading)
-          ProgressScreen()
+          const ProgressScreen()
       ],
     );
   }
@@ -148,7 +138,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
       setState(() {
         _pageCtr.animateToPage(
             ++_index,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.ease
         );
         _canNext = false;
@@ -177,7 +167,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
               PageRouteBuilder(
                   fullscreenDialog: false,
                   transitionsBuilder: slideRigth2Left,
-                  pageBuilder: (context, anime, secondAnime) => FirstCompleteSignUpPage()
+                  pageBuilder: (context, anime, secondAnime) => const _FirstCompleteSignUpPage()
               )
           );
         });
@@ -202,18 +192,15 @@ class _SignUpFrameState extends State<SignUpFrame> {
 }
 
 /// 약관 & 개인정보 수집 동의 페이지
-class AgreePge extends StatefulWidget {
-  const AgreePge({
-    super.key,
-    required this.allowToMovePage
-  });
+class _AgreePge extends StatefulWidget {
+  const _AgreePge({required this.allowToMovePage});
 
   final Function(bool) allowToMovePage;
 
   @override
-  State<AgreePge> createState() => _AgreePgeState();
+  State<_AgreePge> createState() => _AgreePgeState();
 }
-class _AgreePgeState extends State<AgreePge> {
+class _AgreePgeState extends State<_AgreePge> {
   late List<bool> _list;
 
   @override
@@ -251,9 +238,11 @@ class _AgreePgeState extends State<AgreePge> {
                 /// 이용약관
                 TileButton(
                   onTap: () {
-                    if (_list[0])
+                    if (_list[0]) {
                       setState(() => widget.allowToMovePage(_list[0] = false));
-                    else _showTerms(Term.usingService);
+                    } else {
+                      _showTerms(Term.usingService);
+                    }
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -261,16 +250,16 @@ class _AgreePgeState extends State<AgreePge> {
                     children: [
                       Checkbox(
                         value: _list[0],
-                        activeColor: MGcolor.brand1Primary,
+                        activeColor: MGColor.brand1Primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
-                          side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                          side: const BorderSide(width: 1.6, color: MGColor.base6)),
                         onChanged: (val) {}
                       ),
                       Expanded(child: Text('이용약관 동의', style: KR.subtitle2)),
                       Transform.rotate(
                         angle: pi,
-                        child: Icon(AppinIcon.back, size: 24),
+                        child: const Icon(MGIcon.back, size: 24),
                       )
                     ]
                   )
@@ -279,8 +268,11 @@ class _AgreePgeState extends State<AgreePge> {
                 /// 개인정보 수집 및 이용
                 TileButton(
                   onTap: () {
-                    if (_list[1]) setState(() => widget.allowToMovePage(_list[1] = false));
-                    else _showTerms(Term.personalInfomationCollection);
+                    if (_list[1]) {
+                      setState(() => widget.allowToMovePage(_list[1] = false));
+                    } else {
+                      _showTerms(Term.personalInfomationCollection);
+                    }
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -288,38 +280,44 @@ class _AgreePgeState extends State<AgreePge> {
                     children: [
                       Checkbox(
                           value: _list[1],
-                          activeColor: MGcolor.brand1Primary,
+                          activeColor: MGColor.brand1Primary,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
-                              side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                              side: const BorderSide(width: 1.6, color: MGColor.base6)),
                           onChanged: (val) {}
                       ),
                       Expanded(child: Text(
                           '개인정보 수집 및 이용 동의', style: KR.subtitle2)),
                       Transform.rotate(
                         angle: pi,
-                        child: Icon(AppinIcon.back, size: 24),
+                        child: const Icon(MGIcon.back, size: 24),
                       )
                     ]
                   ),
                 ),
 
-                Divider(
+                const Divider(
                   height: 10,
                   thickness: 1,
                   indent: 13,
                   endIndent: 5,
-                  color: MGcolor.base6,
+                  color: MGColor.base6,
                 ),
 
                 /// 전체 동의
                 TileButton(
                   onTap: () {
-                    if (_list[0] & _list[1])
+                    if (_list[0] & _list[1]) {
                       setState(() => widget.allowToMovePage(_list[0] = _list[1] = false));
-                    else if (!_list[0] & !_list[1]) _showTerms(null);
-                    else if (!_list[0]) _showTerms(Term.usingService);
-                    else if (!_list[1]) _showTerms(Term.personalInfomationCollection);
+                    } else if (!_list[0] & !_list[1]) {
+                      _showTerms(null);
+                    }
+                    else if (!_list[0]) {
+                      _showTerms(Term.usingService);
+                    }
+                    else {
+                      _showTerms(Term.personalInfomationCollection);
+                    }
                   },
                   child: Row(
                       mainAxisSize: MainAxisSize.max,
@@ -327,16 +325,16 @@ class _AgreePgeState extends State<AgreePge> {
                       children: [
                         Checkbox(
                             value: _list[0] && _list[1],
-                            activeColor: MGcolor.brand1Primary,
+                            activeColor: MGColor.brand1Primary,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
-                                side: BorderSide(width: 1.6, color: MGcolor.base6)),
+                                side: const BorderSide(width: 1.6, color: MGColor.base6)),
                             onChanged: (val) {}
                         ),
                         Expanded(child: Text('전체 동의', style: KR.subtitle2)),
                         Transform.rotate(
                           angle: pi,
-                          child: Icon(AppinIcon.back, size: 24),
+                          child: const Icon(MGIcon.back, size: 24),
                         )
                       ]
                   ),
@@ -348,7 +346,6 @@ class _AgreePgeState extends State<AgreePge> {
       ]
     );
   }
-
 
   Future<void> _showTerms(Term? term) async {
     switch (term) {
@@ -381,8 +378,8 @@ class _AgreePgeState extends State<AgreePge> {
                                 vertical: ratio.height * 60
                             ),
                             child: Text(
-                                USING_SERVICE_TERM,
-                                style: KR.parag2.copyWith(color: MGcolor.base3),
+                                usingServiceTerm,
+                                style: KR.parag2.copyWith(color: MGColor.base3),
                                 softWrap: true
                             ),
                           ),
@@ -398,7 +395,7 @@ class _AgreePgeState extends State<AgreePge> {
                             setState(() => _list[0] = true);
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brand1Primary,
+                              backgroundColor: MGColor.brand1Primary,
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, 48),
                               shape: RoundedRectangleBorder(
@@ -434,8 +431,8 @@ class _AgreePgeState extends State<AgreePge> {
                           horizontal: ratio.width * 61
                         ),
                         child: Text(
-                            PERSONAL_INFORMATION_COLLECTION_TERM,
-                            style: KR.parag2.copyWith(color: MGcolor.base3),
+                            personalInformationCollectionTerm,
+                            style: KR.parag2.copyWith(color: MGColor.base3),
                             softWrap: true
                         ),
                       ),
@@ -449,7 +446,7 @@ class _AgreePgeState extends State<AgreePge> {
                             setState(() => _list[1] = true);
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brand1Primary,
+                              backgroundColor: MGColor.brand1Primary,
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, 48),
                               shape: RoundedRectangleBorder(
@@ -491,8 +488,8 @@ class _AgreePgeState extends State<AgreePge> {
                                 vertical: ratio.height * 60
                             ),
                             child: Text(
-                                USING_SERVICE_TERM,
-                                style: KR.parag2.copyWith(color: MGcolor.base3),
+                                usingServiceTerm,
+                                style: KR.parag2.copyWith(color: MGColor.base3),
                                 softWrap: true
                             ),
                           ),
@@ -508,7 +505,7 @@ class _AgreePgeState extends State<AgreePge> {
                             setState(() => _list[0] = true);
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: MGcolor.brand1Primary,
+                              backgroundColor: MGColor.brand1Primary,
                               foregroundColor: Colors.white,
                               fixedSize: Size(ratio.width * 358, 48),
                               shape: RoundedRectangleBorder(
@@ -542,8 +539,8 @@ class _AgreePgeState extends State<AgreePge> {
                               horizontal: ratio.width * 61
                           ),
                           child: Text(
-                              PERSONAL_INFORMATION_COLLECTION_TERM,
-                              style: KR.parag2.copyWith(color: MGcolor.base3),
+                              personalInformationCollectionTerm,
+                              style: KR.parag2.copyWith(color: MGColor.base3),
                               softWrap: true
                           ),
                         ),
@@ -557,7 +554,7 @@ class _AgreePgeState extends State<AgreePge> {
                               setState(() => _list[1] = true);
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: MGcolor.brand1Primary,
+                                backgroundColor: MGColor.brand1Primary,
                                 foregroundColor: Colors.white,
                                 fixedSize: Size(ratio.width * 358, 48),
                                 shape: RoundedRectangleBorder(
@@ -576,9 +573,8 @@ class _AgreePgeState extends State<AgreePge> {
 }
 
 /// 이름 입력 페이지
-class EnterNamePage extends StatelessWidget {
-  const EnterNamePage({
-    super.key,
+class _EnterNamePage extends StatelessWidget {
+  const _EnterNamePage({
     required this.nameEditCtr,
     required this.allowToMovePage
   });
@@ -607,7 +603,7 @@ class EnterNamePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: ratio.width * 18),
-            child: Text('이름', style: KR.parag2.copyWith(color: MGcolor.base5)),
+            child: Text('이름', style: KR.parag2.copyWith(color: MGColor.base5)),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(
@@ -626,13 +622,13 @@ class EnterNamePage extends StatelessWidget {
                     vertical: ratio.height * 12
                 ),
                 hintText: '예) 김가천',
-                hintStyle: KR.subtitle4.copyWith(color: MGcolor.base5),
+                hintStyle: KR.subtitle4.copyWith(color: MGColor.base5),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: MGcolor.base5),
+                  borderSide: const BorderSide(color: MGColor.base5),
                   borderRadius: BorderRadius.circular(8)
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: MGcolor.base5, width: 2),
+                  borderSide: const BorderSide(color: MGColor.base5, width: 2),
                   borderRadius: BorderRadius.circular(8)
                 ),
 
@@ -650,9 +646,8 @@ class EnterNamePage extends StatelessWidget {
 }
 
 /// ID & PW 입력 페이지
-class EnterIdPwPage extends StatefulWidget {
-  const EnterIdPwPage({
-    super.key,
+class _EnterIdPwPage extends StatefulWidget {
+  const _EnterIdPwPage({
     required this.idEditCtr,
     required this.pwEditCtr,
     required this.allowToMovePage
@@ -662,9 +657,9 @@ class EnterIdPwPage extends StatefulWidget {
   final Function(bool) allowToMovePage;
 
   @override
-  State<EnterIdPwPage> createState() => _EnterIdPwPageState();
+  State<_EnterIdPwPage> createState() => _EnterIdPwPageState();
 }
-class _EnterIdPwPageState extends State<EnterIdPwPage> {
+class _EnterIdPwPageState extends State<_EnterIdPwPage> {
   String? _tempId, _tempPw, _tempPwCheck;
   String? _idError, _pwError;
   bool pw1 = false, pw2 = false;
@@ -686,7 +681,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
 
           AnimatedSize(
             curve: Curves.ease,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: SizedBox(height:
             ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 24 : 52)),
           ),
@@ -702,7 +697,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 Text('아이디', style: KR.subtitle3),
                 Text(
                   _idError ?? '',
-                  style: KR.label2.copyWith(color: MGcolor.systemError)
+                  style: KR.label2.copyWith(color: MGColor.systemError)
                 )
               ],
             ),
@@ -714,33 +709,11 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 ratio.height * 16,
                 0
             ),
-            child: TextFormField(
+            child: LongTextField(
                 controller: widget.idEditCtr,
-                style: KR.subtitle1,
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: ratio.width * 16,
-                    vertical: ratio.height * 12
-                  ),
-                  hintText: '5~20자의 영문 소문자, 숫자와 특수기호 입력',
-                  hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                  errorText: _pwError,
-                  errorStyle: TextStyle(fontSize: 0),
-                  border: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: MGcolor.base5)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.base6, width: 2)),
-                  errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.systemError)),
-                  focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                ),
+                password: false,
+                hint: '5~20자의 영문 소문자, 숫자와 특수기호 입력',
+                error: _idError,
                 onChanged: (val) {
                   _tempId = val;
                   _allowToMovePage();
@@ -766,7 +739,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
 
           AnimatedSize(
             curve: Curves.ease,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: SizedBox(height:
             ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 37)),
           ),
@@ -782,7 +755,7 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 Text('비밀번호', style: KR.subtitle3),
                 Text(
                   _pwError ?? '',
-                  style: KR.label2.copyWith(color: MGcolor.systemError)
+                  style: KR.label2.copyWith(color: MGColor.systemError)
                 )
               ],
             ),
@@ -794,74 +767,28 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 ratio.height * 16,
                 0
             ),
-            child: Stack(
-              children: [
-                TextFormField(
-                    controller: widget.pwEditCtr,
-                    obscureText: !pw1,
-                    style: KR.subtitle1,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 16,
-                          vertical: ratio.height * 12
-                      ),
-                      hintText: '8~16자의 영문 대/소문자, 숫자, 특수문자 입력 가능',
-                      hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                      errorText: _pwError,
-                      errorStyle: TextStyle(fontSize: 0),
-                      border: InputBorder.none,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                    ),
-                    onChanged: (val) {
-                      _tempPw = val;
-                      _allowToMovePage();
-                    },
-                    validator: (val) {
-                      if (!(8 <= val!.length && val.length <= 16)) {
-                        return _pwError = "비밀번호는 8 ~ 16자입니다.";
-                      } else if (_tempPw != _tempPwCheck) {
-                        debugPrint("$_tempPw != $_tempPwCheck");
-                        return _pwError = "비밀번호가 동일하지 않습니다.";
-                      } else {
-                        return null;
-                      }
-                    },
-                ),
-                Positioned(
-                  right: 0,
-                  child: GestureDetector(
-                    onTapDown: (tapDetails) => setState(() => pw1 = true),
-                    onTapUp: (tapDetails) => setState(() => pw1 = false),
-                    onTapCancel: () => setState(() => pw1 = false),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 12,
-                          vertical: 14
-                      ),
-                      child: Icon(pw1
-                            ? AppinIcon.eye_on
-                            : AppinIcon.eye_off,
-                        color: MGcolor.base4,
-                        size: ratio.width * 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: LongTextField(
+              controller: widget.pwEditCtr,
+              password: true,
+              hint: '8~16자의 영문 대/소문자, 숫자, 특수문자 입력 가능',
+              error: _pwError,
+              shownPassword: !pw1,
+              onTapToShowPassword: (val) => setState(() => pw1 = val),
+              onChanged: (val) {
+                _tempPw = val;
+                _allowToMovePage();
+              },
+              validator: (val) {
+                if (!(8 <= val!.length && val.length <= 16)) {
+                  return _pwError = "비밀번호는 8 ~ 16자입니다.";
+                } else if (_tempPw != _tempPwCheck) {
+                  debugPrint("$_tempPw != $_tempPwCheck");
+                  return _pwError = "비밀번호가 동일하지 않습니다.";
+                } else {
+                  return null;
+                }
+              },
+            )
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(
@@ -870,69 +797,24 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
                 ratio.height * 16,
                 0
             ),
-            child: Stack(
-              children: [
-                TextFormField(
-                    obscureText: !pw2,
-                    style: KR.subtitle1,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 16,
-                          vertical: ratio.height * 12
-                      ),
-                      hintText: '비밀번호 재입력',
-                      hintStyle: KR.parag2.copyWith(color: MGcolor.base5),
-                      errorText: _pwError,
-                      errorStyle: TextStyle(fontSize: 0),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: MGcolor.base5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.base5, width: 2)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: MGcolor.systemError, width: 2)),
-                    ),
-                    onChanged: (val) => setState(() {
-                      _tempPwCheck = val;
-                      _allowToMovePage();
-                    }),
-                    validator: (val) {
-                      if (_tempPw != _tempPwCheck) {
-                        return _pwError = "비밀번호가 동일하지 않습니다.";
-                      } else {
-                        return null;
-                      }
-                    }
-                ),
-                Positioned(
-                  right: 0,
-                  child: GestureDetector(
-                    onTapDown: (tapDetails) => setState(() => pw2 = true),
-                    onTapUp: (tapDetails) => setState(() => pw2 = false),
-                    onTapCancel: () => setState(() => pw2 = false),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 12,
-                          vertical: 14
-                      ),
-                      child: Icon(pw2
-                          ? AppinIcon.eye_on
-                          : AppinIcon.eye_off,
-                        color: MGcolor.base4,
-                        size: ratio.width * 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: LongTextField(
+              password: true,
+              hint: '비밀번호 재입력',
+              error: _pwError,
+              shownPassword: !pw2,
+              onTapToShowPassword: (val) => setState(() => pw2 = val),
+                onChanged: (val) => setState(() {
+                  _tempPwCheck = val;
+                  _allowToMovePage();
+                }),
+                validator: (val) {
+                  if (_tempPw != _tempPwCheck) {
+                    return _pwError = "비밀번호가 동일하지 않습니다.";
+                  } else {
+                    return null;
+                  }
+                }
+            )
           ),
         ]
     );
@@ -948,8 +830,8 @@ class _EnterIdPwPageState extends State<EnterIdPwPage> {
 }
 
 /// 1차 회원가입 완료 페이지
-class FirstCompleteSignUpPage extends StatelessWidget {
-  const FirstCompleteSignUpPage({super.key});
+class _FirstCompleteSignUpPage extends StatelessWidget {
+  const _FirstCompleteSignUpPage();
 
   static late Size screenSize;
 
@@ -960,18 +842,18 @@ class FirstCompleteSignUpPage extends StatelessWidget {
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [MGcolor.base8, MGcolor.base9],
+                colors: [MGColor.base8, MGColor.base9],
                 stops: [0.0, 0.5])),
         child: Stack(
           children: [
             /// 배경 이미지
             Positioned(
               child: Image.asset(
-                ImgPath.on_boarding,
+                ImgPath.onBoarding,
                 width: screenSize.width,
                 height: ratio.height * 800,
               ),
@@ -995,7 +877,7 @@ class FirstCompleteSignUpPage extends StatelessWidget {
                 child: Text(
                   '재학생이라면 재학생 인증,\n신입생 및 외부인은 인증되지 않은 회원으로 넘어가주세요.',
                   textAlign: TextAlign.center,
-                  style: KR.parag2.copyWith(color: MGcolor.base4),
+                  style: KR.parag2.copyWith(color: MGColor.base4),
                 ),
               ),
             ),
@@ -1009,7 +891,7 @@ class FirstCompleteSignUpPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => _moveToAiiaAuthPage(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.brand1Primary,
+                      backgroundColor: MGColor.brand1Primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       minimumSize: Size(ratio.width * 358, 48),
@@ -1026,7 +908,7 @@ class FirstCompleteSignUpPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => _backToSignInPage(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.brand1Secondary,
+                      backgroundColor: MGColor.brand1Secondary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       minimumSize: Size(ratio.width * 358, 48),
@@ -1050,7 +932,7 @@ class FirstCompleteSignUpPage extends StatelessWidget {
 
   void _moveToAiiaAuthPage(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => GachonStudentCertificationPage()));
+      MaterialPageRoute(builder: (context) => const _GachonStudentCertificationPage()));
   }
   
   void _backToSignInPage(BuildContext context) {
@@ -1059,13 +941,13 @@ class FirstCompleteSignUpPage extends StatelessWidget {
 }
 
 /// 재학생 인증 페이지
-class GachonStudentCertificationPage extends StatefulWidget {
-  const GachonStudentCertificationPage({super.key});
+class _GachonStudentCertificationPage extends StatefulWidget {
+  const _GachonStudentCertificationPage();
 
   @override
-  State<GachonStudentCertificationPage> createState() => _GachonStudentCertificationPageState();
+  State<_GachonStudentCertificationPage> createState() => _GachonStudentCertificationPageState();
 }
-class _GachonStudentCertificationPageState extends State<GachonStudentCertificationPage> {
+class _GachonStudentCertificationPageState extends State<_GachonStudentCertificationPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
@@ -1108,7 +990,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(ImgPath.school_symbol),
+                      Image.asset(ImgPath.schoolSymbol),
                       SizedBox(height: ratio.height * 8),
                       Text('재학생 인증', style: TextStyle(
                         height: 2.4,
@@ -1118,14 +1000,14 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                       )),
                       Text(
                         '가천대학교 계정으로 로그인을 해주세요.',
-                        style: KR.label2.copyWith(color: MGcolor.base4),
+                        style: KR.label2.copyWith(color: MGColor.base4),
                       ),
                     ],
                   ),
 
                   AnimatedSize(
                     curve: Curves.ease,
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     child: SizedBox(height:
                     ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 72)),
                   ),
@@ -1136,30 +1018,18 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: ratio.width * 358,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: MGcolor.base6),
-                          ),
-                          child: TextFormField(
+                          child: LongTextField(
                             controller: idController,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: ratio.width * 12,
-                                  vertical: ratio.height * 12
-                              ),
-                              hintText: '아이디 입력',
-                              hintStyle: KR.subtitle3.copyWith(
-                                color: MGcolor.base4,
-                              ),
-                              border: InputBorder.none,
-                            ),
+                            password: false,
+                            hint: '아이디 입력',
+                            error: null,
+                            onChanged: (val) {},
                             validator: (val) {
                               return val == null ? '' : null;
                             },
-                          ),
+                          )
                         ),
                         SizedBox(height: ratio.height * 10),
                         Container(
@@ -1167,7 +1037,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: MGcolor.base6),
+                            border: Border.all(color: MGColor.base6),
                           ),
                           child: Stack(
                             children: [
@@ -1182,7 +1052,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                                       vertical: ratio.height * 12
                                   ),
                                   hintStyle: KR.subtitle3.copyWith(
-                                    color: MGcolor.base4,
+                                    color: MGColor.base4,
                                   ),
                                 ),
                               ),
@@ -1199,9 +1069,9 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                                         vertical: 14
                                     ),
                                     child: Icon(isPasswordVisible
-                                        ? AppinIcon.eye_on
-                                        : AppinIcon.eye_off,
-                                      color: MGcolor.base4,
+                                        ? MGIcon.eyeOn
+                                        : MGIcon.eyeOff,
+                                      color: MGColor.base4,
                                       size: ratio.width * 20,
                                     ),
                                   ),
@@ -1213,7 +1083,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                         SizedBox(height: ratio.height * 4),
                         Text(
                             errorMessage,
-                            style: KR.label2.copyWith(color: MGcolor.systemError)
+                            style: KR.label2.copyWith(color: MGColor.systemError)
                         ),
                       ],
                     ),
@@ -1221,7 +1091,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
 
                   AnimatedSize(
                     curve: Curves.ease,
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     child: SizedBox(height:
                     ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 16 : 68)),
                   ),
@@ -1230,8 +1100,8 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
                   ElevatedButton(
                     onPressed: _buttonEnabled ? tryLogin : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: MGcolor.school,
-                      disabledBackgroundColor: MGcolor.base6,
+                      backgroundColor: MGColor.school,
+                      disabledBackgroundColor: MGColor.base6,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       minimumSize: Size(ratio.width * 358, ratio.height * 56),
@@ -1251,7 +1121,7 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
 
           ///
           if (isLoading)
-            ProgressScreen()
+            const ProgressScreen()
         ],
       ),
     );
@@ -1270,15 +1140,15 @@ class _GachonStudentCertificationPageState extends State<GachonStudentCertificat
         PageRouteBuilder(
           fullscreenDialog: false,
           transitionsBuilder: slideRigth2Left,
-          pageBuilder: (context, anime, secondAnime) => SecondCompleteSignUpPage(),
+          pageBuilder: (context, anime, secondAnime) => const _SecondCompleteSignUpPage(),
         )
     );
   }
 }
 
 /// 2차 회원가입 완료 페이지
-class SecondCompleteSignUpPage extends StatelessWidget {
-  const SecondCompleteSignUpPage({super.key});
+class _SecondCompleteSignUpPage extends StatelessWidget {
+  const _SecondCompleteSignUpPage();
 
   static late Size screenSize;
 
@@ -1289,18 +1159,18 @@ class SecondCompleteSignUpPage extends StatelessWidget {
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [MGcolor.base8, MGcolor.base9],
+                colors: [MGColor.base8, MGColor.base9],
                 stops: [0.0, 0.5])),
         child: Stack(
           children: [
             /// 배경 이미지
             Positioned(
               child: Image.asset(
-                ImgPath.on_boarding,
+                ImgPath.onBoarding,
                 width: screenSize.width,
                 height: ratio.height * 800,
               ),
@@ -1324,7 +1194,7 @@ class SecondCompleteSignUpPage extends StatelessWidget {
                 child: Text(
                   '메타 가천에 오신 것을 환영합니다.',
                   textAlign: TextAlign.center,
-                  style: KR.parag2.copyWith(color: MGcolor.base4),
+                  style: KR.parag2.copyWith(color: MGColor.base4),
                 ),
               ),
             ),
@@ -1337,7 +1207,7 @@ class SecondCompleteSignUpPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _backToSignInPage(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MGcolor.brand1Primary,
+                    backgroundColor: MGColor.brand1Primary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     minimumSize: Size(ratio.width * 358, 48),

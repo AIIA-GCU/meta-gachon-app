@@ -4,10 +4,9 @@ import 'dart:io' show Platform;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-import 'package:mata_gachon/config/variable.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
-import 'package:mata_gachon/widgets/small_widgets.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import '../widgets/popup_widgets.dart';
+import '../widgets/small_widgets.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({super.key, required this.takenPictrue});
@@ -162,18 +161,18 @@ class _QrScannerPageState extends State<QrScannerPage> {
               child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   style: IconButton.styleFrom(
-                      foregroundColor: MGcolor.primaryColor(),
-                      backgroundColor: MGcolor.tertiaryColor(),
+                      foregroundColor: MGColor.primaryColor(),
+                      backgroundColor: MGColor.tertiaryColor(),
                       fixedSize: Size(ratio.width * 48, ratio.width * 48)
                   ),
-                  icon: Icon(AppinIcon.cross)
+                  icon: const Icon(MGIcon.cross)
               ),
             )
         ),
 
         /// lading
         if (loading)
-          ProgressScreen()
+          const ProgressScreen()
       ])
     );
   }
@@ -186,7 +185,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
     /// QR 검증
     late String title;
     late bool valid;
-    if (data.code == BARCODE) {
+    if (data.code == barcode) {
       title =  "인증되었습니다!";
       valid = true;
     } else {
