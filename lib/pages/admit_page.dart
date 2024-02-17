@@ -24,7 +24,7 @@ class AdmitPage extends StatefulWidget {
 class _AdmitPageState extends State<AdmitPage> {
   final TextEditingController _textCtr = TextEditingController();
 
-  late String room;
+  late String? place;
   late String leaderInfo;
   late Widget time;
   late bool loading;
@@ -36,28 +36,25 @@ class _AdmitPageState extends State<AdmitPage> {
     super.initState();
     loading = false;
 
-    room = widget.reservate.place;
-
+    place = widget.reservate.place;
     leaderInfo = widget.reservate.leaderInfo;
 
-    var temp = widget.reservate.date.split(' ').first;
-    var date = date2_format.format(std3_format.parse(temp));
     if (service == ServiceType.computer) {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGcolor.base3),
         children: [
-          TextSpan(text: date),
+          TextSpan(text: widget.reservate.startToDate()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGcolor.base1)),
-          TextSpan(text: date)
+          TextSpan(text: widget.reservate.endToDate())
         ]
       ));
     } else {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGcolor.base3),
         children: [
-          TextSpan(text: date),
+          TextSpan(text: widget.reservate.startToDate()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGcolor.base1)),
-          TextSpan(text: widget.reservate.time)
+          TextSpan(text: widget.reservate.toDuration())
         ]
       ));
     }
@@ -177,7 +174,7 @@ class _AdmitPageState extends State<AdmitPage> {
                               children: [
                                 Text('회의실', style: KR.parag1.copyWith(color: Colors.black)),
                                 SizedBox(width: ratio.width * 26),
-                                Text(room, style: KR.parag2.copyWith(color: MGcolor.base3))
+                                Text(place!, style: KR.parag2.copyWith(color: MGcolor.base3))
                               ],
                             )
                           ),
@@ -374,21 +371,20 @@ class _AdmitPageState extends State<AdmitPage> {
 
     setState(() => loading = true);
 
-    final temp1 = widget.reservate.date.split(' ').first;
-    final temp2 = widget.reservate.time.split(' ~ ');
     final expension = _picturePath!.substring(_picturePath!.lastIndexOf('.'));
     final bytes = await File(_picturePath!).readAsBytes();
     debugPrint("""
       [reservation Info]
-        . room: $room
-        . startTime: $temp1 ${temp2[0]}
-        . endTime: $temp1 ${temp2[1]}
+        . room: $place
+        . startTime: ${widget.reservate.startToDate()}
+        . endTime: ${widget.reservate.endToDate()}
         . leader: $leaderInfo
         . review: ${_textCtr.text}
         . photo: ${bytes}""");
 
     try {
       int? uid = await RestAPI.addAdmission(
+          reservationId: widget.reservate.reservationId,
           review: _textCtr.text,
           photo: base64Encode(bytes),
           photoExtension: expension

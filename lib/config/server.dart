@@ -143,7 +143,7 @@ class APIRequest {
       }
 
       final httpReturned = await http.Client()
-          .send(request).timeout(Duration(seconds: 5));
+          .send(request).timeout(Duration(seconds: 10));
       if (httpReturned.statusCode == 200) {
         final response = await http.Response.fromStream(httpReturned);
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
@@ -275,12 +275,7 @@ class RestAPI {
           final temp = e as Map<String, dynamic>;
           return Reservate.fromJson(temp);
         }).toList();
-        result.sort((a, b) {
-          late int temp;
-          if ((temp = a.date.compareTo(b.date)) == 0) {
-            return a.time.compareTo(b.time);
-          } else return temp;
-        });
+        result.sort((a, b) => a.startTime.compareTo(b.startTime));
         return result;
       }
     } on TimeoutException {
@@ -290,21 +285,52 @@ class RestAPI {
 
   /// 예약 추가
   static Future<int?> addReservation({
-    required String room,
+    required String? place,
     required String startTime,
     required String endTime,
+    required String? professor,
     required String member,
     required String purpose
   }) async {
     try {
-      final api = APIRequest('book');
-      Map<String, dynamic> response = await api.send(HTTPMethod.POST, params: {
-        'room': room,
-        'startTime': startTime,
-        'endTime': endTime,
-        'member': member,
-        'purpose': purpose
-      });
+      late String path;
+      late Map<String, dynamic> params;
+      switch (service) {
+        case ServiceType.aiSpace:
+          // path = "book/meta";
+          path = "book";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.computer:
+          path = "book/gpu";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'professor': professor,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.lectureRoom:
+          path = 'book/lecture';
+          params = {
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose,
+          };
+          break;
+      }
+      final api = APIRequest(path);
+      Map<String, dynamic> response = await api
+          .send(HTTPMethod.POST, params: params);
       return response['reservationID'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -315,24 +341,53 @@ class RestAPI {
   /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<int?> patchReservation({
     required int reservationId,
-    required String room,
+    required String? place,
     required String startTime,
     required String endTime,
     required String leader,
     required String member,
-    required String purpose
+    required String purpose,
+    required String? professor
   }) async {
     try {
-      final api = APIRequest('book');
-      Map<String, dynamic> response = await api.send(HTTPMethod.PATCH, params: {
-        "reservationId": reservationId,
-        "room": room,
-        "startTime": startTime,
-        "endTime": endTime,
-        "leaderInfo": leader,
-        "memberInfo": member,
-        "purpose": purpose
-      });
+      late String path;
+      late Map<String, dynamic> params;
+      switch (service) {
+        case ServiceType.aiSpace:
+          // path = "book/meta";
+          path = "book";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.computer:
+          path = "book/gpu";
+          params = {
+            'room': place,
+            'startTime': startTime,
+            'endTime': endTime,
+            'professor': professor,
+            'member': member,
+            'purpose': purpose
+          };
+          break;
+        case ServiceType.lectureRoom:
+          path = 'book/lecture';
+          params = {
+            'startTime': startTime,
+            'endTime': endTime,
+            'member': member,
+            'purpose': purpose,
+          };
+          break;
+      }
+      final api = APIRequest(path);
+      Map<String, dynamic> response = await api
+          .send(HTTPMethod.POST, params: params);
       return response['reservationID'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -479,6 +534,7 @@ class RestAPI {
   /// 인증 추가
   /// Note. 인증은 반드시 끝나는 시간이 지나고 해야 오류가 없음
   static Future<int?> addAdmission({
+    required int reservationId,
     required String review,
     required String photo,
     required String photoExtension
@@ -486,6 +542,7 @@ class RestAPI {
     try {
       final api = APIRequest('admit');
       Map<String, dynamic> response = await api.send(HTTPMethod.POST, params: {
+        'reservationId': reservationId,
         'review': review,
         'photo': photo,
         'photoExtension': photoExtension
@@ -662,31 +719,56 @@ class User {
 class Reservate {
   final int _reservationId;
   final String _leaderInfo;
-  final String _room;
-  final String _date;
-  final String _time;
+  final String? _place;
+  final DateTime _startTime;
+  final DateTime _endTime;
   final String _memberInfo;
+  final String? _professor;
+
+  Reservate(
+      this._reservationId,
+      this._leaderInfo,
+      this._place,
+      this._startTime,
+      this._endTime,
+      this._memberInfo,
+      this._professor
+  ) {
+    assert(
+      !(service == ServiceType.computer && _professor == null),
+      'Professor must enter in reservation of GPU computer'
+    );
+  }
 
   int get reservationId => _reservationId;
 
   String get leaderInfo => _leaderInfo;
 
-  String get place => _room;
+  String? get place => _place;
 
-  String get date => _date;
+  DateTime get startTime => _startTime;
 
-  String get time => _time;
+  DateTime get endTime => _endTime;
 
   String get memberInfo => _memberInfo;
 
-  Reservate(
-      this._reservationId,
-      this._leaderInfo,
-      this._room,
-      this._date,
-      this._time,
-      this._memberInfo
-      );
+  String? get professor => _professor;
+
+  String startToDate() => date2_format.format(_startTime);
+
+  String endToDate() => date2_format.format(_endTime);
+
+  String toDuration() {
+    if (service == ServiceType.computer) {
+      var s = date2_format.format(_startTime);
+      var e = date2_format.format(_endTime);
+      return '$s ~ $e';
+    } else {
+      var s = time_format.format(_startTime);
+      var e = time_format.format(_endTime);
+      return '$s ~ $e';
+    }
+  }
 
   ///
   /// EX) Reservate 객체의 response
@@ -696,14 +778,19 @@ class Reservate {
   /// - "date": "2023. 01. 01 목요일"
   /// - "time": "06:00 ~ 15:00"
   ///
-  factory Reservate.fromJson(Map<String, dynamic> json) => Reservate(
-    json['reservationId'],
-    json['leaderInfo'],
-    json['room'],
-    json['date'],
-    json['time'],
-    json['memberInfo'] ?? ''
-  );
+  factory Reservate.fromJson(Map<String, dynamic> json) {
+    String date = (json['date'] as String).split(' ')[0];
+    List<String> time = (json['time'] as String).split(' ~ ');
+    return Reservate(
+      json['reservationId'],
+      json['leaderInfo'],
+      json['room'],
+      std2_format.parse('$date ${time[0]}'),
+      std2_format.parse('$date ${time[1]}'),
+      json['memberInfo'] ?? '',
+      json['professor']
+    );
+  }
 }
 
 class Admit {
@@ -716,22 +803,6 @@ class Admit {
   final String _review;
   final Uint8List _photo;
 
-  int get admissionId => _admisstionId;
-
-  String get leaderInfo => _leaderInfo;
-
-  String get room => _room;
-
-  String get date => _date;
-
-  String get time => _time;
-
-  String get memberInfo => _memberInfo;
-
-  String get review => _review;
-
-  Uint8List get photo => _photo;
-
   Admit(
       this._admisstionId,
       this._leaderInfo,
@@ -742,6 +813,22 @@ class Admit {
       this._review,
       this._photo
       );
+
+  int get admissionId => _admisstionId;
+
+  String get leaderInfo => _leaderInfo;
+
+  String get place => _room;
+
+  String get date => _date;
+
+  String get time => _time;
+
+  String get memberInfo => _memberInfo;
+
+  String get review => _review;
+
+  Uint8List get photo => _photo;
 
   ///
   /// EX) Admit 객체의 response
