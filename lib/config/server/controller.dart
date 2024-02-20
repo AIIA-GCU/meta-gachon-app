@@ -76,7 +76,19 @@ class RestAPI {
   /// 내 모든 예약
   static Future<List<Reservate>?> getAllReservation() async {
     try {
-      final api = APIRequest('books');
+      late String category;
+      switch (service) {
+        case ServiceType.aiSpace:
+          category = "MI";
+          break;
+        case ServiceType.lectureRoom:
+          category = "CLASSROOM";
+          break;
+        case ServiceType.computer:
+          category = "COMPUTER";
+          break;
+      }
+      final api = APIRequest('books?category=$category');
       List<dynamic> response = await api.send(HTTPMethod.get);
 
       if (response.isEmpty) {
@@ -95,7 +107,7 @@ class RestAPI {
   }
 
   /// 예약 추가
-  static Future<int?> addReservation({
+  static Future<Map<String, dynamic>?> addReservation({
     required String? place,
     required String startTime,
     required String endTime,
@@ -108,8 +120,8 @@ class RestAPI {
       late Map<String, dynamic> params;
       switch (service) {
         case ServiceType.aiSpace:
-        // path = "book/meta";
-          path = "book";
+          path = "book/meta";
+          // path = "book";
           params = {
             'room': place,
             'startTime': startTime,
@@ -138,11 +150,13 @@ class RestAPI {
             'purpose': purpose,
           };
           break;
+        default:
+          break;
       }
       final api = APIRequest(path);
       Map<String, dynamic> response = await api
           .send(HTTPMethod.post, params: params);
-      return response['reservationID'];
+      return response;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -150,7 +164,7 @@ class RestAPI {
 
   /// 예약 수정
   /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
-  static Future<int?> patchReservation({
+  static Future<Map<String, dynamic>?> patchReservation({
     required int reservationId,
     required String? place,
     required String startTime,
@@ -165,23 +179,12 @@ class RestAPI {
       late Map<String, dynamic> params;
       switch (service) {
         case ServiceType.aiSpace:
-        // path = "book/meta";
-          path = "book";
+          path = "book/meta";
           params = {
+            'reservationId': reservationId,
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'member': member,
-            'purpose': purpose
-          };
-          break;
-        case ServiceType.computer:
-          path = "book/gpu";
-          params = {
-            'room': place,
-            'startTime': startTime,
-            'endTime': endTime,
-            'professor': professor,
             'member': member,
             'purpose': purpose
           };
@@ -189,17 +192,20 @@ class RestAPI {
         case ServiceType.lectureRoom:
           path = 'book/lecture';
           params = {
+            'reservationId': reservationId,
             'startTime': startTime,
             'endTime': endTime,
             'member': member,
             'purpose': purpose,
           };
           break;
+        default:
+          break;
       }
       final api = APIRequest(path);
       Map<String, dynamic> response = await api
           .send(HTTPMethod.post, params: params);
-      return response['reservationID'];
+      return response;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -232,12 +238,13 @@ class RestAPI {
   }
 
   /// 현재 예약의 상태
-  /// . 0: 사용 전 (예약 변경 O)
-  /// . 1: 사용 전 (예약 변경 X)
-  /// . 2: 사용 중 (연장 X)
-  /// . 3: 사용 중 (연장 O)
-  /// . 4: 사용 끝 (인증 X)
-  /// . 5: 사용 끝 (인증 O)
+  /// . 0: 사용 전 (예약 변경 X, QR O)
+  /// . 1: 사용 전 (예약 변경 X, QR X)
+  /// . 2: 사용 전 (예약 변경 O)
+  /// . 3: 사용 중 (연장 X)
+  /// . 4: 사용 중 (연장 O)
+  /// . 5: 사용 끝 (인증 X)
+  /// . 6: 사용 끝 (인증 O)
   /// Todo: 아직 추가 안 됨
   static Future<int?> currentReservationStatus({
     required int reservationId
@@ -271,19 +278,27 @@ class RestAPI {
   }
 
   /// 서비스에 따른 예약 장소 반환
-  static Future<List<String>?> placeForService({
-    required int service
-  }) async {
+  static Future<List<String>?> placeForService() async {
     try {
-      final api = APIRequest('book/place');
-      Map<String, dynamic> response = await api.send(
-          HTTPMethod.get,
-          params: {'service': service}
-      );
+      late int type;
+      switch (service) {
+        case ServiceType.aiSpace:
+          type = 1;
+          break;
+        case ServiceType.lectureRoom:
+          type = 2;
+          break;
+        case ServiceType.computer:
+          type = 3;
+          break;
+      }
+      final api = APIRequest('book/items/$type');
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
       if (response.isEmpty) {
         return null;
       } else {
-        return response['places'];
+        List<dynamic> temp = response['availableRoom'];
+        return temp.map((e) => e as String).toList();
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');

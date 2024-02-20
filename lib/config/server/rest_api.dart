@@ -87,25 +87,23 @@ class APIRequest {
 
       final httpReturned = await http.Client()
           .send(request).timeout(const Duration(seconds: 10));
-      if (httpReturned.statusCode == 200) {
-        final response = await http.Response.fromStream(httpReturned);
-        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        debugPrint("[api] returned: ${jsonResponse.toString()}");
+      final response = await http.Response.fromStream(httpReturned);
+      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      debugPrint("[api] returned: ${jsonResponse.toString()}");
 
+      if (httpReturned.statusCode == 200) {
         // 쿠키 파싱, 토큰 설정
         final Map<String, String> serverCookies = _parseServerCookies(response);
         if (serverCookies.containsKey(_sessionCookieName)) {
           final newToken = serverCookies[_sessionCookieName]!;
-          if (session.get() != newToken) {
+          if (await session.get() != newToken) {
             session.set(newToken);
           }
         }
-
         return jsonResponse;
       } else {
-        debugPrint('Status Code: ${httpReturned.statusCode}');
-        throw Exception('\n[Error] related http response: ${httpReturned.statusCode}');
-        // return null;
+        debugPrint('[Error] related http response: ${httpReturned.statusCode}');
+        return jsonResponse;
       }
     } on TimeoutException {
       throw TimeoutException('[Error] api send: timeout');

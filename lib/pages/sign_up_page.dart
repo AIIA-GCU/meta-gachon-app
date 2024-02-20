@@ -181,6 +181,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
                 barrierColor: Colors.black.withOpacity(0.25),
                 builder: (context) => CommentPopup(
                     title: "계정 생성 중 오류가 발생했습니다!",
+                    buttonColor: MGColor.brand1Primary,
                     onPressed: () => Navigator.pop(context)
                 )
             );

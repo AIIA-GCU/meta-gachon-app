@@ -15,9 +15,11 @@ import '../widgets/small_widgets.dart';
 class ReservatePage extends StatefulWidget {
   const ReservatePage({
     Key? key,
+    required this.availableRoom,
     this.reservate
   }) : super(key: key);
 
+  final List<String> availableRoom;
   final Reservate? reservate;
 
   @override
@@ -36,7 +38,7 @@ class _ReservatePageState extends State<ReservatePage> {
   /// 고정 데이터
   late final int _leaderNumber; //대표자 학번
   late final String _leaderName; //대표자 이름
-  final List<String> _places = ['405-4', '405-5', '405-6']; // 강의실 목록
+  late final List<String> _places; // 강의실 목록
   final List<Widget> _firstWidgets = []; // 화면에 표시되는 위젯 목록
 
   /// 기타
@@ -58,6 +60,7 @@ class _ReservatePageState extends State<ReservatePage> {
     super.initState();
 
     // init
+    _places = widget.availableRoom;
     _loading = false;
     _isSolo = _canTime = false;
     _addUserGuideline = MGColor.primaryColor();
@@ -507,7 +510,9 @@ class _ReservatePageState extends State<ReservatePage> {
                   _selectedRoom = value;
                   if (_selectedRoom != null && _selectedDate != null) {
                     setState(() {
-                      _selectedEnter = _selectedEnd = null;
+                      if (service != ServiceType.computer) {
+                        _selectedEnter = _selectedEnd = null;
+                      }
                       if (!_canTime) {
                         _canTime = true;
                         _listKey.currentState!.insertAllItems(0, 4);
@@ -543,7 +548,7 @@ class _ReservatePageState extends State<ReservatePage> {
           break;
       }
       _selectedEnd = _selectedEnter!.add(const Duration(days: 4));
-      debugPrint('${stdFormat1.format(_selectedEnter!)} ~ ${stdFormat1.format(_selectedEnd!)}');
+      debugPrint('${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
       _selectedDate = stdFormat3.format(_selectedEnter!);
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
@@ -732,20 +737,6 @@ class _ReservatePageState extends State<ReservatePage> {
     );
   }
 
-  // /// 서비스에 따른 예약 장소
-  // Future<void> _getPlace() async {
-  //   List<String>? temp = await RestAPI.placeForService(service: widget.service);
-  //   if (temp == null) {
-  //     debugPrint('[Error] about getting places');
-  //     Navigator.pop(context);
-  //   } else {
-  //     setState(() {
-  //       this._places = temp;
-  //       this._loading = false;
-  //     });
-  //   }
-  // }
-
   /// 예약하기
   Future<void> _reservate() async {
     bool allClear = false;
@@ -759,7 +750,7 @@ class _ReservatePageState extends State<ReservatePage> {
       }
     });
 
-    if (_selectedEnter == null || _selectedEnd == null) {
+    if (service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (!_isSolo && _usersList.isEmpty) {
@@ -773,39 +764,46 @@ class _ReservatePageState extends State<ReservatePage> {
       onPressed = () => Navigator.pop(context);
     } else {
       onPressed = () => Navigator.pop(context);
-      String member = _usersList.toString();
+
+      late String member, start, end;
+      member = _usersList.toString();
       member = member.substring(1, member.length-1);
+      start = stdFormat2.format(_selectedEnter!);
+      end = stdFormat2.format(_selectedEnd!);
       debugPrint("""
       [reservation Info]
         . room: $_selectedRoom
-        . startTime: ${stdFormat2.format(_selectedEnter!)}
-        . endTime: ${stdFormat2.format(_selectedEnd!)}
+        . startTime: $start
+        . endTime: $end
         . leader: $_leaderNumber $_leaderName
         . member: $member
         . purpose: ${_purposeCtr.text}""");
 
       try {
-        int? uid = widget.reservate != null
+        Map<String, dynamic>? response = widget.reservate != null
             ? await RestAPI.patchReservation(
-            reservationId: widget.reservate!.reservationId,
-            place: _selectedRoom!,
-            startTime: stdFormat2.format(_selectedEnter!),
-            endTime: stdFormat2.format(_selectedEnd!),
-            leader: widget.reservate!.leaderInfo,
-            member: member,
-            purpose: _purposeCtr.text,
-            professor: _professerCtr.text
-        )
+                  reservationId: widget.reservate!.reservationId,
+                  place: _selectedRoom,
+                  startTime: start,
+                  endTime: end,
+                  leader: widget.reservate!.leaderInfo,
+                  member: member,
+                  purpose: _purposeCtr.text,
+                  professor: _professerCtr.text
+              )
             : await RestAPI.addReservation(
-            place: _selectedRoom!,
-            startTime: stdFormat2.format(_selectedEnter!),
-            endTime: stdFormat2.format(_selectedEnd!),
-            member: member,
-            purpose: _purposeCtr.text,
-            professor: _professerCtr.text
-        );
-        if (uid == null) {
+                  place: _selectedRoom,
+                  startTime: start,
+                  endTime: end,
+                  member: member,
+                  purpose: _purposeCtr.text,
+                  professor: _professerCtr.text
+              );
+        if (response == null) {
           title = 'Not found';
+          onPressed = () => Navigator.pop(context);
+        } else if (response['reservationID'] == -1) {
+          title = '[!] ${response['statusMsg']}';
           onPressed = () => Navigator.pop(context);
         } else {
           allClear = true;

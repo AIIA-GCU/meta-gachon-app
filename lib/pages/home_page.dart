@@ -19,13 +19,13 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   late final FToast _fToast;
-  late bool _isShownToast;
+  late bool _isShownToast, _loading;
 
   @override
   void initState() {
     _fToast = FToast();
     _fToast.init(context);
-    _isShownToast = false;
+    _isShownToast = _loading = false;
     super.initState();
   }
 
@@ -250,10 +250,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void doReservation() {
-    Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => const ReservatePage()));
-    widget.movetoReserList();
+  Future<void> doReservation() async {
+    setState(() => _loading = true);
+    List<String>? temp = await RestAPI.placeForService();
+    if (temp != null) {
+      setState(() {
+        _loading = false;
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
+      });
+    } else {
+      setState(() {
+        _loading = false;
+        late String place;
+        switch (service) {
+          case ServiceType.aiSpace:
+            place = "회의실";
+            break;
+          case ServiceType.lectureRoom:
+            place = "강의실";
+            break;
+          case ServiceType.computer:
+            place = "컴퓨터";
+            break;
+        }
+        showDialog(
+            context: context,
+            builder: (ctx) => CommentPopup(
+                title: '현재 예약 가능한 $place가 없습니다.',
+                onPressed: () => Navigator.pop(ctx)
+            )
+        );
+      });
+    }
   }
 
   void doAdmission() {

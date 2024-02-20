@@ -348,6 +348,7 @@ class _SignInPageState extends State<SignInPage> {
             barrierColor: Colors.black.withOpacity(0.25),
             builder: (context) => CommentPopup(
                 title: "통신 속도가 너무 느립니다!",
+                buttonColor: MGColor.brand1Primary,
                 onPressed: () => Navigator.pop(context)
             )
         );

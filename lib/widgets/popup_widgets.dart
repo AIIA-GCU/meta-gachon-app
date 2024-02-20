@@ -83,7 +83,7 @@ class CommentPopup extends StatelessWidget {
     Color? buttonColor,
     required this.onPressed
   }) {
-    buttonBackground = buttonColor ?? MGColor.brand1Primary;
+    buttonBackground = buttonColor ?? MGColor.primaryColor();
   }
 
   final String title;
@@ -129,10 +129,11 @@ class CommentPopup extends StatelessWidget {
 }
 
 class ReservationPopup extends StatelessWidget {
-  const ReservationPopup(this.item, this.status, {super.key});
+  const ReservationPopup(this.item, this.status, this.setLoading, {super.key});
 
   final Reservate item;
   final int status;
+  final void Function(bool) setLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +141,7 @@ class ReservationPopup extends StatelessWidget {
     late String statusMsg;
     late Widget button;
     
-    if (service == ServiceType.lectureRoom && item.place == null) {
+    if (service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
     } else {
       place = Text(item.place!, style: KR.subtitle1);
@@ -174,36 +175,7 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
-        /// 사용 전 (예약 변경 O)
-        case 1:
-          button = Column(children: [
-            ElevatedButton(
-                onPressed: () => _edit(context),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: MGColor.primaryColor(),
-                    fixedSize: Size(
-                        ratio.width * 145, ratio.height * 40),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("예약 수정하기", style: KR.parag1.copyWith(
-                    color: Colors.white))
-            ),
-            TextButton(
-                onPressed: () => _del(context),
-                style: TextButton.styleFrom(
-                    fixedSize: Size(
-                        ratio.width * 145, ratio.height * 40),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))
-                ),
-                child: Text("예약 취소하기", style: KR.parag1.copyWith(
-                    color: MGColor.base3))
-            )
-          ]);
-          break;
-
-        /// 사용 전 (예약 변경 X)
+        /// 사용 전 (예약 변경 X, QR O)
         case 0:
           button = ElevatedButton(
               onPressed: () => _qr,
@@ -219,7 +191,58 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
-      /// 사용 중 (연장 O)
+        case 1:
+          button = Text(
+            "사용 전날은 수정 및 취소가 불가합니다.",
+            style: KR.label2.copyWith(color: MGColor.systemError)
+          );
+          break;
+
+        /// 사용 전 (예약 변경 O, QR X)
+        case 2:
+          if (service case ServiceType.computer) {
+            button = ElevatedButton(
+                onPressed: () => _del(context),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: MGColor.primaryColor(),
+                    fixedSize: Size(
+                        ratio.width * 145, ratio.height * 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))
+                ),
+                child: Text("예약 취소하기", style: KR.parag1.copyWith(
+                    color: Colors.white))
+            );
+          } else {
+            button = Column(children: [
+              ElevatedButton(
+                  onPressed: () => _edit(context),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: MGColor.primaryColor(),
+                      fixedSize: Size(
+                          ratio.width * 145, ratio.height * 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))
+                  ),
+                  child: Text("예약 수정하기", style: KR.parag1.copyWith(
+                      color: Colors.white))
+              ),
+              TextButton(
+                  onPressed: () => _del(context),
+                  style: TextButton.styleFrom(
+                      fixedSize: Size(
+                          ratio.width * 145, ratio.height * 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))
+                  ),
+                  child: Text("예약 취소하기", style: KR.parag1.copyWith(
+                      color: MGColor.base3))
+              )
+            ]);
+          }
+          break;
+
+        /// 사용 중 (연장 O)
         case 3:
           button = ElevatedButton(
               onPressed: () => _prolong,
@@ -343,10 +366,41 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// 예약 수정
-  void _edit(BuildContext context) {
+  Future<void> _edit(BuildContext context) async {
+    setLoading(true);
     Navigator.pop(context);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ReservatePage(reservate: item)));
+    List<String>? temp = await RestAPI.placeForService();
+    setLoading(false);
+    if (temp != null || temp!.isEmpty) {
+      late String place;
+      switch (service) {
+        case ServiceType.aiSpace:
+          place = "회의실";
+          break;
+        case ServiceType.lectureRoom:
+          place = "강의실";
+          break;
+        case ServiceType.computer:
+          place = "컴퓨터";
+          break;
+      }
+      showDialog(
+          context: context,
+          builder: (ctx) => CommentPopup(
+              title: '현재 예약 가능한 $place가 없습니다.',
+              onPressed: () => Navigator.pop(ctx)
+          )
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ReservatePage(
+            availableRoom: temp,
+            reservate: item
+          )
+        )
+      );
+    }
   }
 
   /// 예약 삭제

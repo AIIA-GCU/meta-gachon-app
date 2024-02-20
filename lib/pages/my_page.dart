@@ -258,7 +258,12 @@ class MyPage extends StatelessWidget {
   
   void _backToSelectingPage(BuildContext context) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const SelectingServicePage()));
+      PageRouteBuilder(
+        fullscreenDialog: false,
+        transitionsBuilder: slideLeft2Right,
+        pageBuilder: (_, __, ___) => const SelectingServicePage()
+      )
+    );
   }
 
   void _floatSettingPage(BuildContext context) {
