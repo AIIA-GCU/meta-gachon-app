@@ -143,22 +143,32 @@ class CustomButtons {
 }
 
 class CustomDropdown extends StatefulWidget {
-  final String hint;
-  final List<String> items;
-  final Function(String?) onChanged;
-
   const CustomDropdown({
     Key? key,
+    this.value,
     required this.hint,
     required this.items,
     required this.onChanged,
   }) : super(key: key);
 
+  final String? value;
+  final String hint;
+  final List<String> items;
+  final Function(String?) onChanged;
+
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
 class _CustomDropdownState extends State<CustomDropdown> {
-  String? _selectedItem;
+  late String? _selectedItem;
+
+  @override
+  void initState() {
+    _selectedItem = widget.value;
+    debugPrint(widget.value);
+    debugPrint(_selectedItem);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

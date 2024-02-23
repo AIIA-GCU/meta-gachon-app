@@ -428,10 +428,9 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     _reset = true;
     _date = widget.date;
     _place = widget.room;
-    debugPrint('${widget.begin} ${widget.end}');
     if (widget.begin != null && widget.end != null) {
       _begin = widget.begin;
-      _end = widget.end! - 1;
+      _end = (widget.end!+23) % 24;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
     super.initState();
@@ -444,10 +443,9 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
       _date = widget.date;
       _place = widget.room;
       _begin = _end = null;
-      debugPrint('${widget.begin} ${widget.end}');
       if (widget.begin != null && widget.end != null) {
         _begin = widget.begin;
-        _end = widget.end! - 1;
+        _end = (widget.end!+23) % 24;
         debugPrint("start: $_begin | end: ${_end!+1}");
       }
     }
@@ -529,9 +527,11 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
                                 color = MGColor.primaryColor();
-                              } else if (index < 23 && index == _begin!+1) {
+                              } else if (index == _begin!+1) {
+                                debugPrint("a $index");
                                 color = MGColor.primaryColor().withOpacity(0.2);
-                              } else if (index < 22 && index == _begin!+2 && _availables[index-1]) {
+                              } else if (index == _begin!+2 && _availables[index-1]) {
+                                debugPrint("b $index");
                                 color = MGColor.primaryColor().withOpacity(0.2);
                               }
                             }
@@ -626,7 +626,8 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   /// 박스를 클릭했을 때, 시간을 설정하기
   void _onTap(int idx) {
     setState(() {
-      if (_begin == null || idx < _begin! || _begin!+2 < idx) {
+      if (_begin == null || idx < _begin!
+          || _begin!+2 < idx || !_availables[_begin!+1]) {
         widget.setStart(_begin = idx);
         widget.setEnd(_end = idx);
       } else if (_end! <= _begin!+2) {

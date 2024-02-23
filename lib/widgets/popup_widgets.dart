@@ -159,13 +159,13 @@ class ReservationPopup extends StatelessWidget {
       case 0:
         statusMsg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
         break;
-      case 2:
+      case 3:
         statusMsg = '현재 회의실을 사용 중이에요!';
         break;
-      case 3:
+      case 4:
         statusMsg = '곧 있음 이용 시간이 끝납니다.';
         break;
-      case 4:
+      case 5:
         statusMsg = '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!';
         break;
       default:
@@ -243,7 +243,7 @@ class ReservationPopup extends StatelessWidget {
           break;
 
         /// 사용 중 (연장 O)
-        case 3:
+        case 4:
           button = ElevatedButton(
               onPressed: () => _prolong,
               style: ElevatedButton.styleFrom(
@@ -259,7 +259,7 @@ class ReservationPopup extends StatelessWidget {
           break;
 
       /// 사용 끝 (인증 X)
-        case 4:
+        case 5:
           button = ElevatedButton(
               onPressed: () => _admit(context),
               style: ElevatedButton.styleFrom(
@@ -370,24 +370,25 @@ class ReservationPopup extends StatelessWidget {
     setLoading(true);
     Navigator.pop(context);
     List<String>? temp = await RestAPI.placeForService();
+    debugPrint(temp.toString());
     setLoading(false);
-    if (temp != null || temp!.isEmpty) {
+    if (temp == null || temp.isEmpty) {
       late String place;
       switch (service) {
         case ServiceType.aiSpace:
-          place = "회의실";
+          place = "회의실이";
           break;
         case ServiceType.lectureRoom:
-          place = "강의실";
+          place = "강의실이";
           break;
         case ServiceType.computer:
-          place = "컴퓨터";
+          place = "컴퓨터가";
           break;
       }
       showDialog(
           context: context,
           builder: (ctx) => CommentPopup(
-              title: '현재 예약 가능한 $place가 없습니다.',
+              title: '현재 예약 가능한 $place 없습니다.',
               onPressed: () => Navigator.pop(ctx)
           )
       );
@@ -480,8 +481,8 @@ class ReservationPopup extends StatelessWidget {
                   context: context,
                   builder: (context2) => CommentPopup(
                       title: "연장하기",
-                      onPressed: () => Navigator.pop(context2)))
-                  .then((_) => listListener.add(StreamType.reservate));
+                      onPressed: () => Navigator.pop(context2))
+              ).then((_) => listListener.add(StreamType.reservate));
             }
           } on TimeoutException {
             showDialog(
