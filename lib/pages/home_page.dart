@@ -9,28 +9,130 @@ import 'my_admission_list_page.dart';
 import 'reservate_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.movetoReserList, required this.movetoAdmisList});
+  const HomePage({
+    super.key,
+    required this.movetoReserList,
+    required this.movetoAdmisList,
+    required this.setLoading
+  });
 
   final VoidCallback movetoReserList;
   final VoidCallback movetoAdmisList;
+  final void Function(bool) setLoading;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
   late final FToast _fToast;
-  late bool _isShownToast, _loading;
+
+  late bool _isShownToast;
+  late Widget _upperCard, _lowerCard;
 
   @override
   void initState() {
     _fToast = FToast();
     _fToast.init(context);
-    _isShownToast = _loading = false;
+
+    _isShownToast = false;
+
+    if (service case ServiceType.aiSpace) {
+      _upperCard = Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          /// <예약하기>
+          _smallCard(
+              '강의실을 빌려\n편하게 공부해요!',
+              '예약하기',
+              ImgPath.home3,
+              doReservation
+          ),
+
+          /// <인증하기>
+          _smallCard(
+              "강의실 이용 후\n인증을 올려주세요!",
+              "인증하기",
+              ImgPath.home2,
+              doAdmission
+          )
+        ],
+      );
+      _lowerCard = Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+            /// <등급 확인하기>
+            _largeCard(
+                "현재 나의 등급은?",
+                "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
+                "등급 확인하기",
+                ImgPath.home5,
+                checkRating
+            ),
+
+            SizedBox(height: ratio.height * 12),
+
+            /// <예약 확인하기>
+            _largeCard(
+                "내가 언제 예약했더라?",
+                "내가 예약한 강의실과\n예약 시간을 확인해요!",
+                "예약 확인하기",
+                ImgPath.home4,
+                widget.movetoReserList
+            ),
+
+            SizedBox(height: ratio.height * 12),
+
+            /// <내 인증 확인하기>
+            _largeCard(
+                "과연 나의 깔끔 점수는?",
+                "내가 올린 인증 사진 점수는\n과연 몇 점일지 확인해요!",
+                "내 인증 확인하기",
+                ImgPath.home1,
+                checkMyAdmission
+            )
+          ]
+      );
+    } else {
+      _upperCard = _smallCard(
+        '강의실을 빌려\n편하게 공부해요!',
+        '예약하기',
+        ImgPath.home3,
+        doReservation
+      );
+      _lowerCard = Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          /// <등급 확인하기>
+          _largeCard(
+              "현재 나의 등급은?",
+              "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
+              "등급 확인하기",
+              ImgPath.home5,
+              checkRating
+          ),
+
+          SizedBox(height: ratio.height * 12),
+
+          /// <예약 확인하기>
+          _largeCard(
+              "내가 언제 예약했더라?",
+              "내가 예약한 강의실과\n예약 시간을 확인해요!",
+              "예약 확인하기",
+              ImgPath.home4,
+              widget.movetoReserList
+          )
+        ]
+      );
+    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    late List rowItems, columnItems;
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.fromLTRB(
@@ -44,27 +146,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// <예약하기> & <인증하기>
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  /// <예약하기>
-                  _smallCard(
-                    '강의실을 빌려\n편하게 공부해요!',
-                    '예약하기',
-                    ImgPath.home3,
-                    doReservation
-                  ),
-
-                  /// <인증하기>
-                  _smallCard(
-                    "강의실 이용 후\n인증을 올려주세요!",
-                    "인증하기",
-                    ImgPath.home2,
-                    doAdmission
-                  )
-                ],
-              ),
+              _upperCard,
 
               SizedBox(height: ratio.height * 30),
 
@@ -75,41 +157,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: ratio.height * 8),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      /// <등급 확인하기>
-                      _largeCard(
-                          "현재 나의 등급은?",
-                          "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
-                          "등급 확인하기",
-                          ImgPath.home5,
-                          checkRating
-                      ),
-
-                      SizedBox(height: ratio.height * 12),
-
-                      /// <예약 확인하기>
-                      _largeCard(
-                          "내가 언제 예약했더라?",
-                          "내가 예약한 강의실과\n예약 시간을 확인해요!",
-                          "예약 확인하기",
-                          ImgPath.home4,
-                          widget.movetoReserList
-                      ),
-
-                      SizedBox(height: ratio.height * 12),
-
-                      /// <내 인증 확인하기>
-                      _largeCard(
-                          "과연 나의 깔끔 점수는?",
-                          "내가 올린 인증 사진 점수는\n과연 몇 점일지 확인해요!",
-                          "내 인증 확인하기",
-                          ImgPath.home1,
-                          checkMyAdmission
-                      )
-                    ]
-                ),
+                child: _lowerCard,
               )
             ]
         )
@@ -251,37 +299,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> doReservation() async {
-    setState(() => _loading = true);
+    widget.setLoading(true);
     List<String>? temp = await RestAPI.placeForService();
+    widget.setLoading(false);
     if (temp != null) {
-      setState(() {
-        _loading = false;
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
-      });
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
     } else {
-      setState(() {
-        _loading = false;
-        late String place;
-        switch (service) {
-          case ServiceType.aiSpace:
-            place = "회의실";
-            break;
-          case ServiceType.lectureRoom:
-            place = "강의실";
-            break;
-          case ServiceType.computer:
-            place = "컴퓨터";
-            break;
-        }
-        showDialog(
-            context: context,
-            builder: (ctx) => CommentPopup(
-                title: '현재 예약 가능한 $place가 없습니다.',
-                onPressed: () => Navigator.pop(ctx)
-            )
-        );
-      });
+      late String place;
+      switch (service) {
+        case ServiceType.aiSpace:
+          place = "회의실";
+          break;
+        case ServiceType.lectureRoom:
+          place = "강의실";
+          break;
+        case ServiceType.computer:
+          place = "컴퓨터";
+          break;
+      }
+      showDialog(
+          context: context,
+          builder: (ctx) => CommentPopup(
+              title: '현재 예약 가능한 $place가 없습니다.',
+              onPressed: () => Navigator.pop(ctx)
+          )
+      );
     }
   }
 

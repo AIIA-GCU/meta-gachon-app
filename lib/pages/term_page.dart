@@ -21,7 +21,7 @@ class TermPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            leadingWidth: 42,
+            leadingWidth: 48,
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
               icon: Icon(

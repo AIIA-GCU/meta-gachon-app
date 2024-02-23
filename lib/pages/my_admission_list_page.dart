@@ -19,7 +19,7 @@ class _MyAdmissionPageState extends State<MyAdmissionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            leadingWidth: 26,
+            leadingWidth: 48,
             leading: IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,

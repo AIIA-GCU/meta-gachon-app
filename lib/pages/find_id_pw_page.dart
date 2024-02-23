@@ -119,6 +119,8 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                           bottom: ratio.height * 22),
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
+                        style: IconButton.styleFrom(
+                          tapTargetSize: MaterialTapTargetSize.padded),
                         icon: Icon(
                             MGIcon.back,
                             size: ratio.width * 24,

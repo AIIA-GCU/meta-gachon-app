@@ -72,6 +72,7 @@ class _AdmitPageState extends State<AdmitPage> {
           child: Scaffold(
             appBar: AppBar(
                 titleSpacing: 0,
+                leadingWidth: 48,
                 leading: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(MGIcon.back),

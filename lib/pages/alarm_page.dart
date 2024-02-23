@@ -17,6 +17,7 @@ class _AlarmState extends State<Alarm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 48,
         leading: IconButton(
           icon: const Icon(MGIcon.back, color: MGColor.base4),
           onPressed: () => Navigator.of(context).pop(),

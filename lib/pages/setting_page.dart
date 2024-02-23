@@ -43,6 +43,9 @@ class _SettingPageState extends State<SettingPage> {
               child: Row(children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
+                  style: IconButton.styleFrom(
+                      tapTargetSize: MaterialTapTargetSize.padded
+                  ),
                   icon: Icon(
                     MGIcon.back,
                     size: ratio.width * 24,
