@@ -13,11 +13,9 @@ import '../widgets/popup_widgets.dart';
 class MyPage extends StatelessWidget {
   const MyPage({
     super.key,
-    required this.manager,
     required this.moveToReserList
   });
 
-  final bool manager;
   final VoidCallback moveToReserList;
 
   @override

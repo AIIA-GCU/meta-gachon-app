@@ -32,132 +32,137 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          /// <내 인증 확인하기> & <인증하러 가기>
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.symmetric(
-                horizontal: ratio.width * 16,
-                vertical: ratio.height * 16
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                /// 인트로
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        ImgPath.home5,
-                        height: ratio.width * 48,
-                      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        /// <내 인증 확인하기> & <인증하러 가기>
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(
+              horizontal: ratio.width * 16,
+              vertical: ratio.height * 16
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              /// 인트로
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      ImgPath.home5,
+                      height: ratio.width * 48,
                     ),
-                    SizedBox(width: ratio.width * 10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            '강의실 이용 끝!',
-                            style: KR.parag2.copyWith(color: MGColor.base3)
-                        ),
-                        Text(
-                            '이제 인증하러 가볼까요?',
-                            style: KR.subtitle1
-                        ),
-                      ],
+                  ),
+                  SizedBox(width: ratio.width * 10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          '강의실 이용 끝!',
+                          style: KR.parag2.copyWith(color: MGColor.base3)
+                      ),
+                      Text(
+                          '이제 인증하러 가볼까요?',
+                          style: KR.subtitle1
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: ratio.height * 16),
+
+              /// 버튼
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /// <내 인증 확인하기>
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage())),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.tertiaryColor(),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        fixedSize: Size(ratio.width * 159, ratio.height * 40)
+                    ),
+                    child: Text(
+                      '내 인증 확인하기',
+                      style: KR.parag2.copyWith(color: MGColor.primaryColor()),
+                    ),
+                  ),
+                  /// <인증하러 가기>
+                  ElevatedButton(
+                    onPressed: _doAdmission,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.primaryColor(),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        fixedSize: Size(ratio.width * 160, ratio.height * 40)
+                    ),
+                    child: Text(
+                      '인증하러 가기',
+                      style: KR.parag2.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        /// 리스트
+        Padding(
+            padding: EdgeInsets.only(top: ratio.height * 30),
+            child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
+        ),
+        FutureBuilder<List<Admit>?>(
+            future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Container(
+                    height: ratio.height * 594,
+                    alignment: Alignment.center,
+                    child: Text(
+                        '통신 속도가 너무 느립니다!',
+                        style: KR.subtitle4.copyWith(color: MGColor.base3)
                     )
-                  ],
-                ),
-                SizedBox(height: ratio.height * 16),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
 
-                /// 버튼
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /// <내 인증 확인하기>
-                    ElevatedButton(
-                      onPressed: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage())),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MGColor.tertiaryColor(),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          fixedSize: Size(ratio.width * 159, ratio.height * 40)
-                      ),
-                      child: Text(
-                        '내 인증 확인하기',
-                        style: KR.parag2.copyWith(color: MGColor.primaryColor()),
-                      ),
-                    ),
-                    /// <인증하러 가기>
-                    ElevatedButton(
-                      onPressed: _doAdmission,
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MGColor.primaryColor(),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          fixedSize: Size(ratio.width * 160, ratio.height * 40)
-                      ),
-                      child: Text(
-                        '인증하러 가기',
-                        style: KR.parag2.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+              if (snapshot.hasData) admits = snapshot.data!;
 
-          /// 리스트
-          Padding(
-              padding: EdgeInsets.only(top: ratio.height * 30),
-              child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
-          ),
-          Padding(
-              padding: EdgeInsets.only(bottom: ratio.height * 30),
-              child: FutureBuilder<List<Admit>?>(
-                  future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container(
-                          height: ratio.height * 594,
-                          alignment: Alignment.center,
-                          child: Text(
-                              '통신 속도가 너무 느립니다!',
-                              style: KR.subtitle4.copyWith(color: MGColor.base3)
-                          )
-                      );
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-
-                    if (snapshot.hasData) admits = snapshot.data!;
-
-                    if (admits.isNotEmpty) {
-                      return Column(children: admits.map((e) => _listItem(e)).toList());
-                    } else {
-                      return Container(
-                          height: ratio.height * 218,
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                              '아직 인증이 없어요!',
-                              style: KR.subtitle4.copyWith(color: MGColor.base3)
-                          )
-                      );
-                    }
-                  }
-              )
-          )
-        ]),
-      ),
+              if (admits.isNotEmpty) {
+                return RefreshIndicator(
+                  displacement: 0,
+                  color: MGColor.primaryColor(),
+                  onRefresh: _onRefreshed,
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics()
+                        .applyTo(const BouncingScrollPhysics()),
+                    itemCount: admits.length,
+                    itemBuilder: (_, index) => _listItem(admits[index])
+                  )
+                );
+              } else {
+                return Container(
+                    height: ratio.height * 218,
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                        '아직 인증이 없어요!',
+                        style: KR.subtitle4.copyWith(color: MGColor.base3)
+                    )
+                );
+              }
+            }
+        )
+      ]),
     );
   }
   
@@ -248,5 +253,10 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
         myAdmits.clear();
       });
     }
+  }
+
+  Future<void> _onRefreshed() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    setState(() => admits.clear());
   }
 }

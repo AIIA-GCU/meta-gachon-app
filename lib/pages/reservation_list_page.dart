@@ -13,7 +13,9 @@ import 'reservate_page.dart';
 import '../widgets/small_widgets.dart';
 
 class ReservationListPage extends StatefulWidget {
-  const ReservationListPage({super.key});
+  const ReservationListPage({super.key, required this.setLoading});
+
+  final void Function(bool) setLoading;
 
   @override
   State<ReservationListPage> createState() => _ReservationListPageState();
@@ -21,111 +23,108 @@ class ReservationListPage extends StatefulWidget {
 
 class _ReservationListPageState extends State<ReservationListPage> {
   final Stream<StreamType> _stream = listListener.stream;
-  late bool _loading;
 
   @override
   void initState() {
-    _loading = false;
     _stream.listen((event) => _event(event));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                /// 예약하기 카드
-                Material(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                  child: InkWell(
-                    onTap: doReservation,
-                    child: Container(
-                      height: 56,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: ratio.width * 16),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              ImgPath.home4,
-                              height: ratio.height * 36,
-                            ),
-                          ),
-                          SizedBox(width: ratio.width * 8),
-                          Text('강의실 예약하기', style: KR.subtitle3),
-                          const Flexible(child: SizedBox.expand()),
-                          Transform.rotate(
-                            angle: pi,
-                            child: const Icon(
-                              MGIcon.back,
-                              size: 24,
-                              color: MGColor.base3,
-                            ),
-                          ),
-                        ],
-                      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        /// 예약하기 카드
+        Material(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+          child: InkWell(
+            onTap: doReservation,
+            child: Container(
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.symmetric(
+                  horizontal: ratio.width * 16),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      ImgPath.home4,
+                      height: ratio.height * 36,
                     ),
                   ),
-                ),
-
-                /// 리스트
-                Padding(
-                  padding: EdgeInsets.only(top: ratio.height * 30),
-                  child: Text('내 예약 확인하기', style: KR.subtitle1),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(bottom: ratio.height * 30),
-                    child: FutureBuilder<List<Reservate>?>(
-                        future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Container(
-                                height: 218,
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                    '통신 속도가 너무 느립니다!',
-                                    style: KR.subtitle4.copyWith(
-                                        color: MGColor.base3)
-                                )
-                            );
-                          }
-                          if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-                          if (snapshot.hasData) reservates = snapshot.data!;
-                          if (reservates.isNotEmpty) {
-                            return Column(children: reservates.map((e) => _listItem(e)).toList());
-                          } else {
-                            return Container(
-                                height: ratio.height * 594,
-                                alignment: Alignment.center,
-                                child: Text(
-                                    '아직 예약 내역이 없어요!',
-                                    style: KR.subtitle4.copyWith(
-                                        color: MGColor.base3)
-                                )
-                            );
-                          }
-                        }
-                    )
-                )
-              ]),
+                  SizedBox(width: ratio.width * 8),
+                  Text('강의실 예약하기', style: KR.subtitle3),
+                  const Flexible(child: SizedBox.expand()),
+                  Transform.rotate(
+                    angle: pi,
+                    child: const Icon(
+                      MGIcon.back,
+                      size: 24,
+                      color: MGColor.base3,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ]),
+          ),
         ),
 
-        if (_loading)
-          const ProgressScreen()
-      ],
+        /// 리스트
+        Padding(
+          padding: EdgeInsets.only(top: ratio.height * 30),
+          child: Text('내 예약 확인하기', style: KR.subtitle1),
+        ),
+        Expanded(
+          child: FutureBuilder<List<Reservate>?>(
+              future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Container(
+                      height: 218,
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                          '통신 속도가 너무 느립니다!',
+                          style: KR.subtitle4.copyWith(
+                              color: MGColor.base3)
+                      )
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+                if (snapshot.hasData) reservates = snapshot.data!;
+                if (reservates.isNotEmpty) {
+                  return RefreshIndicator(
+                    displacement: 0,
+                    color: MGColor.primaryColor(),
+                    onRefresh: _onRefreshed,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: ratio.height * 30),
+                      physics: const AlwaysScrollableScrollPhysics()
+                          .applyTo(const BouncingScrollPhysics()),
+                      itemCount: reservates.length,
+                      itemBuilder: (_, index) => _listItem(reservates[index])
+                    ),
+                  );
+                } else {
+                  return Container(
+                      height: ratio.height * 594,
+                      alignment: Alignment.center,
+                      child: Text(
+                          '아직 예약 내역이 없어요!',
+                          style: KR.subtitle4.copyWith(
+                              color: MGColor.base3)
+                      )
+                  );
+                }
+              }
+          ),
+        )
+      ]),
     );
   }
 
@@ -176,7 +175,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         int? status = await RestAPI.currentReservationStatus(reservationId: reservate.reservationId);
         showDialog(
           context: context,
-          builder: (_) => ReservationPopup(reservate, status!, _setLoading)
+          builder: (_) => ReservationPopup(reservate, status!, widget.setLoading)
         );
       },
       child: Container(
@@ -219,8 +218,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  void _setLoading(bool val) => setState(() => _loading = val);
-
   void _event(StreamType event) {
     if (mounted && event == StreamType.reservate) {
       setState(() => reservates.clear());
@@ -228,9 +225,10 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   Future<void> doReservation() async {
-    _setLoading(true);
+    widget.setLoading(true);
     List<String>? temp = await RestAPI.placeForService();
-    if (temp != null || temp!.isEmpty) {
+    widget.setLoading(false);
+    if (temp != null || temp!.isNotEmpty) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
     } else {
@@ -254,5 +252,10 @@ class _ReservationListPageState extends State<ReservationListPage> {
           )
       );
     }
+  }
+
+  Future<void> _onRefreshed() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    setState(() => reservates.clear());
   }
 }

@@ -36,78 +36,84 @@ class _MainFrameState extends State<MainFrame> {
   ///      예약 리스트 페이지로 이동하는 callback
   ///  - movetoAdmisList:
   ///      인증 리스트 페이지로 이동하는 callback
-  late int currentPageIndex;
+  late int _currentPageIndex;
+  late bool _loading;
   late final List<Widget> _children;
-  late final PageController pageController;
+  late final PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    currentPageIndex = 0;
+    _currentPageIndex = 0;
+    _loading = false;
+    _pageController = PageController();
     _children = [
       HomePage(
-        movetoReserList: movetoReserList,
-        movetoAdmisList: movetoAdmisList
+        movetoReserList: _movetoReserList,
+        movetoAdmisList: _movetoAdmisList
       ),
-      const ReservationListPage(),
+      ReservationListPage(setLoading: _setLoading),
       const AdmissionListPage(),
-      MyPage(
-        manager: false,
-        moveToReserList: movetoReserList,
-      )
+      MyPage(moveToReserList: _movetoReserList,)
     ];
-    pageController = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
-          actions: [
-            /// alarm
-            NotificationIcon(onPressed: movetoAlarm),
-            SizedBox(width: ratio.width * 16)
-          ],
+    return Stack(
+      children: [
+        Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: const Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+              actions: [
+                /// alarm
+                NotificationIcon(onPressed: _movetoAlarm),
+                SizedBox(width: ratio.width * 16)
+              ],
+            ),
+            body: PageView(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              physics: const PageScrollPhysics(),
+              children: _children,
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _currentPageIndex,
+                onTap: _onTap,
+                items: const [
+                  BottomNavigationBarItem(icon: Icon(MGIcon.home), label: "홈"),
+                  BottomNavigationBarItem(icon: Icon(MGIcon.res), label: "예약"),
+                  BottomNavigationBarItem(icon: Icon(MGIcon.cert), label: "인증"),
+                  BottomNavigationBarItem(icon: Icon(MGIcon.my), label: "마이")
+                ],
+                selectedIconTheme: IconThemeData(
+                  size: 24, color: MGColor.primaryColor())
+            )
         ),
-        body: PageView(
-          controller: pageController,
-          onPageChanged: onPageChanged,
-          physics: const PageScrollPhysics(),
-          children: _children,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: currentPageIndex,
-            onTap: onTap,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(MGIcon.home), label: "홈"),
-              BottomNavigationBarItem(icon: Icon(MGIcon.res), label: "예약"),
-              BottomNavigationBarItem(icon: Icon(MGIcon.cert), label: "인증"),
-              BottomNavigationBarItem(icon: Icon(MGIcon.my), label: "마이")
-            ],
-            selectedIconTheme: IconThemeData(
-              size: 24, color: MGColor.primaryColor())
-        )
+
+        if (_loading)
+          const ProgressScreen()
+      ],
     );
   }
 
-  void movetoAlarm() => Navigator.of(context)
+  void _movetoAlarm() => Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => const Alarm()));
 
-  void onTap(int index) => pageController
+  void _onTap(int index) => _pageController
       .animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
 
-  void onPageChanged(int index) => setState(() => currentPageIndex = index);
+  void _onPageChanged(int index) => setState(() => _currentPageIndex = index);
 
-  void movetoReserList() {
-    pageController
+  void _setLoading(bool val) => setState(() => _loading = val);
+
+  void _movetoReserList() => _pageController
       .animateToPage(1, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-  }
 
-  void movetoAdmisList() => pageController.jumpToPage(2);
+  void _movetoAdmisList() => _pageController.jumpToPage(2);
 
-  void movetoMyAdmis() => Navigator.of(context)
+  void _movetoMyAdmis() => Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
 }

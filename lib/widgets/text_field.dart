@@ -171,6 +171,7 @@ class CustomTextField extends StatelessWidget {
   final String hint;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? format;
+  final TextInputType? keyboard;
 
   const CustomTextField({
     required this.enabled,
@@ -180,6 +181,7 @@ class CustomTextField extends StatelessWidget {
     required this.hint,
     this.validator,
     this.format,
+    this.keyboard,
     super.key,
   });
 
@@ -196,6 +198,7 @@ class CustomTextField extends StatelessWidget {
           style: KR.parag2,
           controller: controller,
           inputFormatters: format,
+          keyboardType: keyboard,
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(0),
               hintText: hint,
@@ -230,15 +233,111 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
+
+/// 여기 밑으로 있는 코드는
+/// 아직 완벽하게 이해하지 못했음
 class ProfesserFormat extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.selection.baseOffset == 0) return const TextEditingValue();
+    final _TextEditingValueAccumulator formatState = _TextEditingValueAccumulator(newValue);
+    assert(!formatState.debugFinalized);
 
-    String temp = newValue.text.split(' ')[0];
+    final pattern = RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]');
+    final Iterable<Match> matches = pattern.allMatches(newValue.text);
+    Match? previousMatch;
+    for (final Match match in matches) {
+      assert(match.end >= match.start);
+      _processRegion(true, previousMatch?.end ?? 0, match.start, formatState);
+      assert(!formatState.debugFinalized);
+      _processRegion(false, match.start, match.end, formatState);
+      assert(!formatState.debugFinalized);
+
+      previousMatch = match;
+    }
+
+    _processRegion(true, previousMatch?.end ?? 0, newValue.text.length, formatState);
+    assert(!formatState.debugFinalized);
+    var temp1 = formatState.finalize();
+
+    if (temp1.selection.baseOffset == 0) return const TextEditingValue();
+
+    var temp2 = newValue.text.split(' ')[0];
     return newValue.copyWith(
-        text: '$temp 교수님',
-        selection: TextSelection.collapsed(offset: temp.length)
+        text: '$temp2 교수님',
+        selection: TextSelection.collapsed(offset: temp2.length)
+    );
+  }
+
+  void _processRegion(bool isBannedRegion, int regionStart, int regionEnd, _TextEditingValueAccumulator state) {
+    final String replacementString = isBannedRegion ? '' : state.inputValue.text.substring(regionStart, regionEnd);
+
+    state.stringBuffer.write(replacementString);
+
+    if (replacementString.length == regionEnd - regionStart) return;
+
+    int adjustIndex(int originalIndex) {
+      final int replacedLength = originalIndex <= regionStart && originalIndex < regionEnd ? 0 : replacementString.length;
+      final int removedLength = originalIndex.clamp(regionStart, regionEnd) - regionStart;
+      return replacedLength - removedLength;
+    }
+
+    state.selection?.base += adjustIndex(state.inputValue.selection.baseOffset);
+    state.selection?.extent += adjustIndex(state.inputValue.selection.extentOffset);
+    state.composingRegion?.base += adjustIndex(state.inputValue.composing.start);
+    state.composingRegion?.extent += adjustIndex(state.inputValue.composing.end);
+  }
+}
+
+class _MutableTextRange {
+  _MutableTextRange(this.base, this.extent);
+
+  int base;
+  int extent;
+
+  static _MutableTextRange? fromComposingRange(TextRange range) {
+    return range.isValid && !range.isCollapsed
+        ? _MutableTextRange(range.start, range.end)
+        : null;
+  }
+
+  static _MutableTextRange? fromTextSelection(TextSelection selection) {
+    return selection.isValid
+        ? _MutableTextRange(selection.baseOffset, selection.extentOffset)
+        : null;
+  }
+}
+
+// The intermediate state of a [FilteringTextInputFormatter] when it's
+// formatting a new user input.
+class _TextEditingValueAccumulator {
+  _TextEditingValueAccumulator(this.inputValue)
+      : selection = _MutableTextRange.fromTextSelection(inputValue.selection),
+        composingRegion = _MutableTextRange.fromComposingRange(inputValue.composing);
+
+  final TextEditingValue inputValue;
+  final StringBuffer stringBuffer = StringBuffer();
+  final _MutableTextRange? selection;
+  final _MutableTextRange? composingRegion;
+
+  bool debugFinalized = false;
+
+  TextEditingValue finalize() {
+    debugFinalized = true;
+    final _MutableTextRange? selection = this.selection;
+    final _MutableTextRange? composingRegion = this.composingRegion;
+    return TextEditingValue(
+      text: stringBuffer.toString(),
+      composing: composingRegion == null || composingRegion.base == composingRegion.extent
+          ? TextRange.empty
+          : TextRange(start: composingRegion.base, end: composingRegion.extent),
+      selection: selection == null
+          ? const TextSelection.collapsed(offset: -1)
+          : TextSelection(
+        baseOffset: selection.base,
+        extentOffset: selection.extent,
+        affinity: inputValue.selection.affinity,
+        isDirectional: inputValue.selection.isDirectional,
+      ),
     );
   }
 }

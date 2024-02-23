@@ -96,7 +96,7 @@ class APIRequest {
         final Map<String, String> serverCookies = _parseServerCookies(response);
         if (serverCookies.containsKey(_sessionCookieName)) {
           final newToken = serverCookies[_sessionCookieName]!;
-          if (await session.get() != newToken) {
+          if (session.get() != newToken) {
             session.set(newToken);
           }
         }

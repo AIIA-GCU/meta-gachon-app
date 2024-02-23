@@ -164,7 +164,7 @@ class Reservate {
         stdFormat2.parse('$date ${time[0]}'),
         stdFormat2.parse('$date ${time[1]}'),
         json['memberInfo'] ?? '',
-        json['professor']
+        json['professor'] ?? ''
     );
   }
 }

@@ -154,7 +154,7 @@ class CustomDropdown extends StatefulWidget {
   final String? value;
   final String hint;
   final List<String> items;
-  final Function(String?) onChanged;
+  final void Function(String?) onChanged;
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
@@ -165,9 +165,13 @@ class _CustomDropdownState extends State<CustomDropdown> {
   @override
   void initState() {
     _selectedItem = widget.value;
-    debugPrint(widget.value);
-    debugPrint(_selectedItem);
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomDropdown oldWidget) {
+    _selectedItem = widget.value;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -187,12 +191,12 @@ class _CustomDropdownState extends State<CustomDropdown> {
         ///드롭버튼(선택된 항목) 디자인
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
-          height: 40,
+          height: 32,
           width: 120 * ratio.width,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(width: 1, color: MGColor.primaryColor()),
+            border: Border.all(color: MGColor.primaryColor()),
           ),
         ),
 
@@ -246,7 +250,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 child: Text(
                     item,
                     textAlign: TextAlign.center,
-                    style: EN.parag2.copyWith(
+                    style: EN.subtitle2.copyWith(
                         color: (item == _selectedItem)
                             ? Colors.black
                             : const Color(0xFF7C7C7C)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/button.dart';
 
 class CustomDayCalender extends StatefulWidget {
   const CustomDayCalender({
@@ -413,11 +414,13 @@ class CustomTimePicker extends StatefulWidget {
   @override
   State<CustomTimePicker> createState() => _CustomTimePickerState();
 }
-class _CustomTimePickerState extends State<CustomTimePicker> {
+class _CustomTimePickerState extends State<CustomTimePicker>
+    with WidgetsBindingObserver {
   final _scrollCtr = ScrollController();
+  final List<int> times = List.generate(24, (index) => index);
 
   late List<bool> _availables;
-  late bool _reset;
+  late bool _reset, _animating;
   late String _date;
   late String? _place;
 
@@ -425,7 +428,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
   @override
   void initState() {
-    _reset = true;
+    _reset = _animating = true;
     _date = widget.date;
     _place = widget.room;
     if (widget.begin != null && widget.end != null) {
@@ -433,13 +436,20 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
       _end = (widget.end!+23) % 24;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
+    WidgetsBinding.instance.addTimingsCallback((_) {
+      if (_scrollCtr.hasClients && _animating && _date == today) {
+        debugPrint('the selected date is today!');
+        _animating = false;
+        _actScrollController(DateTime.now().hour);
+      }
+    });
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
     if (_place != widget.room || _date != widget.date) {
-      _reset = true;
+      _reset = _animating = true;
       _date = widget.date;
       _place = widget.room;
       _begin = _end = null;
@@ -451,6 +461,12 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     }
     super.didUpdateWidget(oldWidget);
   }
+  
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   /// Todo: 나중에 애니메이션 추가하기
   @override
@@ -458,30 +474,6 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     return FutureBuilder<void>(
       future: _reset ? _availableTime() : null,
       builder: (context, snapshot) {
-        /// 시간 표시용 텍스트
-        late final Text beginStr, endStr;
-        if (_begin != null && _end != null) {
-          if (_begin! < 10) {
-            beginStr = Text('0$_begin:00', style: EN.subtitle2);
-          } else if (_begin! >= 24) {
-            beginStr = Text('0${_begin! % 24}:00', style: EN.subtitle2);
-          } else {
-            beginStr = Text('$_begin:00', style: EN.subtitle2);
-          }
-          if (_end! < 9) {
-            endStr = Text('0${_end!+1}:00', style: EN.subtitle2);
-          } else if (_end! >= 23) {
-            endStr = Text('0${(_end!+1) % 24}:00', style: EN.subtitle2);
-          } else {
-            endStr = Text('${_end!+1}:00', style: EN.subtitle2);
-          }
-        } else {
-          beginStr = Text('00:00',
-              style: EN.subtitle2.copyWith(color: MGColor.base5));
-          endStr = Text('00:00',
-              style: EN.subtitle2.copyWith(color: MGColor.base5));
-        }
-
         return SizedBox(
           width: ratio.width * 336,
           child: Column(
@@ -528,10 +520,8 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
                               if (_begin! <= index && index <= _end!) {
                                 color = MGColor.primaryColor();
                               } else if (index == _begin!+1) {
-                                debugPrint("a $index");
                                 color = MGColor.primaryColor().withOpacity(0.2);
                               } else if (index == _begin!+2 && _availables[index-1]) {
-                                debugPrint("b $index");
                                 color = MGColor.primaryColor().withOpacity(0.2);
                               }
                             }
@@ -539,7 +529,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
                             return GestureDetector(
                               onTap: color == MGColor.base6
-                                  ? null : () => _onTap(index),
+                                  ? null : () => _onChangedTime(index),
                               child: Container(
                                   width: 24,
                                   height: 28,
@@ -583,36 +573,38 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
 
                   SizedBox(height: ratio.height * 8),
 
-                  /// 시간 표시용 텍스트
+                  /// 드롭다운
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                          width: ratio.width * 120,
-                          height: 32,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGColor.primaryColor())
-                          ),
-                          child: beginStr
+                      CustomDropdown(
+                        value: _begin == null ? null
+                            : _begin! < 10 ? '0$_begin:00' : '$_begin:00',
+                        hint: '00:00',
+                        items: times
+                            .map((i) => i < 10 ? '0$i:00' : '$i:00')
+                            .toList(),
+                        onChanged: (value) {
+                          var temp = value!.substring(0, 2);
+                          _onChangedTime(int.parse(temp));
+                        },
                       ),
                       SizedBox(
                           width: 22 * ratio.width,
                           child: const Center(child: Text("~"))
                       ),
-                      Container(
-                          width: ratio.width * 120,
-                          height: 32,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: MGColor.primaryColor())
-                          ),
-                          child: endStr
-                      ),
+                      CustomDropdown(
+                        value: _end == null ? null
+                            : _end! < 10 ? '0${_end!+1}:00' : '${_end!+1}:00',
+                        hint: '00:00',
+                        items: times
+                            .map((i) => i < 10 ? '0${i+1}:00' : '${i+1}:00')
+                            .toList(),
+                        onChanged: (value) {
+                          var temp = value!.substring(0, 2);
+                          _onChangedTime(int.parse(temp)-1);
+                        },
+                      )
                     ]
                   )
                 ]
@@ -623,11 +615,25 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
     );
   }
 
-  /// 박스를 클릭했을 때, 시간을 설정하기
-  void _onTap(int idx) {
+  /// 스크롤 컨트롤러 작동시키기
+  void _actScrollController(int hour) {
+    double offset = hour * 30 - 90;
+    double maxOffset = _scrollCtr.position.maxScrollExtent;
+    if (offset >= maxOffset) offset = maxOffset;
+    else if (offset <= 120) offset = 0;
+    _scrollCtr.animateTo(
+        offset > maxOffset ? maxOffset : offset,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease
+    );
+  }
+
+  /// 시간 변경
+  void _onChangedTime(int idx) {
     setState(() {
-      if (_begin == null || idx < _begin!
-          || _begin!+2 < idx || !_availables[_begin!+1]) {
+      if (_begin == null
+          || idx < _begin! || _begin!+2 < idx
+          || (_begin != 23 && !_availables[_begin!+1])) {
         widget.setStart(_begin = idx);
         widget.setEnd(_end = idx);
       } else if (_end! <= _begin!+2) {
@@ -639,6 +645,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
       }
       debugPrint("start: $_begin | end: ${_end!+1}");
     });
+    _actScrollController(_begin!);
   }
 
   /// 서버에서 예약 가능한 시간 확인하기

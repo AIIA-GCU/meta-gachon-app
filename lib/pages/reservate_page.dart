@@ -87,7 +87,7 @@ class _ReservatePageState extends State<ReservatePage> {
       _purposeCtr.text = 'late change!';
       _canTime = true;
     }
-    
+
     _initPage();
     super.initState();
   }
@@ -283,6 +283,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               height: 32,
                                               controller: _stuNumCtr,
                                               hint: '202300001',
+                                              keyboard: TextInputType.number,
                                               format: [
                                                 FilteringTextInputFormatter.digitsOnly, //숫자만 허용
                                                 LengthLimitingTextInputFormatter(9), //9글자만 허용
@@ -299,7 +300,9 @@ class _ReservatePageState extends State<ReservatePage> {
                                                 }
                                               },
                                             ),
+
                                             SizedBox(width: 8 * ratio.width),
+
                                             CustomTextField(
                                               enabled: !_isSolo,
                                               width: 92 * ratio.width,
@@ -318,7 +321,9 @@ class _ReservatePageState extends State<ReservatePage> {
                                                 }
                                               },
                                             ),
+
                                             SizedBox(width: 8 * ratio.width),
+
                                             Material(
                                               child: InkWell(
                                                 onTap: _isSolo ? null : _validateAddingUser,
@@ -501,7 +506,6 @@ class _ReservatePageState extends State<ReservatePage> {
                 hint: "선택",
                 items: _places,
                 onChanged: (value) {
-                  debugPrint('hellow');
                   _selectedRoom = value;
                   if (_selectedRoom != null && _selectedDate != null) {
                     setState(() {
