@@ -67,21 +67,33 @@ class _MainFrameState extends State<MainFrame> {
       children: [
         Scaffold(
             appBar: AppBar(
+
               automaticallyImplyLeading: false,
-              title: GestureDetector(
-                  onTap: _backToSelectingPage,
-                  behavior: HitTestBehavior.translucent,
-                  child: const SizedBox(
-                    width: 200,
-                    height: 30,
-                    child: Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
-                  )
+              title:
+              const SizedBox(
+                width: 200,
+                height: 30,
+                child: Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+              ),
+              leading:
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                      PageRouteBuilder(
+                          fullscreenDialog: false,
+                          transitionsBuilder: slideLeft2Right,
+                          pageBuilder: (_, __, ___) => const SelectingServicePage()
+                      ),
+                  );
+                },
               ),
               actions: [
                 /// alarm
                 NotificationIcon(onPressed: _movetoAlarm),
                 SizedBox(width: ratio.width * 16)
               ],
+              centerTitle: true,
             ),
             body: PageView(
               controller: _pageController,
@@ -108,28 +120,6 @@ class _MainFrameState extends State<MainFrame> {
         if (_loading)
           const ProgressScreen()
       ],
-    );
-  }
-
-  void _backToSelectingPage() {
-    showDialog(
-        context: context,
-        barrierColor: MGColor.barrier,
-        builder: (ctx) => AlertPopup(
-            title: '서비스를 다시 선택하시겠습니까?',
-            agreeMsg: '선택하기',
-            onAgreed: () async {
-              Navigator.pop(ctx);
-              await Future.delayed(const Duration(milliseconds: 100));
-              Navigator.of(context).pushReplacement(
-                  PageRouteBuilder(
-                      fullscreenDialog: false,
-                      transitionsBuilder: slideLeft2Right,
-                      pageBuilder: (_, __, ___) => const SelectingServicePage()
-                  )
-              );
-            }
-        )
     );
   }
 
