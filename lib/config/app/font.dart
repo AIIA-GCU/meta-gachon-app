@@ -1,3 +1,19 @@
+///
+/// font.dart
+/// 2024.03.07
+/// by. @protaku
+///
+///
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class
+///   - KR
+///   - EN
+///
+
 import 'package:flutter/material.dart';
 
 import 'interface.dart';

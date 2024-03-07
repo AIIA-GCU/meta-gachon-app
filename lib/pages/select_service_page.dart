@@ -106,7 +106,7 @@ class _SelectingServicePageState extends State<SelectingServicePage> {
   void _onTap(ServiceType type) async {
     setState(() => _loading = true);
     service = type;
-    reservates = await RestAPI.getAllReservation() ?? [];
+    reserves = await RestAPI.getAllReservation() ?? [];
     admits = await RestAPI.getAllAdmission() ?? [];
     myAdmits = await RestAPI.getMyAdmission() ?? [];
     setState(() {

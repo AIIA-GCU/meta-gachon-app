@@ -1,3 +1,18 @@
+///
+/// controller.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// ALL HTTP API functions of this service
+///
+/// Change
+/// - Added Comments
+///
+/// Content
+/// [*] Class
+///   - [RestAPI]
+///
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -74,7 +89,7 @@ class RestAPI {
   }
 
   /// 내 모든 예약
-  static Future<List<Reservate>?> getAllReservation() async {
+  static Future<List<Reserve>?> getAllReservation() async {
     try {
       late String category;
       switch (service) {
@@ -94,9 +109,9 @@ class RestAPI {
       if (response.isEmpty) {
         return null;
       } else {
-        List<Reservate> result = response.map((e) {
+        List<Reserve> result = response.map((e) {
           final temp = e as Map<String, dynamic>;
-          return Reservate.fromJson(temp);
+          return Reserve.fromJson(temp);
         }).toList();
         result.sort((a, b) => a.startTime.compareTo(b.startTime));
         return result;

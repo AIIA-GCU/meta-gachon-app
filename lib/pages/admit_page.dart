@@ -12,9 +12,9 @@ import '../widgets/small_widgets.dart';
 import 'using_camera_page.dart';
 
 class AdmitPage extends StatefulWidget {
-  const AdmitPage({Key? key, required this.reservate}) : super(key: key);
+  const AdmitPage({Key? key, required this.reserve}) : super(key: key);
 
-  final Reservate reservate;
+  final Reserve reserve;
 
   @override
   State<AdmitPage> createState() => _AdmitPageState();
@@ -35,25 +35,25 @@ class _AdmitPageState extends State<AdmitPage> {
     super.initState();
     loading = false;
 
-    place = widget.reservate.place;
-    leaderInfo = widget.reservate.leaderInfo;
+    place = widget.reserve.place;
+    leaderInfo = widget.reserve.leaderInfo;
 
     if (service == ServiceType.computer) {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [
-          TextSpan(text: widget.reservate.startToDate2()),
+          TextSpan(text: widget.reserve.startToDate2()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGColor.base1)),
-          TextSpan(text: widget.reservate.endToDate2())
+          TextSpan(text: widget.reserve.endToDate2())
         ]
       ));
     } else {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [
-          TextSpan(text: widget.reservate.startToDate2()),
+          TextSpan(text: widget.reserve.startToDate2()),
           TextSpan(text: ' | ', style: EN.parag1.copyWith(color: MGColor.base1)),
-          TextSpan(text: widget.reservate.toDuration())
+          TextSpan(text: widget.reserve.toDuration())
         ]
       ));
     }
@@ -362,15 +362,15 @@ class _AdmitPageState extends State<AdmitPage> {
     debugPrint("""
       [reservation Info]
         . room: $place
-        . startTime: ${widget.reservate.startToDate1()}
-        . endTime: ${widget.reservate.endToDate1()}
+        . startTime: ${widget.reserve.startToDate1()}
+        . endTime: ${widget.reserve.endToDate1()}
         . leader: $leaderInfo
         . review: ${_textCtr.text}
         . photo: $bytes""");
 
     try {
       int? uid = await RestAPI.addAdmission(
-          reservationId: widget.reservate.reservationId,
+          reservationId: widget.reserve.reservationId,
           review: _textCtr.text,
           photo: base64Encode(bytes),
           photoExtension: expension
@@ -382,7 +382,7 @@ class _AdmitPageState extends State<AdmitPage> {
         allClear = true;
         title = '인증했습니다!';
         onPressed = () {
-          listListener.add(StreamType.reservate);
+          listListener.add(StreamType.reserve);
           listListener.add(StreamType.admit);
           Navigator.popUntil(context, (route) => route.isFirst);
         };

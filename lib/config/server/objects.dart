@@ -1,3 +1,22 @@
+///
+/// objects.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// Resources of our service
+/// They are also used as dto to transmit with server
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class
+///   - User
+///   - Reserve
+///   - Admit
+///   - Notice
+///
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,6 +26,19 @@ import '../app/enum.dart';
 import '../app/interface.dart';
 import '../app/load_assets.dart';
 
+///
+/// User
+///
+/// Client's human info
+///
+/// Parameters
+/// - ratingName(String): User's rating name
+/// - ratingImg(String): Path of image matched with rating
+/// - name(String): User's name
+/// - stuNum(int): User's student number
+/// - negative(int): Count of admissions evaluated negatively
+/// - positive(int): Count of admissions evaluated positively
+///
 class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
@@ -23,6 +55,7 @@ class User {
       this._rating,
       this._negative,
       this._positive) {
+    // Following rating, determine variables of this object
     switch (_rating) {
       case 1:
         _ratingImg = const AssetImage(ImgPath.grayLv);
@@ -48,48 +81,65 @@ class User {
     }
   }
 
+  // getters
   String get ratingName => _ratingName;
-
   AssetImage get ratingImg => _ratingImg;
-
   String get name => _name;
-
   // String get major => _major;
-
   int get stuNum => _stuNum;
-
   int get rating => _rating;
-
   int get negative => _negative;
-
   int get positive => _positive;
 
   ///
-  /// EX) User 객체의 response
-  /// - "name": "김가천"
-  /// - "major": "소프트웨어학과(소프트웨어전공)"
-  /// - "stuNum": 202300001
-  /// - "rating": 2 (1 ~ 5)
-  /// - "negative": 5
-  /// - "positive": 10
+  /// factory User.fromJson
+  ///
+  /// Get [User] instance from decoded json
+  ///
+  /// Parameter:
+  /// - json(Map<String, dynamic>):
+  ///   data decoded json
+  ///
+  /// Return:
+  /// - [User] instance
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
-      json['name'],
-      // json['major'],
-      json['stuNum'],
-      json['rating'],
-      json['negative'],
-      json['positive']
+      json['name'],         // "김가천"
+      // json['major'],     // "소프트웨어학과(소프트웨어전공)"
+      json['stuNum'],       // 202300001
+      json['rating'],       // 2 (1 ~ 5)
+      json['negative'],     // 5
+      json['positive']      // 20
   );
 
-  /// (리더의 정보에 대하여) 유저 정보가 일치하는지
+  ///
+  /// bool match
+  ///
+  /// When tapping reservation item, check if it's leader match client's info
+  ///
+  /// Parameters:
+  /// - userInfo(String): client's info
+  ///
+  /// Return:
+  /// - bool data
+  ///
   bool match(String userInfo) {
     return '$_stuNum $_name' == userInfo;
   }
 }
 
-class Reservate {
-  final int _reservationId;
+///
+/// Reserve
+///
+/// Reservation object
+///
+/// Parameters
+/// - uid(int): item's unique id
+/// - leaderInfo(String): leader's info (Ex. 202300001 김가천)
+/// - 
+///
+class Reserve {
+  final int _uid;
   final String _leaderInfo;
   final String? _place;
   final DateTime _startTime;
@@ -97,8 +147,8 @@ class Reservate {
   final String _memberInfo;
   final String? _professor;
 
-  Reservate(
-      this._reservationId,
+  Reserve(
+      this._uid,
       this._leaderInfo,
       this._place,
       this._startTime,
@@ -112,7 +162,7 @@ class Reservate {
     );
   }
 
-  int get reservationId => _reservationId;
+  int get reservationId => _uid;
 
   String get leaderInfo => _leaderInfo;
 
@@ -154,10 +204,10 @@ class Reservate {
   /// - "date": "2023. 01. 01 목요일"
   /// - "time": "06:00 ~ 15:00"
   ///
-  factory Reservate.fromJson(Map<String, dynamic> json) {
+  factory Reserve.fromJson(Map<String, dynamic> json) {
     String date = (json['date'] as String).split(' ')[0];
     List<String> time = (json['time'] as String).split(' ~ ');
-    return Reservate(
+    return Reserve(
         json['reservationId'],
         json['leaderInfo'],
         json['room'],

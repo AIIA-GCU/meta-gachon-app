@@ -6,7 +6,7 @@ import 'package:mata_gachon/config/server/_export.dart';
 import '../widgets/popup_widgets.dart';
 import 'admit_page.dart';
 import 'my_admission_list_page.dart';
-import 'reservate_page.dart';
+import 'reserve_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -329,10 +329,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void doAdmission() {
-    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
+    int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
+        MaterialPageRoute(builder: (_) => AdmitPage(reserve: reserves[idx])));
       widget.movetoAdmisList();
     } else {
       if (!_isShownToast) {

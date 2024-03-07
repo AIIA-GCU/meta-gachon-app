@@ -9,7 +9,7 @@ import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import '../widgets/popup_widgets.dart';
-import 'reservate_page.dart';
+import 'reserve_page.dart';
 import '../widgets/small_widgets.dart';
 
 class ReservationListPage extends StatefulWidget {
@@ -81,8 +81,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
           child: Text('내 예약 확인하기', style: KR.subtitle1),
         ),
         Expanded(
-          child: FutureBuilder<List<Reservate>?>(
-              future: reservates.isEmpty ? RestAPI.getAllReservation() : null,
+          child: FutureBuilder<List<Reserve>?>(
+              future: reserves.isEmpty ? RestAPI.getAllReservation() : null,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Container(
@@ -96,8 +96,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-                if (snapshot.hasData) reservates = snapshot.data!;
-                if (reservates.isNotEmpty) {
+                if (snapshot.hasData) reserves = snapshot.data!;
+                if (reserves.isNotEmpty) {
                   return RefreshIndicator(
                     displacement: 0,
                     color: MGColor.primaryColor(),
@@ -106,8 +106,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
                       padding: EdgeInsets.only(bottom: ratio.height * 30),
                       physics: const AlwaysScrollableScrollPhysics()
                           .applyTo(const BouncingScrollPhysics()),
-                      itemCount: reservates.length,
-                      itemBuilder: (_, index) => _listItem(reservates[index])
+                      itemCount: reserves.length,
+                      itemBuilder: (_, index) => _listItem(reserves[index])
                     ),
                   );
                 } else {
@@ -128,7 +128,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  Widget _listItem(Reservate reservate) {
+  Widget _listItem(Reserve reserve) {
     late EdgeInsetsGeometry margin, padding;
     late Text firstText, secondText, thirdText;
 
@@ -137,7 +137,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
       padding = EdgeInsets.symmetric(
           horizontal: ratio.width * 16, vertical: 26);
       secondText = Text(
-        '${reservate.startToDate2()} ~ ${reservate.endToDate2()}',
+        '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
         style: KR.parag2.copyWith(color: MGColor.base3),
       );
       thirdText = Text.rich(
@@ -148,7 +148,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 style: KR.parag2.copyWith(color: MGColor.base3)
             ),
             TextSpan(
-                text: reservate.professor,
+                text: reserve.professor,
                 style: KR.parag2.copyWith(color: MGColor.secondaryColor())
             ),
           ],
@@ -158,24 +158,24 @@ class _ReservationListPageState extends State<ReservationListPage> {
       margin = const EdgeInsets.symmetric(vertical: 4);
       padding = EdgeInsets.symmetric(
           horizontal: ratio.width * 16, vertical: 12);
-      secondText = Text(reservate.startToDate1(),
+      secondText = Text(reserve.startToDate1(),
           style: KR.parag2.copyWith(color: MGColor.base3));
-      thirdText = Text(reservate.toDuration(),
+      thirdText = Text(reserve.toDuration(),
           style: KR.parag2.copyWith(color: MGColor.base3));
     }
 
-    if (service == ServiceType.lectureRoom && reservate.place == '-1') {
+    if (service == ServiceType.lectureRoom && reserve.place == '-1') {
       firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
     } else {
-      firstText = Text(reservate.place!, style: KR.subtitle3);
+      firstText = Text(reserve.place!, style: KR.subtitle3);
     }
 
     return GestureDetector(
       onTap: () async {
-        int? status = await RestAPI.currentReservationStatus(reservationId: reservate.reservationId);
+        int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
         showDialog(
           context: context,
-          builder: (_) => ReservationPopup(reservate, status!, widget.setLoading)
+          builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
         );
       },
       child: Container(
@@ -184,7 +184,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
-            border: stdFormat3.format(reservate.startTime) == today
+            border: stdFormat3.format(reserve.startTime) == today
                 ? Border.all(color: MGColor.primaryColor()) : null
         ),
         child: Row(
@@ -219,8 +219,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   void _event(StreamType event) {
-    if (mounted && event == StreamType.reservate) {
-      setState(() => reservates.clear());
+    if (mounted && event == StreamType.reserve) {
+      setState(() => reserves.clear());
     }
   }
 
@@ -256,6 +256,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
   Future<void> _onRefreshed() async {
     await Future.delayed(const Duration(milliseconds: 200));
-    setState(() => reservates.clear());
+    setState(() => reserves.clear());
   }
 }

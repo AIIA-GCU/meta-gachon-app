@@ -5,7 +5,7 @@ import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import '../pages/admit_page.dart';
-import '../pages/reservate_page.dart';
+import '../pages/reserve_page.dart';
 import '../pages/using_camera_page.dart';
 
 class AlertPopup extends StatelessWidget {
@@ -131,7 +131,7 @@ class CommentPopup extends StatelessWidget {
 class ReservationPopup extends StatelessWidget {
   const ReservationPopup(this.item, this.status, this.setLoading, {super.key});
 
-  final Reservate item;
+  final Reserve item;
   final int status;
   final void Function(bool) setLoading;
 
@@ -397,7 +397,7 @@ class ReservationPopup extends StatelessWidget {
         MaterialPageRoute(
           builder: (_) => ReservatePage(
             availableRoom: temp,
-            reservate: item
+            reserve: item
           )
         )
       );
@@ -431,7 +431,7 @@ class ReservationPopup extends StatelessWidget {
                           builder: (context2) => CommentPopup(
                               title: "예약이 취소되었습니다!",
                               onPressed: () => Navigator.pop(context2)))
-                      .then((_) => listListener.add(StreamType.reservate));
+                      .then((_) => listListener.add(StreamType.reserve));
                 }
             } on TimeoutException {
               showDialog(
@@ -482,7 +482,7 @@ class ReservationPopup extends StatelessWidget {
                   builder: (context2) => CommentPopup(
                       title: "연장하기",
                       onPressed: () => Navigator.pop(context2))
-              ).then((_) => listListener.add(StreamType.reservate));
+              ).then((_) => listListener.add(StreamType.reserve));
             }
           } on TimeoutException {
             showDialog(
@@ -501,7 +501,7 @@ class ReservationPopup extends StatelessWidget {
   void _admit(BuildContext context) {
     Navigator.pop(context);
     Navigator.push(context,
-      MaterialPageRoute(builder: (context) => AdmitPage(reservate: item))
+      MaterialPageRoute(builder: (context) => AdmitPage(reserve: item))
     );
   }
 }

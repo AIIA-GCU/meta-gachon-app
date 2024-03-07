@@ -1,3 +1,21 @@
+///
+/// main.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// <br>
+///
+/// Changes
+/// - Added comment
+///
+/// Content
+/// [*] Function
+///   - main()
+/// [*] Class
+///   - MetaGachonApp
+///
+///
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -57,18 +75,31 @@ Future<void> main() async {
 
   debugPrint("start to run app");
 
-  runApp(MataGachon(start: start));
+  runApp(MataGachonApp(start: start));
 }
 
-class MataGachon extends StatefulWidget {
-  const MataGachon({super.key, required this.start});
+///
+/// MetaGachonApp
+///
+/// The root widget of app, including MaterialApp()
+///
+/// Parameters
+/// - start(Widget):
+///   The displayed screen when running app.
+///   If app is installed for the first time, then display [OnBoardingPage]
+///   If remaining the session, then display [SelectingServicePage]
+///   If not both, display [SignInPage]
+///
+///
+class MataGachonApp extends StatefulWidget {
+  const MataGachonApp({super.key, required this.start});
 
   final Widget start;
 
   @override
-  State<MataGachon> createState() => _MataGachonState();
+  State<MataGachonApp> createState() => _MataGachonAppState();
 }
-class _MataGachonState extends State<MataGachon> {
+class _MataGachonAppState extends State<MataGachonApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +127,8 @@ class _MataGachonState extends State<MataGachon> {
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),
-          useMaterial3: true,
       ),
-      builder: FToastBuilder(),
+      builder: FToastBuilder(),   // for <fluttertost> package
       home: widget.start,
     );
   }

@@ -16,11 +16,11 @@ class ReservatePage extends StatefulWidget {
   const ReservatePage({
     Key? key,
     required this.availableRoom,
-    this.reservate
+    this.reserve
   }) : super(key: key);
 
   final List<String> availableRoom;
-  final Reservate? reservate;
+  final Reserve? reserve;
 
   @override
   State<ReservatePage> createState() => _ReservatePageState();
@@ -68,14 +68,14 @@ class _ReservatePageState extends State<ReservatePage> {
     _usersWidgets = [];
 
     // if modifing
-    if (widget.reservate != null) {
-      _selectedRoom = widget.reservate!.place;
-      _selectedDate = stdFormat3.format(widget.reservate!.startTime);
-      _selectedEnter = widget.reservate!.startTime;
-      _selectedEnd = widget.reservate!.endTime;
-      if (widget.reservate!.memberInfo.isNotEmpty) {
+    if (widget.reserve != null) {
+      _selectedRoom = widget.reserve!.place;
+      _selectedDate = stdFormat3.format(widget.reserve!.startTime);
+      _selectedEnter = widget.reserve!.startTime;
+      _selectedEnd = widget.reserve!.endTime;
+      if (widget.reserve!.memberInfo.isNotEmpty) {
         _isSolo = false;
-        List<String> temp = widget.reservate!.memberInfo.split(' ');
+        List<String> temp = widget.reserve!.memberInfo.split(' ');
         for (int i=0 ; i < temp.length ; i+=2) {
           _usersList.add('${temp[i]} ${temp[i+1]}');
         }
@@ -453,7 +453,7 @@ class _ReservatePageState extends State<ReservatePage> {
                             child: CustomButtons.bottomButton(
                                 '예약하기',
                                 MGColor.primaryColor(),
-                                    () => _canTime ? _reservate() : null,
+                                    () => _canTime ? _reserve() : null,
                                 MGColor.base6
                             )
                         ),
@@ -644,11 +644,11 @@ class _ReservatePageState extends State<ReservatePage> {
             _selectedDate = stdFormat3.format(value);
             if ((_selectedRoom != null || service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
-                if (widget.reservate != null
-                    && _selectedRoom == widget.reservate!.place
-                    && _selectedDate == widget.reservate!.startToDate2()) {
-                  _selectedEnter = widget.reservate!.startTime;
-                  _selectedEnd = widget.reservate!.endTime;
+                if (widget.reserve != null
+                    && _selectedRoom == widget.reserve!.place
+                    && _selectedDate == widget.reserve!.startToDate2()) {
+                  _selectedEnter = widget.reserve!.startTime;
+                  _selectedEnd = widget.reserve!.endTime;
                 } else {
                   _selectedEnter = _selectedEnd = null;
                 }
@@ -666,12 +666,12 @@ class _ReservatePageState extends State<ReservatePage> {
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
   bool _isSame() {
-    if (widget.reservate!.place == _selectedRoom) return true;
+    if (widget.reserve!.place == _selectedRoom) return true;
 
-    if (widget.reservate!.startToDate2() == _selectedDate) return true;
+    if (widget.reserve!.startToDate2() == _selectedDate) return true;
 
-    if (widget.reservate!.startTime.compareTo(_selectedEnd!) == 0) return true;
-    if (widget.reservate!.endTime.compareTo(_selectedEnter!) == 0) return true;
+    if (widget.reserve!.startTime.compareTo(_selectedEnd!) == 0) return true;
+    if (widget.reserve!.endTime.compareTo(_selectedEnter!) == 0) return true;
 
     return false;
   }
@@ -738,7 +738,7 @@ class _ReservatePageState extends State<ReservatePage> {
   }
 
   /// 예약하기
-  Future<void> _reservate() async {
+  Future<void> _reserve() async {
     bool allClear = false;
     late String title;
     late Function() onPressed;
@@ -759,7 +759,7 @@ class _ReservatePageState extends State<ReservatePage> {
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
-    } else if (widget.reservate != null && _isSame()) {
+    } else if (widget.reserve != null && _isSame()) {
       title = '이전 내용과 같습니다.';
       onPressed = () => Navigator.pop(context);
     } else {
@@ -780,13 +780,13 @@ class _ReservatePageState extends State<ReservatePage> {
         . purpose: ${_purposeCtr.text}""");
 
       try {
-        Map<String, dynamic>? response = widget.reservate != null
+        Map<String, dynamic>? response = widget.reserve != null
             ? await RestAPI.patchReservation(
-                  reservationId: widget.reservate!.reservationId,
+                  reservationId: widget.reserve!.reservationId,
                   place: _selectedRoom,
                   startTime: start,
                   endTime: end,
-                  leader: widget.reservate!.leaderInfo,
+                  leader: widget.reserve!.leaderInfo,
                   member: member,
                   purpose: _purposeCtr.text,
                   professor: _professerCtr.text
@@ -809,7 +809,7 @@ class _ReservatePageState extends State<ReservatePage> {
           allClear = true;
           title = '예약되었습니다!';
           onPressed = () {
-            listListener.add(StreamType.reservate);
+            listListener.add(StreamType.reserve);
             Navigator.popUntil(context, (route) => route.isFirst);
           };
         }

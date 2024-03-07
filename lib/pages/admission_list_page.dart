@@ -212,10 +212,10 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   }
 
   void _doAdmission() {
-    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
+    int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
+          MaterialPageRoute(builder: (_) => AdmitPage(reserve: reserves[idx])));
     } else {
       if (!_isShownToast) {
         /// show toast during 2s
