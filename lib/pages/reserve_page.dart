@@ -454,7 +454,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                 '예약하기',
                                 MGColor.primaryColor(),
                                     () => _canTime ? _reserve() : null,
-                                MGColor.base6
+                                disableBackground: MGColor.base6
                             )
                         ),
                       ])

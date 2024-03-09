@@ -186,7 +186,7 @@ class _SignInPageState extends State<SignInPage> {
                             '로그인',
                             MGColor.brand1Primary,
                             () => _buttonEnabled ? trySignIn() : null,
-                            MGColor.base6
+                            disableBackground: MGColor.base6
                           ),
                                 
                           // SizedBox(height: ratio.height * 12),

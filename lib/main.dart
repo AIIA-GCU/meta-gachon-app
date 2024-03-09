@@ -35,16 +35,13 @@ Future<void> main() async {
   debugPrint("called main()");
 
   debugPrint("initializing flutter binding");
-
   WidgetsFlutterBinding.ensureInitialized();
 
   debugPrint("initializing local date time");
-
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
   debugPrint("determining initial page");
-
   late final Widget start;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final bool? first = preferences.getBool('firstTime');
@@ -67,14 +64,12 @@ Future<void> main() async {
   }
 
   debugPrint("complete camera setting");
-
   camera = await availableCameras().then((value) {
     debugPrint(value.length.toString());
     return value.first;
   });
 
   debugPrint("start to run app");
-
   runApp(MataGachonApp(start: start));
 }
 
@@ -89,7 +84,6 @@ Future<void> main() async {
 ///   If app is installed for the first time, then display [OnBoardingPage]
 ///   If remaining the session, then display [SelectingServicePage]
 ///   If not both, display [SignInPage]
-///
 ///
 class MataGachonApp extends StatefulWidget {
   const MataGachonApp({super.key, required this.start});

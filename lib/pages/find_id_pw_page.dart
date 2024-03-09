@@ -166,7 +166,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                                   curve: Curves.ease
                                 );
                               },
-                              MGColor.base6
+                              disableBackground: MGColor.base6
                             )
                           ),
                           
@@ -176,7 +176,7 @@ class _FindIdPwFrameState extends State<FindIdPwFrame> {
                               buttonText,
                               MGColor.brand1Primary,
                               () => _canNext ? _moveToPage() : null,
-                              MGColor.base6
+                              disableBackground: MGColor.base6
                             )
                           )
                         ],

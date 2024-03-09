@@ -120,7 +120,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
                     '다음 단계',
                     MGColor.brand1Primary,
                     () => _canNext ? _moveToPage() : null,
-                    MGColor.base6
+                    disableBackground: MGColor.base6
                   )
                 )
               ]
