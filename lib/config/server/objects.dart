@@ -303,7 +303,7 @@ class Notice {
   /// "01/20 10:40"
   ///
   factory Notice.fromJson(Map<String, dynamic> json) => Notice(
-      json['noticeId'],
+      json['id'],
       json['category'],
       json['content'],
       json['time']

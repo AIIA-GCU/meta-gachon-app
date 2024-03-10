@@ -41,6 +41,7 @@ class _AlarmState extends State<Alarm> {
                 );
               } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: snapshot.data!

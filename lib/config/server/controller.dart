@@ -409,14 +409,18 @@ class RestAPI {
   static Future<List<Notice>?> getNotices() async {
     try {
       final api = APIRequest('notices');
-      List<Map<String, dynamic>> response = await api.send(HTTPMethod.get);
+      List<dynamic> response = await api.send(HTTPMethod.get);
       if (response.isEmpty) {
         return null;
       } else {
-        return response.map((e) => Notice.fromJson(e)).toList();
+        return response
+            .map((e) => Notice.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }
