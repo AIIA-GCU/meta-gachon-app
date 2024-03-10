@@ -314,10 +314,10 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
     try {
-      // try sign in
-      final fcmToken = await FCM.getToken();
+      // // try sign in
+      // final fcmToken = await FCM.getToken();
       User? user = await RestAPI.signIn(
-          id: idController.text, pw: pwController.text, token: fcmToken);
+          id: idController.text, pw: pwController.text, token: 'fcmToken');
 
       // if sign-in success
       if (user != null) {

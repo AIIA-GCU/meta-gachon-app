@@ -53,9 +53,9 @@ Future<void> main() async {
     start = OnBoarding();
   } else {
     try {
-      await FCM.initialize();
-      final fcmToken = await FCM.getToken();
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
+      // await FCM.initialize();
+      // final fcmToken = await FCM.getToken();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
       start = const SelectingServicePage();
     } catch(_) {
       debugPrint('No token');
