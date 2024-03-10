@@ -307,7 +307,7 @@ class _AdmitPageState extends State<AdmitPage> {
       context,
       MaterialPageRoute(
         builder: (context) => TakePictureScreen(
-           takenPictrue: (path) {
+           takenPicture: (path) {
              setState(() => _picturePath = path);
            }
         )

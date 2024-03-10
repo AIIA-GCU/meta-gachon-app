@@ -121,46 +121,48 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
             padding: EdgeInsets.only(top: ratio.height * 30),
             child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
         ),
-        FutureBuilder<List<Admit>?>(
-            future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Container(
-                    height: ratio.height * 594,
-                    alignment: Alignment.center,
-                    child: Text(
-                        '통신 속도가 너무 느립니다!',
-                        style: KR.subtitle4.copyWith(color: MGColor.base3)
+        Expanded(
+          child: FutureBuilder<List<Admit>?>(
+              future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Container(
+                      height: ratio.height * 594,
+                      alignment: Alignment.center,
+                      child: Text(
+                          '통신 속도가 너무 느립니다!',
+                          style: KR.subtitle4.copyWith(color: MGColor.base3)
+                      )
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+          
+                if (snapshot.hasData) admits = snapshot.data!;
+          
+                if (admits.isNotEmpty) {
+                  return RefreshIndicator(
+                    displacement: 0,
+                    color: MGColor.primaryColor(),
+                    onRefresh: _onRefreshed,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics()
+                          .applyTo(const BouncingScrollPhysics()),
+                      itemCount: admits.length,
+                      itemBuilder: (_, index) => _listItem(admits[index])
                     )
-                );
+                  );
+                } else {
+                  return Container(
+                      height: ratio.height * 218,
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                          '아직 인증이 없어요!',
+                          style: KR.subtitle4.copyWith(color: MGColor.base3)
+                      )
+                  );
+                }
               }
-              if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-
-              if (snapshot.hasData) admits = snapshot.data!;
-
-              if (admits.isNotEmpty) {
-                return RefreshIndicator(
-                  displacement: 0,
-                  color: MGColor.primaryColor(),
-                  onRefresh: _onRefreshed,
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics()
-                        .applyTo(const BouncingScrollPhysics()),
-                    itemCount: admits.length,
-                    itemBuilder: (_, index) => _listItem(admits[index])
-                  )
-                );
-              } else {
-                return Container(
-                    height: ratio.height * 218,
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                        '아직 인증이 없어요!',
-                        style: KR.subtitle4.copyWith(color: MGColor.base3)
-                    )
-                );
-              }
-            }
+          ),
         )
       ]),
     );
