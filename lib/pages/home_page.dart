@@ -381,6 +381,5 @@ class _HomePageState extends State<HomePage> {
   void checkMyAdmission() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
-    widget.movetoAdmisList();
   }
 }
