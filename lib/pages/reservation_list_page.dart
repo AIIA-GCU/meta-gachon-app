@@ -22,6 +22,7 @@ class ReservationListPage extends StatefulWidget {
 }
 
 class _ReservationListPageState extends State<ReservationListPage> {
+  final _scrollCtr = ScrollController();
   final Stream<StreamType> _stream = listListener.stream;
 
   @override
@@ -31,100 +32,149 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   @override
+  void dispose() {
+    debugPrint("dispose");
+    _scrollCtr.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        /// 예약하기 카드
-        Material(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
-          child: InkWell(
-            onTap: doReservation,
-            child: Container(
-              height: 56,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.symmetric(
-                  horizontal: ratio.width * 16),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      ImgPath.home4,
-                      height: ratio.height * 36,
-                    ),
-                  ),
-                  SizedBox(width: ratio.width * 8),
-                  Text('강의실 예약하기', style: KR.subtitle3),
-                  const Flexible(child: SizedBox.expand()),
-                  Transform.rotate(
-                    angle: pi,
-                    child: const Icon(
-                      MGIcon.back,
-                      size: 24,
-                      color: MGColor.base3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      child: NestedScrollView(
+        controller: _scrollCtr,
+        floatHeaderSlivers: true,
+        headerSliverBuilder: _headerSliver,
+        body: _list()
+      ),
+    );
+  }
 
-        /// 리스트
-        Padding(
-          padding: EdgeInsets.only(top: ratio.height * 30),
-          child: Text('내 예약 확인하기', style: KR.subtitle1),
+  List<Widget> _headerSliver(BuildContext context, bool innerBoxIsScrolled) {
+    return [
+      SliverAppBar(
+        forceElevated: innerBoxIsScrolled,
+        flexibleSpace: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _moveToPageCard(),
+            const SizedBox(height: 12),
+            _moveToPageCard(),
+            const SizedBox(height: 12),
+            _moveToPageCard(),
+            const SizedBox(height: 12)
+          ]
         ),
-        Expanded(
-          child: FutureBuilder<List<Reserve>?>(
-              future: reserves.isEmpty ? RestAPI.getAllReservation() : null,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container(
-                      height: 218,
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                          '통신 속도가 너무 느립니다!',
-                          style: KR.subtitle4.copyWith(
-                              color: MGColor.base3)
-                      )
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-                if (snapshot.hasData) reserves = snapshot.data!;
-                if (reserves.isNotEmpty) {
-                  return RefreshIndicator(
-                    displacement: 0,
-                    color: MGColor.primaryColor(),
-                    onRefresh: _onRefreshed,
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: ratio.height * 30),
-                      physics: const AlwaysScrollableScrollPhysics()
-                          .applyTo(const BouncingScrollPhysics()),
-                      itemCount: reserves.length,
-                      itemBuilder: (_, index) => _listItem(reserves[index])
-                    ),
-                  );
-                } else {
-                  return Container(
-                      height: ratio.height * 594,
-                      alignment: Alignment.center,
-                      child: Text(
-                          '아직 예약 내역이 없어요!',
-                          style: KR.subtitle4.copyWith(
-                              color: MGColor.base3)
-                      )
-                  );
-                }
-              }
+        expandedHeight: 204,
+        collapsedHeight: 204,
+      ),
+
+      SliverAppBar(
+        floating: true,
+        pinned: true,
+        snap: true,
+        forceElevated: innerBoxIsScrolled,
+        flexibleSpace: Padding(
+          padding: const EdgeInsets.only(top: 18, bottom: 8),
+          child: GestureDetector(
+            onTap: () {
+              _scrollCtr.animateTo(0,
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.ease
+              );
+            },
+            child: Text('내 예약 확인하기', style: KR.subtitle1)
           ),
-        )
-      ]),
+        ),
+        toolbarHeight: 52,
+      )
+    ];
+  }
+
+  Widget _list() {
+    return FutureBuilder<List<Reserve>?>(
+      future: reserves.isEmpty ? RestAPI.getAllReservation() : null,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container(
+              height: 218,
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                  '통신 속도가 너무 느립니다!',
+                  style: KR.subtitle4.copyWith(
+                      color: MGColor.base3)
+              )
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+        if (snapshot.hasData) reserves = snapshot.data!;
+        if (reserves.isNotEmpty) {
+          return RefreshIndicator(
+            displacement: 0,
+            color: MGColor.primaryColor(),
+            onRefresh: _onRefreshed,
+            child: ListView.builder(
+              padding: EdgeInsets.only(bottom: ratio.height * 30),
+              physics: const AlwaysScrollableScrollPhysics()
+                  .applyTo(const BouncingScrollPhysics()),
+              // itemCount: reserves.length,
+              itemBuilder: (_, index) => _listItem(reserves[index%2])
+            ),
+          );
+        } else {
+          return Container(
+              height: ratio.height * 594,
+              alignment: Alignment.center,
+              child: Text(
+                  '아직 예약 내역이 없어요!',
+                  style: KR.subtitle4.copyWith(
+                      color: MGColor.base3)
+              )
+          );
+        }
+      }
+    );
+  }
+
+  Widget _moveToPageCard() {
+    return Material(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: doReservation,
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.symmetric(
+              horizontal: ratio.width * 16),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  ImgPath.home4,
+                  height: ratio.height * 36,
+                ),
+              ),
+              SizedBox(width: ratio.width * 8),
+              Text('강의실 예약하기', style: KR.subtitle3),
+              const Flexible(child: SizedBox.expand()),
+              Transform.rotate(
+                angle: pi,
+                child: const Icon(
+                  MGIcon.back,
+                  size: 24,
+                  color: MGColor.base3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
