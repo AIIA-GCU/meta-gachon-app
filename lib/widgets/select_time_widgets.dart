@@ -420,7 +420,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   final List<int> times = List.generate(24, (index) => index);
 
   late List<bool> _availables;
-  late bool _reset, _animating;
+  late bool _reset, _animating, _areaActive;
   late String _date;
   late String? _place;
 
@@ -429,18 +429,24 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   @override
   void initState() {
     _reset = _animating = true;
+    _areaActive = false;
     _date = widget.date;
     _place = widget.room;
+
     if (widget.begin != null && widget.end != null) {
       _begin = widget.begin;
       _end = (widget.end!+23) % 24;
       debugPrint("start: $_begin | end: ${_end!+1}");
     }
     WidgetsBinding.instance.addTimingsCallback((_) {
-      if (_scrollCtr.hasClients && _animating && _date == today) {
+      if (_scrollCtr.hasClients && _animating) {
         debugPrint('the selected date is today!');
         _animating = false;
-        _actScrollController(DateTime.now().hour);
+        if (_date == today) {
+          _actScrollController(DateTime.now().hour);
+        } else {
+          _actScrollController(0);
+        }
       }
     });
     super.initState();
@@ -450,6 +456,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
     if (_place != widget.room || _date != widget.date) {
       _reset = _animating = true;
+      _areaActive = false;
       _date = widget.date;
       _place = widget.room;
       _begin = _end = null;
@@ -515,14 +522,22 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                             Color? color;
                             if (!_availables[index]) {
                               color = MGColor.base6;
+                              if (_areaActive) _areaActive = false;
                             }
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
                                 color = MGColor.primaryColor();
-                              } else if (index == _begin!+1) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
-                              } else if (index == _begin!+2 && _availables[index-1]) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
+                                _areaActive = true;
+                              } else {
+                                if (service == ServiceType.aiSpace) {
+                                  if (index == _begin!+1) {
+                                    color = MGColor.primaryColor().withOpacity(0.2);
+                                  } else if (index == _begin!+2 && _availables[index-1]) {
+                                    color = MGColor.primaryColor().withOpacity(0.2);
+                                  }
+                                } else if (_areaActive) {
+                                  color = MGColor.primaryColor().withOpacity(0.2);
+                                }
                               }
                             }
                             color ??= Colors.white;
@@ -584,9 +599,10 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                         items: times
                             .map((i) => i < 10 ? '0$i:00' : '$i:00')
                             .toList(),
+                        availables: _availables,
                         onChanged: (value) {
                           var temp = value!.substring(0, 2);
-                          _onChangedTime(int.parse(temp));
+                          _onChangedTime(int.parse(temp), isBegin: true);
                         },
                       ),
                       SizedBox(
@@ -595,14 +611,15 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                       ),
                       CustomDropdown(
                         value: _end == null ? null
-                            : _end! < 10 ? '0${_end!+1}:00' : '${_end!+1}:00',
+                            : _end! < 9 ? '0${_end!+1}:00' : '${_end!+1}:00',
                         hint: '00:00',
                         items: times
-                            .map((i) => i < 10 ? '0${i+1}:00' : '${i+1}:00')
+                            .map((i) => i < 9 ? '0${i+1}:00' : '${i+1}:00')
                             .toList(),
+                        availables: _availables,
                         onChanged: (value) {
                           var temp = value!.substring(0, 2);
-                          _onChangedTime(int.parse(temp)-1);
+                          _onChangedTime(int.parse(temp)-1, isBegin: false);
                         },
                       )
                     ]
@@ -619,8 +636,10 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   void _actScrollController(int hour) {
     double offset = hour * 30 - 90;
     double maxOffset = _scrollCtr.position.maxScrollExtent;
+
     if (offset >= maxOffset) offset = maxOffset;
     else if (offset <= 120) offset = 0;
+
     _scrollCtr.animateTo(
         offset > maxOffset ? maxOffset : offset,
         duration: const Duration(milliseconds: 500),
@@ -629,23 +648,42 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   }
 
   /// 시간 변경
-  void _onChangedTime(int idx) {
+  void _onChangedTime(int idx, {bool? isBegin}) {
     setState(() {
-      if (_begin == null
-          || idx < _begin! || _begin!+2 < idx
-          || (_begin != 23 && !_availables[_begin!+1])) {
-        widget.setStart(_begin = idx);
-        widget.setEnd(_end = idx);
-      } else if (_end! <= _begin!+2) {
-        if (idx == _end!) {
+      if (service == ServiceType.aiSpace) {
+        if (_begin == null
+            || idx < _begin! || _begin! + 2 < idx
+            || (_begin != 23 && !_availables[_begin! + 1])
+            || (isBegin != null && isBegin)) {
           widget.setStart(_begin = idx);
-        } else {
           widget.setEnd(_end = idx);
+        } else if (_end! <= _begin! + 2) {
+          if (idx == _end!) {
+            widget.setStart(_begin = idx);
+          } else {
+            widget.setEnd(_end = idx);
+          }
         }
+        _actScrollController(_begin!);
+      } else if (service == ServiceType.lectureRoom) {
+        if (_begin == null
+            || idx < _begin!
+            || (_begin != 23 && !_availables[_begin! + 1])
+            || (isBegin != null && isBegin)) {
+          widget.setStart(_begin = idx);
+          widget.setEnd(_end = idx);
+        } else {
+          if (idx == _end!) {
+            widget.setStart(_begin = idx);
+          } else {
+            widget.setEnd(_end = idx);
+          }
+        }
+        _areaActive = false;
+        _actScrollController(_end!);
       }
-      debugPrint("start: $_begin | end: ${_end!+1}");
     });
-    _actScrollController(_begin!);
+    debugPrint("start: $_begin | end: ${_end!+1}");
   }
 
   /// 서버에서 예약 가능한 시간 확인하기

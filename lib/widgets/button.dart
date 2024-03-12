@@ -148,12 +148,14 @@ class CustomDropdown extends StatefulWidget {
     this.value,
     required this.hint,
     required this.items,
+    this.availables,
     required this.onChanged,
   }) : super(key: key);
 
   final String? value;
   final String hint;
   final List<String> items;
+  final List<bool>? availables;
   final void Function(String?) onChanged;
 
   @override
@@ -184,8 +186,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
         items: _addDividersAfterItems(widget.items),
         value: _selectedItem,
         onChanged: (val) {
-          widget.onChanged(val);
-          setState(() => _selectedItem = val);
+          int idx = widget.items.indexOf(val!);
+          if (widget.availables == null || widget.availables![idx]) {
+            widget.onChanged(val);
+            setState(() => _selectedItem = val);
+          }
         },
 
         ///드롭버튼(선택된 항목) 디자인
@@ -240,32 +245,35 @@ class _CustomDropdownState extends State<CustomDropdown> {
     final List<DropdownMenuItem<String>> menuItems = [];
 
     ///아이템 개수만큼 반복합니다.
-    for (final String item in inItems) {
-      menuItems.addAll(
-        [
+    for (int i=0 ; i < inItems.length ; i++) {
+      late Color textColor;
+      if (inItems[i] == _selectedItem) {
+        textColor = Colors.black;
+      } else if (widget.availables != null && !widget.availables![i]) {
+        textColor = MGColor.base6;
+      } else {
+        textColor = MGColor.base3;
+      }
+      menuItems.addAll([
           ///위젯형태의 아이템(선택지) 넣기
           DropdownMenuItem<String>(
-              value: item,
+              value: inItems[i],
               child: Center(
                 child: Text(
-                    item,
+                    inItems[i],
                     textAlign: TextAlign.center,
-                    style: EN.subtitle2.copyWith(
-                        color: (item == _selectedItem)
-                            ? Colors.black
-                            : const Color(0xFF7C7C7C)
-                    )
+                    style: EN.subtitle2.copyWith(color: textColor)
                 ),
-              )),
+              )
+          ),
           //If it's last item, we will not add Divider after it.
           ///아이템 하나마다 끝에 divider 넣기
-          if (item != inItems.last)
+          if (i < inItems.length-1)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(color: MGColor.base5),
             ),
-        ],
-      );
+      ]);
     }
     return menuItems;
   }
