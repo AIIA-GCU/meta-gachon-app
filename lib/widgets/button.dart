@@ -398,7 +398,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   ///
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
+    for (int i = 0; i < items.length; i++) {
       itemsHeights.addAll([24, 1]);
     }
     itemsHeights.removeLast();

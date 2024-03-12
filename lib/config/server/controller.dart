@@ -26,42 +26,6 @@ import 'rest_api.dart';
 class RestAPI {
   RestAPI._();
 
-  /// 아이디 중복
-  /// Todo: 통합 로그인용
-  static Future<bool> checkOverlappingId({
-    required String id
-  }) async {
-    try {
-      final api = APIRequest('user/overlap');
-      Map<String, dynamic> response = await api.send(
-          HTTPMethod.get,
-          params: {"ID" : id}
-      );
-      return response['overlapping'];
-    } catch(_) {
-      return false;
-    }
-  }
-
-  /// 회원가입
-  /// Todo: 통합 로그인용
-  static Future<bool> signUp({
-    required String name,
-    required String id,
-    required String pw
-  }) async {
-    try {
-      final api = APIRequest('user/signUp');
-      Map<String, dynamic> response = await api.send(
-          HTTPMethod.get,
-          params: {'name' : name, 'ID' : id, 'PW' : pw}
-      );
-      return response['result'];
-    } catch(_) {
-      return true;
-    }
-  }
-
   /// 로그인
   /// Todo: 추후 통합 로그인용으로 바꿔야 함
   static Future<User?> signIn({
@@ -91,21 +55,8 @@ class RestAPI {
   /// 내 모든 예약
   static Future<List<Reserve>?> getAllReservation() async {
     try {
-      late String category;
-      switch (service) {
-        case ServiceType.aiSpace:
-          category = "MI";
-          break;
-        case ServiceType.lectureRoom:
-          category = "CLASSROOM";
-          break;
-        case ServiceType.computer:
-          category = "COMPUTER";
-          break;
-      }
-      final api = APIRequest('books?category=$category');
+      final api = APIRequest('books');
       List<dynamic> response = await api.send(HTTPMethod.get);
-
       if (response.isEmpty) {
         return null;
       } else {
@@ -260,7 +211,6 @@ class RestAPI {
   /// . 4: 사용 중 (연장 O)
   /// . 5: 사용 끝 (인증 X)
   /// . 6: 사용 끝 (인증 O)
-  /// Todo: 아직 추가 안 됨
   static Future<int?> currentReservationStatus({
     required int reservationId
   }) async {

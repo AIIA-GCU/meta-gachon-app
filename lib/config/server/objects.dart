@@ -140,6 +140,7 @@ class User {
 ///
 class Reserve {
   final int _uid;
+  final ServiceType _type;
   final String _leaderInfo;
   final String? _place;
   final DateTime _startTime;
@@ -149,6 +150,7 @@ class Reserve {
 
   Reserve(
       this._uid,
+      this._type,
       this._leaderInfo,
       this._place,
       this._startTime,
@@ -163,6 +165,8 @@ class Reserve {
   }
 
   int get reservationId => _uid;
+
+  ServiceType get type => _type;
 
   String get leaderInfo => _leaderInfo;
 
@@ -185,7 +189,7 @@ class Reserve {
   String endToDate2() => dateFormat2.format(_endTime);
 
   String toDuration() {
-    if (service == ServiceType.computer) {
+    if (_type == ServiceType.computer) {
       var s = dateFormat2.format(_startTime);
       var e = dateFormat2.format(_endTime);
       return '$s ~ $e';
@@ -209,6 +213,7 @@ class Reserve {
     List<String> time = (json['time'] as String).split(' ~ ');
     return Reserve(
         json['reservationId'],
+        json['category'],
         json['leaderInfo'],
         json['room'],
         stdFormat2.parse('$date ${time[0]}'),
