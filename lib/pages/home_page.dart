@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           /// <예약하기>
           _smallCard(
-              '강의실을 빌려\n편하게 공부해요!',
+              '공간과 컴퓨터를 빌려\n편하게 공부해요!',
               '예약하기',
               ImgPath.home3,
               doReservation
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
 
           /// <인증하기>
           _smallCard(
-              "강의실 이용 후\n인증을 올려주세요!",
+              "시설 이용 후\n인증을 올려주세요!",
               "인증하기",
               ImgPath.home2,
               doAdmission
@@ -61,26 +61,23 @@ class _HomePageState extends State<HomePage> {
       _lowerCard = Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-            /// <등급 확인하기>
-            _largeCard(
-                "현재 나의 등급은?",
-                "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
-                "등급 확인하기",
-                ImgPath.home5,
-                checkRating
-            ),
-
+          /// <예약 확인하기>
+          _largeCard(
+              "내가 언제 예약했더라?",
+              "내가 예약한 강의실과\n예약 시간을 확인해요!",
+              "예약 확인하기",
+              ImgPath.home4,
+              widget.movetoReserList
+          ),
             SizedBox(height: ratio.height * 12),
-
-            /// <예약 확인하기>
-            _largeCard(
-                "내가 언제 예약했더라?",
-                "내가 예약한 강의실과\n예약 시간을 확인해요!",
-                "예약 확인하기",
-                ImgPath.home4,
-                widget.movetoReserList
-            ),
-
+          /// <등급 확인하기>
+          _largeCard(
+              "현재 나의 등급은?",
+              "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
+              "등급 확인하기",
+              ImgPath.home5,
+              checkRating
+          ),
             SizedBox(height: ratio.height * 12),
 
             /// <내 인증 확인하기>

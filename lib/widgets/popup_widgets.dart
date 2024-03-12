@@ -166,7 +166,7 @@ class ReservationPopup extends StatelessWidget {
         statusMsg = '곧 있음 이용 시간이 끝납니다.';
         break;
       case 5:
-        statusMsg = '회의실 사용이 끝났습니다.\n사용 후 인증을 해주세요!';
+        statusMsg = '공간 이용 시간이 끝났습니다!\n인증 사진을 올려주세요.';
         break;
       default:
         statusMsg = '';
