@@ -6,7 +6,7 @@ import 'package:mata_gachon/config/server/_export.dart';
 
 import '../pages/admit_page.dart';
 import '../pages/reserve_page.dart';
-import '../pages/using_camera_page.dart';
+import '../pages/qr_page.dart';
 
 class AlertPopup extends StatelessWidget {
   const AlertPopup({
