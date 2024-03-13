@@ -1,75 +1,12 @@
 import 'dart:async';
 import 'dart:io' show Platform;
-import 'package:image_picker/image_picker.dart';
-import 'package:camera/camera.dart';
+
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 import 'package:mata_gachon/config/app/_export.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
-
-///
-/// TakePictureScreen
-/// using image_picker
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({Key? key, required this.takenPicture});
-
-  final Function(String) takenPicture;
-
-  @override
-  _TakePictureScreenState createState() => _TakePictureScreenState();
-}
-
-class _TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = CameraController(camera, ResolutionPreset.medium);
-    _initializeControllerFuture = _controller.initialize();
-    _startCamera();
-  }
-
-  Future<void> _startCamera() async {
-    try {
-      await _initializeControllerFuture;
-      if (_controller.value.isInitialized) {
-        final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
-        if (pickedFile != null) {
-          await widget.takenPicture(pickedFile.path);
-          Navigator.pop(context);
-        }
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: _initializeControllerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Container();
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-}
-
-
 
 class QrScannerPage extends StatefulWidget {
   const QrScannerPage({super.key, required this.onMatchedCode});
