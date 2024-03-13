@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/widgets/button.dart';
 
+import 'pages/main_frame.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
@@ -202,17 +202,6 @@ class _SignInPageState extends State<SignInPage> {
       _buttonEnabled =
           idController.text.isNotEmpty && pwController.text.isNotEmpty;
     });
-  }
-
-  /// move page with sliding animation
-  void _floatPage(Widget page) {
-    Navigator.of(context).push(
-        PageRouteBuilder(
-          fullscreenDialog: false,
-          transitionsBuilder: slideRigth2Left,
-          pageBuilder: (context, anime, secondAnime) => page,
-        )
-    );
   }
 
   /// try sign-in method
