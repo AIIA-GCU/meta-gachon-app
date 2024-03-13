@@ -12,20 +12,21 @@ import '../widgets/select_time_widgets.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
-class ReservatePage extends StatefulWidget {
-  const ReservatePage({
+class ReservePage extends StatefulWidget {
+  const ReservePage(this.service, {
     Key? key,
     required this.availableRoom,
     this.reserve
   }) : super(key: key);
 
+  final ServiceType service;
   final List<String> availableRoom;
   final Reserve? reserve;
 
   @override
-  State<ReservatePage> createState() => _ReservatePageState();
+  State<ReservePage> createState() => _ReservePageState();
 }
-class _ReservatePageState extends State<ReservatePage> {
+class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
@@ -104,7 +105,7 @@ class _ReservatePageState extends State<ReservatePage> {
   @override
   Widget build(BuildContext context) {
     late String title;
-    switch (service) {
+    switch (widget.service) {
       case ServiceType.aiSpace:
         title = "회의실 예약하기";
         break;
@@ -145,7 +146,7 @@ class _ReservatePageState extends State<ReservatePage> {
 
                       /// 만약 GPU 컴퓨터 예약이면, 전담 교수님 추가 위젯
                       /// 아니면, 시간 선택 위젯
-                      if (service == ServiceType.computer) {
+                      if (widget.service == ServiceType.computer) {
                         temp.add(Container(
                             margin: EdgeInsets.fromLTRB(
                                 ratio.width * 16,
@@ -193,7 +194,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12)),
                             child: CustomTimePicker(
-                              room: _selectedRoom,
+                              widget.service,
+                              place: _selectedRoom,
                               date: _selectedDate!,
                               begin: _selectedEnter?.hour,
                               end: _selectedEnd?.hour,
@@ -475,7 +477,7 @@ class _ReservatePageState extends State<ReservatePage> {
   void _initPage() {
     debugPrint(_selectedRoom);
     /// 장소 선택란
-    if (service == ServiceType.lectureRoom) {
+    if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
         padding: EdgeInsets.only(
             left: ratio.width * 20,
@@ -492,7 +494,7 @@ class _ReservatePageState extends State<ReservatePage> {
       ));
     } else {
       _firstWidgets.add(CustomContainer(
-        title: service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
+        title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
         height: 52,
         margin: EdgeInsets.fromLTRB(
             ratio.width * 16,
@@ -510,7 +512,7 @@ class _ReservatePageState extends State<ReservatePage> {
                   _selectedRoom = value;
                   if (_selectedRoom != null && _selectedDate != null) {
                     setState(() {
-                      if (service != ServiceType.computer) {
+                      if (widget.service != ServiceType.computer) {
                         _selectedEnter = _selectedEnd = null;
                       }
                       if (!_canTime) {
@@ -527,7 +529,7 @@ class _ReservatePageState extends State<ReservatePage> {
     }
 
     /// 날짜 선택란
-    if (service == ServiceType.computer) {
+    if (widget.service == ServiceType.computer) {
       _selectedEnter = DateTime.now();
       switch (DateTime.now().weekday) {
         case 1:
@@ -642,7 +644,7 @@ class _ReservatePageState extends State<ReservatePage> {
           ),
           onSelected: (value) {
             _selectedDate = stdFormat3.format(value);
-            if ((_selectedRoom != null || service == ServiceType.lectureRoom) && _selectedDate != null) {
+            if ((_selectedRoom != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
                 if (widget.reserve != null
                     && _selectedRoom == widget.reserve!.place
@@ -750,7 +752,7 @@ class _ReservatePageState extends State<ReservatePage> {
       }
     });
 
-    if (service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
+    if (widget.service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (!_isSolo && _usersList.isEmpty) {
@@ -783,6 +785,7 @@ class _ReservatePageState extends State<ReservatePage> {
         Map<String, dynamic>? response = widget.reserve != null
             ? await RestAPI.patchReservation(
                   reservationId: widget.reserve!.reservationId,
+                  service: widget.service,
                   place: _selectedRoom,
                   startTime: start,
                   endTime: end,
@@ -792,6 +795,7 @@ class _ReservatePageState extends State<ReservatePage> {
                   professor: _professerCtr.text
               )
             : await RestAPI.addReservation(
+                  service: widget.service,
                   place: _selectedRoom,
                   startTime: start,
                   endTime: end,

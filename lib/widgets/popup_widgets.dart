@@ -141,13 +141,13 @@ class ReservationPopup extends StatelessWidget {
     late String statusMsg;
     late Widget button;
     
-    if (service == ServiceType.lectureRoom && item.place == '-1') {
+    if (item.service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
     } else {
       place = Text(item.place!, style: KR.subtitle1);
     }
 
-    if (service == ServiceType.computer) {
+    if (item.service == ServiceType.computer) {
       time1 = Text(item.startToDate2(), style: KR.parag2.copyWith(color: MGColor.base3));
       time2 = Text('~ ${item.endToDate2()}', style: KR.parag2.copyWith(color: MGColor.base3));
     } else {
@@ -200,7 +200,7 @@ class ReservationPopup extends StatelessWidget {
 
         /// 사용 전 (예약 변경 O, QR X)
         case 2:
-          if (service case ServiceType.computer) {
+          if (item.service case ServiceType.computer) {
             button = ElevatedButton(
                 onPressed: () => _del(context),
                 style: ElevatedButton.styleFrom(
@@ -369,12 +369,12 @@ class ReservationPopup extends StatelessWidget {
   Future<void> _edit(BuildContext context) async {
     setLoading(true);
     Navigator.pop(context);
-    List<String>? temp = await RestAPI.placeForService();
+    List<String>? temp = await RestAPI.placeForService(item.service);
     debugPrint(temp.toString());
     setLoading(false);
     if (temp == null || temp.isEmpty) {
       late String place;
-      switch (service) {
+      switch (item.service) {
         case ServiceType.aiSpace:
           place = "회의실이";
           break;
@@ -395,7 +395,8 @@ class ReservationPopup extends StatelessWidget {
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => ReservatePage(
+          builder: (_) => ReservePage(
+            item.service,
             availableRoom: temp,
             reserve: item
           )

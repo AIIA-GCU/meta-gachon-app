@@ -74,6 +74,7 @@ class RestAPI {
 
   /// 예약 추가
   static Future<Map<String, dynamic>?> addReservation({
+    required ServiceType service,
     required String? place,
     required String startTime,
     required String endTime,
@@ -131,6 +132,7 @@ class RestAPI {
   /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<Map<String, dynamic>?> patchReservation({
     required int reservationId,
+    required ServiceType service,
     required String? place,
     required String startTime,
     required String endTime,
@@ -242,7 +244,7 @@ class RestAPI {
   }
 
   /// 서비스에 따른 예약 장소 반환
-  static Future<List<String>?> placeForService() async {
+  static Future<List<String>?> placeForService(ServiceType service) async {
     try {
       late int type;
       switch (service) {

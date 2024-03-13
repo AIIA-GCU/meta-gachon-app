@@ -140,7 +140,7 @@ class User {
 ///
 class Reserve {
   final int _uid;
-  final ServiceType _type;
+  late final ServiceType _type;
   final String _leaderInfo;
   final String? _place;
   final DateTime _startTime;
@@ -150,7 +150,7 @@ class Reserve {
 
   Reserve(
       this._uid,
-      this._type,
+      String serviceType,
       this._leaderInfo,
       this._place,
       this._startTime,
@@ -158,15 +158,28 @@ class Reserve {
       this._memberInfo,
       this._professor
       ) {
+    switch (serviceType) {
+      case 'mi':
+        _type = ServiceType.aiSpace;
+        break;
+      case 'lecture':
+        _type = ServiceType.lectureRoom;
+        break;
+      case 'computer':
+        _type = ServiceType.computer;
+        break;
+      default:
+        assert(true, "category is excluded from range!");
+    }
     assert(
-      !(service == ServiceType.computer && _professor == null),
+      !(_type == ServiceType.computer && _professor == null),
       'Professor must enter in reservation of GPU computer'
     );
   }
 
   int get reservationId => _uid;
 
-  ServiceType get type => _type;
+  ServiceType get service => _type;
 
   String get leaderInfo => _leaderInfo;
 

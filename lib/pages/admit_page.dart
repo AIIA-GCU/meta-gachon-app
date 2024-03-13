@@ -41,7 +41,7 @@ class _AdmitPageState extends State<AdmitPage> {
     place = widget.reserve.place;
     leaderInfo = widget.reserve.leaderInfo;
 
-    if (service == ServiceType.computer) {
+    if (widget.reserve.service == ServiceType.computer) {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [

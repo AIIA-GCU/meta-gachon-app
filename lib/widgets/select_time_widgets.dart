@@ -394,9 +394,9 @@ class CellStyle {
 }
 
 class CustomTimePicker extends StatefulWidget {
-  const CustomTimePicker({
+  const CustomTimePicker(this.service, {
     super.key,
-    required this.room,
+    required this.place,
     required this.date,
     required this.begin,
     required this.end,
@@ -404,7 +404,8 @@ class CustomTimePicker extends StatefulWidget {
     required this.setEnd
   });
 
-  final String? room;
+  final ServiceType service;
+  final String? place;
   final String date;
   final int? begin;
   final int? end;
@@ -430,7 +431,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   void initState() {
     _reset = _animating = true;
     _date = widget.date;
-    _place = widget.room;
+    _place = widget.place;
     if (widget.begin != null && widget.end != null) {
       _begin = widget.begin;
       _end = (widget.end!+23) % 24;
@@ -448,10 +449,10 @@ class _CustomTimePickerState extends State<CustomTimePicker>
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    if (_place != widget.room || _date != widget.date) {
+    if (_place != widget.place || _date != widget.date) {
       _reset = _animating = true;
       _date = widget.date;
-      _place = widget.room;
+      _place = widget.place;
       _begin = _end = null;
       if (widget.begin != null && widget.end != null) {
         _begin = widget.begin;
@@ -650,11 +651,11 @@ class _CustomTimePickerState extends State<CustomTimePicker>
 
   /// 서버에서 예약 가능한 시간 확인하기
   Future<void> _availableTime() async {
-    if (service == ServiceType.aiSpace) {
+    if (widget.service == ServiceType.aiSpace) {
       _availables = List.generate(24, (_) => false);
       try {
         Map<int, bool>? times = await RestAPI
-            .getAvailableTime(room: widget.room!, date: widget.date);
+            .getAvailableTime(room: widget.place!, date: widget.date);
         int i;
         for (i = 0; i < 24; i++) {
           _availables[i] = !times![i]!;

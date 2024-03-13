@@ -5,7 +5,7 @@ import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
 
-import 'pages/main_frame.dart';
+import 'main_frame.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 

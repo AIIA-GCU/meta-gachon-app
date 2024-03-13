@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                       '공간과 컴퓨터를 빌려\n편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
-                      doReservation
+                      () => doReservation(ServiceType.aiSpace)
                   ),
 
                   /// <인증하기>
@@ -255,13 +255,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> doReservation() async {
+  Future<void> doReservation(ServiceType service) async {
     widget.setLoading(true);
-    List<String>? temp = await RestAPI.placeForService();
+    List<String>? temp = await RestAPI.placeForService(service);
     widget.setLoading(false);
     if (temp != null) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
+        MaterialPageRoute(
+          builder: (context) => ReservePage(service, availableRoom: temp))
+      );
     } else {
       late String place;
       switch (service) {
