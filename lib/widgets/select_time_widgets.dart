@@ -75,7 +75,7 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
       rangeLast = rangeLast.add(const Duration(days: 1));
     }
 
-    final DateFormat format = DateFormat.MMMM();
+    final DateFormat format = DateFormat.MMMM('ko_KR');
     if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month) {
       title = "${format.format(rangeFirst)} ~ ${format.format(rangeLast)}";
     } else {

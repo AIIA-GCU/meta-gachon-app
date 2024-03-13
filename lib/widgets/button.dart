@@ -312,7 +312,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
           height: 32,
-          width: 120 * ratio.width,
+          width: 120,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
@@ -344,7 +344,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
         // dropdown's item
         menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
+          padding: EdgeInsets.symmetric(horizontal: 4),
           customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
@@ -368,10 +368,13 @@ class _CustomDropdownState extends State<CustomDropdown> {
       menuItems.addAll([
         DropdownMenuItem<String>(
           value: item,
-          child: Center(
-            child: Text(item,
-              style: EN.subtitle2.copyWith(
-                  color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+          child: Container(
+            width: 120,
+            child: Center(
+              child: Text(item,
+                style: EN.subtitle2.copyWith(
+                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+              ),
             ),
           )
         ),
@@ -399,7 +402,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < items.length; i++) {
-      itemsHeights.addAll([24, 1]);
+      itemsHeights.addAll([32, 1]);
     }
     itemsHeights.removeLast();
     return itemsHeights;

@@ -283,7 +283,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               width: 122 * ratio.width,
                                               height: 32,
                                               controller: _stuNumCtr,
-                                              hint: '202300001',
+                                              hint: '학번',
                                               keyboard: TextInputType.number,
                                               format: [
                                                 FilteringTextInputFormatter.digitsOnly, //숫자만 허용
@@ -309,7 +309,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               width: 92 * ratio.width,
                                               height: 32,
                                               controller: _nameCtr,
-                                              hint: '김가천',
+                                              hint: '이름',
                                               format: [
                                                 FilteringTextInputFormatter.allow(
                                                     RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
@@ -384,7 +384,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                       width: ratio.width * 274,
                                       child: Wrap(
                                         spacing: 8,
-                                        alignment: WrapAlignment.end,
+                                        alignment: WrapAlignment.start,
                                         children: _usersWidgets,
                                       ),
                                     ),
@@ -414,7 +414,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                     setState(() => _isSolo = value!);
                                                   }),
                                             ),
-                                            SizedBox(width: 6 * ratio.width),
+                                            SizedBox(width: 10 * ratio.width),
                                             Text('추가 이용자가 없습니다.',
                                                 style: KR.label2.copyWith(color: MGColor.base3)),
                                           ],

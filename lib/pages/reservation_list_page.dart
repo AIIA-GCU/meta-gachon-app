@@ -58,11 +58,11 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _moveToPageCard(),
+            _moveToPageCard('강의실'),
             const SizedBox(height: 12),
-            _moveToPageCard(),
+            _moveToPageCard('회의실'),
             const SizedBox(height: 12),
-            _moveToPageCard(),
+            _moveToPageCard('컴퓨터'),
             const SizedBox(height: 12)
           ]
         ),
@@ -119,7 +119,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
               physics: const AlwaysScrollableScrollPhysics()
                   .applyTo(const BouncingScrollPhysics()),
               // itemCount: reserves.length,
-              itemBuilder: (_, index) => _listItem(reserves[index%2])
+              itemBuilder: (_, index) => _listItem(reserves[0])
             ),
           );
         } else {
@@ -137,7 +137,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  Widget _moveToPageCard() {
+  Widget _moveToPageCard(place) {
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
@@ -161,7 +161,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 ),
               ),
               SizedBox(width: ratio.width * 8),
-              Text('강의실 예약하기', style: KR.subtitle3),
+              Text('$place 예약하기', style: KR.subtitle3),
               const Flexible(child: SizedBox.expand()),
               Transform.rotate(
                 angle: pi,
