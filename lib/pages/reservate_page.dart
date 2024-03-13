@@ -312,7 +312,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                               hint: '김가천',
                                               format: [
                                                 FilteringTextInputFormatter.allow(
-                                                    RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
+                                                    RegExp('[ㄱ-ㅎㅏ-ㅣ가-힣]')), // 이름에 영어 입력 금지
                                               ],
                                               validator: (str) {
                                                 if (str!.isEmpty) {

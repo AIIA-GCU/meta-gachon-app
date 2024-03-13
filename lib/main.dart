@@ -38,9 +38,9 @@ Future<void> main() async {
     start = OnBoarding();
   } else {
     try {
-      await FCM.initialize();
-      final fcmToken = await FCM.getToken();
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
+      // await FCM.initialize();
+      // final fcmToken = await FCM.getToken();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
       start = const SelectingServicePage();
     } catch(_) {
       debugPrint('No token');
@@ -50,10 +50,10 @@ Future<void> main() async {
 
   debugPrint("complete camera setting");
 
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
   debugPrint("start to run app");
 

@@ -10,6 +10,7 @@ import 'sign_up_page.dart';
 import 'select_service_page.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -22,6 +23,7 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final storage = FlutterSecureStorage();
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -314,17 +316,19 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
     try {
-      // try sign in
-      final fcmToken = await FCM.getToken();
+      // // try sign in
+      // final fcmToken = await FCM.getToken();
       User? user = await RestAPI.signIn(
-          id: idController.text, pw: pwController.text, token: fcmToken);
+          id: idController.text, pw: pwController.text, token: 'fcmToken');
 
       // if sign-in success
       if (user != null) {
+        await saveIdResource(idController.text, pwController.text);
+
         // save data
         myInfo = user;
 
-        // appaer selecting service page
+        // appear selecting service page
         setState(() => isLoading = false);
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
@@ -354,5 +358,10 @@ class _SignInPageState extends State<SignInPage> {
         );
       });
     }
+  }
+
+  Future<void> saveIdResource(String userId, String userPw) async {
+    await storage.write(key: 'userId', value: userId);
+    await storage.write(key: 'userPw', value: userPw);
   }
 }
