@@ -112,7 +112,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         if (reserves.isNotEmpty) {
           return RefreshIndicator(
             displacement: 0,
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             onRefresh: _onRefreshed,
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: ratio.height * 30),
@@ -199,7 +199,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
             ),
             TextSpan(
                 text: reserve.professor,
-                style: KR.parag2.copyWith(color: MGColor.secondaryColor())
+                style: KR.parag2.copyWith(color: MGColor.brandSecondary)
             ),
           ],
         ),
@@ -235,7 +235,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
             border: stdFormat3.format(reserve.startTime) == today
-                ? Border.all(color: MGColor.primaryColor()) : null
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -119,7 +119,7 @@ class _AdmitPageState extends State<AdmitPage> {
                                 SizedBox(height: ratio.height * 10),
                                 Text(
                                   '회의실 전체가 다 보이도록 사진을 찍어 올려주세요!',
-                                  style: KR.label2.copyWith(color: MGColor.primaryColor()),
+                                  style: KR.label2.copyWith(color: MGColor.brandPrimary),
                                 ),
                                 SizedBox(height: ratio.height * 4),
                                 Expanded(
@@ -293,7 +293,7 @@ class _AdmitPageState extends State<AdmitPage> {
                     left: ratio.width * 16,
                     child: CustomButtons.bottomButton(
                       '인증하기',
-                      MGColor.primaryColor(),
+                      MGColor.brandPrimary,
                       doubleCheck
                     )
                   )

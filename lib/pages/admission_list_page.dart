@@ -86,21 +86,21 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                     onPressed: () => Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage())),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: MGColor.tertiaryColor(),
+                        backgroundColor: MGColor.brandTertiary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         fixedSize: Size(ratio.width * 159, ratio.height * 40)
                     ),
                     child: Text(
                       '내 인증 확인하기',
-                      style: KR.parag2.copyWith(color: MGColor.primaryColor()),
+                      style: KR.parag2.copyWith(color: MGColor.brandPrimary),
                     ),
                   ),
                   /// <인증하러 가기>
                   ElevatedButton(
                     onPressed: _doAdmission,
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: MGColor.primaryColor(),
+                        backgroundColor: MGColor.brandPrimary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         fixedSize: Size(ratio.width * 160, ratio.height * 40)
@@ -142,7 +142,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                 if (admits.isNotEmpty) {
                   return RefreshIndicator(
                     displacement: 0,
-                    color: MGColor.primaryColor(),
+                    color: MGColor.brandPrimary,
                     onRefresh: _onRefreshed,
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics()

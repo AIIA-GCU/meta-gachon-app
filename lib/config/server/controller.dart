@@ -92,18 +92,7 @@ class RestAPI {
   static Future<List<Reserve>?> getAllReservation() async {
     try {
       late String category;
-      switch (service) {
-        case ServiceType.aiSpace:
-          category = "MI";
-          break;
-        case ServiceType.lectureRoom:
-          category = "CLASSROOM";
-          break;
-        case ServiceType.computer:
-          category = "COMPUTER";
-          break;
-      }
-      final api = APIRequest('books?category=$category');
+      final api = APIRequest('books');
       List<dynamic> response = await api.send(HTTPMethod.get);
 
       if (response.isEmpty) {
@@ -136,7 +125,6 @@ class RestAPI {
       switch (service) {
         case ServiceType.aiSpace:
           path = "book/meta";
-          // path = "book";
           params = {
             'room': place,
             'startTime': startTime,

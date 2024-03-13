@@ -486,7 +486,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                   const SizedBox(width: 12),
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
-                    style: KR.label2.copyWith(color: MGColor.primaryColor())
+                    style: KR.label2.copyWith(color: MGColor.brandPrimary)
                   )
                 ],
               ),
@@ -518,11 +518,11 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                             }
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
-                                color = MGColor.primaryColor();
+                                color = MGColor.brandPrimary;
                               } else if (index == _begin!+1) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
+                                color = MGColor.brandPrimary.withOpacity(0.2);
                               } else if (index == _begin!+2 && _availables[index-1]) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
+                                color = MGColor.brandPrimary.withOpacity(0.2);
                               }
                             }
                             color ??= Colors.white;

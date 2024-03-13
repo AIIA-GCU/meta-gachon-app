@@ -90,8 +90,8 @@ class _QrScannerPageState extends State<QrScannerPage> {
             child: IconButton(
                 onPressed: () => Navigator.pop(context),
                 style: IconButton.styleFrom(
-                    foregroundColor: MGColor.primaryColor(),
-                    backgroundColor: MGColor.tertiaryColor(),
+                    foregroundColor: MGColor.brandPrimary,
+                    backgroundColor: MGColor.brandTertiary,
                     fixedSize: Size(ratio.width * 48, ratio.width * 48)),
                 icon: const Icon(MGIcon.cross)),
           )),

@@ -61,7 +61,7 @@ class _ReservatePageState extends State<ReservatePage> {
     _places = widget.availableRoom;
     _loading = false;
     _isSolo = _canTime = false;
-    _addUserGuideline = MGColor.primaryColor();
+    _addUserGuideline = MGColor.brandPrimary;
     _leaderNumber = myInfo.stuNum;
     _leaderName = myInfo.name;
     _usersList = [];
@@ -336,7 +336,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                     height: 32 * ratio.width,
                                                     decoration: BoxDecoration(
                                                       color: _isSolo ? MGColor.base6
-                                                          : MGColor.primaryColor(),
+                                                          : MGColor.brandPrimary,
                                                       borderRadius:
                                                       BorderRadius.circular(12),
                                                     ),
@@ -409,7 +409,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                       color: MGColor.base3,
                                                       width: 1.6
                                                   ),
-                                                  activeColor: MGColor.primaryColor(),
+                                                  activeColor: MGColor.brandPrimary,
                                                   onChanged: (bool? value) {
                                                     setState(() => _isSolo = value!);
                                                   }),
@@ -452,7 +452,7 @@ class _ReservatePageState extends State<ReservatePage> {
                             padding: EdgeInsets.only(bottom: ratio.height * 10),
                             child: CustomButtons.bottomButton(
                                 '예약하기',
-                                MGColor.primaryColor(),
+                                MGColor.brandPrimary,
                                     () => _canTime ? _reserve() : null,
                                 disableBackground: MGColor.base6
                             )
@@ -485,7 +485,7 @@ class _ReservatePageState extends State<ReservatePage> {
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
             fontSize: 11,
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             fontFamily: 'Ko'
           ),
         ),
@@ -580,10 +580,10 @@ class _ReservatePageState extends State<ReservatePage> {
               selectedDateTextStyle:
               EN.parag1.copyWith(color: Colors.white),
               selelctedDateBoxDecoration: BoxDecoration(
-                  color: MGColor.primaryColor(),
+                  color: MGColor.brandPrimary,
                   borderRadius: BorderRadius.circular(4)),
               todayTextStyle:
-              EN.parag1.copyWith(color: MGColor.primaryColor()),
+              EN.parag1.copyWith(color: MGColor.brandPrimary),
               todayBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
@@ -627,10 +627,10 @@ class _ReservatePageState extends State<ReservatePage> {
             selectedDateTextStyle:
             EN.parag1.copyWith(color: Colors.white),
             selelctedDateBoxDecoration: BoxDecoration(
-                color: MGColor.primaryColor(),
+                color: MGColor.brandPrimary,
                 borderRadius: BorderRadius.circular(4)),
             todayTextStyle:
-            EN.parag1.copyWith(color: MGColor.primaryColor()),
+            EN.parag1.copyWith(color: MGColor.brandPrimary),
             todayBoxDecoration: BoxDecoration(
                 color: MGColor.base10,
                 borderRadius: BorderRadius.circular(4)),
@@ -684,7 +684,7 @@ class _ReservatePageState extends State<ReservatePage> {
           FocusScope.of(context).unfocus();
         }
         alertMessege = "정상적으로 추가됐습니다";
-        _addUserGuideline = MGColor.primaryColor();
+        _addUserGuideline = MGColor.brandPrimary;
         _usersList.add("${_stuNumCtr.text} ${_nameCtr.text}");
         _usersWidgets.add(_myUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
         _stuNumCtr.clear();
@@ -707,7 +707,7 @@ class _ReservatePageState extends State<ReservatePage> {
         right: ratio.width * 5
       ),
       decoration: ShapeDecoration(
-        color: MGColor.secondaryColor(),
+        color: MGColor.brandSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
