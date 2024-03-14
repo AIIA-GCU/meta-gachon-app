@@ -58,11 +58,11 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _moveToPageCard('강의실'),
+            _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
-            _moveToPageCard('회의실'),
+            _moveToPageCard(ServiceType.aiSpace),
             const SizedBox(height: 12),
-            _moveToPageCard('컴퓨터'),
+            _moveToPageCard(ServiceType.computer),
             const SizedBox(height: 12)
           ]
         ),
@@ -112,7 +112,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         if (reserves.isNotEmpty) {
           return RefreshIndicator(
             displacement: 0,
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             onRefresh: _onRefreshed,
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: ratio.height * 30),
@@ -137,12 +137,15 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  Widget _moveToPageCard(place) {
+  Widget _moveToPageCard(ServiceType service) {
+    final String place = service == ServiceType.aiSpace
+        ? "회의실" : service == ServiceType.lectureRoom
+        ? "강의실" : "컴퓨터";
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: doReservation,
+        onTap: () => doReservation(service),
         child: Container(
           height: 56,
           decoration: BoxDecoration(
@@ -179,13 +182,9 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   Widget _listItem(Reserve reserve) {
-    late EdgeInsetsGeometry margin, padding;
-    late Text firstText, secondText, thirdText;
+    late final Text firstText, secondText, thirdText;
 
-    if (service == ServiceType.computer) {
-      margin = const EdgeInsets.symmetric(vertical: 16);
-      padding = EdgeInsets.symmetric(
-          horizontal: ratio.width * 16, vertical: 26);
+    if (reserve.service == ServiceType.computer) {
       secondText = Text(
         '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
         style: KR.parag2.copyWith(color: MGColor.base3),
@@ -199,22 +198,19 @@ class _ReservationListPageState extends State<ReservationListPage> {
             ),
             TextSpan(
                 text: reserve.professor,
-                style: KR.parag2.copyWith(color: MGColor.secondaryColor())
+                style: KR.parag2.copyWith(color: MGColor.brandSecondary)
             ),
           ],
         ),
       );
     } else {
-      margin = const EdgeInsets.symmetric(vertical: 4);
-      padding = EdgeInsets.symmetric(
-          horizontal: ratio.width * 16, vertical: 12);
       secondText = Text(reserve.startToDate1(),
           style: KR.parag2.copyWith(color: MGColor.base3));
       thirdText = Text(reserve.toDuration(),
           style: KR.parag2.copyWith(color: MGColor.base3));
     }
 
-    if (service == ServiceType.lectureRoom && reserve.place == '-1') {
+    if (reserve.service == ServiceType.lectureRoom && reserve.place == '-1') {
       firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
     } else {
       firstText = Text(reserve.place!, style: KR.subtitle3);
@@ -229,13 +225,14 @@ class _ReservationListPageState extends State<ReservationListPage> {
         );
       },
       child: Container(
-        margin: margin,
-        padding: padding,
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding:  EdgeInsets.symmetric(
+            horizontal: ratio.width * 16, vertical: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
             border: stdFormat3.format(reserve.startTime) == today
-                ? Border.all(color: MGColor.primaryColor()) : null
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,13 +271,15 @@ class _ReservationListPageState extends State<ReservationListPage> {
     }
   }
 
-  Future<void> doReservation() async {
+  Future<void> doReservation(ServiceType service) async {
     widget.setLoading(true);
-    List<String>? temp = await RestAPI.placeForService();
+    List<String>? temp = await RestAPI.placeForService(service);
     widget.setLoading(false);
     if (temp != null || temp!.isNotEmpty) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
+        MaterialPageRoute(
+          builder: (context) => ReservePage(service, availableRoom: temp))
+      );
     } else {
       late String place;
       switch (service) {

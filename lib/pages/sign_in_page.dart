@@ -5,9 +5,7 @@ import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
 
-import 'find_id_pw_page.dart';
-import 'sign_up_page.dart';
-import 'select_service_page.dart';
+import 'main_frame.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
@@ -179,101 +177,11 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                                 
                       /// button
-                      Column(
-                        children: [
-                          /// 로그인
-                          CustomButtons.bottomButton(
-                            '로그인',
-                            MGColor.brand1Primary,
-                            () => _buttonEnabled ? trySignIn() : null,
-                            disableBackground: MGColor.base6
-                          ),
-                                
-                          // SizedBox(height: ratio.height * 12),
-                                
-                          /// 로그인 외
-                          // IntrinsicHeight(
-                          //   child: Row(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     children: [
-                          //       /// 아이디 찾기
-                          //       GestureDetector(
-                          //         onTap: () => Navigator.of(context).push(
-                          //           PageRouteBuilder(
-                          //             transitionsBuilder: slideRigth2Left,
-                          //             pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: true)
-                          //           )
-                          //         ),
-                          //         behavior: HitTestBehavior.translucent,
-                          //         child: Padding(
-                          //           padding: EdgeInsets.symmetric(
-                          //             horizontal: ratio.width * 10,
-                          //             vertical: ratio.height * 12
-                          //           ),
-                          //           child: Text(
-                          //             '아이디 찾기',
-                          //             style: KR.parag2.copyWith(color: MGcolor.base4),
-                          //           )
-                          //         ),
-                          //       ),
-                          //
-                          //       VerticalDivider(
-                          //         width: 1,
-                          //         thickness: 1,
-                          //         indent: 15,
-                          //         endIndent: 13,
-                          //         color: MGcolor.base4,
-                          //       ),
-                          //
-                          //       /// 비밀번호 찾기
-                          //       GestureDetector(
-                          //         onTap: () => Navigator.of(context).push(
-                          //           PageRouteBuilder(
-                          //             transitionsBuilder: slideRigth2Left,
-                          //             pageBuilder: (_, __, ___) => FindIdPwFrame(isFindingId: false)
-                          //           )
-                          //         ),
-                          //         behavior: HitTestBehavior.translucent,
-                          //         child: Padding(
-                          //             padding: EdgeInsets.symmetric(
-                          //                 horizontal: ratio.width * 10,
-                          //                 vertical: ratio.height * 12
-                          //             ),
-                          //             child: Text(
-                          //               '비밀번호 찾기',
-                          //               style: KR.parag2.copyWith(color: MGcolor.base4),
-                          //             )
-                          //         ),
-                          //       ),
-                          //
-                          //       VerticalDivider(
-                          //         width: 1,
-                          //         thickness: 1,
-                          //         indent: 15,
-                          //         endIndent: 13,
-                          //         color: MGcolor.base4,
-                          //       ),
-                          //
-                          //       /// 회원가입
-                          //       GestureDetector(
-                          //         onTap: _floatSignUpPage,
-                          //         behavior: HitTestBehavior.translucent,
-                          //         child: Padding(
-                          //             padding: EdgeInsets.symmetric(
-                          //                 horizontal: ratio.width * 10,
-                          //                 vertical: ratio.height * 12
-                          //             ),
-                          //             child: Text(
-                          //               '회원가입',
-                          //               style: KR.parag2.copyWith(color: MGcolor.brand1Primary),
-                          //             )
-                          //         ),
-                          //       ),
-                          //     ]
-                          //   ),
-                          // )
-                        ],
+                      CustomButtons.bottomButton(
+                        '로그인',
+                        MGColor.brandPrimary,
+                        () => _buttonEnabled ? trySignIn() : null,
+                        disableBackground: MGColor.base6
                       )
                     ],
                   ),
@@ -296,17 +204,6 @@ class _SignInPageState extends State<SignInPage> {
     });
   }
 
-  /// move page with sliding animation
-  void _floatPage(Widget page) {
-    Navigator.of(context).push(
-        PageRouteBuilder(
-          fullscreenDialog: false,
-          transitionsBuilder: slideRigth2Left,
-          pageBuilder: (context, anime, secondAnime) => page,
-        )
-    );
-  }
-
   /// try sign-in method
   Future<void> trySignIn() async {
     setState(() {
@@ -323,14 +220,17 @@ class _SignInPageState extends State<SignInPage> {
       if (user != null) {
         // save data
         myInfo = user;
+        reserves = await RestAPI.getAllReservation() ?? [];
+        admits = await RestAPI.getAllAdmission() ?? [];
+        myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-        // appaer selecting service page
+        // appear main frame
         setState(() => isLoading = false);
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             fullscreenDialog: false,
             transitionsBuilder: slideRigth2Left,
-            pageBuilder: (_, __, ___) => const SelectingServicePage()
+            pageBuilder: (_, __, ___) => const MainFrame()
           )
         );
       } else {
@@ -348,7 +248,7 @@ class _SignInPageState extends State<SignInPage> {
             barrierColor: Colors.black.withOpacity(0.25),
             builder: (context) => CommentPopup(
                 title: "통신 속도가 너무 느립니다!",
-                buttonColor: MGColor.brand1Primary,
+                buttonColor: MGColor.brandPrimary,
                 onPressed: () => Navigator.pop(context)
             )
         );

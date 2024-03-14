@@ -12,20 +12,21 @@ import '../widgets/select_time_widgets.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
-class ReservatePage extends StatefulWidget {
-  const ReservatePage({
+class ReservePage extends StatefulWidget {
+  const ReservePage(this.service, {
     Key? key,
     required this.availableRoom,
     this.reserve
   }) : super(key: key);
 
+  final ServiceType service;
   final List<String> availableRoom;
   final Reserve? reserve;
 
   @override
-  State<ReservatePage> createState() => _ReservatePageState();
+  State<ReservePage> createState() => _ReservePageState();
 }
-class _ReservatePageState extends State<ReservatePage> {
+class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
@@ -61,7 +62,7 @@ class _ReservatePageState extends State<ReservatePage> {
     _places = widget.availableRoom;
     _loading = false;
     _isSolo = _canTime = false;
-    _addUserGuideline = MGColor.primaryColor();
+    _addUserGuideline = MGColor.brandPrimary;
     _leaderNumber = myInfo.stuNum;
     _leaderName = myInfo.name;
     _usersList = [];
@@ -104,7 +105,7 @@ class _ReservatePageState extends State<ReservatePage> {
   @override
   Widget build(BuildContext context) {
     late String title;
-    switch (service) {
+    switch (widget.service) {
       case ServiceType.aiSpace:
         title = "회의실 예약하기";
         break;
@@ -145,7 +146,7 @@ class _ReservatePageState extends State<ReservatePage> {
 
                       /// 만약 GPU 컴퓨터 예약이면, 전담 교수님 추가 위젯
                       /// 아니면, 시간 선택 위젯
-                      if (service == ServiceType.computer) {
+                      if (widget.service == ServiceType.computer) {
                         temp.add(Container(
                             margin: EdgeInsets.fromLTRB(
                                 ratio.width * 16,
@@ -193,7 +194,8 @@ class _ReservatePageState extends State<ReservatePage> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12)),
                             child: CustomTimePicker(
-                              room: _selectedRoom,
+                              widget.service,
+                              place: _selectedRoom,
                               date: _selectedDate!,
                               begin: _selectedEnter?.hour,
                               end: _selectedEnd?.hour,
@@ -336,7 +338,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                     height: 32 * ratio.width,
                                                     decoration: BoxDecoration(
                                                       color: _isSolo ? MGColor.base6
-                                                          : MGColor.primaryColor(),
+                                                          : MGColor.brandPrimary,
                                                       borderRadius:
                                                       BorderRadius.circular(12),
                                                     ),
@@ -409,7 +411,7 @@ class _ReservatePageState extends State<ReservatePage> {
                                                       color: MGColor.base3,
                                                       width: 1.6
                                                   ),
-                                                  activeColor: MGColor.primaryColor(),
+                                                  activeColor: MGColor.brandPrimary,
                                                   onChanged: (bool? value) {
                                                     setState(() => _isSolo = value!);
                                                   }),
@@ -452,7 +454,7 @@ class _ReservatePageState extends State<ReservatePage> {
                             padding: EdgeInsets.only(bottom: ratio.height * 10),
                             child: CustomButtons.bottomButton(
                                 '예약하기',
-                                MGColor.primaryColor(),
+                                MGColor.brandPrimary,
                                     () => _canTime ? _reserve() : null,
                                 disableBackground: MGColor.base6
                             )
@@ -475,7 +477,7 @@ class _ReservatePageState extends State<ReservatePage> {
   void _initPage() {
     debugPrint(_selectedRoom);
     /// 장소 선택란
-    if (service == ServiceType.lectureRoom) {
+    if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
         padding: EdgeInsets.only(
             left: ratio.width * 20,
@@ -485,14 +487,14 @@ class _ReservatePageState extends State<ReservatePage> {
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
             fontSize: 11,
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             fontFamily: 'Ko'
           ),
         ),
       ));
     } else {
       _firstWidgets.add(CustomContainer(
-        title: service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
+        title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
         height: 52,
         margin: EdgeInsets.fromLTRB(
             ratio.width * 16,
@@ -510,7 +512,7 @@ class _ReservatePageState extends State<ReservatePage> {
                   _selectedRoom = value;
                   if (_selectedRoom != null && _selectedDate != null) {
                     setState(() {
-                      if (service != ServiceType.computer) {
+                      if (widget.service != ServiceType.computer) {
                         _selectedEnter = _selectedEnd = null;
                       }
                       if (!_canTime) {
@@ -527,7 +529,7 @@ class _ReservatePageState extends State<ReservatePage> {
     }
 
     /// 날짜 선택란
-    if (service == ServiceType.computer) {
+    if (widget.service == ServiceType.computer) {
       _selectedEnter = DateTime.now();
       switch (DateTime.now().weekday) {
         case 1:
@@ -580,10 +582,10 @@ class _ReservatePageState extends State<ReservatePage> {
               selectedDateTextStyle:
               EN.parag1.copyWith(color: Colors.white),
               selelctedDateBoxDecoration: BoxDecoration(
-                  color: MGColor.primaryColor(),
+                  color: MGColor.brandPrimary,
                   borderRadius: BorderRadius.circular(4)),
               todayTextStyle:
-              EN.parag1.copyWith(color: MGColor.primaryColor()),
+              EN.parag1.copyWith(color: MGColor.brandPrimary),
               todayBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
@@ -627,10 +629,10 @@ class _ReservatePageState extends State<ReservatePage> {
             selectedDateTextStyle:
             EN.parag1.copyWith(color: Colors.white),
             selelctedDateBoxDecoration: BoxDecoration(
-                color: MGColor.primaryColor(),
+                color: MGColor.brandPrimary,
                 borderRadius: BorderRadius.circular(4)),
             todayTextStyle:
-            EN.parag1.copyWith(color: MGColor.primaryColor()),
+            EN.parag1.copyWith(color: MGColor.brandPrimary),
             todayBoxDecoration: BoxDecoration(
                 color: MGColor.base10,
                 borderRadius: BorderRadius.circular(4)),
@@ -642,7 +644,7 @@ class _ReservatePageState extends State<ReservatePage> {
           ),
           onSelected: (value) {
             _selectedDate = stdFormat3.format(value);
-            if ((_selectedRoom != null || service == ServiceType.lectureRoom) && _selectedDate != null) {
+            if ((_selectedRoom != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
                 if (widget.reserve != null
                     && _selectedRoom == widget.reserve!.place
@@ -684,7 +686,7 @@ class _ReservatePageState extends State<ReservatePage> {
           FocusScope.of(context).unfocus();
         }
         alertMessege = "정상적으로 추가됐습니다";
-        _addUserGuideline = MGColor.primaryColor();
+        _addUserGuideline = MGColor.brandPrimary;
         _usersList.add("${_stuNumCtr.text} ${_nameCtr.text}");
         _usersWidgets.add(_myUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
         _stuNumCtr.clear();
@@ -707,7 +709,7 @@ class _ReservatePageState extends State<ReservatePage> {
         right: ratio.width * 5
       ),
       decoration: ShapeDecoration(
-        color: MGColor.secondaryColor(),
+        color: MGColor.brandSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -750,7 +752,7 @@ class _ReservatePageState extends State<ReservatePage> {
       }
     });
 
-    if (service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
+    if (widget.service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (!_isSolo && _usersList.isEmpty) {
@@ -783,6 +785,7 @@ class _ReservatePageState extends State<ReservatePage> {
         Map<String, dynamic>? response = widget.reserve != null
             ? await RestAPI.patchReservation(
                   reservationId: widget.reserve!.reservationId,
+                  service: widget.service,
                   place: _selectedRoom,
                   startTime: start,
                   endTime: end,
@@ -792,6 +795,7 @@ class _ReservatePageState extends State<ReservatePage> {
                   professor: _professerCtr.text
               )
             : await RestAPI.addReservation(
+                  service: widget.service,
                   place: _selectedRoom,
                   startTime: start,
                   endTime: end,

@@ -56,7 +56,7 @@ class OnBoarding extends StatelessWidget {
               child: Center(
                 child: CustomButtons.bottomButton(
                     '시작하기',
-                    MGColor.brand1Primary,
+                    MGColor.brandPrimary,
                     () => _onPressed(context)
                 )
               ),

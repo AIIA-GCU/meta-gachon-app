@@ -61,7 +61,7 @@ class CustomButtons {
         text,
         style: EN.subtitle2.copyWith(
           fontWeight: FontWeight.w700,
-          color: MGColor.brand1Tertiary,
+          color: MGColor.brandTertiary,
         ),
       ),
     );
@@ -190,7 +190,7 @@ class CustomButtons {
             borderRadius: BorderRadius.circular(8)),
         child: Ink(
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -231,7 +231,7 @@ class CustomButtons {
         child: Ink(
           width: ratio.width * 77,
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -316,7 +316,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: MGColor.primaryColor()),
+            border: Border.all(color: MGColor.brandPrimary),
           ),
         ),
 

@@ -47,7 +47,7 @@ class Message extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: MGColor.primaryColor(),
+              color: MGColor.brandPrimary,
               borderRadius: const BorderRadiusDirectional.only(
                 topStart: Radius.circular(12),
                 topEnd: Radius.circular(12),
@@ -89,7 +89,7 @@ class _Triangle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = MGColor.primaryColor()
+      ..color = MGColor.brandPrimary
       ..style = PaintingStyle.fill;
 
     Path path = Path();

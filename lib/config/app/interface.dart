@@ -233,6 +233,3 @@ late final String today;
 
 /// 비율
 late Size ratio;
-
-/// 서비스 타입
-late ServiceType service;

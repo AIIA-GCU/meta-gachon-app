@@ -43,12 +43,12 @@ class _SplashState extends State<Splash> {
           Positioned(
             left: logoX,
             top: logoY,
-            child: Icon(MGLogo.logo, color: MGColor.primaryColor(), size: 120),
+            child: Icon(MGLogo.logo, color: MGColor.brandPrimary, size: 120),
           ),
           Positioned(
             left: logoX - 45,
             top: logoY + 160,
-            child: Icon(MGLogo.typo, color: MGColor.primaryColor(), size: 29),
+            child: Icon(MGLogo.typo, color: MGColor.brandPrimary, size: 29),
           ),
           Positioned(
             left: logoX + 44,

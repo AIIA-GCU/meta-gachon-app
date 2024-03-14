@@ -75,7 +75,7 @@ class _SettingPageState extends State<SettingPage> {
                       Switch(
                         value: _alarmOnOff,
                         activeColor: Colors.white,
-                        activeTrackColor: MGColor.primaryColor(),
+                        activeTrackColor: MGColor.brandPrimary,
                         inactiveTrackColor: MGColor.base6,
                         inactiveThumbColor: Colors.white,
                         onChanged: (val) {
@@ -126,7 +126,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                             '학교 홈페이지로 바로 가기',
-                            style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
+                            style: KR.subtitle4.copyWith(color: MGColor.brandPrimary)
                           ),
                           Transform.rotate(
                             angle: pi,
@@ -155,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
                         children: [
                           Text(
                               '사이버 캠퍼스로 바로 가기',
-                              style: KR.subtitle4.copyWith(color: MGColor.primaryColor())
+                              style: KR.subtitle4.copyWith(color: MGColor.brandPrimary)
                           ),
                           Transform.rotate(
                               angle: pi,

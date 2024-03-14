@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
@@ -11,6 +13,7 @@ import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 import 'using_camera_page.dart';
 import 'admission_list_page.dart';
+import 'qr_page.dart';
 
 class AdmitPage extends StatefulWidget {
   const AdmitPage({Key? key, required this.reserve}) : super(key: key);
@@ -23,6 +26,8 @@ class AdmitPage extends StatefulWidget {
 
 class _AdmitPageState extends State<AdmitPage> {
   final TextEditingController _textCtr = TextEditingController();
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
 
   late String? place;
   late String leaderInfo;
@@ -33,13 +38,12 @@ class _AdmitPageState extends State<AdmitPage> {
 
   @override
   void initState() {
-    super.initState();
     loading = false;
 
     place = widget.reserve.place;
     leaderInfo = widget.reserve.leaderInfo;
 
-    if (service == ServiceType.computer) {
+    if (widget.reserve.service == ServiceType.computer) {
       time = RichText(text: TextSpan(
         style: EN.parag2.copyWith(color: MGColor.base3),
         children: [
@@ -58,6 +62,11 @@ class _AdmitPageState extends State<AdmitPage> {
         ]
       ));
     }
+
+    _controller = CameraController(camera, ResolutionPreset.medium);
+    _initializeControllerFuture = _controller.initialize();
+
+    super.initState();
   }
 
   @override
@@ -112,12 +121,12 @@ class _AdmitPageState extends State<AdmitPage> {
                                 SizedBox(height: ratio.height * 10),
                                 Text(
                                   '회의실 전체가 다 보이도록 사진을 찍어 올려주세요!',
-                                  style: KR.label2.copyWith(color: MGColor.primaryColor()),
+                                  style: KR.label2.copyWith(color: MGColor.brandPrimary),
                                 ),
                                 SizedBox(height: ratio.height * 4),
                                 Expanded(
                                   child: GestureDetector(
-                                    onTap: moveToCamera,
+                                    onTap: _startCamera,
                                     behavior: HitTestBehavior.translucent,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -286,7 +295,7 @@ class _AdmitPageState extends State<AdmitPage> {
                     left: ratio.width * 16,
                     child: CustomButtons.bottomButton(
                       '인증하기',
-                      MGColor.primaryColor(),
+                      MGColor.brandPrimary,
                       doubleCheck
                     )
                   )
@@ -303,17 +312,19 @@ class _AdmitPageState extends State<AdmitPage> {
     );
   }
 
-  void moveToCamera() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TakePictureScreen(
-           takenPicture: (path) {
-             setState(() => _picturePath = path);
-           }
-        )
-      )
-    );
+  Future<void> _startCamera() async {
+    try {
+      await _initializeControllerFuture;
+      if (_controller.value.isInitialized) {
+        final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+        if (pickedFile != null) {
+          setState(() => _picturePath = pickedFile.path);
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void doubleCheck() {
