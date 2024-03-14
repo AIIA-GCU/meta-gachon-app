@@ -16,19 +16,17 @@
 ///
 ///
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
-import 'pages/select_service_page.dart';
 
 Future<void> main() async {
 
@@ -56,7 +54,10 @@ Future<void> main() async {
       // await FCM.initialize();
       // final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
-      start = const SelectingServicePage();
+      reserves = await RestAPI.getAllReservation() ?? [];
+      admits = await RestAPI.getAllAdmission() ?? [];
+      myAdmits = await RestAPI.getMyAdmission() ?? [];
+      start = const MainFrame();
     } catch(_) {
       debugPrint('No token');
       start = const SignInPage();
@@ -64,10 +65,10 @@ Future<void> main() async {
   }
 
   debugPrint("complete camera setting");
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
