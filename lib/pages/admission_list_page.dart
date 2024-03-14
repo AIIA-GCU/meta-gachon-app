@@ -8,6 +8,7 @@ import 'admit_page.dart';
 import 'my_admission_list_page.dart';
 import '../widgets/small_widgets.dart';
 
+
 class AdmissionListPage extends StatefulWidget {
   const AdmissionListPage({super.key});
 
@@ -20,6 +21,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
   late final FToast _fToast;
   late bool _isShownToast;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -212,12 +214,16 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       ),
     );
   }
-
+  void setLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
   void _doAdmission() {
     int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AdmitPage(reserve: reserves[idx])));
+          MaterialPageRoute(builder: (_) => NewAdmitPage(setLoading: setLoading)));
     } else {
       if (!_isShownToast) {
         /// show toast during 2s
