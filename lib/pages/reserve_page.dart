@@ -808,7 +808,10 @@ class _ReservePageState extends State<ReservePage> {
           onPressed = () => Navigator.pop(context);
         } else if (response['reservationID'] == -1) {
           title = '[!] ${response['statusMsg']}';
-          onPressed = () => Navigator.pop(context);
+          onPressed = () {
+            Navigator.pop(context);
+            setState(() {});
+          };
         } else {
           allClear = true;
           title = '예약되었습니다!';

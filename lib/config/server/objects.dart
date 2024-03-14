@@ -159,13 +159,13 @@ class Reserve {
       this._professor
       ) {
     switch (serviceType) {
-      case 'mi':
+      case 'MI':
         _type = ServiceType.aiSpace;
         break;
-      case 'lecture':
+      case 'LECTURE':
         _type = ServiceType.lectureRoom;
         break;
-      case 'computer':
+      case 'COMPUTER':
         _type = ServiceType.computer;
         break;
       default:

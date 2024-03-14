@@ -51,6 +51,7 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        elevation: 0,
         backgroundColor: background,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
@@ -89,6 +90,7 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 302, 40),
           shape: RoundedRectangleBorder(
@@ -124,10 +126,11 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 147, 40),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10))
+              borderRadius: BorderRadius.circular(10)),
       ),
       child: Text(text, style: KR.parag2.copyWith(color: textColor)),
     );
@@ -158,6 +161,7 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 147, 40),
           shape: RoundedRectangleBorder(

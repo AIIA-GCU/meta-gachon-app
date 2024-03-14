@@ -6,13 +6,13 @@ import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mata_gachon/config/app/_export.dart';
-import 'package:mata_gachon/config/server/_export.dart';
-import 'package:mata_gachon/widgets/button.dart';
+
+import '../config/app/_export.dart';
+import '../config/server/_export.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
-import 'using_camera_page.dart';
 import 'admission_list_page.dart';
+import '../widgets/button.dart';
 import 'qr_page.dart';
 
 class AdmitPage extends StatefulWidget {
@@ -466,7 +466,7 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
                 if (reserves.isNotEmpty) {
                   return RefreshIndicator(
                     displacement: 0,
-                    color: MGColor.primaryColor(),
+                    color: MGColor.brandPrimary,
                     onRefresh: _onRefreshed,
                     child: ListView.builder(
                         padding: EdgeInsets.only(bottom: ratio.height * 30),
@@ -497,7 +497,7 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
     late EdgeInsetsGeometry margin, padding;
     late Text firstText, secondText, thirdText;
 
-    if (service == ServiceType.computer) {
+    if (reserve.service == ServiceType.computer) {
       margin = const EdgeInsets.symmetric(vertical: 16);
       padding = EdgeInsets.symmetric(
           horizontal: ratio.width * 16, vertical: 26);
@@ -514,7 +514,7 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
             ),
             TextSpan(
                 text: reserve.professor,
-                style: KR.parag2.copyWith(color: MGColor.secondaryColor())
+                style: KR.parag2.copyWith(color: MGColor.brandSecondary)
             ),
           ],
         ),
@@ -529,7 +529,7 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
           style: KR.parag2.copyWith(color: MGColor.base3));
     }
 
-    if (service == ServiceType.lectureRoom && reserve.place == '-1') {
+    if (reserve.service == ServiceType.lectureRoom && reserve.place == '-1') {
       firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
     } else {
       firstText = Text(reserve.place!, style: KR.subtitle3);
@@ -550,7 +550,7 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
             border: stdFormat3.format(reserve.startTime) == today
-                ? Border.all(color: MGColor.primaryColor()) : null
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -595,8 +595,6 @@ class _NewAdmitPageState extends State<NewAdmitPage> {
       ),
     );
   }
-
-
 
   Future<void> _onRefreshed() async {
     await Future.delayed(const Duration(milliseconds: 200));

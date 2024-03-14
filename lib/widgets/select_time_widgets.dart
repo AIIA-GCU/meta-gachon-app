@@ -89,16 +89,25 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: EN.parag1.copyWith(color: MGColor.base1)),
+          Text(title, style: KR.parag1.copyWith(color: MGColor.base1)),
           SizedBox(height: 10 * ratio.height),
           Table(
             children: <TableRow>[
               TableRow(
                 children: ['일', '월', '화', '수', '목', '금', '토']
-                    .map((e) => Padding(
-                      padding: EdgeInsets.only(bottom: 6 * ratio.height),
-                      child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
-                    ))
+                    .map((e) {
+                      late TextStyle style;
+                      if (e == '일') {
+                        style = widget.cellStyle
+                            .fieldTextStyle.copyWith(color: MGColor.systemError);
+                      } else {
+                        style = widget.cellStyle.fieldTextStyle;
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 6 * ratio.height),
+                        child: Text(e, style: style, textAlign: TextAlign.center)
+                      );
+                    })
                     .toList()
               ),
               TableRow(

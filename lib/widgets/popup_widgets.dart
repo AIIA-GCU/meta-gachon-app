@@ -174,7 +174,7 @@ class ReservationPopup extends StatelessWidget {
     }
 
     if (myInfo.match(item.leaderInfo)) {
-      switch (5) {
+      switch (status) {
         /// 사용 전 (예약 변경 X, QR O)
         case 0:
           button = ElevatedButton(

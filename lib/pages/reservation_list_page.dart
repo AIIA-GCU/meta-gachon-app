@@ -115,7 +115,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
             color: MGColor.brandPrimary,
             onRefresh: _onRefreshed,
             child: ListView.builder(
-              padding: EdgeInsets.only(bottom: ratio.height * 30),
               physics: const AlwaysScrollableScrollPhysics()
                   .applyTo(const BouncingScrollPhysics()),
               itemCount: reserves.length,
