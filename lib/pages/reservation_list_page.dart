@@ -118,8 +118,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
               padding: EdgeInsets.only(bottom: ratio.height * 30),
               physics: const AlwaysScrollableScrollPhysics()
                   .applyTo(const BouncingScrollPhysics()),
-              // itemCount: reserves.length,
-              itemBuilder: (_, index) => _listItem(reserves[0])
+              itemCount: reserves.length,
+              itemBuilder: (_, index) => _listItem(reserves[index])
             ),
           );
         } else {
