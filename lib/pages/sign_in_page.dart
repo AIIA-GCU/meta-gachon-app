@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
@@ -23,7 +24,7 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
-  final storage = FlutterSecureStorage();
+  final secureStorage = FlutterSecureStorage();
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -323,10 +324,14 @@ class _SignInPageState extends State<SignInPage> {
 
       // if sign-in success
       if (user != null) {
-        await saveIdResource(idController.text, pwController.text);
-
         // save data
         myInfo = user;
+
+        // save IOS login data
+        await saveIosData(idController.text, pwController.text);
+
+        // save android login data
+        await saveAndroidData(idController.text, pwController.text);
 
         // appear selecting service page
         setState(() => isLoading = false);
@@ -360,8 +365,12 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  Future<void> saveIdResource(String userId, String userPw) async {
-    await storage.write(key: 'userId', value: userId);
-    await storage.write(key: 'userPw', value: userPw);
+  Future<void> saveAndroidData(String userId, String userPw) async {
+    await secureStorage.write(key: 'userId', value: userId);
+    await secureStorage.write(key: 'userPw', value: userPw);
+  }
+  Future<void> saveIosData(String userId, String userPw) async {
+    await FlutterKeychain.put(key:'userId', value: idController.text);
+    await FlutterKeychain.put(key:'userPw', value: pwController.text);
   }
 }

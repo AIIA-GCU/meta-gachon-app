@@ -49,6 +49,7 @@ dependencies:
   firebase_messaging: ^14.7.14
   fluttertoast: ^8.2.4
   flutter_secure_storage: ^9.0.0
+  flutter_keychain: ^2.4.0
 
 dev_dependencies:
   flutter_test:
