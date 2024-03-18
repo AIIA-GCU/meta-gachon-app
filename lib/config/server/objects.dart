@@ -162,7 +162,7 @@ class Reserve {
       case 'MI':
         _type = ServiceType.aiSpace;
         break;
-      case 'LECTURE':
+      case 'CLASSROOM':
         _type = ServiceType.lectureRoom;
         break;
       case 'COMPUTER':

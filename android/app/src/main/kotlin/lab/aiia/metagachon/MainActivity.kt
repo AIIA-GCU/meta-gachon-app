@@ -1,4 +1,4 @@
-package com.aiia.meta_gachon
+package lab.aiia.metagachon
 
 import io.flutter.embedding.android.FlutterActivity
 

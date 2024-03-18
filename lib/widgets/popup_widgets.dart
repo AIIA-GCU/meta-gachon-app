@@ -36,6 +36,10 @@ class AlertPopup extends StatelessWidget {
           ratio.width * 12,
           12
         ),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12)
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,6 +108,10 @@ class CommentPopup extends StatelessWidget {
             40,
             ratio.width * 12,
             12
+        ),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12)
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -285,11 +293,16 @@ class ReservationPopup extends StatelessWidget {
       button = const SizedBox.shrink();
     }
 
+
     return Dialog(
       insetPadding: EdgeInsets.zero,
       child: Container(
         width: ratio.width * 326,
         padding: EdgeInsets.symmetric(vertical: ratio.height * 30),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12)
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -519,6 +532,10 @@ class AdmissionPopup extends StatelessWidget {
       child: Container(
         width: ratio.width * 326,
         padding: EdgeInsets.symmetric(vertical: ratio.height * 30),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12)
+        ),
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -590,33 +607,16 @@ class AdmissionPopup extends StatelessWidget {
   void enlargePhoto(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.55),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            top: ratio.height * 150,
-            bottom: ratio.height * 44
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.memory(
-                item.photo,
-                height: ratio.height * 594,
-                fit: BoxFit.fitWidth,
-              ),
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                style: IconButton.styleFrom(
-                  foregroundColor: MGColor.brandPrimary,
-                  backgroundColor: MGColor.brandTertiary,
-                  fixedSize: Size(ratio.width * 48, ratio.width * 48)
-                ),
-                icon: Icon(MGIcon.cross)
-              )
-            ]
+        return GestureDetector(
+          child: Center(
+            child: Image.memory(
+              item.photo,
+              height: ratio.height * 594,
+              fit: BoxFit.fitWidth,
+            ),
           ),
         );
       }

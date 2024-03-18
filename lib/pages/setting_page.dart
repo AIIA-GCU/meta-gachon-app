@@ -57,135 +57,137 @@ class _SettingPageState extends State<SettingPage> {
               ])
             )
           ),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-            child: Column(children: [
-              TileButtonCard(items: [
-                /// 알림 설정
-                TileButton(
-                  padding: EdgeInsets.symmetric(
-                    // vertical: ratio.height * 10,
-                    horizontal: ratio.width * 22
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('알림 설정', style: KR.subtitle4),
-                      Switch(
-                        value: _alarmOnOff,
-                        activeColor: Colors.white,
-                        activeTrackColor: MGColor.brandPrimary,
-                        inactiveTrackColor: MGColor.base6,
-                        inactiveThumbColor: Colors.white,
-                        onChanged: (val) {
-                          setState(() => _alarmOnOff = val);
-                        }
-                      )
-                    ]
-                  )
-                ),
-                // /// 다크 모드
-                // TileButton(
-                //     padding: EdgeInsets.symmetric(
-                //       vertical: ratio.height * 10,
-                //       horizontal: ratio.width * 22
-                //     ),
-                //     child: Row(
-                //         mainAxisSize: MainAxisSize.max,
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Text('다크 모드', style: KR.subtitle4),
-                //           Switch(
-                //               value: _temp2,
-                //               activeColor: Colors.white,
-                //               activeTrackColor: MGcolor.primaryColor(),
-                //               inactiveTrackColor: MGcolor.base6,
-                //               inactiveThumbColor: Colors.white,
-                //               onChanged: (val) {
-                //                 setState(() => _temp2 = val);
-                //               }
-                //           )
-                //         ]
-                //     )
-                // ),
-              ]),
-              TileButtonCard(items: [
-                /// 학교 홈페이지로 바로 가기
-                TileButton(
-                  onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
-                    padding: EdgeInsets.fromLTRB(
-                      ratio.width * 22,
-                      12,
-                      ratio.width * 18,
-                      12
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
+              child: Column(children: [
+                TileButtonCard(items: [
+                  /// 알림 설정
+                  TileButton(
+                    padding: EdgeInsets.symmetric(
+                      // vertical: ratio.height * 10,
+                      horizontal: ratio.width * 22
                     ),
                     child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '학교 홈페이지로 바로 가기',
-                            style: KR.subtitle4.copyWith(color: MGColor.brandPrimary)
-                          ),
-                          Transform.rotate(
-                            angle: pi,
-                            child: Icon(
-                                MGIcon.back,
-                                size: ratio.width * 24,
-                                color: MGColor.base4
-                            )
-                          )
-                        ]
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('알림 설정', style: KR.subtitle4),
+                        Switch(
+                          value: _alarmOnOff,
+                          activeColor: Colors.white,
+                          activeTrackColor: MGColor.brandPrimary,
+                          inactiveTrackColor: MGColor.base6,
+                          inactiveThumbColor: Colors.white,
+                          onChanged: (val) {
+                            setState(() => _alarmOnOff = val);
+                          }
+                        )
+                      ]
                     )
-                ),
-
-                /// 사이버 캠퍼스로 바로 가기
-                TileButton(
+                  ),
+                  // /// 다크 모드
+                  // TileButton(
+                  //     padding: EdgeInsets.symmetric(
+                  //       vertical: ratio.height * 10,
+                  //       horizontal: ratio.width * 22
+                  //     ),
+                  //     child: Row(
+                  //         mainAxisSize: MainAxisSize.max,
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Text('다크 모드', style: KR.subtitle4),
+                  //           Switch(
+                  //               value: _temp2,
+                  //               activeColor: Colors.white,
+                  //               activeTrackColor: MGcolor.primaryColor(),
+                  //               inactiveTrackColor: MGcolor.base6,
+                  //               inactiveThumbColor: Colors.white,
+                  //               onChanged: (val) {
+                  //                 setState(() => _temp2 = val);
+                  //               }
+                  //           )
+                  //         ]
+                  //     )
+                  // ),
+                ]),
+                TileButtonCard(items: [
+                  /// 학교 홈페이지로 바로 가기
+                  TileButton(
                     onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
-                    padding: EdgeInsets.fromLTRB(
+                      padding: EdgeInsets.fromLTRB(
                         ratio.width * 22,
                         12,
                         ratio.width * 18,
                         12
-                    ),
-                    child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              '사이버 캠퍼스로 바로 가기',
+                      ),
+                      child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '학교 홈페이지로 바로 가기',
                               style: KR.subtitle4.copyWith(color: MGColor.brandPrimary)
-                          ),
-                          Transform.rotate(
+                            ),
+                            Transform.rotate(
                               angle: pi,
                               child: Icon(
                                   MGIcon.back,
                                   size: ratio.width * 24,
                                   color: MGColor.base4
                               )
-                          )
-                        ]
-                    )
-                )
-              ]),
-              TileButtonCard(
-                padding: EdgeInsets.zero,
-                items: [
-                  /// 로그아웃
+                            )
+                          ]
+                      )
+                  ),
+            
+                  /// 사이버 캠퍼스로 바로 가기
                   TileButton(
-                    onTap: _trySignOut,
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ratio.width * 22,
-                      vertical: 16
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Text('로그아웃', style: KR.subtitle4)
+                      onTap: () => launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
+                      padding: EdgeInsets.fromLTRB(
+                          ratio.width * 22,
+                          12,
+                          ratio.width * 18,
+                          12
+                      ),
+                      child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                '사이버 캠퍼스로 바로 가기',
+                                style: KR.subtitle4.copyWith(color: MGColor.brandPrimary)
+                            ),
+                            Transform.rotate(
+                                angle: pi,
+                                child: Icon(
+                                    MGIcon.back,
+                                    size: ratio.width * 24,
+                                    color: MGColor.base4
+                                )
+                            )
+                          ]
+                      )
                   )
-                ]
-              )
-            ])
+                ]),
+                TileButtonCard(
+                  padding: EdgeInsets.zero,
+                  items: [
+                    /// 로그아웃
+                    TileButton(
+                      onTap: _trySignOut,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ratio.width * 22,
+                        vertical: 16
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Text('로그아웃', style: KR.subtitle4)
+                    )
+                  ]
+                )
+              ])
+            ),
           )
         ),
 

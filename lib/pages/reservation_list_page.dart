@@ -138,8 +138,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
   Widget _moveToPageCard(ServiceType service) {
     final String place = service == ServiceType.aiSpace
-        ? "회의실" : service == ServiceType.lectureRoom
-        ? "강의실" : "컴퓨터";
+        ? "AI 인큐베이터" : service == ServiceType.lectureRoom
+        ? "강의실" : "GPU 컴퓨터";
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
@@ -280,22 +280,22 @@ class _ReservationListPageState extends State<ReservationListPage> {
           builder: (context) => ReservePage(service, availableRoom: temp))
       );
     } else {
-      late String place;
+      late String str;
       switch (service) {
         case ServiceType.aiSpace:
-          place = "회의실";
+          str = "회의실이";
           break;
         case ServiceType.lectureRoom:
-          place = "강의실";
+          str = "강의실이";
           break;
         case ServiceType.computer:
-          place = "컴퓨터";
+          str = "컴퓨터가";
           break;
       }
       showDialog(
           context: context,
           builder: (ctx) => CommentPopup(
-              title: '현재 예약 가능한 $place가 없습니다.',
+              title: '현재 예약 가능한 $str 없습니다.',
               onPressed: () => Navigator.pop(ctx)
           )
       );

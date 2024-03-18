@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/pages/prior_admissions_page.dart';
 
 import '../widgets/popup_widgets.dart';
 import 'admit_page.dart';
@@ -265,22 +266,22 @@ class _HomePageState extends State<HomePage> {
           builder: (context) => ReservePage(service, availableRoom: temp))
       );
     } else {
-      late String place;
+      late String str;
       switch (service) {
         case ServiceType.aiSpace:
-          place = "회의실";
+          str = "회의실이";
           break;
         case ServiceType.lectureRoom:
-          place = "강의실";
+          str = "강의실이";
           break;
         case ServiceType.computer:
-          place = "컴퓨터";
+          str = "컴퓨터가";
           break;
       }
       showDialog(
           context: context,
           builder: (ctx) => CommentPopup(
-              title: '현재 예약 가능한 $place가 없습니다.',
+              title: '현재 예약 가능한 $str 없습니다.',
               onPressed: () => Navigator.pop(ctx)
           )
       );
@@ -291,8 +292,7 @@ class _HomePageState extends State<HomePage> {
     int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => AdmitPage(reserve: reserves[idx])));
-      widget.movetoAdmisList();
+        MaterialPageRoute(builder: (_) => const PriorAdmissionsPage()));
     } else {
       if (!_isShownToast) {
         _isShownToast = true;

@@ -53,6 +53,7 @@ class CustomButtons {
       style: ElevatedButton.styleFrom(
         elevation: 0,
         backgroundColor: background,
+        shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12)),
@@ -60,7 +61,7 @@ class CustomButtons {
       ),
       child: Text(
         text,
-        style: EN.subtitle2.copyWith(
+        style: EN.subtitle3.copyWith(
           fontWeight: FontWeight.w700,
           color: MGColor.brandTertiary,
         ),
@@ -91,6 +92,7 @@ class CustomButtons {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 302, 40),
           shape: RoundedRectangleBorder(
@@ -127,8 +129,9 @@ class CustomButtons {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
-          fixedSize: Size(ratio.width * 147, 40),
+          fixedSize: Size(ratio.width * 159, 40),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10)),
       ),
@@ -163,6 +166,7 @@ class CustomButtons {
       style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: background,
+          shadowColor: Colors.transparent,
           fixedSize: Size(ratio.width * 147, 40),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10))
@@ -376,7 +380,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
             width: 120,
             child: Center(
               child: Text(item,
-                style: EN.subtitle2.copyWith(
+                style: EN.subtitle3.copyWith(
                     color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
               ),
             ),

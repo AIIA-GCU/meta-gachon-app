@@ -271,6 +271,18 @@ class RestAPI {
     }
   }
 
+  /// QR 인증
+  static Future<bool> qrCheck(String uri) async {
+    try {
+      final api = APIRequest('book/qrcheck');
+      Map<String, dynamic> response = await api.send(HTTPMethod.post);
+      if (response.isEmpty) return false;
+      return true;
+    } catch(e) {
+      throw Exception(e);
+    }
+  }
+
   /// 모든 인증
   static Future<List<Admit>?> getAllAdmission() async {
     try {

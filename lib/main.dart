@@ -65,10 +65,10 @@ Future<void> main() async {
   }
 
   debugPrint("complete camera setting");
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
