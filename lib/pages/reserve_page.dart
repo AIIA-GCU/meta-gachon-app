@@ -13,11 +13,9 @@ import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
 class ReservePage extends StatefulWidget {
-  const ReservePage(this.service, {
-    Key? key,
-    required this.availableRoom,
-    this.reserve
-  }) : super(key: key);
+  const ReservePage(this.service,
+      {Key? key, required this.availableRoom, this.reserve})
+      : super(key: key);
 
   final ServiceType service;
   final List<String> availableRoom;
@@ -26,15 +24,18 @@ class ReservePage extends StatefulWidget {
   @override
   State<ReservePage> createState() => _ReservePageState();
 }
+
 class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> _listKey =
+      GlobalKey<SliverAnimatedListState>();
 
   ///textfield controllor
   final TextEditingController _stuNumCtr = TextEditingController();
   final TextEditingController _nameCtr = TextEditingController();
   final TextEditingController _purposeCtr = TextEditingController();
   final TextEditingController _professerCtr = TextEditingController();
+  final TextEditingController _numberCtr = TextEditingController();
 
   /// 고정 데이터
   late final int _leaderNumber; //대표자 학번
@@ -77,8 +78,8 @@ class _ReservePageState extends State<ReservePage> {
       if (widget.reserve!.memberInfo.isNotEmpty) {
         _isSolo = false;
         List<String> temp = widget.reserve!.memberInfo.split(' ');
-        for (int i=0 ; i < temp.length ; i+=2) {
-          _usersList.add('${temp[i]} ${temp[i+1]}');
+        for (int i = 0; i < temp.length; i += 2) {
+          _usersList.add('${temp[i]} ${temp[i + 1]}');
         }
         _usersWidgets = _usersList.map((e) => _myUserBox(e)).toList();
       } else {
@@ -136,340 +137,312 @@ class _ReservePageState extends State<ReservePage> {
                 title: Text(title,
                     style: KR.subtitle1.copyWith(color: MGColor.base1))),
             body: SafeArea(
-              child: CustomScrollView(
-                  slivers: [
-                    SliverList.list(children: _firstWidgets),
-                    SliverAnimatedList(
-                      key: _listKey,
-                      initialItemCount: _canTime ? 4 : 0,
-                      itemBuilder: (context, index, animation) {
-                        List<Widget> temp = [];
-              
-                        /// 만약 GPU 컴퓨터 예약이면, 전담 교수님 추가 위젯
-                        /// 아니면, 시간 선택 위젯
-                        if (widget.service == ServiceType.computer) {
-                          temp.add(Container(
-                              margin: EdgeInsets.fromLTRB(
-                                  ratio.width * 16,
-                                  0,
-                                  ratio.width * 16,
-                                  ratio.height * 12
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: ratio.width * 16,
-                                  vertical: 16
-                              ),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    /// Title
-                                    Text('전담 교수님', style: KR.parag1),
-              
-                                    SizedBox(width: ratio.width * 36),
-              
-                                    /// Textfield
-                                    CustomTextField(
-                                      enabled: true,
-                                      width: 184 * ratio.width,
-                                      height: 32,
-                                      controller: _professerCtr,
-                                      hint: 'OOO 교수님',
-                                      format: [ProfesserFormat()],
-                                    )
-                                  ]
-                              )
-                          ));
-                        } else {
-                          temp.add(Container(
-                              margin: EdgeInsets.fromLTRB(
-                                  ratio.width * 16,
-                                  0,
-                                  ratio.width * 16,
-                                  ratio.height * 12
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: CustomTimePicker(
-                                widget.service,
-                                place: _selectedRoom,
-                                date: _selectedDate!,
-                                begin: _selectedEnter?.hour,
-                                end: _selectedEnd?.hour,
-                                setStart: (index) {
-                                  DateTime temp = stdFormat3.parse(_selectedDate!);
-                                  _selectedEnter = DateTime(temp.year, temp.month, temp.day, index);
-                                },
-                                setEnd: (index) {
-                                  DateTime temp = stdFormat3.parse(_selectedDate!);
-                                  _selectedEnd = DateTime(temp.year, temp.month, temp.day, index+1);
-                                },
-                              )
-                          ));
-                        }
-              
-                        /// 나머지 모두
-                        temp.addAll([
-                          ///대표자
-                          CustomContainer(
-                            title: "대표자",
-                            height: 52,
-                            margin: EdgeInsets.fromLTRB(
-                                ratio.width * 16,
-                                0,
-                                ratio.width * 16,
-                                ratio.height * 12
-                            ),
-                            content: const SizedBox.shrink(),
-                            additionalContent: [
-                              Positioned(
-                                  left: 80 * ratio.width,
-                                  top: 16,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "$_leaderNumber",
-                                        style: KR.parag2.copyWith(color: MGColor.base3),
-                                      ),
-                                      SizedBox(width: 4 * ratio.width),
-                                      Text(
-                                        _leaderName,
-                                        style: KR.parag2.copyWith(color: MGColor.base3),
-                                      ),
-                                    ],
-                                  )
-                              )
-                            ],
-                          ),
-              
-                          ///이용자
-                          Container(
-                            margin: EdgeInsets.fromLTRB(
-                                ratio.width * 16,
-                                0,
-                                ratio.width * 16,
-                                ratio.height * 12
-                            ),
-                            width: 358 * ratio.width,
-                            decoration: BoxDecoration(
+              child: CustomScrollView(slivers: [
+                SliverList.list(children: _firstWidgets),
+                SliverAnimatedList(
+                  key: _listKey,
+                  initialItemCount: _canTime ? 4 : 0,
+                  itemBuilder: (context, index, animation) {
+                    List<Widget> temp = [];
+
+                    /// 만약 GPU 컴퓨터 예약이면, 전담 교수님 추가 위젯
+                    /// 아니면, 시간 선택 위젯
+                    if (widget.service == ServiceType.computer) {
+                      temp.add(Container(
+                          margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                              ratio.width * 16, ratio.height * 12),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: ratio.width * 16, vertical: 16),
+                          decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                /// Input
-                                SizedBox(
-                                  width: 358 * ratio.width,
-                                  height: 32 + 31 * ratio.height,
-                                  child: Stack(children: [
-                                    Positioned(
-                                      left: 16 * ratio.width,
-                                      top: 16 * ratio.height,
-                                      child: Text('이용자', style: KR.parag1.copyWith(color: MGColor.base1)),
-                                    ),
-                                    Positioned(
-                                      left: 80 * ratio.width,
-                                      top: 10 * ratio.height,
-                                      child: Form(
-                                        key: _formKey,
-                                        child: Row(
-                                            children: [
-                                              CustomTextField(
-                                                enabled: !_isSolo,
-                                                width: 122 * ratio.width,
-                                                height: 32,
-                                                controller: _stuNumCtr,
-                                                hint: '학번',
-                                                keyboard: TextInputType.number,
-                                                format: [
-                                                  FilteringTextInputFormatter.digitsOnly, //숫자만 허용
-                                                  LengthLimitingTextInputFormatter(9), //9글자만 허용
-                                                ],
-                                                validator: (str) {
-                                                  if (str!.isEmpty || str.length != 9) {
-                                                    return alertMessege = "정확한 학번과 이름을 입력해 주세요";
-                                                  } else if(_leaderNumber.toString() == str) {
-                                                    return alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
-                                                  } else if (_usersWidgets.any((e) => (e.key! as ValueKey<String>).value.contains(str))) {
-                                                    return alertMessege = "이미 등록된 이용자입니다!";
-                                                  } else {
-                                                    return null;
-                                                  }
-                                                },
-                                              ),
-              
-                                              SizedBox(width: 8 * ratio.width),
-              
-                                              CustomTextField(
-                                                enabled: !_isSolo,
-                                                width: 92 * ratio.width,
-                                                height: 32,
-                                                controller: _nameCtr,
-                                                hint: '이름',
-                                                format: [
-                                                  FilteringTextInputFormatter.allow(
-                                                      RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
-                                                ],
-                                                validator: (str) {
-                                                  if (str!.isEmpty) {
-                                                    return alertMessege = "정확한 학번과 이름을 입력해 주세요";
-                                                  } else {
-                                                    return null;
-                                                  }
-                                                },
-                                              ),
-              
-                                              SizedBox(width: 8 * ratio.width),
-              
-                                              Material(
-                                                child: InkWell(
-                                                  onTap: _isSolo ? null : _validateAddingUser,
-                                                  customBorder: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius.circular(12)),
-                                                  child: Ink(
-                                                      width: 32 * ratio.width,
-                                                      height: 32 * ratio.width,
-                                                      decoration: BoxDecoration(
-                                                        color: _isSolo ? MGColor.base6
-                                                            : MGColor.brandPrimary,
-                                                        borderRadius:
-                                                        BorderRadius.circular(12),
-                                                      ),
-                                                      child: Center(
-                                                          child: Icon(
-                                                            MGIcon.plus,
-                                                            size: 16,
-                                                            color: _isSolo ? MGColor.base4
-                                                                : Colors.white,
-                                                          )
-                                                      )
-                                                  ),
-                                                ),
-                                              )
-                                            ]
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                        left: 80 * ratio.width,
-                                        top: 32 + ratio.height * 14,
-                                        child: Text(
-                                            alertMessege,
-                                            style: KR.label2.copyWith(
-                                                color: _isSolo
-                                                    ? MGColor.base4
-                                                    : _addUserGuideline
-                                            )
-                                        )
-                                    ),
-                                  ]),
+                                /// Title
+                                Text('전담 교수님', style: KR.parag1),
+
+                                SizedBox(width: ratio.width * 36),
+
+                                /// Textfield
+                                CustomTextField(
+                                  enabled: true,
+                                  width: 100 * ratio.width,
+                                  height: 32,
+                                  controller: _professerCtr,
+                                  hint: '김가천',
+                                  format: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp('[ㄱ-ㅎㅏ-ㅣ가-힣]')),
+                                    //외국 교수님 일단 배제
+                                  ],
                                 ),
-              
-                                /// registers
-                                Container(
-                                  width: 274 * ratio.width,
-                                  margin: EdgeInsets.only(
-                                      left: 68 * ratio.width,
-                                      bottom: 12 * ratio.height
+
+                                SizedBox(width: ratio.width * 10),
+
+                                Text('교수님', style: KR.parag1),
+                              ])));
+                    } else {
+                      temp.add(Container(
+                          margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                              ratio.width * 16, ratio.height * 12),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: CustomTimePicker(
+                            widget.service,
+                            place: _selectedRoom,
+                            date: _selectedDate!,
+                            begin: _selectedEnter?.hour,
+                            end: _selectedEnd?.hour,
+                            setStart: (index) {
+                              DateTime temp = stdFormat3.parse(_selectedDate!);
+                              _selectedEnter = DateTime(
+                                  temp.year, temp.month, temp.day, index);
+                            },
+                            setEnd: (index) {
+                              DateTime temp = stdFormat3.parse(_selectedDate!);
+                              _selectedEnd = DateTime(
+                                  temp.year, temp.month, temp.day, index + 1);
+                            },
+                          )));
+                    }
+
+                    /// 나머지 모두
+                    temp.addAll([
+                      ///대표자
+                      CustomContainer(
+                        title: "대표자",
+                        height: 52,
+                        margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                            ratio.width * 16, ratio.height * 12),
+                        content: const SizedBox.shrink(),
+                        additionalContent: [
+                          Positioned(
+                              left: 80 * ratio.width,
+                              top: 16,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "$_leaderNumber",
+                                    style: KR.parag2
+                                        .copyWith(color: MGColor.base3),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: ratio.width * 274,
-                                        child: Wrap(
-                                          spacing: 8,
-                                          alignment: WrapAlignment.start,
-                                          children: _usersWidgets,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8 * ratio.height),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 12 * ratio.width),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() => _isSolo = !_isSolo);
+                                  SizedBox(width: 4 * ratio.width),
+                                  Text(
+                                    _leaderName,
+                                    style: KR.parag2
+                                        .copyWith(color: MGColor.base3),
+                                  ),
+                                ],
+                              ))
+                        ],
+                      ),
+
+                      ///이용자
+                      Container(
+                        margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                            ratio.width * 16, ratio.height * 12),
+                        width: 358 * ratio.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// Input
+                            SizedBox(
+                              width: 358 * ratio.width,
+                              height: 32 + 31 * ratio.height,
+                              child: Stack(children: [
+                                Positioned(
+                                  left: 16 * ratio.width,
+                                  top: 16 * ratio.height,
+                                  child: Text('이용자',
+                                      style: KR.parag1
+                                          .copyWith(color: MGColor.base1)),
+                                ),
+                                Positioned(
+                                  left: 80 * ratio.width,
+                                  top: 10 * ratio.height,
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Row(children: [
+                                      // CustomTextField(
+                                      //   enabled: !_isSolo,
+                                      //   width: 122 * ratio.width,
+                                      //   height: 32,
+                                      //   controller: _stuNumCtr,
+                                      //   hint: '학번',
+                                      //   keyboard: TextInputType.number,
+                                      //   format: [
+                                      //     FilteringTextInputFormatter.digitsOnly, //숫자만 허용
+                                      //     LengthLimitingTextInputFormatter(9), //9글자만 허용
+                                      //   ],
+                                      //   validator: (str) {
+                                      //     if (str!.isEmpty || str.length != 9) {
+                                      //       return alertMessege = "정확한 학번과 이름을 입력해 주세요";
+                                      //     } else if(_leaderNumber.toString() == str) {
+                                      //       return alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
+                                      //     } else if (_usersWidgets.any((e) => (e.key! as ValueKey<String>).value.contains(str))) {
+                                      //       return alertMessege = "이미 등록된 이용자입니다!";
+                                      //     } else {
+                                      //       return null;
+                                      //     }
+                                      //   },
+                                      // ),
+                                      CustomTextField(
+                                          enabled: !_isSolo,
+                                          width: ratio.width * 40,
+                                          height: 32,
+                                          controller: _numberCtr,
+                                          keyboard: TextInputType.number,
+                                          hint: '',
+                                          format: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                            LengthLimitingTextInputFormatter(2),
+                                          ],
+                                          validator:(str) {
+                                            if(str!.isEmpty || str == "0" || str == "00") {
+                                              return alertMessege = "인원 수를 정확히 입력해 주세요";
+                                            } else {
+                                              return null;
+                                            }
                                           },
-                                          behavior: HitTestBehavior.translucent,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 12,
-                                                backgroundColor: Colors.transparent,
-                                                child: Checkbox(
-                                                    value: _isSolo,
-                                                    shape: const CircleBorder(),
-                                                    side: const BorderSide(
-                                                        color: MGColor.base3,
-                                                        width: 1.6
-                                                    ),
-                                                    activeColor: MGColor.brandPrimary,
-                                                    onChanged: (bool? value) {
-                                                      setState(() => _isSolo = value!);
-                                                    }),
-                                              ),
-                                              SizedBox(width: 10 * ratio.width),
-                                              Text('추가 이용자가 없습니다.',
-                                                  style: KR.label2.copyWith(color: MGColor.base3)),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                      ),
+                                      SizedBox(width: ratio.width * 8),
+
+                                      Text('명', style: KR.parag1),
+
+                                      // CustomTextField(
+                                      //   enabled: !_isSolo,
+                                      //   width: 92 * ratio.width,
+                                      //   height: 32,
+                                      //   controller: _nameCtr,
+                                      //   hint: '이름',
+                                      //   format: [
+                                      //     FilteringTextInputFormatter.allow(
+                                      //         RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
+                                      //   ],
+                                      //   validator: (str) {
+                                      //     if (str!.isEmpty) {
+                                      //       return alertMessege = "정확한 학번과 이름을 입력해 주세요";
+                                      //     } else {
+                                      //       return null;
+                                      //     }
+                                      //   },
+                                      // ),
+                                    ]),
                                   ),
                                 ),
-                              ],
+                                Positioned(
+                                    left: 80 * ratio.width,
+                                    top: 32 + ratio.height * 14,
+                                    child: Text(alertMessege,
+                                        style: KR.label2.copyWith(
+                                            color: _isSolo
+                                                ? MGColor.base4
+                                                : _addUserGuideline))),
+                              ]),
                             ),
-                          ),
-              
-                          /// 사용 목적
-                          LargeTextField(
-                              title: '사용 목적',
-                              hint: '이용 목적을 간단하게 기술해주세요',
-                              controller: _purposeCtr
-                          )
-                        ]);
-              
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          child: temp[index],
-                        );
-                      },
-                    ),
-                    SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Column(children: [
-                          const Spacer(),
-              
-                          ///예약하기 버튼
-                          Padding(
-                              padding: EdgeInsets.only(bottom: ratio.height * 10),
-                              child: CustomButtons.bottomButton(
-                                  '예약하기',
-                                  MGColor.brandPrimary,
-                                      () => _canTime ? _reserve() : null,
-                                  disableBackground: MGColor.base6
-                              )
-                          ),
-                        ])
-                    )
-                  ]
-              ),
+
+                            /// registers
+                            Container(
+                              width: 274 * ratio.width,
+                              margin: EdgeInsets.only(
+                                  left: 68 * ratio.width,
+                                  bottom: 12 * ratio.height),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: ratio.width * 274,
+                                    child: Wrap(
+                                      spacing: 8,
+                                      alignment: WrapAlignment.start,
+                                      children: _usersWidgets,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8 * ratio.height),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 12 * ratio.width),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() => _isSolo = !_isSolo);
+                                      },
+                                      behavior: HitTestBehavior.translucent,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 12,
+                                            backgroundColor: Colors.transparent,
+                                            child: Checkbox(
+                                                value: _isSolo,
+                                                shape: const CircleBorder(),
+                                                side: const BorderSide(
+                                                    color: MGColor.base3,
+                                                    width: 1.6),
+                                                activeColor:
+                                                    MGColor.brandPrimary,
+                                                onChanged: (bool? value) {
+                                                  setState(
+                                                      () => _isSolo = value!);
+                                                }),
+                                          ),
+                                          SizedBox(width: 10 * ratio.width),
+                                          Text('추가 이용자가 없습니다.',
+                                              style: KR.label2.copyWith(
+                                                  color: MGColor.base3)),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// 사용 목적
+                      LargeTextField(
+                          title: '사용 목적',
+                          hint: '이용 목적을 간단하게 기술해주세요',
+                          controller: _purposeCtr)
+                    ]);
+
+                    return SizeTransition(
+                      sizeFactor: animation,
+                      child: temp[index],
+                    );
+                  },
+                ),
+                SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(children: [
+                      const Spacer(),
+
+                      ///예약하기 버튼
+                      Padding(
+                          padding: EdgeInsets.only(bottom: ratio.height * 10),
+                          child: CustomButtons.bottomButton(
+                              '예약하기',
+                              MGColor.brandPrimary,
+                              () => _canTime ? _reserve() : null,
+                              disableBackground: MGColor.base6)),
+                    ]))
+              ]),
             ),
           ),
 
           /// 로딩 중
-          if (_loading)
-            const ProgressScreen()
+          if (_loading) const ProgressScreen()
         ],
       ),
     );
@@ -478,56 +451,45 @@ class _ReservePageState extends State<ReservePage> {
   /// 맨 처음 보이는 위젯
   void _initPage() {
     debugPrint(_selectedRoom);
+
     /// 장소 선택란
     if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
-        padding: EdgeInsets.only(
-            left: ratio.width * 20,
-            bottom: ratio.height * 20
-        ),
-        child: Text(
+        padding:
+            EdgeInsets.only(left: ratio.width * 20, bottom: ratio.height * 20),
+        child: const Text(
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
-            fontSize: 11,
-            color: MGColor.brandPrimary,
-            fontFamily: 'Ko'
-          ),
+              fontSize: 11, color: MGColor.brandPrimary, fontFamily: 'Ko'),
         ),
       ));
     } else {
       _firstWidgets.add(CustomContainer(
-        title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
-        height: 52,
-        margin: EdgeInsets.fromLTRB(
-            ratio.width * 16,
-            0,
-            ratio.width * 16,
-            ratio.height * 12
-        ),
-        content: Row(
-            children: [
-              CustomDropdown(
-                value: _selectedRoom,
-                hint: "선택",
-                items: _places,
-                onChanged: (value) {
-                  _selectedRoom = value;
-                  if (_selectedRoom != null && _selectedDate != null) {
-                    setState(() {
-                      if (widget.service != ServiceType.computer) {
-                        _selectedEnter = _selectedEnd = null;
-                      }
-                      if (!_canTime) {
-                        _canTime = true;
-                        _listKey.currentState!.insertAllItems(0, 4);
-                      }
-                    });
-                  }
-                },
-              )
-            ]
-        )
-      ));
+          title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
+          height: 52,
+          margin: EdgeInsets.fromLTRB(
+              ratio.width * 16, 0, ratio.width * 16, ratio.height * 12),
+          content: Row(children: [
+            CustomDropdown(
+              value: _selectedRoom,
+              hint: "선택",
+              items: _places,
+              onChanged: (value) {
+                _selectedRoom = value;
+                if (_selectedRoom != null && _selectedDate != null) {
+                  setState(() {
+                    if (widget.service != ServiceType.computer) {
+                      _selectedEnter = _selectedEnd = null;
+                    }
+                    if (!_canTime) {
+                      _canTime = true;
+                      _listKey.currentState!.insertAllItems(0, 4);
+                    }
+                  });
+                }
+              },
+            )
+          ])));
     }
 
     /// 날짜 선택란
@@ -552,119 +514,96 @@ class _ReservePageState extends State<ReservePage> {
           break;
       }
       _selectedEnd = _selectedEnter!.add(const Duration(days: 4));
-      debugPrint('${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
+      debugPrint(
+          '${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
       _selectedDate = stdFormat3.format(_selectedEnter!);
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
-              ratio.width * 16,
-              0,
-              ratio.width * 16,
-              ratio.height * 12
-          ),
-          padding: EdgeInsets.symmetric(
-              horizontal: ratio.width * 16,
-              vertical: 16
-          ),
+              ratio.width * 16, 0, ratio.width * 16, ratio.height * 12),
+          padding:
+              EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: 16),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12)),
+              color: Colors.white, borderRadius: BorderRadius.circular(12)),
           child: CustomWeekCalender(
             first: _selectedEnter!,
             last: _selectedEnd!,
             rowHeight: 32,
             rowWidth: 38 * ratio.width,
             cellStyle: CellStyle(
-              fieldTextStyle:
-              EN.label1.copyWith(color: MGColor.base3),
-              normalDateTextStyle:
-              EN.parag1.copyWith(color: MGColor.base1),
+              fieldTextStyle: EN.label1.copyWith(color: MGColor.base3),
+              normalDateTextStyle: EN.parag1.copyWith(color: MGColor.base1),
               normalDateBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
-              selectedDateTextStyle:
-              EN.parag1.copyWith(color: Colors.white),
+              selectedDateTextStyle: EN.parag1.copyWith(color: Colors.white),
               selelctedDateBoxDecoration: BoxDecoration(
                   color: MGColor.brandPrimary,
                   borderRadius: BorderRadius.circular(4)),
-              todayTextStyle:
-              EN.parag1.copyWith(color: MGColor.brandPrimary),
+              todayTextStyle: EN.parag1.copyWith(color: MGColor.brandPrimary),
               todayBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
-              rangeOutDateTextStyle:
-              EN.parag1.copyWith(color: MGColor.base6),
+              rangeOutDateTextStyle: EN.parag1.copyWith(color: MGColor.base6),
               rangeOutDateBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
             ),
-          )
-      ));
+          )));
     } else {
       _firstWidgets.add(Container(
-        margin: EdgeInsets.fromLTRB(
-            ratio.width * 16,
-            0,
-            ratio.width * 16,
-            ratio.height * 12
-        ),
-        padding: EdgeInsets.symmetric(
-            horizontal: ratio.width * 16,
-            vertical: 16
-        ),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12)),
-        child: CustomDayCalender(
-          init: _selectedDate,
-          first: DateTime.now(),
-          last: DateTime.now().add(const Duration(days: 13)),
-          rowHeight: 32,
-          rowWidth: 38 * ratio.width,
-          cellStyle: CellStyle(
-            fieldTextStyle:
-            EN.label1.copyWith(color: MGColor.base3),
-            normalDateTextStyle:
-            EN.parag1.copyWith(color: MGColor.base1),
-            normalDateBoxDecoration: BoxDecoration(
-                color: MGColor.base10,
-                borderRadius: BorderRadius.circular(4)),
-            selectedDateTextStyle:
-            EN.parag1.copyWith(color: Colors.white),
-            selelctedDateBoxDecoration: BoxDecoration(
-                color: MGColor.brandPrimary,
-                borderRadius: BorderRadius.circular(4)),
-            todayTextStyle:
-            EN.parag1.copyWith(color: MGColor.brandPrimary),
-            todayBoxDecoration: BoxDecoration(
-                color: MGColor.base10,
-                borderRadius: BorderRadius.circular(4)),
-            rangeOutDateTextStyle:
-            EN.parag1.copyWith(color: MGColor.base6),
-            rangeOutDateBoxDecoration: BoxDecoration(
-                color: MGColor.base10,
-                borderRadius: BorderRadius.circular(4)),
-          ),
-          onSelected: (value) {
-            _selectedDate = stdFormat3.format(value);
-            if ((_selectedRoom != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
-              setState(() {
-                if (widget.reserve != null
-                    && _selectedRoom == widget.reserve!.place
-                    && _selectedDate == widget.reserve!.startToDate2()) {
-                  _selectedEnter = widget.reserve!.startTime;
-                  _selectedEnd = widget.reserve!.endTime;
-                } else {
-                  _selectedEnter = _selectedEnd = null;
-                }
-                if (!_canTime) {
-                  _canTime = true;
-                  _listKey.currentState!.insertAllItems(0, 4);
-                }
-              });
-            }
-          },
-        )
-      ));
+          margin: EdgeInsets.fromLTRB(
+              ratio.width * 16, 0, ratio.width * 16, ratio.height * 12),
+          padding:
+              EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: 16),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          child: CustomDayCalender(
+            init: _selectedDate,
+            first: DateTime.now(),
+            last: DateTime.now().add(const Duration(days: 13)),
+            rowHeight: 32,
+            rowWidth: 38 * ratio.width,
+            cellStyle: CellStyle(
+              fieldTextStyle: EN.label1.copyWith(color: MGColor.base3),
+              normalDateTextStyle: EN.parag1.copyWith(color: MGColor.base1),
+              normalDateBoxDecoration: BoxDecoration(
+                  color: MGColor.base10,
+                  borderRadius: BorderRadius.circular(4)),
+              selectedDateTextStyle: EN.parag1.copyWith(color: Colors.white),
+              selelctedDateBoxDecoration: BoxDecoration(
+                  color: MGColor.brandPrimary,
+                  borderRadius: BorderRadius.circular(4)),
+              todayTextStyle: EN.parag1.copyWith(color: MGColor.brandPrimary),
+              todayBoxDecoration: BoxDecoration(
+                  color: MGColor.base10,
+                  borderRadius: BorderRadius.circular(4)),
+              rangeOutDateTextStyle: EN.parag1.copyWith(color: MGColor.base6),
+              rangeOutDateBoxDecoration: BoxDecoration(
+                  color: MGColor.base10,
+                  borderRadius: BorderRadius.circular(4)),
+            ),
+            onSelected: (value) {
+              _selectedDate = stdFormat3.format(value);
+              if ((_selectedRoom != null ||
+                      widget.service == ServiceType.lectureRoom) &&
+                  _selectedDate != null) {
+                setState(() {
+                  if (widget.reserve != null &&
+                      _selectedRoom == widget.reserve!.place &&
+                      _selectedDate == widget.reserve!.startToDate2()) {
+                    _selectedEnter = widget.reserve!.startTime;
+                    _selectedEnd = widget.reserve!.endTime;
+                  } else {
+                    _selectedEnter = _selectedEnd = null;
+                  }
+                  if (!_canTime) {
+                    _canTime = true;
+                    _listKey.currentState!.insertAllItems(0, 4);
+                  }
+                });
+              }
+            },
+          )));
     }
   }
 
@@ -689,10 +628,9 @@ class _ReservePageState extends State<ReservePage> {
         }
         alertMessege = "정상적으로 추가됐습니다";
         _addUserGuideline = MGColor.brandPrimary;
-        _usersList.add("${_stuNumCtr.text} ${_nameCtr.text}");
-        _usersWidgets.add(_myUserBox("${_stuNumCtr.text} ${_nameCtr.text}"));
-        _stuNumCtr.clear();
-        _nameCtr.clear();
+        _usersList.add("${_numberCtr.text}");
+        _usersWidgets.add(_myUserBox("${_numberCtr.text}"));
+        _numberCtr.clear();
       } else {
         _addUserGuideline = MGColor.systemError;
       }
@@ -706,10 +644,7 @@ class _ReservePageState extends State<ReservePage> {
       width: 133 * ratio.width,
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
-      padding: EdgeInsets.only(
-        left: ratio.width * 10,
-        right: ratio.width * 5
-      ),
+      padding: EdgeInsets.only(left: ratio.width * 10, right: ratio.width * 5),
       decoration: ShapeDecoration(
         color: MGColor.brandSecondary,
         shape: RoundedRectangleBorder(
@@ -721,21 +656,18 @@ class _ReservePageState extends State<ReservePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: Text(
-              memberInfo,
-              maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
-              style: KR.label2.copyWith(color: Colors.white)
-            ),
+            child: Text(memberInfo,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: KR.label2.copyWith(color: Colors.white)),
           ),
           GestureDetector(
-            onTap: () {
-              setState(() => _usersWidgets
-                  .removeWhere((widget) => widget.key == Key(memberInfo)));
-            },
-            child: const Icon(MGIcon.cross, size: 20, color: Colors.white)
-          ),
+              onTap: () {
+                setState(() => _usersWidgets
+                    .removeWhere((widget) => widget.key == Key(memberInfo)));
+              },
+              child: const Icon(MGIcon.cross, size: 20, color: Colors.white)),
         ],
       ),
     );
@@ -754,11 +686,12 @@ class _ReservePageState extends State<ReservePage> {
       }
     });
 
-    if (widget.service != ServiceType.computer && (_selectedEnter == null || _selectedEnd == null)) {
+    if (widget.service != ServiceType.computer &&
+        (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (!_isSolo && _usersList.isEmpty) {
-      title = '추가 이용자를 입력해주세요!';
+      title = '인원 수를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';
@@ -771,7 +704,7 @@ class _ReservePageState extends State<ReservePage> {
 
       late String member, start, end;
       member = _usersList.toString();
-      member = member.substring(1, member.length-1);
+      member = member.substring(1, member.length - 1);
       start = stdFormat2.format(_selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
       debugPrint("""
@@ -786,25 +719,23 @@ class _ReservePageState extends State<ReservePage> {
       try {
         Map<String, dynamic>? response = widget.reserve != null
             ? await RestAPI.patchReservation(
-                  reservationId: widget.reserve!.reservationId,
-                  service: widget.service,
-                  place: _selectedRoom,
-                  startTime: start,
-                  endTime: end,
-                  leader: widget.reserve!.leaderInfo,
-                  member: member,
-                  purpose: _purposeCtr.text,
-                  professor: _professerCtr.text
-              )
+                reservationId: widget.reserve!.reservationId,
+                service: widget.service,
+                place: _selectedRoom,
+                startTime: start,
+                endTime: end,
+                leader: widget.reserve!.leaderInfo,
+                member: member,
+                purpose: _purposeCtr.text,
+                professor: _professerCtr.text)
             : await RestAPI.addReservation(
-                  service: widget.service,
-                  place: _selectedRoom,
-                  startTime: start,
-                  endTime: end,
-                  member: member,
-                  purpose: _purposeCtr.text,
-                  professor: _professerCtr.text
-              );
+                service: widget.service,
+                place: _selectedRoom,
+                startTime: start,
+                endTime: end,
+                member: member,
+                purpose: _purposeCtr.text,
+                professor: _professerCtr.text);
         if (response == null) {
           title = 'Not found';
           onPressed = () => Navigator.pop(context);
@@ -825,7 +756,7 @@ class _ReservePageState extends State<ReservePage> {
       } on TimeoutException {
         title = '통신 속도가 너무 느립니다!';
         onPressed = () => Navigator.pop(context);
-      } catch(_) {
+      } catch (_) {
         title = '예약할 수 없는 상태입니다.';
         onPressed = () => Navigator.pop(context);
       }
@@ -836,9 +767,8 @@ class _ReservePageState extends State<ReservePage> {
       showDialog(
           context: context,
           barrierColor: MGColor.barrier,
-          builder: (context) => CommentPopup(
-              title: title, onPressed: onPressed)
-      ).then((_) {
+          builder: (context) =>
+              CommentPopup(title: title, onPressed: onPressed)).then((_) {
         if (allClear) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }

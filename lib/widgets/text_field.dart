@@ -263,7 +263,7 @@ class ProfesserFormat extends TextInputFormatter {
 
     var temp2 = newValue.text.split(' ')[0];
     return newValue.copyWith(
-        text: '$temp2 교수님',
+        text: '$temp2',
         selection: TextSelection.collapsed(offset: temp2.length)
     );
   }
