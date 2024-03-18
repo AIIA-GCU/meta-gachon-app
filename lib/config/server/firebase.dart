@@ -1,9 +1,38 @@
+///
+/// firebase.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// All objects related firebase
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class
+///   - [DefaultFirebaseOptions]
+///   - [FCM]
+///
+
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+///
+/// [DefaultFirebaseOptions]
+///
+/// This object make app use firebase through platform
+///
 class DefaultFirebaseOptions {
+  ///
+  /// FirebaseOptions get currentPlatform
+  ///
+  /// Getter that give [FirebaseOptions] as per platform
+  ///
+  /// Return
+  /// - [FirebaseOptions]
+  ///
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
@@ -38,6 +67,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // FirebaseOptions of android version
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCzp90IpwNLe-Gtdf7K7G6peJTWKAJ8BWs',
     appId: '1:832071493502:android:80242cc6e15306113a752f',
@@ -46,6 +76,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'meta-gachon-fcm-8056.appspot.com',
   );
 
+  // FirebaseOptions of ios version
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCJhFbRUhAvroec7Ldc7E5xPl49tmgd1IQ',
     appId: '1:832071493502:ios:a8f929d05fc671cc3a752f',
@@ -56,6 +87,13 @@ class DefaultFirebaseOptions {
   );
 }
 
+///
+/// FCM
+///
+/// This object make using push-notification possible
+///
+///
+///
 class FCM {
   /// 토큰 얻기
   static Future<String> getToken() async {

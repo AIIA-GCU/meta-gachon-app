@@ -1,3 +1,19 @@
+///
+/// font.dart
+/// 2024.03.07
+/// by. @protaku
+///
+///
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class
+///   - KR
+///   - EN
+///
+
 import 'package:flutter/material.dart';
 
 import 'interface.dart';
@@ -33,7 +49,8 @@ class EN {
   static TextStyle title1 = TextStyle(fontSize: ratio.height * 28, fontWeight: FontWeight.w500, fontFamily: 'En');
   static TextStyle title2 = TextStyle(fontSize: ratio.height * 22, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle subtitle1 = TextStyle(fontSize: ratio.height * 18, fontWeight: FontWeight.w400, fontFamily: 'En');
-  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle subtitle2 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w500, fontFamily: 'En');
+  static TextStyle subtitle3 = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle parag1 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'En');
   static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'En');

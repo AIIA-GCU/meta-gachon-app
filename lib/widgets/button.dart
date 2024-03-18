@@ -1,20 +1,59 @@
+///
+/// button.dart
+/// 2024.03.09
+/// by. @protaku
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class
+///   - CustomButtons
+///   - CustomDropdown
+///   - TileButton
+///
+
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
+///
+/// CustomButtons
+///
+/// Collection of helper method about button.
+/// They are classified by size.
+///
 class CustomButtons {
   CustomButtons._();
 
+  ///
+  /// Widget bottomButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [background] ([Color]):
+  ///   Color of button
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  /// - [disableBackground] ([Color]?):
+  ///   The color when button don't enable to press
+  ///
+  /// Return:
+  /// - Customized [ElevatedButton]
+  ///
   static Widget bottomButton(
       String text,
       Color background,
       VoidCallback onPressed,
-      [Color? disableBackground]
+      {Color? disableBackground}
       ) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        elevation: 0,
         backgroundColor: background,
+        shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12)),
@@ -22,14 +61,28 @@ class CustomButtons {
       ),
       child: Text(
         text,
-        style: EN.subtitle2.copyWith(
+        style: EN.subtitle3.copyWith(
           fontWeight: FontWeight.w700,
-          color: MGColor.brand1Tertiary,
+          color: MGColor.brandTertiary,
         ),
       ),
     );
   }
 
+  ///
+  /// Widget largeButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [background] ([Color]):
+  ///   Color of button
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  ///
+  /// Return:
+  /// - Customized [ElevatedButton]
+  ///
   static Widget largeButton(
       String text,
       Color background,
@@ -38,6 +91,8 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 302, 40),
           shape: RoundedRectangleBorder(
@@ -48,6 +103,22 @@ class CustomButtons {
     );
   }
 
+  ///
+  /// Widget bigButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [background] ([Color]):
+  ///   Color of button
+  /// - [textColor] ([Color]):
+  ///   Color of title
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  ///
+  /// Return:
+  /// - Customized [ElevatedButton]
+  ///
   static Widget bigButton(
       String text,
       Color background,
@@ -57,15 +128,33 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
-          fixedSize: Size(ratio.width * 147, 40),
+          fixedSize: Size(ratio.width * 159, 40),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10))
+              borderRadius: BorderRadius.circular(10)),
       ),
       child: Text(text, style: KR.parag2.copyWith(color: textColor)),
     );
   }
 
+  ///
+  /// Widget mediumButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [background] ([Color]):
+  ///   Color of button
+  /// - [textColor] ([Color]):
+  ///   Color of title
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  ///
+  /// Return:
+  /// - Customized [ElevatedButton]
+  ///
   static Widget mediumButton(
       String text,
       Color background,
@@ -75,7 +164,9 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
           backgroundColor: background,
+          shadowColor: Colors.transparent,
           fixedSize: Size(ratio.width * 147, 40),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10))
@@ -84,6 +175,18 @@ class CustomButtons {
     );
   }
 
+  ///
+  /// Widget smallButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  ///
+  /// Return:
+  /// - Customized Button made by [InkWell]
+  ///
   static Widget smallButton(
       String text,
       VoidCallback onPressed
@@ -95,7 +198,7 @@ class CustomButtons {
             borderRadius: BorderRadius.circular(8)),
         child: Ink(
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -112,6 +215,18 @@ class CustomButtons {
     );
   }
 
+  ///
+  /// Widget miiButton
+  ///
+  /// Parameter:
+  /// - [text] ([String]):
+  ///   The title of button
+  /// - [onPressed] (void Function()):
+  ///   The function running when tapping button
+  ///
+  /// Return:
+  /// - Customized Button made by [InkWell]
+  ///
   static Widget miniButton(
       String text,
       VoidCallback onPressed
@@ -124,7 +239,7 @@ class CustomButtons {
         child: Ink(
           width: ratio.width * 77,
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -142,6 +257,19 @@ class CustomButtons {
   }
 }
 
+///
+/// CustomDropdown
+///
+/// Parameter:
+/// - [value] ([String]?):
+///   The current selected item of dropdown
+/// - [hint] ([String]):
+///   The text displayed when dropdown is closed or [value] is empty
+/// - [items] ([List]<[String]>):
+///   Data enable to select
+/// - [onChanged] (void Function(String?)):
+///   Callback when item is selected
+///
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown({
     Key? key,
@@ -188,30 +316,27 @@ class _CustomDropdownState extends State<CustomDropdown> {
           setState(() => _selectedItem = val);
         },
 
-        ///드롭버튼(선택된 항목) 디자인
+        // style of the displayed value selected item
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
           height: 32,
-          width: 120 * ratio.width,
+          width: 120,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: MGColor.primaryColor()),
+            border: Border.all(color: MGColor.brandPrimary),
           ),
         ),
 
-        ///드롭아이콘 디자인
+        // dropdown's icon style
         iconStyleData: const IconStyleData(iconSize: 0),
 
-        ///메뉴창 디자인
+        // dropdown layer style
         dropdownStyleData: DropdownStyleData(
             offset: const Offset(0, -4),
-            //위치조정
             padding: EdgeInsets.zero,
             maxHeight: 120,
-            //최대크기
             elevation: 0,
-            //그림자 없앰
             decoration: BoxDecoration(
                 boxShadow: const [
                   BoxShadow(
@@ -221,69 +346,94 @@ class _CustomDropdownState extends State<CustomDropdown> {
                     spreadRadius: 0,
                   )
                 ],
-                color: Colors.white.withOpacity(0.9) //배경투명도
+                color: Colors.white.withOpacity(0.9)
             )
         ),
 
-        ///메뉴들(선택지들) 디자인
+        // dropdown's item
         menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
+          padding: EdgeInsets.symmetric(horizontal: 4),
           customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
     );
   }
 
-  /// 드롭다운메뉴창에 아이템(선택지)을 넣어주는 메소드입니다.
-  /// 리턴값은 아이템이 각각 위젯형태로 들어간 리스트입니다.
+  ///
+  /// [List]<[DropdownMenuItem]<[String]>> _addDividersAfterItems
+  ///
+  /// Convert raw data to exclusive widget
+  /// 
+  /// Parameter:
+  /// - [inItems] ([List]<[String]>)
+  ///
+  /// Return:
+  /// - [List] converted [DropdownMenuItem]
+  /// 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
     final List<DropdownMenuItem<String>> menuItems = [];
-
-    ///아이템 개수만큼 반복합니다.
     for (final String item in inItems) {
-      menuItems.addAll(
-        [
-          ///위젯형태의 아이템(선택지) 넣기
-          DropdownMenuItem<String>(
-              value: item,
-              child: Center(
-                child: Text(
-                    item,
-                    textAlign: TextAlign.center,
-                    style: EN.subtitle2.copyWith(
-                        color: (item == _selectedItem)
-                            ? Colors.black
-                            : const Color(0xFF7C7C7C)
-                    )
-                ),
-              )),
-          //If it's last item, we will not add Divider after it.
-          ///아이템 하나마다 끝에 divider 넣기
-          if (item != inItems.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(color: MGColor.base5),
+      menuItems.addAll([
+        DropdownMenuItem<String>(
+          value: item,
+          child: Container(
+            width: 120,
+            child: Center(
+              child: Text(item,
+                style: EN.subtitle3.copyWith(
+                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+              ),
             ),
-        ],
-      );
+          )
+        ),
+        const DropdownMenuItem<String>(
+          enabled: false,
+          child: Divider(color: MGColor.base5),
+        ),
+      ]);
     }
+    menuItems.removeLast();
     return menuItems;
   }
 
-  ///드롭다운메뉴창에 item(선택지)의 크기를 지정해주는 메소드입니다.
+  ///
+  /// List<double> _getCustomItemsHeights
+  ///
+  /// Get sizes of dropdown items
+  ///
+  /// Paramete:
+  /// - [items] ([List]<[String]>)
+  ///
+  /// Return:
+  /// - [List] about size
+  ///
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(24);
-      } else {
-        itemsHeights.add(1);
-      }
+    for (int i = 0; i < items.length; i++) {
+      itemsHeights.addAll([32, 1]);
     }
+    itemsHeights.removeLast();
     return itemsHeights;
   }
 }
 
+///
+/// TitleButton
+///
+/// Customized button of tile style
+///
+/// Parameter:
+/// - [onTap] (void Function()):
+///   Callback when tapping this widget
+/// - [alignment] ([Alignment]?):
+///   Align contents in this widget
+/// - [padding] ([EdgeInsetsGeometry]):
+///   Padding in this widget
+/// - [BorderRadius] ([borderRadius]):
+///   Set edge round
+/// - [child] ([Widget]):
+///   Content of widget
+///
 class TileButton extends StatelessWidget {
   const TileButton({
     super.key,
