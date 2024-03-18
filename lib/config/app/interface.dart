@@ -1,3 +1,23 @@
+///
+/// interface.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Comment of variables
+///   - 학교 바코드
+///   - 약관
+///   - Stream
+///   - date format
+///   - 카메라
+///   - 오늘 날짜
+///   - 비율
+///   - 서비스 타입
+///
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -196,7 +216,7 @@ const String personalInformationCollectionTerm = """이용자 식별 및 본인�
 /// Stream
 final StreamController<StreamType> listListener = StreamController<StreamType>.broadcast();
 
-/// date formet
+/// date format
 final stdFormat1 = DateFormat('yyyy-MM-dd-HH:mm');
 final stdFormat2 = DateFormat('yyyy-MM-dd HH:mm');
 final stdFormat3 = DateFormat('yyyy-MM-dd');
@@ -213,6 +233,3 @@ late final String today;
 
 /// 비율
 late Size ratio;
-
-/// 서비스 타입
-late ServiceType service;

@@ -31,35 +31,37 @@ class TermPage extends StatelessWidget {
               ),
             )
         ),
-        body: Column(
-            children: [
-              /// Title
-              Text(title, style: KR.subtitle0),
+        body: SafeArea(
+          child: Column(
+              children: [
+                /// Title
+                Text(title, style: KR.subtitle0),
 
-              SizedBox(height: ratio.height * 23),
+                SizedBox(height: ratio.height * 23),
 
-              /// Content
-              Expanded(
-                child: ShaderMask(
-                  shaderCallback: hazySide,
-                  blendMode: BlendMode.dstOut,
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: ratio.width * 36,
-                        vertical: ratio.height * 63
-                    ),
-                    child: Text(
-                        content,
-                        style: KR.parag2.copyWith(color: MGColor.base3),
-                        softWrap: true
+                /// Content
+                Expanded(
+                  child: ShaderMask(
+                    shaderCallback: hazySide,
+                    blendMode: BlendMode.dstOut,
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ratio.width * 36,
+                          vertical: ratio.height * 63
+                      ),
+                      child: Text(
+                          content,
+                          style: KR.parag2.copyWith(color: MGColor.base3),
+                          softWrap: true
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: ratio.height * 23),
-            ]
+                SizedBox(height: ratio.height * 23),
+              ]
+          ),
         )
     );
   }

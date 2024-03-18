@@ -75,7 +75,7 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
       rangeLast = rangeLast.add(const Duration(days: 1));
     }
 
-    final DateFormat format = DateFormat.MMMM();
+    final DateFormat format = DateFormat.MMMM('ko_KR');
     if (rangeFirst.year < rangeLast.year || rangeFirst.month <rangeLast.month) {
       title = "${format.format(rangeFirst)} ~ ${format.format(rangeLast)}";
     } else {
@@ -89,16 +89,25 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: EN.parag1.copyWith(color: MGColor.base1)),
+          Text(title, style: KR.parag1.copyWith(color: MGColor.base1)),
           SizedBox(height: 10 * ratio.height),
           Table(
             children: <TableRow>[
               TableRow(
                 children: ['일', '월', '화', '수', '목', '금', '토']
-                    .map((e) => Padding(
-                      padding: EdgeInsets.only(bottom: 6 * ratio.height),
-                      child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
-                    ))
+                    .map((e) {
+                      late TextStyle style;
+                      if (e == '일') {
+                        style = widget.cellStyle
+                            .fieldTextStyle.copyWith(color: MGColor.systemError);
+                      } else {
+                        style = widget.cellStyle.fieldTextStyle;
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 6 * ratio.height),
+                        child: Text(e, style: style, textAlign: TextAlign.center)
+                      );
+                    })
                     .toList()
               ),
               TableRow(
@@ -394,9 +403,9 @@ class CellStyle {
 }
 
 class CustomTimePicker extends StatefulWidget {
-  const CustomTimePicker({
+  const CustomTimePicker(this.service, {
     super.key,
-    required this.room,
+    required this.place,
     required this.date,
     required this.begin,
     required this.end,
@@ -404,7 +413,8 @@ class CustomTimePicker extends StatefulWidget {
     required this.setEnd
   });
 
-  final String? room;
+  final ServiceType service;
+  final String? place;
   final String date;
   final int? begin;
   final int? end;
@@ -430,7 +440,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   void initState() {
     _reset = _animating = true;
     _date = widget.date;
-    _place = widget.room;
+    _place = widget.place;
     if (widget.begin != null && widget.end != null) {
       _begin = widget.begin;
       _end = (widget.end!+23) % 24;
@@ -448,10 +458,10 @@ class _CustomTimePickerState extends State<CustomTimePicker>
 
   @override
   void didUpdateWidget(covariant CustomTimePicker oldWidget) {
-    if (_place != widget.room || _date != widget.date) {
+    if (_place != widget.place || _date != widget.date) {
       _reset = _animating = true;
       _date = widget.date;
-      _place = widget.room;
+      _place = widget.place;
       _begin = _end = null;
       if (widget.begin != null && widget.end != null) {
         _begin = widget.begin;
@@ -486,7 +496,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                   const SizedBox(width: 12),
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
-                    style: KR.label2.copyWith(color: MGColor.primaryColor())
+                    style: KR.label2.copyWith(color: MGColor.brandPrimary)
                   )
                 ],
               ),
@@ -518,11 +528,11 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                             }
                             else if (_begin != null && _end != null) {
                               if (_begin! <= index && index <= _end!) {
-                                color = MGColor.primaryColor();
+                                color = MGColor.brandPrimary;
                               } else if (index == _begin!+1) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
+                                color = MGColor.brandPrimary.withOpacity(0.2);
                               } else if (index == _begin!+2 && _availables[index-1]) {
-                                color = MGColor.primaryColor().withOpacity(0.2);
+                                color = MGColor.brandPrimary.withOpacity(0.2);
                               }
                             }
                             color ??= Colors.white;
@@ -650,11 +660,11 @@ class _CustomTimePickerState extends State<CustomTimePicker>
 
   /// 서버에서 예약 가능한 시간 확인하기
   Future<void> _availableTime() async {
-    if (service == ServiceType.aiSpace) {
+    if (widget.service == ServiceType.aiSpace) {
       _availables = List.generate(24, (_) => false);
       try {
         Map<int, bool>? times = await RestAPI
-            .getAvailableTime(room: widget.room!, date: widget.date);
+            .getAvailableTime(room: widget.place!, date: widget.date);
         int i;
         for (i = 0; i < 24; i++) {
           _availables[i] = !times![i]!;
