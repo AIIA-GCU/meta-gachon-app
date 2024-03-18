@@ -257,31 +257,20 @@ class CustomButtons {
   }
 }
 
-///
-/// CustomDropdown
-///
-/// Parameter:
-/// - [value] ([String]?):
-///   The current selected item of dropdown
-/// - [hint] ([String]):
-///   The text displayed when dropdown is closed or [value] is empty
-/// - [items] ([List]<[String]>):
-///   Data enable to select
-/// - [onChanged] (void Function(String?)):
-///   Callback when item is selected
-///
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown({
     Key? key,
     this.value,
     required this.hint,
     required this.items,
+    this.availables,
     required this.onChanged,
   }) : super(key: key);
 
   final String? value;
   final String hint;
   final List<String> items;
+  final List<bool>? availables;
   final void Function(String?) onChanged;
 
   @override
@@ -312,15 +301,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
         items: _addDividersAfterItems(widget.items),
         value: _selectedItem,
         onChanged: (val) {
-          widget.onChanged(val);
-          setState(() => _selectedItem = val);
+          int idx = widget.items.indexOf(val!);
+          if (widget.availables == null || widget.availables![idx]) {
+            widget.onChanged(val);
+            setState(() => _selectedItem = val);
+          }
         },
 
-        // style of the displayed value selected item
+        ///드롭버튼(선택된 항목) 디자인
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
           height: 32,
-          width: 120,
+          width: 120 * ratio.width,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
@@ -328,15 +320,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
           ),
         ),
 
-        // dropdown's icon style
+        ///드롭아이콘 디자인
         iconStyleData: const IconStyleData(iconSize: 0),
 
-        // dropdown layer style
+        ///메뉴창 디자인
         dropdownStyleData: DropdownStyleData(
             offset: const Offset(0, -4),
+            //위치조정
             padding: EdgeInsets.zero,
             maxHeight: 120,
+            //최대크기
             elevation: 0,
+            //그림자 없앰
             decoration: BoxDecoration(
                 boxShadow: const [
                   BoxShadow(
@@ -346,94 +341,72 @@ class _CustomDropdownState extends State<CustomDropdown> {
                     spreadRadius: 0,
                   )
                 ],
-                color: Colors.white.withOpacity(0.9)
+                color: Colors.white.withOpacity(0.9) //배경투명도
             )
         ),
 
-        // dropdown's item
+        ///메뉴들(선택지들) 디자인
         menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.symmetric(horizontal: 4),
+          padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
           customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
     );
   }
 
-  ///
-  /// [List]<[DropdownMenuItem]<[String]>> _addDividersAfterItems
-  ///
-  /// Convert raw data to exclusive widget
-  /// 
-  /// Parameter:
-  /// - [inItems] ([List]<[String]>)
-  ///
-  /// Return:
-  /// - [List] converted [DropdownMenuItem]
-  /// 
+  /// 드롭다운메뉴창에 아이템(선택지)을 넣어주는 메소드입니다.
+  /// 리턴값은 아이템이 각각 위젯형태로 들어간 리스트입니다.
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
     final List<DropdownMenuItem<String>> menuItems = [];
-    for (final String item in inItems) {
+
+    ///아이템 개수만큼 반복합니다.
+    for (int i=0 ; i < inItems.length ; i++) {
+      late Color textColor;
+      if (inItems[i] == _selectedItem) {
+        textColor = Colors.black;
+      } else if (widget.availables != null && !widget.availables![i]) {
+        textColor = MGColor.base6;
+      } else {
+        textColor = MGColor.base3;
+      }
       menuItems.addAll([
+        ///위젯형태의 아이템(선택지) 넣기
         DropdownMenuItem<String>(
-          value: item,
-          child: Container(
-            width: 120,
+            value: inItems[i],
             child: Center(
-              child: Text(item,
-                style: EN.subtitle3.copyWith(
-                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+              child: Text(
+                  inItems[i],
+                  textAlign: TextAlign.center,
+                  style: EN.subtitle2.copyWith(color: textColor)
               ),
-            ),
-          )
+            )
         ),
-        const DropdownMenuItem<String>(
-          enabled: false,
-          child: Divider(color: MGColor.base5),
-        ),
+        //If it's last item, we will not add Divider after it.
+        ///아이템 하나마다 끝에 divider 넣기
+        if (i < inItems.length-1)
+          const DropdownMenuItem<String>(
+            enabled: false,
+            child: Divider(color: MGColor.base5),
+          ),
       ]);
     }
-    menuItems.removeLast();
     return menuItems;
   }
 
-  ///
-  /// List<double> _getCustomItemsHeights
-  ///
-  /// Get sizes of dropdown items
-  ///
-  /// Paramete:
-  /// - [items] ([List]<[String]>)
-  ///
-  /// Return:
-  /// - [List] about size
-  ///
+  ///드롭다운메뉴창에 item(선택지)의 크기를 지정해주는 메소드입니다.
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
-    for (int i = 0; i < items.length; i++) {
-      itemsHeights.addAll([32, 1]);
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(32);
+      } else {
+        itemsHeights.add(1);
+      }
     }
-    itemsHeights.removeLast();
     return itemsHeights;
   }
 }
 
-///
-/// TitleButton
-///
-/// Customized button of tile style
-///
-/// Parameter:
-/// - [onTap] (void Function()):
-///   Callback when tapping this widget
-/// - [alignment] ([Alignment]?):
-///   Align contents in this widget
-/// - [padding] ([EdgeInsetsGeometry]):
-///   Padding in this widget
-/// - [BorderRadius] ([borderRadius]):
-///   Set edge round
-/// - [child] ([Widget]):
-///   Content of widget
-///
 class TileButton extends StatelessWidget {
   const TileButton({
     super.key,

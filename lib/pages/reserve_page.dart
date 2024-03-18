@@ -47,7 +47,7 @@ class _ReservePageState extends State<ReservePage> {
   late Color _addUserGuideline; // for widget
 
   /// 예약 정보
-  String? _selectedRoom; //강의실
+  String? _selectedPlace; //강의실
   String? _selectedDate; //날짜
   DateTime? _selectedEnter, _selectedEnd; // 이용 시작, 끝
   late List<String> _usersList; //이용자리스트
@@ -70,7 +70,7 @@ class _ReservePageState extends State<ReservePage> {
 
     // if modifing
     if (widget.reserve != null) {
-      _selectedRoom = widget.reserve!.place;
+      _selectedPlace = widget.reserve!.place;
       _selectedDate = stdFormat3.format(widget.reserve!.startTime);
       _selectedEnter = widget.reserve!.startTime;
       _selectedEnd = widget.reserve!.endTime;
@@ -195,8 +195,8 @@ class _ReservePageState extends State<ReservePage> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12)),
                               child: CustomTimePicker(
-                                widget.service,
-                                place: _selectedRoom,
+                                service: widget.service,
+                                place: _selectedPlace,
                                 date: _selectedDate!,
                                 begin: _selectedEnter?.hour,
                                 end: _selectedEnd?.hour,
@@ -207,7 +207,7 @@ class _ReservePageState extends State<ReservePage> {
                                 setEnd: (index) {
                                   DateTime temp = stdFormat3.parse(_selectedDate!);
                                   _selectedEnd = DateTime(temp.year, temp.month, temp.day, index+1);
-                                },
+                                }
                               )
                           ));
                         }
@@ -477,7 +477,7 @@ class _ReservePageState extends State<ReservePage> {
 
   /// 맨 처음 보이는 위젯
   void _initPage() {
-    debugPrint(_selectedRoom);
+    debugPrint(_selectedPlace);
     /// 장소 선택란
     if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
@@ -507,12 +507,12 @@ class _ReservePageState extends State<ReservePage> {
         content: Row(
             children: [
               CustomDropdown(
-                value: _selectedRoom,
+                value: _selectedPlace,
                 hint: "선택",
                 items: _places,
                 onChanged: (value) {
-                  _selectedRoom = value;
-                  if (_selectedRoom != null && _selectedDate != null) {
+                  _selectedPlace = value;
+                  if (_selectedPlace != null && _selectedDate != null) {
                     setState(() {
                       if (widget.service != ServiceType.computer) {
                         _selectedEnter = _selectedEnd = null;
@@ -646,10 +646,10 @@ class _ReservePageState extends State<ReservePage> {
           ),
           onSelected: (value) {
             _selectedDate = stdFormat3.format(value);
-            if ((_selectedRoom != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
+            if ((_selectedPlace != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
               setState(() {
                 if (widget.reserve != null
-                    && _selectedRoom == widget.reserve!.place
+                    && _selectedPlace == widget.reserve!.place
                     && _selectedDate == widget.reserve!.startToDate2()) {
                   _selectedEnter = widget.reserve!.startTime;
                   _selectedEnd = widget.reserve!.endTime;
@@ -670,7 +670,7 @@ class _ReservePageState extends State<ReservePage> {
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
   bool _isSame() {
-    if (widget.reserve!.place == _selectedRoom) return true;
+    if (widget.reserve!.place == _selectedPlace) return true;
 
     if (widget.reserve!.startToDate2() == _selectedDate) return true;
 
@@ -776,7 +776,7 @@ class _ReservePageState extends State<ReservePage> {
       end = stdFormat2.format(_selectedEnd!);
       debugPrint("""
       [reservation Info]
-        . room: $_selectedRoom
+        . room: $_selectedPlace
         . startTime: $start
         . endTime: $end
         . leader: $_leaderNumber $_leaderName
@@ -788,7 +788,7 @@ class _ReservePageState extends State<ReservePage> {
             ? await RestAPI.patchReservation(
                   reservationId: widget.reserve!.reservationId,
                   service: widget.service,
-                  place: _selectedRoom,
+                  place: _selectedPlace,
                   startTime: start,
                   endTime: end,
                   leader: widget.reserve!.leaderInfo,
@@ -798,7 +798,7 @@ class _ReservePageState extends State<ReservePage> {
               )
             : await RestAPI.addReservation(
                   service: widget.service,
-                  place: _selectedRoom,
+                  place: _selectedPlace,
                   startTime: start,
                   endTime: end,
                   member: member,
