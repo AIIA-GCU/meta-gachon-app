@@ -54,7 +54,7 @@ Future<void> main() async {
       // await FCM.initialize();
       // final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
-      reserves = await RestAPI.getAllReservation() ?? [];
+      reserves = await RestAPI.getRemainReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
       start = const MainFrame();
@@ -65,10 +65,10 @@ Future<void> main() async {
   }
 
   debugPrint("complete camera setting");
-  // camera = await availableCameras().then((value) {
-  //   debugPrint(value.length.toString());
-  //   return value.first;
-  // });
+  camera = await availableCameras().then((value) {
+    debugPrint(value.length.toString());
+    return value.first;
+  });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));

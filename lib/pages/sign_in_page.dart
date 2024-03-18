@@ -222,7 +222,7 @@ class _SignInPageState extends State<SignInPage> {
       if (user != null) {
         // save data
         myInfo = user;
-        reserves = await RestAPI.getAllReservation() ?? [];
+        reserves = await RestAPI.getRemainReservation() ?? [];
         admits = await RestAPI.getAllAdmission() ?? [];
         myAdmits = await RestAPI.getMyAdmission() ?? [];
 

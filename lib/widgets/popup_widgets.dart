@@ -183,10 +183,10 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
-        /// 사용 전 (예약 변경 X, QR O)
+        /// 사용 전 (예약 변경 X, QR X)
         case 0:
           button = ElevatedButton(
-              onPressed: () => _qr,
+              onPressed: () => _qr(context),
               style: ElevatedButton.styleFrom(
                   backgroundColor: MGColor.brandPrimary,
                   fixedSize: Size(
@@ -199,6 +199,7 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
+        /// 사용 전 (예약 변경 O, QR O)
         case 1:
           button = Text(
             "사용 전날은 수정 및 취소가 불가합니다.",
@@ -206,7 +207,7 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
-        /// 사용 전 (예약 변경 O, QR X)
+        /// 사용 전 (수정 O)
         case 2:
           if (item.service case ServiceType.computer) {
             button = ElevatedButton(
@@ -253,7 +254,7 @@ class ReservationPopup extends StatelessWidget {
         /// 사용 중 (연장 O)
         case 4:
           button = ElevatedButton(
-              onPressed: () => _prolong,
+              onPressed: () => _prolong(context),
               style: ElevatedButton.styleFrom(
                   backgroundColor: MGColor.brandPrimary,
                   fixedSize: Size(

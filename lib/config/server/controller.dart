@@ -52,8 +52,28 @@ class RestAPI {
     }
   }
 
-  /// 내 모든 예약
-  static Future<List<Reserve>?> getAllReservation() async {
+  /// 현재 이용이 끝나지 않은 예약들
+  static Future<List<Reserve>?> getRemainReservation() async {
+    try {
+      final api = APIRequest('books/remain');
+      List<dynamic> response = await api.send(HTTPMethod.get);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Reserve> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Reserve.fromJson(temp);
+        }).toList();
+        result.sort((a, b) => a.startTime.compareTo(b.startTime));
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 이용이 끝났지만, 인증되지 않은 예약들
+  static Future<List<Reserve>?> getPriorAdmittedReservation() async {
     try {
       final api = APIRequest('books');
       List<dynamic> response = await api.send(HTTPMethod.get);
@@ -205,8 +225,8 @@ class RestAPI {
   }
 
   /// 현재 예약의 상태
-  /// . 0: 사용 전 (예약 변경 X, QR O)
-  /// . 1: 사용 전 (예약 변경 X, QR X)
+  /// . 0: 사용 전 (예약 변경 X, QR X)
+  /// . 1: 사용 전 (예약 변경 X, QR O)
   /// . 2: 사용 전 (예약 변경 O)
   /// . 3: 사용 중 (연장 X)
   /// . 4: 사용 중 (연장 O)

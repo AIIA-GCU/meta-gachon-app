@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/pages/admit_page.dart';
 
 import '../config/app/_export.dart';
 import '../config/server/_export.dart';
@@ -9,30 +10,15 @@ import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
-  const PriorAdmissionsPage({super.key});
+  const PriorAdmissionsPage(this.items, {super.key});
+
+  final List<Reserve> items;
 
   @override
   State<PriorAdmissionsPage> createState() => _PriorAdmissionsPageState();
 }
 
 class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
-  late List<Reserve> _list;
-
-  @override
-  void initState() {
-    _list = reserves
-        .where((e) => DateTime.now().isAfter(e.endTime))
-        .toList();
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant PriorAdmissionsPage oldWidget) {
-    _list = reserves
-        .where((e) => DateTime.now().isAfter(e.endTime))
-        .toList();
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +44,8 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
                   padding: EdgeInsets.only(bottom: ratio.height * 18),
                   physics: const AlwaysScrollableScrollPhysics()
                       .applyTo(const BouncingScrollPhysics()),
-                  itemCount: _list.length,
-                  itemBuilder: (_, index) => _listItem(_list[index])
+                  itemCount: widget.items.length,
+                  itemBuilder: (_, index) => _listItem(widget.items[index])
               ),
             )
           ),
@@ -69,7 +55,12 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
 
   Widget _listItem(Reserve reserve) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context).push(
+        PageRouteBuilder(
+          transitionsBuilder: slideRigth2Left,
+          pageBuilder: (_, __, ___) => AdmitPage(reserve: reserve)
+        )
+      ),
       child: Container(
         color: Colors.white,
         margin: EdgeInsets.fromLTRB(
