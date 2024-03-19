@@ -573,17 +573,6 @@ class AdmissionPopup extends StatelessWidget {
 
               SizedBox(height: ratio.height * 24),
 
-              /// 대표자
-              Column(
-                children: [
-                  Text("대표자", style: KR.parag2),
-                  SizedBox(height: ratio.height * 8),
-                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
-                ],
-              ),
-
-              SizedBox(height: ratio.height * 24),
-
               /// 사용 후기
               Container(
                 constraints: BoxConstraints(
