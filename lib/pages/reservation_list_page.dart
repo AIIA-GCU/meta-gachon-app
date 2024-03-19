@@ -94,7 +94,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
   Widget _list() {
     return FutureBuilder<List<Reserve>?>(
-      future: reserves.isEmpty ? RestAPI.getAllReservation() : null,
+      future: reserves.isEmpty ? RestAPI.getRemainReservation() : null,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container(

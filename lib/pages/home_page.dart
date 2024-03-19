@@ -288,11 +288,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void doAdmission() {
-    int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
-    if (idx != -1) {
+  Future<void> doAdmission() async {
+    List<Reserve>? result = await RestAPI.getPriorAdmittedReservation();
+    if (result != null && result.isNotEmpty) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const PriorAdmissionsPage()));
+        MaterialPageRoute(builder: (_) => PriorAdmissionsPage(result)));
     } else {
       if (!_isShownToast) {
         _isShownToast = true;
