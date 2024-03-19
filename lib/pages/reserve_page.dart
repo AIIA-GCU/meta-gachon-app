@@ -55,7 +55,7 @@ class _ReservePageState extends State<ReservePage> {
   late List<Widget> _usersWidgets; // └> 를 위한 위젯
 
   ///이용자 컨데이너 안내메세지
-  String alertMessege = "대표자를 제외한 이용자의 학번과 이름을 입력해주세요!";
+  String alertMessege = "대표자를 제외한 이용 인원의 수를 입력해주세요!";
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _ReservePageState extends State<ReservePage> {
         for (int i = 0; i < temp.length; i += 2) {
           _usersList.add('${temp[i]} ${temp[i + 1]}');
         }
-        _usersWidgets = _usersList.map((e) => _myUserBox(e)).toList();
+        // _usersWidgets = _usersList.map((e) => _myUserBox(e)).toList();
       } else {
         _isSolo = true;
       }
@@ -296,23 +296,27 @@ class _ReservePageState extends State<ReservePage> {
                                       //   },
                                       // ),
                                       CustomTextField(
-                                          enabled: !_isSolo,
-                                          width: ratio.width * 40,
-                                          height: 32,
-                                          controller: _numberCtr,
-                                          keyboard: TextInputType.number,
-                                          hint: '',
-                                          format: [
-                                            FilteringTextInputFormatter.digitsOnly,
-                                            LengthLimitingTextInputFormatter(2),
-                                          ],
-                                          validator:(str) {
-                                            if(str!.isEmpty || str == "0" || str == "00") {
-                                              return alertMessege = "인원 수를 정확히 입력해 주세요";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
+                                        enabled: _isSolo,
+                                        width: ratio.width * 40,
+                                        height: 32,
+                                        controller: _numberCtr,
+                                        keyboard: TextInputType.number,
+                                        hint: '',
+                                        format: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(2),
+                                        ],
+                                        validator: (str) {
+                                          if (str!.isEmpty ||
+                                              str == "0" ||
+                                              str == "00") {
+                                            return alertMessege =
+                                                "인원 수를 정확히 입력해 주세요";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
                                       ),
                                       SizedBox(width: ratio.width * 8),
 
@@ -345,7 +349,7 @@ class _ReservePageState extends State<ReservePage> {
                                     child: Text(alertMessege,
                                         style: KR.label2.copyWith(
                                             color: _isSolo
-                                                ? MGColor.base4
+                                                ? _addUserGuideline = MGColor.systemError
                                                 : _addUserGuideline))),
                               ]),
                             ),
@@ -368,41 +372,41 @@ class _ReservePageState extends State<ReservePage> {
                                     ),
                                   ),
                                   SizedBox(height: 8 * ratio.height),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 12 * ratio.width),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() => _isSolo = !_isSolo);
-                                      },
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 12,
-                                            backgroundColor: Colors.transparent,
-                                            child: Checkbox(
-                                                value: _isSolo,
-                                                shape: const CircleBorder(),
-                                                side: const BorderSide(
-                                                    color: MGColor.base3,
-                                                    width: 1.6),
-                                                activeColor:
-                                                    MGColor.brandPrimary,
-                                                onChanged: (bool? value) {
-                                                  setState(
-                                                      () => _isSolo = value!);
-                                                }),
-                                          ),
-                                          SizedBox(width: 10 * ratio.width),
-                                          Text('추가 이용자가 없습니다.',
-                                              style: KR.label2.copyWith(
-                                                  color: MGColor.base3)),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                  // Padding(
+                                  //   padding:
+                                  //       EdgeInsets.only(left: 12 * ratio.width),
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       setState(() => _isSolo = !_isSolo);
+                                  //     },
+                                  //     behavior: HitTestBehavior.translucent,
+                                  //     child: Row(
+                                  //       mainAxisSize: MainAxisSize.min,
+                                  //       children: [
+                                  //         CircleAvatar(
+                                  //           radius: 12,
+                                  //           backgroundColor: Colors.transparent,
+                                  //           child: Checkbox(
+                                  //               value: _isSolo,
+                                  //               shape: const CircleBorder(),
+                                  //               side: const BorderSide(
+                                  //                   color: MGColor.base3,
+                                  //                   width: 1.6),
+                                  //               activeColor:
+                                  //                   MGColor.brandPrimary,
+                                  //               onChanged: (bool? value) {
+                                  //                 setState(
+                                  //                     () => _isSolo = value!);
+                                  //               }),
+                                  //         ),
+                                  //         SizedBox(width: 10 * ratio.width),
+                                  //         Text('추가 이용자가 없습니다.',
+                                  //             style: KR.label2.copyWith(
+                                  //                 color: MGColor.base3)),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // )
                                 ],
                               ),
                             ),
@@ -629,8 +633,7 @@ class _ReservePageState extends State<ReservePage> {
         alertMessege = "정상적으로 추가됐습니다";
         _addUserGuideline = MGColor.brandPrimary;
         _usersList.add("${_numberCtr.text}");
-        _usersWidgets.add(_myUserBox("${_numberCtr.text}"));
-        _numberCtr.clear();
+        // _usersWidgets.add(_myUserBox("${_numberCtr.text}"));
       } else {
         _addUserGuideline = MGColor.systemError;
       }
@@ -638,40 +641,40 @@ class _ReservePageState extends State<ReservePage> {
   }
 
   /// 추가 이용자를 나타내는 위젯
-  Widget _myUserBox(String memberInfo) {
-    return Container(
-      key: ValueKey<String>(memberInfo),
-      width: 133 * ratio.width,
-      height: 26 * ratio.height,
-      margin: EdgeInsets.only(top: 8 * ratio.height),
-      padding: EdgeInsets.only(left: ratio.width * 10, right: ratio.width * 5),
-      decoration: ShapeDecoration(
-        color: MGColor.brandSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(memberInfo,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                style: KR.label2.copyWith(color: Colors.white)),
-          ),
-          GestureDetector(
-              onTap: () {
-                setState(() => _usersWidgets
-                    .removeWhere((widget) => widget.key == Key(memberInfo)));
-              },
-              child: const Icon(MGIcon.cross, size: 20, color: Colors.white)),
-        ],
-      ),
-    );
-  }
+  // Widget _myUserBox(String memberInfo) {
+  //   return Container(
+  //     key: ValueKey<String>(memberInfo),
+  //     width: 133 * ratio.width,
+  //     height: 26 * ratio.height,
+  //     margin: EdgeInsets.only(top: 8 * ratio.height),
+  //     padding: EdgeInsets.only(left: ratio.width * 10, right: ratio.width * 5),
+  //     decoration: ShapeDecoration(
+  //       color: MGColor.brandSecondary,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20),
+  //       ),
+  //     ),
+  //     child: Row(
+  //       mainAxisSize: MainAxisSize.max,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Expanded(
+  //           child: Text(memberInfo,
+  //               maxLines: 1,
+  //               softWrap: false,
+  //               overflow: TextOverflow.ellipsis,
+  //               style: KR.label2.copyWith(color: Colors.white)),
+  //         ),
+  //         GestureDetector(
+  //             onTap: () {
+  //               setState(() => _usersWidgets
+  //                   .removeWhere((widget) => widget.key == Key(memberInfo)));
+  //             },
+  //             child: const Icon(MGIcon.cross, size: 20, color: Colors.white)),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// 예약하기
   Future<void> _reserve() async {
@@ -684,14 +687,18 @@ class _ReservePageState extends State<ReservePage> {
       if (MediaQuery.of(context).viewInsets.bottom > 0) {
         FocusScope.of(context).unfocus();
       }
+      if (_numberCtr.text.isNotEmpty){
+        _usersList.add(_numberCtr.text);
+      }
     });
 
     if (widget.service != ServiceType.computer &&
         (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
-    } else if (!_isSolo && _usersList.isEmpty) {
+    } else if (_numberCtr.text.isEmpty) {
       title = '인원 수를 입력해주세요!';
+      _isSolo = true;
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';
@@ -702,9 +709,9 @@ class _ReservePageState extends State<ReservePage> {
     } else {
       onPressed = () => Navigator.pop(context);
 
-      late String member, start, end;
-      member = _usersList.toString();
-      member = member.substring(1, member.length - 1);
+      late String number, start, end;
+      number = _usersList.toString();
+      number = number.substring(1, number.length - 1);
       start = stdFormat2.format(_selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
       debugPrint("""
@@ -713,7 +720,7 @@ class _ReservePageState extends State<ReservePage> {
         . startTime: $start
         . endTime: $end
         . leader: $_leaderNumber $_leaderName
-        . member: $member
+        . number: $number
         . purpose: ${_purposeCtr.text}""");
 
       try {
@@ -725,7 +732,7 @@ class _ReservePageState extends State<ReservePage> {
                 startTime: start,
                 endTime: end,
                 leader: widget.reserve!.leaderInfo,
-                member: member,
+                number: number,
                 purpose: _purposeCtr.text,
                 professor: _professerCtr.text)
             : await RestAPI.addReservation(
@@ -733,7 +740,7 @@ class _ReservePageState extends State<ReservePage> {
                 place: _selectedRoom,
                 startTime: start,
                 endTime: end,
-                member: member,
+                number: number,
                 purpose: _purposeCtr.text,
                 professor: _professerCtr.text);
         if (response == null) {
