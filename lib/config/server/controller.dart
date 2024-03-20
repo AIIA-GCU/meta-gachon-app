@@ -75,7 +75,7 @@ class RestAPI {
   /// 이용이 끝났지만, 인증되지 않은 예약들
   static Future<List<Reserve>?> getPriorAdmittedReservation() async {
     try {
-      final api = APIRequest('books');
+      final api = APIRequest('books/remain');
       List<dynamic> response = await api.send(HTTPMethod.get);
       if (response.isEmpty) {
         return null;

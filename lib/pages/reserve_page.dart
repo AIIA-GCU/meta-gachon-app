@@ -99,6 +99,7 @@ class _ReservePageState extends State<ReservePage> {
     _stuNumCtr.dispose();
     _nameCtr.dispose();
     _purposeCtr.dispose();
+    _numberCtr.dispose();
     _professerCtr.dispose();
     super.dispose();
   }
@@ -296,7 +297,7 @@ class _ReservePageState extends State<ReservePage> {
                                       //   },
                                       // ),
                                       CustomTextField(
-                                        enabled: _isSolo,
+                                        enabled: !_isSolo,
                                         width: ratio.width * 40,
                                         height: 32,
                                         controller: _numberCtr,
@@ -482,6 +483,8 @@ class _ReservePageState extends State<ReservePage> {
                 _selectedRoom = value;
                 if (_selectedRoom != null && _selectedDate != null) {
                   setState(() {
+                    _numberCtr.clear();
+                    _purposeCtr.clear();
                     if (widget.service != ServiceType.computer) {
                       _selectedEnter = _selectedEnd = null;
                     }
@@ -592,6 +595,8 @@ class _ReservePageState extends State<ReservePage> {
                       widget.service == ServiceType.lectureRoom) &&
                   _selectedDate != null) {
                 setState(() {
+                  _numberCtr.clear();
+                  _purposeCtr.clear();
                   if (widget.reserve != null &&
                       _selectedRoom == widget.reserve!.place &&
                       _selectedDate == widget.reserve!.startToDate2()) {
@@ -698,7 +703,6 @@ class _ReservePageState extends State<ReservePage> {
       onPressed = () => Navigator.pop(context);
     } else if (_numberCtr.text.isEmpty) {
       title = '인원 수를 입력해주세요!';
-      _isSolo = true;
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';
