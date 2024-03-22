@@ -99,7 +99,8 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String? professor,
-    required String number,
+    required String? number,
+    required String? userNumber,
     required String purpose
   }) async {
     try {
@@ -112,7 +113,7 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'number': number,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
@@ -123,7 +124,7 @@ class RestAPI {
             'startTime': startTime,
             'endTime': endTime,
             'professor': professor,
-            'number': number,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
@@ -157,7 +158,8 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String leader,
-    required String number,
+    required String? number,
+    required String? userNumber,
     required String purpose,
     required String? professor
   }) async {
@@ -172,7 +174,7 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'number': number,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
