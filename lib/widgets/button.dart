@@ -335,7 +335,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         dropdownStyleData: DropdownStyleData(
             offset: const Offset(0, -4),
             padding: EdgeInsets.zero,
-            maxHeight: 120,
+            maxHeight: 110,
             elevation: 0,
             decoration: BoxDecoration(
                 boxShadow: const [

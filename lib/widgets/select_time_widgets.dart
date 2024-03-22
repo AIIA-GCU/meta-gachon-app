@@ -541,8 +541,8 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                               onTap: color == MGColor.base6
                                   ? null : () => _onChangedTime(index),
                               child: Container(
-                                  width: 24,
-                                  height: 28,
+                                  width: 20,
+                                  height: 20,
                                   margin: const EdgeInsets.symmetric(horizontal: 3),
                                   decoration: BoxDecoration(
                                       color: color,
@@ -564,8 +564,8 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('21', style: EN.label2),
-                                        Text('24', style: EN.label2),
+                                        Text('21', style: EN.label1),
+                                        Text('24', style: EN.label1),
                                       ]
                                   )
                               );
