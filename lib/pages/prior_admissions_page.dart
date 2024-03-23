@@ -7,11 +7,14 @@ import '../config/app/_export.dart';
 import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
+import '../widgets/popup_widgets.dart';
+
 
 class PriorAdmissionsPage extends StatefulWidget {
-  const PriorAdmissionsPage({super.key});
+  const PriorAdmissionsPage({super.key, required this.setLoading});
+  final void Function(bool) setLoading;
 
-  @override
+@override
   State<PriorAdmissionsPage> createState() => _PriorAdmissionsPageState();
 }
 
@@ -69,32 +72,26 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
 
   Widget _listItem(Reserve reserve) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
+        showDialog(
+            context: context,
+            builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
+        );
+      },
       child: Container(
-        color: Colors.white,
-        margin: EdgeInsets.fromLTRB(
-          ratio.width * 16,
-          0,
-          ratio.width * 16,
-          12
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: ratio.width * 16,
-          vertical: 16
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.white,
+            border: stdFormat3.format(reserve.startTime) == today
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(reserve.place!, style: EN.subtitle2),
-                SizedBox(height: 8),
-                Text(reserve.startToDate2(), style: EN.subtitle3)
-              ],
-            ),
+
             Transform.translate(
               offset: Offset(0, -(ratio.height * 21)),
               child: Transform.rotate(

@@ -209,7 +209,8 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
     int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const PriorAdmissionsPage()));
+          MaterialPageRoute(builder: (_) => PriorAdmissionsPage(setLoading: setLoading,))
+      );
     } else {
       if (!_isShownToast) {
         /// show toast during 2s

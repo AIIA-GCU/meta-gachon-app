@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final FToast _fToast;
   late bool _isShownToast;
-
+  bool _isLoading = true;
   @override
   void initState() {
     _fToast = FToast();
@@ -287,12 +287,17 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
-
+  void setLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
   void doAdmission() {
     int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
     if (idx != -1) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const PriorAdmissionsPage()));
+          MaterialPageRoute(builder: (_) => PriorAdmissionsPage(setLoading: setLoading,))
+      );
     } else {
       if (!_isShownToast) {
         _isShownToast = true;
