@@ -113,5 +113,10 @@ class ImgPath {
   static const String home3 = "assets/images/home_img3.png";
   static const String home4 = "assets/images/home_img4.png";
   static const String home5 = "assets/images/home_img5.png";
+
+  // 예약 페이지에 사용되는 이미지
+  static const String reserve1 = "assets/images/graphic_class.png";
+  static const String reserve2 = "assets/images/graphic_gpu.png";
+  static const String reserve3 = "assets/images/graphic_meta.png";
 }
 
