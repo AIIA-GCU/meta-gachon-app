@@ -296,7 +296,7 @@ class _ReservePageState extends State<ReservePage> {
                                                   if (str!.isEmpty || str.length != 9) {
                                                     return alertMessege = "정확한 학번과 이름을 입력해 주세요";
                                                   } else if(_leaderNumber.toString() == str) {
-                                                    return alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
+                                                    return alertMessege = '대표자를 제외한 이용자의 학번을 입력해주세요!';
                                                   } else if (_usersWidgets.any((e) => (e.key! as ValueKey<String>).value.contains(str))) {
                                                     return alertMessege = "이미 등록된 이용자입니다!";
                                                   } else {
@@ -304,30 +304,8 @@ class _ReservePageState extends State<ReservePage> {
                                                   }
                                                 },
                                               ),
-              
+
                                               SizedBox(width: 8 * ratio.width),
-              
-                                              CustomTextField(
-                                                enabled: !_isSolo,
-                                                width: 92 * ratio.width,
-                                                height: 32,
-                                                controller: _nameCtr,
-                                                hint: '이름',
-                                                format: [
-                                                  FilteringTextInputFormatter.allow(
-                                                      RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
-                                                ],
-                                                validator: (str) {
-                                                  if (str!.isEmpty) {
-                                                    return alertMessege = "정확한 학번과 이름을 입력해 주세요";
-                                                  } else {
-                                                    return null;
-                                                  }
-                                                },
-                                              ),
-              
-                                              SizedBox(width: 8 * ratio.width),
-              
                                               Material(
                                                 child: InkWell(
                                                   onTap: _isSolo ? null : _validateAddingUser,
