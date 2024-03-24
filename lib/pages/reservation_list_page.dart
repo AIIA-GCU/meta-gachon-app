@@ -143,13 +143,13 @@ class _ReservationListPageState extends State<ReservationListPage> {
     late String path;
     switch (service) {
       case ServiceType.aiSpace:
-        path = "graphic_meta";
+        path = "meta2";
         break;
       case ServiceType.lectureRoom:
-        path = "graphic_class";
+        path = "class2";
         break;
       case ServiceType.computer:
-        path = "graphic_gpu";
+        path = "gpu2";
         break;
     }
     return Material(
