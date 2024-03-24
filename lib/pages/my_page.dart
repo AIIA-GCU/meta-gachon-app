@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
-import 'package:mata_gachon/pages/select_service_page.dart';
 
 import 'term_page.dart';
 import 'setting_page.dart';
@@ -153,23 +152,6 @@ class MyPage extends StatelessWidget {
                 ),
               ),
 
-              /// 서비스 변경
-              TileButton(
-                onTap: () => _backToSelectingPage(context),
-                padding: EdgeInsets.symmetric(
-                    vertical: 11,
-                    horizontal: ratio.width * 22
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Icon(Icons.arrow_circle_left, size: ratio.width * 24),
-                    SizedBox(width: ratio.width * 16),
-                    Text('서비스 변경', style: KR.subtitle4)
-                  ],
-                ),
-              ),
-
               /// 설정
               TileButton(
                   onTap: () => _floatSettingPage(context),
@@ -252,16 +234,6 @@ class MyPage extends StatelessWidget {
   void _floatMyAdmissionPage(BuildContext context) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
-  }
-  
-  void _backToSelectingPage(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        fullscreenDialog: false,
-        transitionsBuilder: slideLeft2Right,
-        pageBuilder: (_, __, ___) => const SelectingServicePage()
-      )
-    );
   }
 
   void _floatSettingPage(BuildContext context) {

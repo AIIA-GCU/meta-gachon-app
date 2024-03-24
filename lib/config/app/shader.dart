@@ -1,5 +1,30 @@
+///
+/// shader.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Function
+///   - hazySide
+///
+
 import 'package:flutter/material.dart';
 
+///
+/// Shader hazySide
+///
+/// The effect that top&bottom edge blur
+/// It's used in [TermPage]
+///
+/// Parameter:
+/// - rect(Rect)
+///
+/// Return:
+/// - Shader made from [LinearGradient]
+///
 Shader hazySide(Rect rect) {
   return const LinearGradient(
     begin: Alignment.topCenter,

@@ -1,32 +1,45 @@
-import 'dart:io';
+///
+/// main.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// <br>
+///
+/// Changes
+/// - Added comment
+///
+/// Content
+/// [*] Function
+///   - main()
+/// [*] Class
+///   - MetaGachonApp
+///
+///
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
-import 'pages/select_service_page.dart';
 
 Future<void> main() async {
 
   debugPrint("called main()");
 
   debugPrint("initializing flutter binding");
-
   WidgetsFlutterBinding.ensureInitialized();
 
   debugPrint("initializing local date time");
-
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
   debugPrint("determining initial page");
-
   late final Widget start;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final bool? first = preferences.getBool('firstTime');
@@ -38,10 +51,13 @@ Future<void> main() async {
     start = OnBoarding();
   } else {
     try {
-      await FCM.initialize();
-      final fcmToken = await FCM.getToken();
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: fcmToken))!;
-      start = const SelectingServicePage();
+      // await FCM.initialize();
+      // final fcmToken = await FCM.getToken();
+      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
+      reserves = await RestAPI.getRemainReservation() ?? [];
+      admits = await RestAPI.getAllAdmission() ?? [];
+      myAdmits = await RestAPI.getMyAdmission() ?? [];
+      start = const MainFrame();
     } catch(_) {
       debugPrint('No token');
       start = const SignInPage();
@@ -49,26 +65,36 @@ Future<void> main() async {
   }
 
   debugPrint("complete camera setting");
-
   camera = await availableCameras().then((value) {
     debugPrint(value.length.toString());
     return value.first;
   });
 
   debugPrint("start to run app");
-
-  runApp(MataGachon(start: start));
+  runApp(MataGachonApp(start: start));
 }
 
-class MataGachon extends StatefulWidget {
-  const MataGachon({super.key, required this.start});
+///
+/// MetaGachonApp
+///
+/// The root widget of app, including MaterialApp()
+///
+/// Parameters
+/// - start(Widget):
+///   The displayed screen when running app.
+///   If app is installed for the first time, then display [OnBoardingPage]
+///   If remaining the session, then display [SelectingServicePage]
+///   If not both, display [SignInPage]
+///
+class MataGachonApp extends StatefulWidget {
+  const MataGachonApp({super.key, required this.start});
 
   final Widget start;
 
   @override
-  State<MataGachon> createState() => _MataGachonState();
+  State<MataGachonApp> createState() => _MataGachonAppState();
 }
-class _MataGachonState extends State<MataGachon> {
+class _MataGachonAppState extends State<MataGachonApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +122,8 @@ class _MataGachonState extends State<MataGachon> {
             showSelectedLabels: true,
             showUnselectedLabels: true,
           ),
-          useMaterial3: true,
       ),
-      builder: FToastBuilder(),
+      builder: FToastBuilder(),   // for <fluttertost> package
       home: widget.start,
     );
   }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCQanzqB0XRTqS-INGmr2UVwJ8juTb5i3Y</string>
+	<key>GCM_SENDER_ID</key>
+	<string>309587225618</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.aiia.matagachon.mataGachon</string>
+	<key>PROJECT_ID</key>
+	<string>meta-gachon-fcm</string>
+	<key>STORAGE_BUCKET</key>
+	<string>meta-gachon-fcm.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:309587225618:ios:664fa741fb11f3def1bccb</string>
+</dict>
+</plist>

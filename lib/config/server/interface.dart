@@ -1,14 +1,30 @@
+///
+/// interface.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// Instances from [objects.dart]'s classes
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Variables:
+///   - myInfo
+///   - reserves
+///   - admits
+///   - myAdmits
 
 import 'objects.dart';
 
-/// 유저 정보
+/// User info
 late User myInfo;
 
-/// 내 예약 정보 리스트
-late List<Reservate> reservates;
+/// User's history of reservation
+late List<Reserve> reserves;
 
-/// 다른 사람 인증 정보 리스트
+/// Admission history of the others
 late List<Admit> admits;
 
-/// 내 인증 정보 리스트
+/// Mine admission history
 late List<Admit> myAdmits;

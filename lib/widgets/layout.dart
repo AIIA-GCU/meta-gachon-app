@@ -1,8 +1,39 @@
+///
+/// layout.dart
+/// 2024.03.07
+/// by. @protaku
+///
+/// Change
+/// - Added comments
+///
+/// Content
+/// [*] Class:
+///   - CustomContainer
+///   - TileButtonCard
+///
+
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 
 import 'button.dart';
 
+///
+/// CustomContainer
+///
+/// In widget, title places at top-left and the other places at top-right
+///
+/// Parameter:
+/// - [margin] ([EdgeInsets]):
+///   Margin of box
+/// - [content] ([Widget]):
+///   Content of widget
+/// - [additionalContent] ([List]<[Widget]>):
+///   this content places at bottom
+/// - [title] ([String]):
+///   title of widget
+/// - [height] ([double]):
+///   Height of widget
+///
 class CustomContainer extends StatelessWidget {
   final EdgeInsets? margin;
   final Widget content;
@@ -42,12 +73,27 @@ class CustomContainer extends StatelessWidget {
             height: 32,
             child: content
         ),
-        ...?additionalContent //추가 위젯들 들어가는 곳
+        ...?additionalContent
       ]),
     );
   }
 }
 
+///
+/// TileButtonCard
+///
+/// Parameter:
+/// - [background] ([Color]):
+///   Color of box
+/// - [shape] ([ShapeBorder]):
+///   Shape of box
+/// - [margin] ([EdgeInsetsGeometry]):
+///   Margin of box
+/// - [padding] ([EdgeInsetsGeometry]):
+///   Padding of box
+/// - [items] ([List]<[String]>):
+///   Content of widget
+///
 class TileButtonCard extends StatelessWidget {
   const TileButtonCard({
     super.key,

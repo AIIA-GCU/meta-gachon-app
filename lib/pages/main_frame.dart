@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 
@@ -7,7 +8,6 @@ import 'admission_list_page.dart';
 import 'my_page.dart';
 import 'reservation_list_page.dart';
 import 'alarm_page.dart';
-import 'my_admission_list_page.dart';
 import '../widgets/small_widgets.dart';
 
 class MainFrame extends StatefulWidget {
@@ -50,11 +50,12 @@ class _MainFrameState extends State<MainFrame> {
     _children = [
       HomePage(
         movetoReserList: _movetoReserList,
-        movetoAdmisList: _movetoAdmisList
+        movetoAdmisList: _movetoAdmisList,
+        setLoading: _setLoading,
       ),
       ReservationListPage(setLoading: _setLoading),
       const AdmissionListPage(),
-      MyPage(moveToReserList: _movetoReserList,)
+      MyPage(moveToReserList: _movetoReserList)
     ];
   }
 
@@ -65,7 +66,11 @@ class _MainFrameState extends State<MainFrame> {
         Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+              title: const SizedBox(
+                width: 200,
+                height: 30,
+                child: Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+              ),
               actions: [
                 /// alarm
                 NotificationIcon(onPressed: _movetoAlarm),
@@ -88,8 +93,8 @@ class _MainFrameState extends State<MainFrame> {
                   BottomNavigationBarItem(icon: Icon(MGIcon.cert), label: "인증"),
                   BottomNavigationBarItem(icon: Icon(MGIcon.my), label: "마이")
                 ],
-                selectedIconTheme: IconThemeData(
-                  size: 24, color: MGColor.primaryColor())
+                selectedIconTheme: const IconThemeData(
+                  size: 24, color: MGColor.brandPrimary)
             )
         ),
 
@@ -113,7 +118,4 @@ class _MainFrameState extends State<MainFrame> {
       .animateToPage(1, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
 
   void _movetoAdmisList() => _pageController.jumpToPage(2);
-
-  void _movetoMyAdmis() => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
 }

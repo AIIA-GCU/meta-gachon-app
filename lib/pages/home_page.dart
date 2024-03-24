@@ -2,30 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/pages/prior_admissions_page.dart';
 
 import '../widgets/popup_widgets.dart';
 import 'admit_page.dart';
 import 'my_admission_list_page.dart';
-import 'reservate_page.dart';
+import 'reserve_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.movetoReserList, required this.movetoAdmisList});
+  const HomePage({
+    super.key,
+    required this.movetoReserList,
+    required this.movetoAdmisList,
+    required this.setLoading
+  });
 
   final VoidCallback movetoReserList;
   final VoidCallback movetoAdmisList;
+  final void Function(bool) setLoading;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
   late final FToast _fToast;
-  late bool _isShownToast, _loading;
+  late bool _isShownToast;
 
   @override
   void initState() {
     _fToast = FToast();
     _fToast.init(context);
-    _isShownToast = _loading = false;
+
+    _isShownToast = false;
+
     super.initState();
   }
 
@@ -50,20 +59,20 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   /// <예약하기>
                   _smallCard(
-                    '강의실을 빌려\n편하게 공부해요!',
-                    '예약하기',
-                    ImgPath.home3,
-                    doReservation
+                      '공간과 컴퓨터를 빌려\n편하게 공부해요!',
+                      '예약하기',
+                      ImgPath.home3,
+                      () => doReservation(ServiceType.aiSpace)
                   ),
 
                   /// <인증하기>
                   _smallCard(
-                    "강의실 이용 후\n인증을 올려주세요!",
-                    "인증하기",
-                    ImgPath.home2,
-                    doAdmission
+                      "시설 이용 후\n인증을 올려주세요!",
+                      "인증하기",
+                      ImgPath.home2,
+                      doAdmission
                   )
-                ],
+                ]
               ),
 
               SizedBox(height: ratio.height * 30),
@@ -78,17 +87,6 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      /// <등급 확인하기>
-                      _largeCard(
-                          "현재 나의 등급은?",
-                          "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
-                          "등급 확인하기",
-                          ImgPath.home5,
-                          checkRating
-                      ),
-
-                      SizedBox(height: ratio.height * 12),
-
                       /// <예약 확인하기>
                       _largeCard(
                           "내가 언제 예약했더라?",
@@ -97,7 +95,15 @@ class _HomePageState extends State<HomePage> {
                           ImgPath.home4,
                           widget.movetoReserList
                       ),
-
+                      SizedBox(height: ratio.height * 12),
+                      /// <등급 확인하기>
+                      _largeCard(
+                          "현재 나의 등급은?",
+                          "나는 지금 강의실을 얼마나\n잘 사용하고 있을지 확인해요!",
+                          "등급 확인하기",
+                          ImgPath.home5,
+                          checkRating
+                      ),
                       SizedBox(height: ratio.height * 12),
 
                       /// <내 인증 확인하기>
@@ -151,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                 child: Ink(
                   width: ratio.width * 77,
                   decoration: BoxDecoration(
-                    color: MGColor.primaryColor(),
+                    color: MGColor.brandPrimary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: EdgeInsets.symmetric(
@@ -227,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(8)),
                       child: Ink(
                         decoration: BoxDecoration(
-                          color: MGColor.primaryColor(),
+                          color: MGColor.brandPrimary,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: EdgeInsets.symmetric(
@@ -250,47 +256,43 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> doReservation() async {
-    setState(() => _loading = true);
-    List<String>? temp = await RestAPI.placeForService();
+  Future<void> doReservation(ServiceType service) async {
+    widget.setLoading(true);
+    List<String>? temp = await RestAPI.placeForService(service);
+    widget.setLoading(false);
     if (temp != null) {
-      setState(() {
-        _loading = false;
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ReservatePage(availableRoom: temp)));
-      });
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ReservePage(service, availableRoom: temp))
+      );
     } else {
-      setState(() {
-        _loading = false;
-        late String place;
-        switch (service) {
-          case ServiceType.aiSpace:
-            place = "회의실";
-            break;
-          case ServiceType.lectureRoom:
-            place = "강의실";
-            break;
-          case ServiceType.computer:
-            place = "컴퓨터";
-            break;
-        }
-        showDialog(
-            context: context,
-            builder: (ctx) => CommentPopup(
-                title: '현재 예약 가능한 $place가 없습니다.',
-                onPressed: () => Navigator.pop(ctx)
-            )
-        );
-      });
+      late String str;
+      switch (service) {
+        case ServiceType.aiSpace:
+          str = "회의실이";
+          break;
+        case ServiceType.lectureRoom:
+          str = "강의실이";
+          break;
+        case ServiceType.computer:
+          str = "컴퓨터가";
+          break;
+      }
+      showDialog(
+          context: context,
+          builder: (ctx) => CommentPopup(
+              title: '현재 예약 가능한 $str 없습니다.',
+              onPressed: () => Navigator.pop(ctx)
+          )
+      );
     }
   }
 
-  void doAdmission() {
-    int idx = reservates.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
-    if (idx != -1) {
+  Future<void> doAdmission() async {
+    List<Reserve>? items = await RestAPI.getPreAdmittedReservation();
+    if (items != null && items.isNotEmpty) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => AdmitPage(reservate: reservates[idx])));
-      widget.movetoAdmisList();
+        MaterialPageRoute(builder: (_) => PriorAdmissionsPage(items)));
     } else {
       if (!_isShownToast) {
         _isShownToast = true;
