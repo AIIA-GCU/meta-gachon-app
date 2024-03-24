@@ -118,5 +118,8 @@ class ImgPath {
   static const String reserve1 = "assets/images/graphic_class.png";
   static const String reserve2 = "assets/images/graphic_gpu.png";
   static const String reserve3 = "assets/images/graphic_meta.png";
+
+  // 인증 페이지 사용 이미지
+  static const String small1 = "assets/images/small_admit.png";
 }
 

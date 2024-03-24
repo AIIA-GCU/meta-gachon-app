@@ -56,7 +56,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      ImgPath.home5,
+                      ImgPath.small1,
                       height: ratio.width * 48,
                     ),
                   ),

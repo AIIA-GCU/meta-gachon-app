@@ -313,7 +313,7 @@ class ReservationPopup extends StatelessWidget {
               decoration: ShapeDecoration(
                 image: const DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage(ImgPath.home4)),
+                  image: AssetImage(ImgPath.reserve1)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),
