@@ -71,8 +71,6 @@ Future<void> main() async {
     return value.first;
   });
 
-  myInfo = User('국희근', 202334418, 2, 0, 0);
-
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
 }
@@ -127,10 +125,7 @@ class _MataGachonAppState extends State<MataGachonApp> {
           ),
       ),
       builder: FToastBuilder(),   // for <fluttertost> package
-      home: const ReservePage(
-        ServiceType.computer,
-        availableRoom: []
-      ),
+      home: widget.start,
     );
   }
 }

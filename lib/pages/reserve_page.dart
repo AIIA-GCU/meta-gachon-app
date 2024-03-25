@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/widgets/select_place_widget.dart';
 import 'package:mata_gachon/widgets/text_field.dart';
 
 import '../widgets/button.dart';
@@ -495,39 +496,54 @@ class _ReservePageState extends State<ReservePage> {
           ),
         ),
       ));
+    } else if (widget.service == ServiceType.computer) {
+      _firstWidgets.add(SelectingComputerWidget(
+        _selectedEnter == null ? null : widget.availableRoom,
+        onSelected: (com) {
+          _selectedRoom = com;
+          if (_selectedRoom != null && _selectedEnter != null) {
+            setState(() {
+              if (!_canTime) {
+                _canTime = true;
+                _listKey.currentState!.insertAllItems(0, 4);
+              }
+            });
+          }
+        },
+      ));
     } else {
       _firstWidgets.add(CustomContainer(
-        title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
-        height: 52,
-        margin: EdgeInsets.fromLTRB(
-            ratio.width * 16,
-            0,
-            ratio.width * 16,
-            ratio.height * 12
-        ),
-        content: Row(
-            children: [
-              // CustomDropdown(
-              //   value: _selectedRoom,
-              //   hint: "선택",
-              //   items: _places,
-              //   onChanged: (value) {
-              //     _selectedRoom = value;
-              //     if (_selectedRoom != null && _selectedDate != null) {
-              //       setState(() {
-              //         if (widget.service != ServiceType.computer) {
-              //           _selectedEnter = _selectedEnd = null;
-              //         }
-              //         if (!_canTime) {
-              //           _canTime = true;
-              //           _listKey.currentState!.insertAllItems(0, 4);
-              //         }
-              //       });
-              //     }
-              //   },
-              // )
-            ]
-        )
+          title: '회의실',
+          height: 52,
+          margin: EdgeInsets.fromLTRB(
+              ratio.width * 16,
+              0,
+              ratio.width * 16,
+              ratio.height * 12
+          ),
+          content: Row(
+              children: [
+                CustomDropdown(
+                  value: _selectedRoom,
+                  hint: "선택",
+                  items: _places,
+                  onChanged: (value) {
+                    _selectedRoom = value;
+                    if (_selectedRoom != null && _selectedDate != null) {
+                      setState(() {
+                        if (widget.service != ServiceType.computer) {
+                          _selectedEnter = _selectedEnd = null;
+                        }
+                        if (!_canTime) {
+                          _canTime = true;
+                          _listKey.currentState!.insertAllItems(0, 4);
+                        }
+                      });
+                    }
+                  },
+                )
+              ]
+          )
       ));
     }
 
@@ -577,9 +593,22 @@ class _ReservePageState extends State<ReservePage> {
             onSelected: (s, e) {
               _selectedEnter = s;
               _selectedEnd = e;
-              debugPrint("Enter = ${stdFormat3.format(_selectedEnter!)}");
-              debugPrint("End   = ${stdFormat3.format(_selectedEnd!)}");
-            },
+              comReserveStreamListener.add(widget.availableRoom);
+              if (_selectedRoom != null && _selectedEnter != null) {
+                setState(() {
+                  if (widget.reserve != null
+                      && _selectedRoom == widget.reserve!.place
+                      && _selectedDate == widget.reserve!.startToDate2()) {
+                    _selectedEnter = widget.reserve!.startTime;
+                    _selectedEnd = widget.reserve!.endTime;
+                  }
+                  if (!_canTime) {
+                    _canTime = true;
+                    _listKey.currentState!.insertAllItems(0, 4);
+                  }
+                });
+              }
+            }
           )
       ));
     } else {
