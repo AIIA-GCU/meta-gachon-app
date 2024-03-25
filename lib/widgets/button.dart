@@ -43,11 +43,8 @@ class CustomButtons {
   /// - Customized [ElevatedButton]
   ///
   static Widget bottomButton(
-      String text,
-      Color background,
-      VoidCallback onPressed,
-      {Color? disableBackground}
-      ) {
+      String text, Color background, VoidCallback onPressed,
+      {Color? disableBackground}) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -55,8 +52,7 @@ class CustomButtons {
         backgroundColor: background,
         shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         minimumSize: Size(ratio.width * 358, 48),
       ),
       child: Text(
@@ -84,23 +80,20 @@ class CustomButtons {
   /// - Customized [ElevatedButton]
   ///
   static Widget largeButton(
-      String text,
-      Color background,
-      VoidCallback onPressed,
-      ) {
+    String text,
+    Color background,
+    VoidCallback onPressed,
+  ) {
     return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          backgroundColor: background,
-          fixedSize: Size(ratio.width * 302, 40),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10))
-      ),
-      child: Text(text,
-        style: EN.parag1.copyWith(color: Colors.white))
-    );
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            backgroundColor: background,
+            fixedSize: Size(ratio.width * 302, 40),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
+        child: Text(text, style: EN.parag1.copyWith(color: Colors.white)));
   }
 
   ///
@@ -120,20 +113,15 @@ class CustomButtons {
   /// - Customized [ElevatedButton]
   ///
   static Widget bigButton(
-      String text,
-      Color background,
-      Color textColor,
-      VoidCallback onPressed
-      ) {
+      String text, Color background, Color textColor, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          backgroundColor: background,
-          fixedSize: Size(ratio.width * 159, 40),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
+        shadowColor: Colors.transparent,
+        backgroundColor: background,
+        fixedSize: Size(ratio.width * 159, 40),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: Text(text, style: KR.parag2.copyWith(color: textColor)),
     );
@@ -156,11 +144,7 @@ class CustomButtons {
   /// - Customized [ElevatedButton]
   ///
   static Widget mediumButton(
-      String text,
-      Color background,
-      Color textColor,
-      VoidCallback onPressed
-      ) {
+      String text, Color background, Color textColor, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -168,9 +152,8 @@ class CustomButtons {
           backgroundColor: background,
           shadowColor: Colors.transparent,
           fixedSize: Size(ratio.width * 147, 40),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10))
-      ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: Text(text, style: KR.parag2.copyWith(color: textColor)),
     );
   }
@@ -187,28 +170,24 @@ class CustomButtons {
   /// Return:
   /// - Customized Button made by [InkWell]
   ///
-  static Widget smallButton(
-      String text,
-      VoidCallback onPressed
-      ) {
+  static Widget smallButton(String text, VoidCallback onPressed) {
     return Material(
       child: InkWell(
         onTap: onPressed,
-        customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)),
+        customBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Ink(
           decoration: BoxDecoration(
             color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: EdgeInsets.symmetric(
-              horizontal: ratio.width * 16, vertical: 8),
-          child: Center(child: Text(
+          padding:
+              EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: 8),
+          child: Center(
+              child: Text(
             text,
-            style: KR.label1.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600
-            ),
+            style: KR.label1
+                .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
           )),
         ),
       ),
@@ -227,29 +206,25 @@ class CustomButtons {
   /// Return:
   /// - Customized Button made by [InkWell]
   ///
-  static Widget miniButton(
-      String text,
-      VoidCallback onPressed
-      ) {
+  static Widget miniButton(String text, VoidCallback onPressed) {
     return Material(
       child: InkWell(
         onTap: onPressed,
-        customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)),
+        customBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Ink(
           width: ratio.width * 77,
           decoration: BoxDecoration(
             color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: EdgeInsets.symmetric(
-              horizontal: ratio.width * 16, vertical: 8),
-          child: Center(child: Text(
+          padding:
+              EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: 8),
+          child: Center(
+              child: Text(
             text,
-            style: KR.label1.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600
-            ),
+            style: KR.label1
+                .copyWith(color: Colors.white, fontWeight: FontWeight.w600),
           )),
         ),
       ),
@@ -287,6 +262,7 @@ class CustomDropdown extends StatefulWidget {
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
+
 class _CustomDropdownState extends State<CustomDropdown> {
   late String? _selectedItem;
 
@@ -308,7 +284,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
       child: DropdownButton2<String>(
         isExpanded: true,
         alignment: Alignment.center,
-        hint: Text(widget.hint, style: EN.parag2.copyWith(color: MGColor.base3)),
+        hint:
+        Text(widget.hint, style: EN.parag2.copyWith(color: MGColor.base3)),
         items: _addDividersAfterItems(widget.items),
         value: _selectedItem,
         onChanged: (val) {
@@ -337,18 +314,14 @@ class _CustomDropdownState extends State<CustomDropdown> {
             padding: EdgeInsets.zero,
             maxHeight: 120,
             elevation: 0,
-            decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x19000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                    spreadRadius: 0,
-                  )
-                ],
-                color: Colors.white.withOpacity(0.9)
-            )
-        ),
+            decoration: BoxDecoration(boxShadow: const [
+              BoxShadow(
+                color: Color(0x19000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+                spreadRadius: 0,
+              )
+            ], color: Colors.white.withOpacity(0.9))),
 
         // dropdown's item
         menuItemStyleData: MenuItemStyleData(
@@ -363,29 +336,29 @@ class _CustomDropdownState extends State<CustomDropdown> {
   /// [List]<[DropdownMenuItem]<[String]>> _addDividersAfterItems
   ///
   /// Convert raw data to exclusive widget
-  /// 
+  ///
   /// Parameter:
   /// - [inItems] ([List]<[String]>)
   ///
   /// Return:
   /// - [List] converted [DropdownMenuItem]
-  /// 
+  ///
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
     final List<DropdownMenuItem<String>> menuItems = [];
     for (final String item in inItems) {
       menuItems.addAll([
         DropdownMenuItem<String>(
-          value: item,
-          child: Container(
-            width: 120,
-            child: Center(
-              child: Text(item,
-                style: EN.subtitle3.copyWith(
-                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+            value: item,
+            child: Container(
+              width: 120,
+              child: Center(
+                child: Text(item,
+                    style: EN.subtitle3.copyWith(
+                        color: (item == _selectedItem)
+                            ? Colors.black
+                            : const Color(0xFF7C7C7C))),
               ),
-            ),
-          )
-        ),
+            )),
         const DropdownMenuItem<String>(
           enabled: false,
           child: Divider(color: MGColor.base5),
@@ -407,44 +380,41 @@ class _CustomDropdownState extends State<CustomDropdown> {
   /// Return:
   /// - [List] about size
   ///
-  List<double> _getCustomItemsHeights(List<String> items) {
+  List<double>? _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
-    for (int i = 0; i < items.length; i++) {
-      itemsHeights.addAll([32, 1]);
-    for (int i = 0; i < items.length; i++) {
-      itemsHeights.addAll([24, 1]);
+      for (int i = 0; i < items.length; i++) {
+        itemsHeights.addAll([24, 1]);
+      }
+      itemsHeights.removeLast();
+      return itemsHeights;
     }
-    itemsHeights.removeLast();
-    return itemsHeights;
-  }
 }
 
-///
-/// TitleButton
-///
-/// Customized button of tile style
-///
-/// Parameter:
-/// - [onTap] (void Function()):
-///   Callback when tapping this widget
-/// - [alignment] ([Alignment]?):
-///   Align contents in this widget
-/// - [padding] ([EdgeInsetsGeometry]):
-///   Padding in this widget
-/// - [BorderRadius] ([borderRadius]):
-///   Set edge round
-/// - [child] ([Widget]):
-///   Content of widget
-///
+  ///
+  /// TitleButton
+  ///
+  /// Customized button of tile style
+  ///
+  /// Parameter:
+  /// - [onTap] (void Function()):
+  ///   Callback when tapping this widget
+  /// - [alignment] ([Alignment]?):
+  ///   Align contents in this widget
+  /// - [padding] ([EdgeInsetsGeometry]):
+  ///   Padding in this widget
+  /// - [BorderRadius] ([borderRadius]):
+  ///   Set edge round
+  /// - [child] ([Widget]):
+  ///   Content of widget
+  ///
 class TileButton extends StatelessWidget {
-  const TileButton({
-    super.key,
-    this.onTap,
-    this.alignment,
-    this.padding,
-    this.borderRadius,
-    required this.child
-  });
+  const TileButton(
+      {super.key,
+      this.onTap,
+      this.alignment,
+      this.padding,
+      this.borderRadius,
+      required this.child});
 
   final VoidCallback? onTap;
   final Alignment? alignment;

@@ -141,7 +141,6 @@ class User {
 class Reserve {
   final int _uid;
   late final ServiceType _type;
-  final ServiceType _type;
   final String _leaderInfo;
   final String? _place;
   final DateTime _startTime;
@@ -152,7 +151,6 @@ class Reserve {
   Reserve(
       this._uid,
       String serviceType,
-      this._type,
       this._leaderInfo,
       this._place,
       this._startTime,
