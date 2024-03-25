@@ -51,7 +51,9 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        elevation: 0,
         backgroundColor: background,
+        shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12)),
@@ -59,9 +61,9 @@ class CustomButtons {
       ),
       child: Text(
         text,
-        style: EN.subtitle2.copyWith(
+        style: EN.subtitle3.copyWith(
           fontWeight: FontWeight.w700,
-          color: MGColor.brand1Tertiary,
+          color: MGColor.brandTertiary,
         ),
       ),
     );
@@ -89,6 +91,8 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
           fixedSize: Size(ratio.width * 302, 40),
           shape: RoundedRectangleBorder(
@@ -124,10 +128,12 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: background,
-          fixedSize: Size(ratio.width * 147, 40),
+          fixedSize: Size(ratio.width * 159, 40),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10))
+              borderRadius: BorderRadius.circular(10)),
       ),
       child: Text(text, style: KR.parag2.copyWith(color: textColor)),
     );
@@ -158,7 +164,9 @@ class CustomButtons {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+          elevation: 0,
           backgroundColor: background,
+          shadowColor: Colors.transparent,
           fixedSize: Size(ratio.width * 147, 40),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10))
@@ -190,7 +198,7 @@ class CustomButtons {
             borderRadius: BorderRadius.circular(8)),
         child: Ink(
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -231,7 +239,7 @@ class CustomButtons {
         child: Ink(
           width: ratio.width * 77,
           decoration: BoxDecoration(
-            color: MGColor.primaryColor(),
+            color: MGColor.brandPrimary,
             borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(
@@ -312,11 +320,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
           height: 32,
-          width: 120 * ratio.width,
+          width: 120,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: MGColor.primaryColor()),
+            border: Border.all(color: MGColor.brandPrimary),
           ),
         ),
 
@@ -368,10 +376,13 @@ class _CustomDropdownState extends State<CustomDropdown> {
       menuItems.addAll([
         DropdownMenuItem<String>(
           value: item,
-          child: Center(
-            child: Text(item,
-              style: EN.subtitle2.copyWith(
-                  color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+          child: Container(
+            width: 120,
+            child: Center(
+              child: Text(item,
+                style: EN.subtitle3.copyWith(
+                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+              ),
             ),
           )
         ),
@@ -398,6 +409,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
   ///
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
+    for (int i = 0; i < items.length; i++) {
+      itemsHeights.addAll([32, 1]);
     for (int i = 0; i < items.length; i++) {
       itemsHeights.addAll([24, 1]);
     }

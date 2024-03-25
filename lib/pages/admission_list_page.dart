@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:mata_gachon/pages/prior_admissions_page.dart';
+import 'package:mata_gachon/widgets/button.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
 
 import 'admit_page.dart';
 import 'my_admission_list_page.dart';
 import '../widgets/small_widgets.dart';
+
 
 class AdmissionListPage extends StatefulWidget {
   const AdmissionListPage({super.key});
@@ -20,6 +23,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
   late final FToast _fToast;
   late bool _isShownToast;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -81,35 +85,19 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  /// <내 인증 확인하기>
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage())),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MGColor.tertiaryColor(),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        fixedSize: Size(ratio.width * 159, ratio.height * 40)
-                    ),
-                    child: Text(
+                  CustomButtons.bigButton(
                       '내 인증 확인하기',
-                      style: KR.parag2.copyWith(color: MGColor.primaryColor()),
-                    ),
+                      MGColor.brandTertiary,
+                      MGColor.brandPrimary,
+                      () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()))
                   ),
-                  /// <인증하러 가기>
-                  ElevatedButton(
-                    onPressed: _doAdmission,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MGColor.primaryColor(),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        fixedSize: Size(ratio.width * 160, ratio.height * 40)
-                    ),
-                    child: Text(
+                  CustomButtons.bigButton(
                       '인증하러 가기',
-                      style: KR.parag2.copyWith(color: Colors.white),
-                    ),
-                  ),
+                      MGColor.brandPrimary,
+                      MGColor.brandTertiary,
+                      _doAdmission
+                  )
                 ],
               ),
             ],
@@ -142,7 +130,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                 if (admits.isNotEmpty) {
                   return RefreshIndicator(
                     displacement: 0,
-                    color: MGColor.primaryColor(),
+                    color: MGColor.brandPrimary,
                     onRefresh: _onRefreshed,
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics()
@@ -212,12 +200,16 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       ),
     );
   }
-
-  void _doAdmission() {
-    int idx = reserves.indexWhere((e) => e.endTime.compareTo(DateTime.now()) < 0);
-    if (idx != -1) {
+  void setLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
+  Future<void> _doAdmission() async {
+    List<Reserve>? items = await RestAPI.getPreAdmittedReservation();
+    if (items != null && items.isNotEmpty) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AdmitPage(reserve: reserves[idx])));
+          MaterialPageRoute(builder: (_) => PriorAdmissionsPage(items)));
     } else {
       if (!_isShownToast) {
         /// show toast during 2s

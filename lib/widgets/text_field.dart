@@ -139,7 +139,7 @@ class LargeTextField extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: MGColor.primaryColor())
+                  border: Border.all(color: MGColor.brandPrimary)
               ),
               alignment: Alignment.topLeft,
               child: TextField(
@@ -205,15 +205,15 @@ class CustomTextField extends StatelessWidget {
               errorStyle: const TextStyle(fontSize: 0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGColor.primaryColor(), width: 1),
+                borderSide: BorderSide(color: MGColor.brandPrimary, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGColor.primaryColor(), width: 2),
+                borderSide: BorderSide(color: MGColor.brandPrimary, width: 2),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: MGColor.primaryColor(), width: 1),
+                borderSide: BorderSide(color: MGColor.brandPrimary, width: 1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),

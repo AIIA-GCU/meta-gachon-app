@@ -52,8 +52,28 @@ class RestAPI {
     }
   }
 
-  /// 내 모든 예약
-  static Future<List<Reserve>?> getAllReservation() async {
+  /// 이용 시간이 끝나지 않은 예약 불러옴
+  static Future<List<Reserve>?> getRemainReservation() async {
+    try {
+      final api = APIRequest('books/remain');
+      List<dynamic> response = await api.send(HTTPMethod.get);
+      if (response.isEmpty) {
+        return null;
+      } else {
+        List<Reserve> result = response.map((e) {
+          final temp = e as Map<String, dynamic>;
+          return Reserve.fromJson(temp);
+        }).toList();
+        result.sort((a, b) => a.startTime.compareTo(b.startTime));
+        return result;
+      }
+    } on TimeoutException {
+      throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// 이용 시간이 끝났지만, 아직 인증하지 않은 예약 불러옴
+  static Future<List<Reserve>?> getPreAdmittedReservation() async {
     try {
       final api = APIRequest('books');
       List<dynamic> response = await api.send(HTTPMethod.get);
@@ -74,6 +94,7 @@ class RestAPI {
 
   /// 예약 추가
   static Future<Map<String, dynamic>?> addReservation({
+    required ServiceType service,
     required String? place,
     required String startTime,
     required String endTime,
@@ -87,7 +108,6 @@ class RestAPI {
       switch (service) {
         case ServiceType.aiSpace:
           path = "book/meta";
-          // path = "book";
           params = {
             'room': place,
             'startTime': startTime,
@@ -132,6 +152,7 @@ class RestAPI {
   /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<Map<String, dynamic>?> patchReservation({
     required int reservationId,
+    required ServiceType service,
     required String? place,
     required String startTime,
     required String endTime,
@@ -204,8 +225,8 @@ class RestAPI {
   }
 
   /// 현재 예약의 상태
-  /// . 0: 사용 전 (예약 변경 X, QR O)
-  /// . 1: 사용 전 (예약 변경 X, QR X)
+  /// . 0: 사용 전 (예약 변경 X, QR X)
+  /// . 1: 사용 전 (예약 변경 X, QR O)
   /// . 2: 사용 전 (예약 변경 O)
   /// . 3: 사용 중 (연장 X)
   /// . 4: 사용 중 (연장 O)
@@ -243,7 +264,7 @@ class RestAPI {
   }
 
   /// 서비스에 따른 예약 장소 반환
-  static Future<List<String>?> placeForService() async {
+  static Future<List<String>?> placeForService(ServiceType service) async {
     try {
       late int type;
       switch (service) {
@@ -267,6 +288,18 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    }
+  }
+
+  /// QR 인증
+  static Future<bool> qrCheck(String uri) async {
+    try {
+      final api = APIRequest('book/qrcheck');
+      Map<String, dynamic> response = await api.send(HTTPMethod.post);
+      if (response.isEmpty) return false;
+      return true;
+    } catch(e) {
+      throw Exception(e);
     }
   }
 

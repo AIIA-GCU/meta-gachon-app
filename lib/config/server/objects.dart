@@ -140,6 +140,7 @@ class User {
 ///
 class Reserve {
   final int _uid;
+  late final ServiceType _type;
   final ServiceType _type;
   final String _leaderInfo;
   final String? _place;
@@ -150,6 +151,7 @@ class Reserve {
 
   Reserve(
       this._uid,
+      String serviceType,
       this._type,
       this._leaderInfo,
       this._place,
@@ -158,13 +160,28 @@ class Reserve {
       this._memberInfo,
       this._professor
       ) {
+    switch (serviceType) {
+      case 'MI':
+        _type = ServiceType.aiSpace;
+        break;
+      case 'CLASSROOM':
+        _type = ServiceType.lectureRoom;
+        break;
+      case 'COMPUTER':
+        _type = ServiceType.computer;
+        break;
+      default:
+        assert(true, "category is excluded from range!");
+    }
     assert(
-      !(service == ServiceType.computer && _professor == null),
+      !(_type == ServiceType.computer && _professor == null),
       'Professor must enter in reservation of GPU computer'
     );
   }
 
   int get reservationId => _uid;
+
+  ServiceType get service => _type;
 
   ServiceType get type => _type;
 
@@ -274,7 +291,7 @@ class Admit {
   factory Admit.fromJson(Map<String, dynamic> json) {
     return Admit(
       json['admissionID'],
-      json['leaderInfo'],
+      json['leaderInfo'] ?? '',
       json['room'],
       json['date'],
       json['time'],
