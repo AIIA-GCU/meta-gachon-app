@@ -169,8 +169,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                   child: Ink.image(
-                     image: AssetImage('asset/image/$path.png'),
+                   child: Image.asset(
+                     'assets/images/$path.png',
                    height: ratio.height * 36,
                  ),
               ),

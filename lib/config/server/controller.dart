@@ -55,7 +55,7 @@ class RestAPI {
   /// 내 모든 예약
   static Future<List<Reserve>?> getAllReservation() async {
     try {
-      final api = APIRequest('books');
+      final api = APIRequest('books/remain');
       List<dynamic> response = await api.send(HTTPMethod.get);
       if (response.isEmpty) {
         return null;
