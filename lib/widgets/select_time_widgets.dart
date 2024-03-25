@@ -564,8 +564,8 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('21', style: EN.label1),
-                                        Text('24', style: EN.label1),
+                                        Text('21', style: EN.label3),
+                                        Text('24', style: EN.label3),
                                       ]
                                   )
                               );

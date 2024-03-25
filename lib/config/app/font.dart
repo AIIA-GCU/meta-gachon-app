@@ -55,4 +55,5 @@ class EN {
   static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle label2 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle label3 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w300, fontFamily: 'En');
 }

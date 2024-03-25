@@ -54,7 +54,7 @@ class _ReservePageState extends State<ReservePage> {
   late List<Widget> _usersWidgets; // └> 를 위한 위젯
 
   ///이용자 컨데이너 안내메세지
-  String alertMessege = "대표자를 제외한 이용자의 학번과 이름을 입력해주세요!";
+  String alertMessege = "대표자를 제외한 이용자의 학번과 이름을 입력해 주세요!";
 
   @override
   void initState() {
