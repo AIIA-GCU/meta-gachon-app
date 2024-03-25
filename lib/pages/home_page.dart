@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       '공간과 컴퓨터를 빌려\n편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
-                      () => doReservation(ServiceType.aiSpace)
+                      widget.movetoReserList,
                   ),
 
                   /// <인증하기>
