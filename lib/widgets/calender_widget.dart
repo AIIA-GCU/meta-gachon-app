@@ -433,6 +433,7 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
     setState(() {
       selectedFirst = d.subtract(Duration(days: d.weekday-1));
       selectedLast = d.add(Duration(days: 5-d.weekday));
+      debugPrint("${stdFormat3.format(selectedFirst!)} ~ ${stdFormat3.format(selectedLast!)}");
       widget.onSelected(selectedFirst!, selectedLast!);
     });
   }
@@ -467,16 +468,16 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
   int _dayType(DateTime d) {
     bool today = isSameDate(d, DateTime.now());
 
-    if (d.weekday == DateTime.saturday
-        || d.weekday == DateTime.sunday
-        || d.isBefore(availableFirst)) {
-      return today ? 3 : 4;
-    }
-
     if (selectedFirst != null
         && !selectedFirst!.isAfter(d)
         && !selectedLast!.isBefore(d)) {
       return 1;
+    }
+
+    if (d.weekday == DateTime.saturday
+        || d.weekday == DateTime.sunday
+        || d.isBefore(availableFirst)) {
+      return today ? 3 : 4;
     }
 
     if (today) return 2;

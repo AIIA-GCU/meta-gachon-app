@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class SelectingComputerWidget extends StatefulWidget {
 }
 
 class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
-  late final Stream<List<String>> _stream = comReserveStreamListener.stream;
+  late final Stream<List<String>> _stream;
 
   late List<bool>? availables;
   late bool frontRoom;
@@ -29,6 +30,8 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
   @override
   void initState() {
     frontRoom = true;
+    comReserveStreamListener = StreamController<List<String>>.broadcast();
+    _stream = comReserveStreamListener.stream;
     _stream.listen(_listen);
     if (widget.computers != null) {
       var temp = widget.computers!
@@ -44,6 +47,7 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
 
   void _listen(List<String> event) {
     computers = event;
+    selected = null;
     var temp = event.map((e) => int.parse(e.split('-')[1])).toList();
     availables = List.generate(19,
             (index) => !temp.contains(index + 1) ? false : true);
@@ -53,6 +57,7 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
 
   @override
   void dispose() {
+    comReserveStreamListener.close();
     super.dispose();
   }
 
