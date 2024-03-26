@@ -58,6 +58,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(height: ratio.height * 12),
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -66,8 +67,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
             const SizedBox(height: 12)
           ]
         ),
-        expandedHeight: 204,
-        collapsedHeight: 204,
+        expandedHeight: 232,
+        collapsedHeight: 232,
       ),
 
       SliverAppBar(

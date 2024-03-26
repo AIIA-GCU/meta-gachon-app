@@ -24,29 +24,31 @@ class OnBoarding extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
+              bottom: ratio.height * 70,
+              width: screenSize.width,
               child: Image.asset(
                 ImgPath.onBoarding,
-                width: screenSize.width,
-                height: ratio.height * 800,
               ),
             ),
             Positioned(
-              top: ratio.height * 562,
+              top: ratio.height * 552,
               width: screenSize.width,
               child: Center(
                 child: Text(
-                  '간편하게 강의실을 예약해요.',
-                  style: KR.subtitle2,
+                  '교내 공간을 간편하게 예약해요.',
+                  style: KR.subtitle1,
                 ),
               ),
             ),
             Positioned(
-              top: ratio.height * 593,
+              top: ratio.height * 610,
               width: screenSize.width,
+              height: ratio.height * 70,
               child: Center(
                 child: Text(
-                  '언제 어디서든 비어있는 강의실을 예약하고 확인하세요.',
-                  style: KR.label1.copyWith(color: MGColor.base3),
+                  '언제 어디서든\n 비어있는 회의실 및 강의실,\n 컴퓨터를 예약하고 확인하세요.',
+                  style: KR.subtitle4.copyWith(color: MGColor.base3),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -54,11 +56,11 @@ class OnBoarding extends StatelessWidget {
               bottom: ratio.height * 30,
               width: screenSize.width,
               child: Center(
-                child: CustomButtons.bottomButton(
-                    '시작하기',
-                    MGColor.brandPrimary,
-                    () => _onPressed(context)
-                )
+                  child: CustomButtons.bottomButton(
+                      '시작하기',
+                      MGColor.brandPrimary,
+                          () => _onPressed(context)
+                  )
               ),
             ),
           ],
@@ -70,18 +72,18 @@ class OnBoarding extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     if (await FCM.initialize()) {
       Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          fullscreenDialog: false,
-          transitionsBuilder: slideRigth2Left,
-          pageBuilder: (context, anime, secondAnime) => SignInPage()
-        )
+          PageRouteBuilder(
+              fullscreenDialog: false,
+              transitionsBuilder: slideRigth2Left,
+              pageBuilder: (context, anime, secondAnime) => SignInPage()
+          )
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          duration: Duration(milliseconds: 1200),
-          content: Text('권한을 허용해 주세요!')
-        )
+          const SnackBar(
+              duration: Duration(milliseconds: 1200),
+              content: Text('권한을 허용해 주세요!')
+          )
       );
     }
   }

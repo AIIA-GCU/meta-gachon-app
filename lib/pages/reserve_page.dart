@@ -134,7 +134,7 @@ class _ReservePageState extends State<ReservePage> {
                   iconSize: 24,
                 ),
                 title: Text(title,
-                    style: KR.subtitle1.copyWith(color: MGColor.base1))),
+                    style: KR.subtitle1.copyWith(color: MGColor.base1)),),
             body: SafeArea(
               child: CustomScrollView(
                   slivers: [
@@ -460,6 +460,7 @@ class _ReservePageState extends State<ReservePage> {
                                   disableBackground: MGColor.base6
                               )
                           ),
+                          SizedBox(height: ratio.height * 30,)
                         ])
                     )
                   ]
