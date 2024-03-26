@@ -7,8 +7,6 @@ import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'term_page.dart';
 import 'setting_page.dart';
 import '../config/server/session.dart';
@@ -75,7 +73,7 @@ class _MyPageState extends State<MyPage> {
               TileButton(
                   onTap: widget.moveToReserList,
                   padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 32),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -84,40 +82,40 @@ class _MyPageState extends State<MyPage> {
                           size: ratio.width * 26),
 
 
-                      SizedBox(width: ratio.width * 16),
+                      SizedBox(width: ratio.width * 40),
                       SizedBox(height: ratio.height * 10),
                       Text('내 예약',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
                     ],
                   )),
             ]),
-            SizedBox(width: ratio.width * 12),
+            SizedBox(width: ratio.width * 13),
             TileButtonCard(items: [
               ///내 인증
               TileButton(
                   onTap: () => _floatMyAdmissionPage(context),
                   padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 32),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Icon(My_page.mycertification,
                         color: MGColor.brandPrimary,
                         size: ratio.width * 26,),
-                      SizedBox(width: ratio.width * 16),
+                      SizedBox(width: ratio.width * 40),
                       SizedBox(height: ratio.height * 10),
                       Text('내 인증',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
                     ],
                   ))
             ]),
-            SizedBox(width: ratio.width * 12),
+            SizedBox(width: ratio.width * 13),
             TileButtonCard(items: [
               ///내 등급
               TileButton(
                   onTap: () => _showGradePopup(context),
                   padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 32),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -126,7 +124,7 @@ class _MyPageState extends State<MyPage> {
                         color: MGColor.brandPrimary,
                         size: ratio.width * 26,
                       ),
-                      SizedBox(width: ratio.width * 16),
+                      SizedBox(width: ratio.width * 40),
                       SizedBox(height: ratio.height * 10),
                       Text('내 등급',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
