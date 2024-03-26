@@ -7,6 +7,7 @@ import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'term_page.dart';
 import 'setting_page.dart';
@@ -35,68 +36,37 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(ratio.width * 16, ratio.height * 31,
+      padding: EdgeInsets.fromLTRB(ratio.width * 16, 0,
           ratio.width * 16, ratio.height * 23),
       child: Column(children: [
         /// 프로필
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Material(
-            color: Colors.white,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Row(children: [
-              /// 이미지
-              /// Todo: 바꿀 필요 있음
-              Container(
-                width: ratio.width * 170,
-                height: ratio.width * 170,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                        image: myInfo.ratingImg,
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter)),
-              ),
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Row(
+              children: [
+            /// 이미지
+            /// Todo: 바꿀 필요 있음
+            Image.asset('assets/images/mypage.png', width: ratio.width * 120, height: ratio.height * 120,),
 
-              SizedBox(width: ratio.width * 9),
+            SizedBox(width: ratio.width * 10),
 
-              /// 텍스트
-              Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(myInfo.name, style: KR.title3),
-                    SizedBox(height: ratio.height * 20),
-                    Text('AI소프트웨어학과',
-                        style: KR.parag2.copyWith(
-                            color: MGColor.base3, letterSpacing: 0.32)),
-                    Text(myInfo.stuNum.toString(),
-                        style: KR.parag2.copyWith(color: MGColor.base3)),
-                    SizedBox(height: ratio.height * 20),
-                    Row(children: [
-                      Text(myInfo.ratingName,
-                          style: KR.parag1.copyWith(color: MGColor.base3)),
-                      SizedBox(width: ratio.width * 11),
-                      InkWell(
-                        onTap: () => _showGradePopup(context),
-                        customBorder: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: ratio.height * 5,
-                              horizontal: ratio.width * 11),
-                          decoration: BoxDecoration(
-                              color: MGColor.base4.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Text('등급 확인',
-                              style: KR.parag2.copyWith(color: Colors.white)),
-                        ),
-                      )
-                    ])
-                  ])
-            ]),
-          ),
+            /// 텍스트
+            Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: ratio.height * 10),
+                  Text(myInfo.name, style: KR.title2),
+                  SizedBox(height: ratio.height * 11),
+                  Text(myInfo.stuNum.toString(),
+                      style: KR.subtitle4.copyWith(color: MGColor.base3)),
+                  Text('AI소프트웨어학부',
+                      style: KR.subtitle4.copyWith(
+                          color: MGColor.base3, letterSpacing: 0.32)),
+                  SizedBox(height: ratio.height * 20),
+
+                ])
+          ]),
         ),
         Row(
           children: [
@@ -105,11 +75,11 @@ class _MyPageState extends State<MyPage> {
               TileButton(
                   onTap: widget.moveToReserList,
                   padding: EdgeInsets.symmetric(
-                      vertical: 7, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 33),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Icon(My_page.myreservation,
+                      Icon(MGIcon.res,
                         color: MGColor.brandPrimary,
                           size: ratio.width * 26),
 
@@ -127,7 +97,7 @@ class _MyPageState extends State<MyPage> {
               TileButton(
                   onTap: () => _floatMyAdmissionPage(context),
                   padding: EdgeInsets.symmetric(
-                      vertical: 7, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 33),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -145,8 +115,9 @@ class _MyPageState extends State<MyPage> {
             TileButtonCard(items: [
               ///내 등급
               TileButton(
+                  onTap: () => _showGradePopup(context),
                   padding: EdgeInsets.symmetric(
-                      vertical: 7, horizontal: ratio.width * 33),
+                      vertical: 2, horizontal: ratio.width * 33),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -164,7 +135,7 @@ class _MyPageState extends State<MyPage> {
             ]),
           ],
         ),
-        SizedBox(height: ratio.height * 30,),
+        SizedBox(height: ratio.height * 22),
         TileButton(
             onTap: () =>
                 launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
@@ -223,7 +194,7 @@ class _MyPageState extends State<MyPage> {
               ],
             )),
         TileButton(
-            onTap: () => _trySignOut,
+            onTap: () => _trySignOut(context),
             padding: EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -241,14 +212,20 @@ class _MyPageState extends State<MyPage> {
                         size: ratio.width * 24, color: MGColor.base4))
               ],
             )),
-        SizedBox(height: ratio.height * 30),
+        SizedBox(height: ratio.height * 16),
+        Divider(
+          thickness: 0.3,
+          color: MGColor.base3,
+        ),
+        SizedBox(height: ratio.height * 16),
+
 
         /// 앱 정보
         TileButton(
           onTap: () => _floatTermPage(context, Term.usingService),
           alignment: Alignment.centerLeft,
           padding:
-          EdgeInsets.symmetric(vertical: 7, horizontal: ratio.width * 13),
+          EdgeInsets.symmetric(vertical: 7, horizontal: ratio.width * 3),
           child: Text('이용약관', style: KR.parag2.copyWith(color: MGColor.base3)),
         ),
         TileButton(
@@ -256,12 +233,12 @@ class _MyPageState extends State<MyPage> {
                 _floatTermPage(context, Term.personalInfomationCollection),
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.symmetric(
-                vertical: 11, horizontal: ratio.width * 13),
+                vertical: 11, horizontal: ratio.width * 3),
             child: Text('개인정보 수집 및 이용',
                 style: KR.parag2.copyWith(color: MGColor.base3))),
         TileButton(
           padding:
-          EdgeInsets.symmetric(vertical: 11, horizontal: ratio.width * 13),
+          EdgeInsets.symmetric(vertical: 11, horizontal: ratio.width * 3),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,6 +248,8 @@ class _MyPageState extends State<MyPage> {
             ],
           ),
         ),
+        SizedBox(height: ratio.height * 30),
+
       ]),
     );
   }
@@ -301,13 +280,13 @@ class _MyPageState extends State<MyPage> {
     showDialog(
         context: context,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (ctx) => AlertPopup(
+        builder: (context) => AlertPopup(
             title: '로그아웃 하시겠습니까?',
             agreeMsg: '로그아웃',
             onAgreed: () async {
               setState(() {
                 _loading = true;
-                Navigator.pop(ctx);
+                Navigator.pop(context);
               });
 
               late Future func;
@@ -320,7 +299,7 @@ class _MyPageState extends State<MyPage> {
                     barrierColor: Colors.black.withOpacity(0.25),
                     builder: (ctx) => CommentPopup(
                         title: "로그아웃 되었습니다!",
-                        onPressed: () => Navigator.of(ctx).pushAndRemoveUntil(
+                        onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(builder: (_) => SignInPage()),
                                 (route) => false
                         )
@@ -330,9 +309,9 @@ class _MyPageState extends State<MyPage> {
                 func = showDialog(
                     context: context,
                     barrierColor: Colors.black.withOpacity(0.25),
-                    builder: (ctx) => CommentPopup(
+                    builder: (context) => CommentPopup(
                         title: "[400] 서버 통신에 문제가 있습니다",
-                        onPressed: () => Navigator.pop(ctx)
+                        onPressed: () => Navigator.pop(context)
                     )
                 );
               }
