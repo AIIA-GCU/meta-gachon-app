@@ -148,7 +148,18 @@ class ReservationPopup extends StatelessWidget {
     late Text place, time1, time2;
     late String statusMsg;
     late Widget button;
-    
+    late String path;
+      switch (item.service) {
+        case ServiceType.aiSpace:
+          path = "graphic_meta";
+          break;
+        case ServiceType.lectureRoom:
+          path = "graphic_class";
+          break;
+        case ServiceType.computer:
+          path = "graphic_gpu";
+          break;
+      }
     if (item.service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
     } else {
@@ -293,8 +304,8 @@ class ReservationPopup extends StatelessWidget {
       button = const SizedBox.shrink();
     }
 
-
     return Dialog(
+
       insetPadding: EdgeInsets.zero,
       child: Container(
         width: ratio.width * 326,
@@ -311,9 +322,10 @@ class ReservationPopup extends StatelessWidget {
               width: ratio.height * 120,
               height: ratio.height * 120,
               decoration: ShapeDecoration(
-                image: const DecorationImage(
+                image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage(ImgPath.reserve1)),
+
+                  image: AssetImage('assets/images/$path.png')),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),

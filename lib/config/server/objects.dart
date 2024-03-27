@@ -287,7 +287,7 @@ class Admit {
   factory Admit.fromJson(Map<String, dynamic> json) {
     return Admit(
       json['admissionID'],
-      json['leaderInfo'],
+        json['leaderInfo'] ?? '',
       json['room'],
       json['date'],
       json['time'],
