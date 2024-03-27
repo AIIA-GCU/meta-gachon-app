@@ -39,7 +39,7 @@ class _MyPageState extends State<MyPage> {
       child: Column(children: [
         /// 프로필
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: const EdgeInsets.symmetric(vertical: 11),
           child: Row(
               children: [
             /// 이미지
@@ -47,6 +47,7 @@ class _MyPageState extends State<MyPage> {
             Image.asset('assets/images/mypage.png', width: ratio.width * 120, height: ratio.height * 120,),
 
             SizedBox(width: ratio.width * 10),
+
 
             /// 텍스트
             Column(
@@ -73,7 +74,7 @@ class _MyPageState extends State<MyPage> {
               TileButton(
                   onTap: widget.moveToReserList,
                   padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 32),
+                      vertical: 2, horizontal: ratio.width * 33),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [

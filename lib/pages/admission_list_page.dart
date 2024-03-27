@@ -40,6 +40,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         /// <내 인증 확인하기> & <인증하러 가기>
+        SizedBox(height: ratio.height * 11),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
@@ -139,6 +140,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       itemBuilder: (_, index) => _listItem(admits[index])
                     )
                   );
+
                 } else {
                   return Container(
                       height: ratio.height * 218,
@@ -146,7 +148,8 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       child: Text(
                           '아직 인증이 없어요!',
                           style: KR.subtitle4.copyWith(color: MGColor.base3)
-                      )
+                      ),
+
                   );
                 }
               }
