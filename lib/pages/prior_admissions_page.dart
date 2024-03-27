@@ -8,10 +8,11 @@ import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
 import '../widgets/popup_widgets.dart';
-
+import '../pages/admit_page.dart';
+import '../config/server/objects.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
-  const PriorAdmissionsPage({super.key, required this.setLoading});
+  const PriorAdmissionsPage({super.key, required this.setLoading });
   final void Function(bool) setLoading;
 
 @override
@@ -46,7 +47,7 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 icon: const Icon(MGIcon.back, size: 24),
-                onPressed: _onPressed
+              onPressed: _onPressed,
             ),
             title: Text('인증하기', style: KR.subtitle1.copyWith(color: MGColor.base1))
         ),
@@ -73,10 +74,9 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
   Widget _listItem(Reserve reserve) {
     return GestureDetector(
       onTap: () async {
-        int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
-        showDialog(
-            context: context,
-            builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
+        Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => AdmitPage(reserve: reserve))
         );
       },
       child: Container(
@@ -111,15 +111,8 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
       ),
     );
   }
-
   void _onPressed() {
-    Navigator.of(context, rootNavigator: true).pop(
-      PageRouteBuilder(
-        fullscreenDialog: false,
-        transitionsBuilder: slideRigth2Left,
-        pageBuilder: (context, animation, secondaryAnimation) => const AdmissionListPage(),
-      ),
-    );
+    Navigator.of(context).pop();
   }
 
   Future<void> _onRefreshed() async {
