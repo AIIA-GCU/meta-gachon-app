@@ -174,7 +174,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
                     title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
                     onPressed: () => Navigator.pop(context),
                   );
-                case 4:
+                case 5:
                   return CommentPopup(
                     title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
                     onPressed: () {
@@ -183,18 +183,19 @@ class _ReservationListPageState extends State<ReservationListPage> {
                       doReservation(service);
                     },
                   );
-                case 5:
+                case 4:
                   return CommentPopup(
-                    title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
+                    title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
                     onPressed: () {
                       Navigator.pop(context);
                       notTouched = false;
                       doReservation(service);
                     },
                   );
+                case 3 :
                 default:
                   return CommentPopup(
-                    title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
+                    title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
                     onPressed: () {
                       Navigator.pop(context);
                       notTouched = false;
