@@ -58,7 +58,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: ratio.height * 12),
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -67,8 +66,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
             const SizedBox(height: 12)
           ]
         ),
-        expandedHeight: 232,
-        collapsedHeight: 232,
+        expandedHeight: 204,
+        collapsedHeight: 204,
       ),
 
       SliverAppBar(
@@ -100,7 +99,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         if (snapshot.hasError) {
           return Container(
               height: 218,
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.center,
               child: Text(
                   '통신 속도가 너무 느립니다!',
                   style: KR.subtitle4.copyWith(
@@ -157,7 +156,65 @@ class _ReservationListPageState extends State<ReservationListPage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () => doReservation(service),
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) {
+            if (service == ServiceType.lectureRoom) {
+              if (myInfo.rating == 1) {
+                return CommentPopup(
+                  title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              } else if (myInfo.rating == 2) {
+                return CommentPopup(
+                  title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              } else if (myInfo.rating == 4) {
+                return CommentPopup(
+                  title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  },
+                );
+              } else if (myInfo.rating == 5) {
+                return CommentPopup(
+                  title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  },
+                );
+              } else {
+                // For rating 3 or any other unknown ratings
+                return CommentPopup(
+                  title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  },
+                );
+              }
+            } else {
+              if (myInfo.rating == 1) {
+                return CommentPopup(
+                  title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              } else if (myInfo.rating == 2) {
+                return CommentPopup(
+                  title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              }
+              return CommentPopup(title: "깨끗한 이용 부탁드려요!", onPressed: () {
+                Navigator.pop(context);
+                doReservation(service);
+              });
+            }
+          }
+        ),
         child: Container(
           height: 56,
           decoration: BoxDecoration(
