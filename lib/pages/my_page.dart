@@ -211,7 +211,7 @@ class MyPage extends StatelessWidget {
                   children: [
                     Text('버전', style: KR.parag2.copyWith(color: MGColor.base3)),
                     Text(
-                        '1.0.0',
+                        '0.2.0',
                         style: EN.parag2.copyWith(color: MGColor.base3)
                     ),
                   ],
