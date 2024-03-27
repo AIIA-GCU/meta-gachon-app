@@ -87,7 +87,6 @@ class _CustomTimePickerState extends State<CustomTimePicker>
     super.dispose();
   }
 
-  /// Todo: 나중에 애니메이션 추가하기
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
@@ -158,8 +157,8 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                               onTap: color == MGColor.base6
                                   ? null : () => _onChangedTime(index),
                               child: Container(
-                                  width: 20,
-                                  height: 20,
+                                  width: 24,
+                                  height: 24,
                                   margin: const EdgeInsets.symmetric(horizontal: 3),
                                   decoration: BoxDecoration(
                                       color: color,
@@ -170,27 +169,27 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                           })),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: ratio.width * 2
-                          ),
-                          child: Row(children: List.generate(8, (index) {
-                            if (index == 7) {
-                              return SizedBox(
-                                  width: (24 + 3 * 2) * 3,
-                                  child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('21', style: EN.label3),
-                                        Text('24', style: EN.label3),
-                                      ]
-                                  )
-                              );
-                            } else {
-                              return SizedBox(
-                                  width: (24 + 3 * 2) * 3,
-                                  child: Text('${index * 3}', style: EN.label2)
-                              );
+                          padding: EdgeInsets.symmetric(horizontal: ratio.width * 2),
+                          child: Row(children: List.generate(9, (index) {
+                            switch (index) {
+                              case 0:
+                                return Container(
+                                  width: 45,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('0', style: EN.label3)
+                                );
+                              case 8:
+                                return Container(
+                                  width: 45,
+                                  alignment: Alignment.centerRight,
+                                  child: Text("24", style: EN.label3)
+                                );
+                              default:
+                                return Container(
+                                  width: 90,
+                                  alignment: Alignment.center,
+                                  child: Text("${index * 3}", style: EN.label3)
+                                );
                             }
                           })),
                         ),
