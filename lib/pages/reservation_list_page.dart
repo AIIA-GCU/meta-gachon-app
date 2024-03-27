@@ -223,7 +223,9 @@ class _ReservationListPageState extends State<ReservationListPage> {
     }
 
     if (reserve.service == ServiceType.lectureRoom && reserve.place == '-1') {
-      firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
+      firstText = Text('배정중...', style: KR.subtitle3.copyWith(color: MGColor.base3));
+    } else if(reserve.service == ServiceType.lectureRoom && reserve.place == '0') { // 배정이 불가할 때 조교님이 강의실에 0을 입력하는 방식
+      firstText = Text('배정 불가', style: KR.subtitle3.copyWith(color: Colors.red),);
     } else {
       firstText = Text(reserve.place!, style: KR.subtitle3);
     }

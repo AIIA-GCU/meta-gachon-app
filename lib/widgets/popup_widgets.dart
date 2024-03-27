@@ -585,6 +585,17 @@ class AdmissionPopup extends StatelessWidget {
 
               SizedBox(height: ratio.height * 24),
 
+              /// 대표자
+              Column(
+                children: [
+                  Text("대표자", style: KR.parag2),
+                  SizedBox(height: ratio.height * 8),
+                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 24),
+
               /// 사용 후기
               Container(
                 constraints: BoxConstraints(
@@ -598,7 +609,56 @@ class AdmissionPopup extends StatelessWidget {
                   softWrap: true,
                   maxLines: 3,
                 )
-              )
+              ),
+
+              SizedBox(height: ratio.height * 24),
+
+              // 관리자 이용내역 평가
+              if (item.me == '0')
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '확인된 인증입니다.',
+                      style: KR.subtitle4.copyWith(color: MGColor.brandPrimary),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
+              else if (item.me == '1')
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '경고를 받았습니다!',
+                      style: KR.subtitle4.copyWith(color: MGColor.systemError),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
+              else
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '아직 확인되지 않은 인증입니다.',
+                      style: KR.subtitle4.copyWith(color: MGColor.base3),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
             ]
         ),
       ),

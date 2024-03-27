@@ -289,6 +289,7 @@ class CustomDropdown extends StatefulWidget {
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
+
 class _CustomDropdownState extends State<CustomDropdown> {
   late String? _selectedItem;
 
@@ -342,18 +343,14 @@ class _CustomDropdownState extends State<CustomDropdown> {
             padding: EdgeInsets.zero,
             maxHeight: 110,
             elevation: 0,
-            decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x19000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                    spreadRadius: 0,
-                  )
-                ],
-                color: Colors.white.withOpacity(0.9)
-            )
-        ),
+            decoration: BoxDecoration(boxShadow: const [
+              BoxShadow(
+                color: Color(0x19000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+                spreadRadius: 0,
+              )
+            ], color: Colors.white.withOpacity(0.9))),
 
         ///메뉴들(선택지들) 디자인
         menuItemStyleData: MenuItemStyleData(
@@ -420,7 +417,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   /// Return:
   /// - [List] about size
   ///
-  List<double> _getCustomItemsHeights(List<String> items) {
+  List<double>? _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < items.length; i++) {
       itemsHeights.addAll([32, 1]);

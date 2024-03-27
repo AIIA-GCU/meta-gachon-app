@@ -246,6 +246,7 @@ class Admit {
   final String _memberInfo;
   final String _review;
   final Uint8List _photo;
+  final String _me;
   final bool? _evaluation;
 
   Admit(
@@ -257,6 +258,7 @@ class Admit {
       this._memberInfo,
       this._review,
       this._photo,
+      this._me,
       this._evaluation
       );
 
@@ -275,6 +277,8 @@ class Admit {
   String get review => _review;
 
   Uint8List get photo => _photo;
+
+  String get me => _me;
 
   bool? get evaluation => _evaluation;
 
@@ -299,6 +303,7 @@ class Admit {
       json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo']),
+      json['me'],
       json['evaluation']
     );
   }

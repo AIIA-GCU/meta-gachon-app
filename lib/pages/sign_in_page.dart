@@ -56,12 +56,13 @@ class _SignInPageState extends State<SignInPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.asset(ImgPath.aiiaColor),
-                              const Text('Login', style: TextStyle(
-                                height: 1.8,
-                                fontSize: 40,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              )),
+                              const Text('Login',
+                                  style: TextStyle(
+                                    height: 1.8,
+                                    fontSize: 40,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  )),
                               Text(
                                 '가천대학교 아이디로 로그인을 해주세요.',
                                 style: KR.label2.copyWith(color: MGColor.base4),
@@ -69,16 +70,18 @@ class _SignInPageState extends State<SignInPage> {
                             ],
                           ),
                         ),
-                    
+
                         AnimatedSize(
                           curve: Curves.ease,
                           duration: const Duration(milliseconds: 100),
                           alignment: Alignment.topCenter,
-                          child: SizedBox(height:
-                          ratio.height * (MediaQuery.of(context).viewInsets.bottom > 0 ? 10 : 70)
-                          ),
+                          child: SizedBox(
+                              height: ratio.height *
+                                  (MediaQuery.of(context).viewInsets.bottom > 0
+                                      ? 10
+                                      : 70)),
                         ),
-                                  
+
                         /// input
                         Form(
                           key: key,
@@ -96,9 +99,8 @@ class _SignInPageState extends State<SignInPage> {
                                   controller: idController,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
-                                      horizontal: ratio.width * 12,
-                                      vertical: ratio.height * 12
-                                    ),
+                                        horizontal: ratio.width * 12,
+                                        vertical: ratio.height * 12),
                                     hintText: '아이디 입력',
                                     hintStyle: KR.subtitle3.copyWith(
                                       color: MGColor.base4,
@@ -128,8 +130,7 @@ class _SignInPageState extends State<SignInPage> {
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.symmetric(
                                             horizontal: ratio.width * 12,
-                                            vertical: ratio.height * 12
-                                        ),
+                                            vertical: ratio.height * 12),
                                         hintStyle: KR.subtitle3.copyWith(
                                           color: MGColor.base4,
                                         ),
@@ -138,16 +139,19 @@ class _SignInPageState extends State<SignInPage> {
                                     Positioned(
                                       right: 0,
                                       child: GestureDetector(
-                                        onTapDown: (tapDetails) => setState(() => isPasswordVisible = true),
-                                        onTapUp: (tapDetails) => setState(() => isPasswordVisible = false),
-                                        onTapCancel: () => setState(() => isPasswordVisible = false),
+                                        onTapDown: (tapDetails) => setState(
+                                            () => isPasswordVisible = true),
+                                        onTapUp: (tapDetails) => setState(
+                                            () => isPasswordVisible = false),
+                                        onTapCancel: () => setState(
+                                            () => isPasswordVisible = false),
                                         behavior: HitTestBehavior.translucent,
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: ratio.width * 12,
-                                            vertical: 14
-                                          ),
-                                          child: Icon(isPasswordVisible
+                                              horizontal: ratio.width * 12,
+                                              vertical: 14),
+                                          child: Icon(
+                                            isPasswordVisible
                                                 ? MGIcon.eyeOn
                                                 : MGIcon.eyeOff,
                                             color: MGColor.base4,
@@ -160,30 +164,30 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               ),
                               SizedBox(height: ratio.height * 4),
-                              Text(
-                                  errorMessage,
-                                  style: KR.label2.copyWith(color: MGColor.systemError)
-                              ),
+                              Text(errorMessage,
+                                  style: KR.label2
+                                      .copyWith(color: MGColor.systemError)),
                             ],
                           ),
                         ),
-              
+
                         AnimatedSize(
                           curve: Curves.ease,
                           duration: const Duration(milliseconds: 100),
                           alignment: Alignment.topCenter,
-                          child: SizedBox(height: ratio.height *
-                              (MediaQuery.of(context).viewInsets.bottom > 0 ? 10 : errorMessage.isEmpty ? 42 : 75)
-                          ),
+                          child: SizedBox(
+                              height: ratio.height *
+                                  (MediaQuery.of(context).viewInsets.bottom > 0
+                                      ? 10
+                                      : errorMessage.isEmpty
+                                          ? 42
+                                          : 75)),
                         ),
-                                  
+
                         /// button
-                        CustomButtons.bottomButton(
-                          '로그인',
-                          MGColor.brandPrimary,
-                          () => _buttonEnabled ? trySignIn() : null,
-                          disableBackground: MGColor.base6
-                        )
+                        CustomButtons.bottomButton('로그인', MGColor.brandPrimary,
+                            () => _buttonEnabled ? trySignIn() : null,
+                            disableBackground: MGColor.base6)
                       ],
                     ),
                   ),
@@ -191,9 +195,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
           ),
-
-          if (isLoading)
-            const ProgressScreen()
+          if (isLoading) const ProgressScreen()
         ],
       ),
     );
@@ -228,13 +230,10 @@ class _SignInPageState extends State<SignInPage> {
 
         // appear main frame
         setState(() => isLoading = false);
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
+        Navigator.of(context).pushReplacement(PageRouteBuilder(
             fullscreenDialog: false,
             transitionsBuilder: slideRigth2Left,
-            pageBuilder: (_, __, ___) => const MainFrame()
-          )
-        );
+            pageBuilder: (_, __, ___) => const MainFrame()));
       } else {
         // show error message
         setState(() {
@@ -251,9 +250,7 @@ class _SignInPageState extends State<SignInPage> {
             builder: (context) => CommentPopup(
                 title: "통신 속도가 너무 느립니다!",
                 buttonColor: MGColor.brandPrimary,
-                onPressed: () => Navigator.pop(context)
-            )
-        );
+                onPressed: () => Navigator.pop(context)));
       });
     }
   }
