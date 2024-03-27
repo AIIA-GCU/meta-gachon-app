@@ -58,6 +58,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(height: ratio.height * 12),
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -227,10 +228,10 @@ class _ReservationListPageState extends State<ReservationListPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                   child: Image.asset(
-                     'assets/images/$path.png',
-                   height: ratio.height * 36,
-                 ),
+                child: Image.asset(
+                  'assets/images/$path.png',
+                  height: ratio.height * 36,
+                ),
               ),
               SizedBox(width: ratio.width * 8),
               Text('$place 예약하기', style: KR.subtitle3),
@@ -250,29 +251,23 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  Widget _listItem(Reserve reserve) {
-    late final Text firstText, secondText, thirdText;
+  Widget? _listItem(Reserve reserve) {
+    late final Text? firstText, secondText, thirdText;
+    late final placeName = reserve.place;
+
 
     if (reserve.service == ServiceType.computer) {
+
+      late final computers = placeName!.split('-')[1];
+      firstText = Text("$computers번 GPU", style: KR.subtitle3);
       secondText = Text(
         '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
         style: KR.parag2.copyWith(color: MGColor.base3),
       );
-      thirdText = Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-                text: '전담 교수님 ',
-                style: KR.parag2.copyWith(color: MGColor.base3)
-            ),
-            TextSpan(
-                text: reserve.professor,
-                style: KR.parag2.copyWith(color: MGColor.brandSecondary)
-            ),
-          ],
-        ),
-      );
-    } else {
+      thirdText = null;
+    }
+
+    if (reserve.service == ServiceType.lectureRoom || reserve.service == ServiceType.aiSpace) {
       secondText = Text(reserve.startToDate1(),
           style: KR.parag2.copyWith(color: MGColor.base3));
       thirdText = Text(reserve.toDuration(),
@@ -283,16 +278,16 @@ class _ReservationListPageState extends State<ReservationListPage> {
       firstText = Text('배정중...', style: KR.subtitle3.copyWith(color: MGColor.base3));
     } else if(reserve.service == ServiceType.lectureRoom && reserve.place == '0') { // 배정이 불가할 때 조교님이 강의실에 0을 입력하는 방식
       firstText = Text('배정 불가', style: KR.subtitle3.copyWith(color: Colors.red),);
-    } else {
-      firstText = Text(reserve.place!, style: KR.subtitle3);
+    } else if (reserve.service == ServiceType.lectureRoom || reserve.service == ServiceType.aiSpace) {
+      firstText = Text("${placeName}호 회의실", style: KR.subtitle3);
     }
 
     return GestureDetector(
       onTap: () async {
         int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
         showDialog(
-          context: context,
-          builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
+            context: context,
+            builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
         );
       },
       child: Container(
@@ -312,22 +307,19 @@ class _ReservationListPageState extends State<ReservationListPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                firstText,
+                firstText ?? SizedBox.shrink(),
                 SizedBox(height: ratio.height * 8),
-                secondText,
+                secondText ?? SizedBox.shrink(),
                 SizedBox(height: ratio.height * 4),
-                thirdText
+                thirdText ?? SizedBox.shrink()
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, -(ratio.height * 21)),
-              child: Transform.rotate(
-                angle: pi,
-                child: const Icon(
-                  MGIcon.back,
-                  size: 24,
-                  color: MGColor.base3,
-                ),
+            Transform.rotate(
+              angle: pi,
+              child: const Icon(
+                MGIcon.back,
+                size: 24,
+                color: MGColor.base3,
               ),
             )
           ],
@@ -348,8 +340,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
     widget.setLoading(false);
     if (temp != null || temp!.isNotEmpty) {
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ReservePage(service, availableRoom: temp))
+          MaterialPageRoute(
+              builder: (context) => ReservePage(service, availableRoom: temp))
       );
     } else {
       late String str;
