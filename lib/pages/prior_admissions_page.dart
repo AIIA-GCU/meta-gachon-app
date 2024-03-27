@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/pages/admit_page.dart';
 
 import '../config/app/_export.dart';
 import '../config/server/_export.dart';
