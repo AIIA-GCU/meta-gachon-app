@@ -211,7 +211,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   }
 
   Future<void> _doAdmission() async {
-    List<Reserve>? result = await RestAPI.getPriorAdmittedReservation();
+    List<Reserve>? result = await RestAPI.getPreAdmittedReservation();
     if (result != null && result.isNotEmpty) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => PriorAdmissionsPage(result)));

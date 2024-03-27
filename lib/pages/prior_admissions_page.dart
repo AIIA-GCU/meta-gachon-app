@@ -7,6 +7,7 @@ import '../config/app/_export.dart';
 import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
+import 'admit_page.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
   const PriorAdmissionsPage(this.items, {super.key});

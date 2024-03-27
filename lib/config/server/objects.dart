@@ -303,7 +303,7 @@ class Admit {
       json['memberInfo'] ?? '',
       json['review'],
       base64Decode(json['photo']),
-      json['me'],
+      json['me'] ?? '',
       json['evaluation']
     );
   }

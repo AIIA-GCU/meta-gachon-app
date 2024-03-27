@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mata_gachon/config/app/_export.dart';
-import 'package:mata_gachon/config/server/_export.dart';
-import 'package:mata_gachon/widgets/text_field.dart';
+
+import '../config/app/_export.dart';
+import '../config/server/_export.dart';
 
 import '../widgets/button.dart';
-import '../widgets/layout.dart';
 import '../widgets/calender_widget.dart';
-import '../widgets/select_time_widgets.dart';
+import '../widgets/layout.dart';
 import '../widgets/popup_widgets.dart';
+import '../widgets/select_place_widget.dart';
+import '../widgets/select_time_widgets.dart';
 import '../widgets/small_widgets.dart';
+import '../widgets/text_field.dart';
 
 class ReservePage extends StatefulWidget {
   const ReservePage(this.service, {
@@ -198,8 +200,7 @@ class _ReservePageState extends State<ReservePage> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)),
-                          child: CustomTimePicker(
-                            service: widget.service,
+                          child: CustomTimePicker(widget.service,
                             place: _selectedPlace,
                             date: _selectedDate!,
                             begin: _selectedEnter?.hour,
@@ -552,8 +553,8 @@ class _ReservePageState extends State<ReservePage> {
       _firstWidgets.add(SelectingComputerWidget(
         _selectedEnter == null ? null : widget.availableRoom,
         onSelected: (com) {
-          _selectedRoom = com;
-          if (_selectedRoom != null && _selectedEnter != null) {
+          _selectedPlace = com;
+          if (_selectedPlace != null && _selectedEnter != null) {
             setState(() {
               if (!_canTime) {
                 _canTime = true;
@@ -641,10 +642,10 @@ class _ReservePageState extends State<ReservePage> {
               _selectedEnter = s;
               _selectedEnd = e;
               comReserveStreamListener.add(widget.availableRoom);
-              if (_selectedRoom != null && _selectedEnter != null) {
+              if (_selectedPlace != null && _selectedEnter != null) {
                 setState(() {
                   if (widget.reserve != null
-                      && _selectedRoom == widget.reserve!.place
+                      && _selectedPlace == widget.reserve!.place
                       && _selectedDate == widget.reserve!.startToDate2()) {
                     _selectedEnter = widget.reserve!.startTime;
                     _selectedEnd = widget.reserve!.endTime;
