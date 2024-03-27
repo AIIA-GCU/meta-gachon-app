@@ -713,11 +713,36 @@ class GradePopup extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(myInfo.ratingName, style: EN.subtitle1),
             SizedBox(height: ratio.height * 40),
-            Text(
-              '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔하네요!',
-              style: KR.parag2.copyWith(color: MGColor.base2),
-              textAlign: TextAlign.center,
-            ),
+            if (myInfo.rating == 1)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n2주간 예약을 할 수 없습니다.',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 2)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n7일 예약을 할 수 없습니다.',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 3)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n잘 하고 있어요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 4)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n깨끗하게 사용중이네요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 5)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔해요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
             SizedBox(height: ratio.height * 16),
             if (showDuration)
               Text(
