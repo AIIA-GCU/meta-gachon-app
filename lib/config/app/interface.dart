@@ -29,6 +29,13 @@ import 'enum.dart';
 /// 학교 바코드
 const String barcode = "http://m.site.naver.com/12XHv";
 
+class qrRoom {
+  final String name;
+  final String code;
+
+  qrRoom({required this.name, required this.code});
+}
+
 /// 약관
 const String usingServiceTerm = """제 1 조 (목적)
 

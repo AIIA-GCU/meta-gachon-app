@@ -465,7 +465,7 @@ class ReservationPopup extends StatelessWidget {
   void _qr(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context)
-      => QrScannerPage(onMatchedCode: () => Navigator.pop(context)))
+      => QrScannerPage(reservationId: item.reservationId, room: item.place, onMatchedCode: () => Navigator.pop(context)))
     );
   }
 
