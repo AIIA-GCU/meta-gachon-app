@@ -1019,10 +1019,7 @@ class GradeExplainPopup extends StatelessWidget {
                   height: ratio.height * 26,
                 ),
                 GradeButton(),
-                SizedBox(
-                  height: ratio.height * 12,
-                ),
-                Text("하루 동안 보지 않기",style: KR.grade1,)
+                TextButton(child: Text("하루 동안 보지 않기",style: KR.grade1), onPressed: () => Navigator.pop(context),)
               ],
             ),
           ),
@@ -1047,7 +1044,7 @@ class GradeButton extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           color: MGColor.brandPrimary,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
         ),
           child: Center(
             child: Text(
