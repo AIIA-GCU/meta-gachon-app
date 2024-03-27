@@ -822,7 +822,8 @@ class _ReservePageState extends State<ReservePage> {
     } else if (_numberCtr.text.isEmpty) {
       title = '인원 수를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
-    } else if (!_isSolo && _userNumList.isEmpty) {
+    } else if (widget.service != ServiceType.lectureRoom &&
+        !_isSolo && _userNumList.isEmpty) {
       title = '추가 이용자를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
