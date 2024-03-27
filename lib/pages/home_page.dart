@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           ratio.width * 16,
-          0,
+          ratio.height * 12,
           ratio.width * 16,
           ratio.height * 16
         ),
@@ -113,12 +113,13 @@ class _HomePageState extends State<HomePage> {
                           "내 인증 확인하기",
                           ImgPath.home1,
                           checkMyAdmission
-                      )
+                      ),
+                      SizedBox(height: ratio.height * 30)
                     ]
                 ),
               )
             ]
-        )
+        ),
       ),
     );
   }
