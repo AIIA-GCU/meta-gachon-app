@@ -58,8 +58,8 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
     return GestureDetector(
       onTap: () => _moveToAdmitPage(reserve),
       child: Container(
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,
@@ -79,17 +79,14 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
                 Text(reserve.startToDate2(), style: EN.subtitle3)
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, -(ratio.height * 21)),
-              child: Transform.rotate(
-                angle: pi,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    MGIcon.back,
-                    size: 24,
-                    color: Colors.black,
-                  ),
+            Transform.rotate(
+              angle: pi,
+              child: Container(
+                alignment: Alignment.center,
+                child: const Icon(
+                  MGIcon.back,
+                  size: 24,
+                  color: Colors.black,
                 ),
               ),
             )

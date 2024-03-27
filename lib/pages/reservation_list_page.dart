@@ -97,8 +97,9 @@ class _ReservationListPageState extends State<ReservationListPage> {
     return FutureBuilder<List<Reserve>?>(
       future: reserves.isEmpty ? RestAPI.getRemainReservation() : null,
       builder: (context, snapshot) {
+        Widget child;
         if (snapshot.hasError) {
-          return Container(
+          child = Container(
               height: 218,
               alignment: Alignment.center,
               child: Text(
@@ -107,32 +108,33 @@ class _ReservationListPageState extends State<ReservationListPage> {
                       color: MGColor.base3)
               )
           );
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-        if (snapshot.hasData) reserves = snapshot.data!;
-        if (reserves.isNotEmpty) {
-          return RefreshIndicator(
-            displacement: 0,
-            color: MGColor.brandPrimary,
-            onRefresh: _onRefreshed,
-            child: ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics()
-                  .applyTo(const BouncingScrollPhysics()),
-              itemCount: reserves.length,
-              itemBuilder: (_, index) => _listItem(reserves[index])
-            ),
-          );
         } else {
-          return Container(
-              height: ratio.height * 594,
-              alignment: Alignment.center,
-              child: Text(
-                  '아직 예약 내역이 없어요!',
-                  style: KR.subtitle4.copyWith(
-                      color: MGColor.base3)
-              )
-          );
+          if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+          if (snapshot.hasData) reserves = snapshot.data!;
+          if (reserves.isNotEmpty) {
+            child = ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics()
+                    .applyTo(const BouncingScrollPhysics()),
+                itemCount: reserves.length,
+                itemBuilder: (_, index) => _listItem(reserves[index])
+            );
+          } else {
+            child = Container(
+                height: ratio.height * 594,
+                alignment: Alignment.center,
+                child: Text(
+                    '아직 예약 내역이 없어요!',
+                    style: KR.subtitle4.copyWith(color: MGColor.base3)
+                )
+            );
+          }
         }
+        return RefreshIndicator(
+          displacement: 0,
+          color: MGColor.brandPrimary,
+          onRefresh: _onRefreshed,
+          child: child
+        );
       }
     );
   }
@@ -262,34 +264,38 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   Widget? _listItem(Reserve reserve) {
-    late final Text? firstText, secondText, thirdText;
-    late final placeName = reserve.place;
+    late final Text firstText, secondText;
+    late final Text? thirdText;
+    var place = reserve.place;
 
-
-    if (reserve.service == ServiceType.computer) {
-
-      late final computers = placeName!.split('-')[1];
-      firstText = Text("$computers번 GPU", style: KR.subtitle3);
+    if (reserve.service == ServiceType.lectureRoom) {
+      if (reserve.place == '-1') {
+        firstText = Text('배정중...', style: KR.subtitle3.copyWith(color: MGColor.base3));
+      } else if(reserve.place == '0') {
+        firstText = Text('배정 불가', style: KR.subtitle3.copyWith(color: Colors.red));
+      } else {
+        firstText = Text("$place호", style: KR.subtitle3);
+      }
+      secondText = Text(reserve.startToDate1(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
+      thirdText = Text(reserve.toDuration(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
+    } else if (reserve.service == ServiceType.aiSpace) {
+      firstText = Text("$place 회의실", style: KR.subtitle3);
+      secondText = Text(reserve.startToDate1(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
+      thirdText = Text(reserve.toDuration(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
+    } else {
+      firstText = Text(
+          "${place!.split('-')[1]}번 컴퓨터",
+          style: KR.subtitle3
+      );
       secondText = Text(
         '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
         style: KR.parag2.copyWith(color: MGColor.base3),
       );
       thirdText = null;
-    }
-
-    if (reserve.service == ServiceType.lectureRoom || reserve.service == ServiceType.aiSpace) {
-      secondText = Text(reserve.startToDate1(),
-          style: KR.parag2.copyWith(color: MGColor.base3));
-      thirdText = Text(reserve.toDuration(),
-          style: KR.parag2.copyWith(color: MGColor.base3));
-    }
-
-    if (reserve.service == ServiceType.lectureRoom && reserve.place == '-1') {
-      firstText = Text('배정중...', style: KR.subtitle3.copyWith(color: MGColor.base3));
-    } else if(reserve.service == ServiceType.lectureRoom && reserve.place == '0') { // 배정이 불가할 때 조교님이 강의실에 0을 입력하는 방식
-      firstText = Text('배정 불가', style: KR.subtitle3.copyWith(color: Colors.red),);
-    } else if (reserve.service == ServiceType.lectureRoom || reserve.service == ServiceType.aiSpace) {
-      firstText = Text("${placeName}호 회의실", style: KR.subtitle3);
     }
 
     return GestureDetector(
@@ -317,11 +323,11 @@ class _ReservationListPageState extends State<ReservationListPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                firstText ?? SizedBox.shrink(),
+                firstText,
                 SizedBox(height: ratio.height * 8),
-                secondText ?? SizedBox.shrink(),
+                secondText,
                 SizedBox(height: ratio.height * 4),
-                thirdText ?? SizedBox.shrink()
+                thirdText ?? const SizedBox.shrink()
               ],
             ),
             Transform.rotate(
