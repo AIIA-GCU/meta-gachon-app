@@ -114,7 +114,7 @@ class _MyPageState extends State<MyPage> {
             TileButtonCard(items: [
               ///내 등급
               TileButton(
-                  onTap: () => _showGradePopup(context),
+                  onTap: () => _showGradeExplainPopup(context),
                   padding: EdgeInsets.symmetric(
                       vertical: 2, horizontal: ratio.width * 32),
                   child: Column(
@@ -252,14 +252,12 @@ class _MyPageState extends State<MyPage> {
       ]),
     );
   }
-
-  void _showGradePopup(BuildContext context) {
+  void _showGradeExplainPopup(BuildContext context) {
     showDialog(
         context: context,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => const GradePopup());
+        builder: (context) => const GradeExplainPopup());
   }
-
   void _floatMyAdmissionPage(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
