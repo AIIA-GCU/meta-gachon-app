@@ -102,6 +102,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                 children: [
                   Text("예약 시간", style: KR.parag1),
                   const SizedBox(width: 12),
+                  if (widget.service == ServiceType.aiSpace)
                   Text(
                     '예약은 최대 3시간까지 가능합니다',
                     style: KR.label2.copyWith(color: MGColor.brandPrimary)
