@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:mata_gachon/pages/admit_page.dart';
-
 import '../config/app/_export.dart';
+
 import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
+import 'admit_page.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
   const PriorAdmissionsPage(this.items, {super.key});
@@ -62,16 +62,13 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
         )
       ),
       child: Container(
-        color: Colors.white,
-        margin: EdgeInsets.fromLTRB(
-          ratio.width * 16,
-          0,
-          ratio.width * 16,
-          12
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: ratio.width * 16,
-          vertical: 16
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.white,
+            border: stdFormat3.format(reserve.startTime) == today
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

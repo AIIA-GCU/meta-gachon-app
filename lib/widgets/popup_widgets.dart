@@ -148,7 +148,18 @@ class ReservationPopup extends StatelessWidget {
     late Text place, time1, time2;
     late String statusMsg;
     late Widget button;
-    
+    late String path;
+      switch (item.service) {
+        case ServiceType.aiSpace:
+          path = "graphic_meta";
+          break;
+        case ServiceType.lectureRoom:
+          path = "graphic_class";
+          break;
+        case ServiceType.computer:
+          path = "graphic_gpu";
+          break;
+      }
     if (item.service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
     } else {
@@ -294,8 +305,8 @@ class ReservationPopup extends StatelessWidget {
       button = const SizedBox.shrink();
     }
 
-
     return Dialog(
+
       insetPadding: EdgeInsets.zero,
       child: Container(
         width: ratio.width * 326,
@@ -312,9 +323,10 @@ class ReservationPopup extends StatelessWidget {
               width: ratio.height * 120,
               height: ratio.height * 120,
               decoration: ShapeDecoration(
-                image: const DecorationImage(
+                image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage(ImgPath.home4)),
+
+                  image: AssetImage('assets/images/$path.png')),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),
@@ -569,17 +581,6 @@ class AdmissionPopup extends StatelessWidget {
                   Text(item.date, style: KR.parag2.copyWith(color: MGColor.base3)),
                   SizedBox(height: ratio.height * 8),
                   Text(item.time, style: EN.parag2.copyWith(color: MGColor.base3)),
-                ],
-              ),
-
-              SizedBox(height: ratio.height * 24),
-
-              /// 대표자
-              Column(
-                children: [
-                  Text("대표자", style: KR.parag2),
-                  SizedBox(height: ratio.height * 8),
-                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
                 ],
               ),
 

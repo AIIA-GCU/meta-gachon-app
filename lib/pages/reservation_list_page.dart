@@ -140,6 +140,18 @@ class _ReservationListPageState extends State<ReservationListPage> {
     final String place = service == ServiceType.aiSpace
         ? "AI 인큐베이터" : service == ServiceType.lectureRoom
         ? "강의실" : "GPU 컴퓨터";
+    late String path;
+    switch (service) {
+      case ServiceType.aiSpace:
+        path = "meta2";
+        break;
+      case ServiceType.lectureRoom:
+        path = "class2";
+        break;
+      case ServiceType.computer:
+        path = "gpu2";
+        break;
+    }
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
@@ -157,10 +169,10 @@ class _ReservationListPageState extends State<ReservationListPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  ImgPath.home4,
-                  height: ratio.height * 36,
-                ),
+                   child: Image.asset(
+                     'assets/images/$path.png',
+                   height: ratio.height * 36,
+                 ),
               ),
               SizedBox(width: ratio.width * 8),
               Text('$place 예약하기', style: KR.subtitle3),

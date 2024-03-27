@@ -5,8 +5,6 @@ import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/prior_admissions_page.dart';
 import 'package:mata_gachon/widgets/button.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
-
-import 'admit_page.dart';
 import 'my_admission_list_page.dart';
 import '../widgets/small_widgets.dart';
 
@@ -58,7 +56,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      ImgPath.home5,
+                      ImgPath.small1,
                       height: ratio.width * 48,
                     ),
                   ),

@@ -39,7 +39,6 @@ class MyPage extends StatelessWidget {
                 child: Row(
                     children: [
                       /// 이미지
-                      /// Todo: 바꿀 필요 있음
                       Container(
                         width: ratio.width * 170,
                         height: ratio.width * 170,

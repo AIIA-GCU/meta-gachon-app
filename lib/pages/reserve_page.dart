@@ -13,9 +13,11 @@ import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
 class ReservePage extends StatefulWidget {
-  const ReservePage(this.service,
-      {Key? key, required this.availableRoom, this.reserve})
-      : super(key: key);
+  const ReservePage(this.service, {
+    Key? key,
+    required this.availableRoom,
+    this.reserve
+  }) : super(key: key);
 
   final ServiceType service;
   final List<String> availableRoom;
@@ -24,11 +26,9 @@ class ReservePage extends StatefulWidget {
   @override
   State<ReservePage> createState() => _ReservePageState();
 }
-
 class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<SliverAnimatedListState> _listKey =
-  GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
   ///textfield controllor
   final TextEditingController _stuNumCtr = TextEditingController();
@@ -49,7 +49,7 @@ class _ReservePageState extends State<ReservePage> {
   late Color _addUserGuideline; // for widget
 
   /// 예약 정보
-  String? _selectedRoom; //강의실
+  String? _selectedPlace; //강의실
   String? _selectedDate; //날짜
   DateTime? _selectedEnter, _selectedEnd; // 이용 시작, 끝
   late List<String> _numberList; // 이용자 수 리스트
@@ -75,7 +75,7 @@ class _ReservePageState extends State<ReservePage> {
 
     // if modifing
     if (widget.reserve != null) {
-      _selectedRoom = widget.reserve!.place;
+      _selectedPlace = widget.reserve!.place;
       _selectedDate = stdFormat3.format(widget.reserve!.startTime);
       _selectedEnter = widget.reserve!.startTime;
       _selectedEnd = widget.reserve!.endTime;
@@ -197,8 +197,8 @@ class _ReservePageState extends State<ReservePage> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)),
                           child: CustomTimePicker(
-                            widget.service,
-                            place: _selectedRoom,
+                            service: widget.service,
+                            place: _selectedPlace,
                             date: _selectedDate!,
                             begin: _selectedEnter?.hour,
                             end: _selectedEnd?.hour,
@@ -315,64 +315,7 @@ class _ReservePageState extends State<ReservePage> {
                                                   MGColor.systemError
                                                   : _addUserGuideline))),
                                 ]),
-                              ),
-
-                              /// registers
-                              Container(
-                                width: 274 * ratio.width,
-                                margin: EdgeInsets.only(
-                                    left: 68 * ratio.width,
-                                    bottom: 12 * ratio.height),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: ratio.width * 274,
-                                      child: Wrap(
-                                        spacing: 8,
-                                        alignment: WrapAlignment.start,
-                                        children: _usersWidgets,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8 * ratio.height),
-                                    // Padding(
-                                    //   padding:
-                                    //       EdgeInsets.only(left: 12 * ratio.width),
-                                    //   child: GestureDetector(
-                                    //     onTap: () {
-                                    //       setState(() => _isSolo = !_isSolo);
-                                    //     },
-                                    //     behavior: HitTestBehavior.translucent,
-                                    //     child: Row(
-                                    //       mainAxisSize: MainAxisSize.min,
-                                    //       children: [
-                                    //         CircleAvatar(
-                                    //           radius: 12,
-                                    //           backgroundColor: Colors.transparent,
-                                    //           child: Checkbox(
-                                    //               value: _isSolo,
-                                    //               shape: const CircleBorder(),
-                                    //               side: const BorderSide(
-                                    //                   color: MGColor.base3,
-                                    //                   width: 1.6),
-                                    //               activeColor:
-                                    //                   MGColor.brandPrimary,
-                                    //               onChanged: (bool? value) {
-                                    //                 setState(
-                                    //                     () => _isSolo = value!);
-                                    //               }),
-                                    //         ),
-                                    //         SizedBox(width: 10 * ratio.width),
-                                    //         Text('추가 이용자가 없습니다.',
-                                    //             style: KR.label2.copyWith(
-                                    //                 color: MGColor.base3)),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // )
-                                  ],
-                                ),
-                              ),
+                              )
                             ],
                           ),
                         )
@@ -622,7 +565,8 @@ class _ReservePageState extends State<ReservePage> {
           ),
 
           /// 로딩 중
-          if (_loading) const ProgressScreen()
+          if (_loading)
+            const ProgressScreen()
         ],
       ),
     );
@@ -630,17 +574,21 @@ class _ReservePageState extends State<ReservePage> {
 
   /// 맨 처음 보이는 위젯
   void _initPage() {
-    debugPrint(_selectedRoom);
-
+    debugPrint(_selectedPlace);
     /// 장소 선택란
     if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
-        padding:
-        EdgeInsets.only(left: ratio.width * 20, bottom: ratio.height * 20),
-        child: const Text(
+        padding: EdgeInsets.only(
+            left: ratio.width * 20,
+            bottom: ratio.height * 20
+        ),
+        child: Text(
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
-              fontSize: 11, color: MGColor.brandPrimary, fontFamily: 'Ko'),
+            fontSize: 11,
+            color: MGColor.brandPrimary,
+            fontFamily: 'Ko'
+          ),
         ),
       ));
     } else {
@@ -651,12 +599,12 @@ class _ReservePageState extends State<ReservePage> {
               ratio.width * 16, 0, ratio.width * 16, ratio.height * 12),
           content: Row(children: [
             CustomDropdown(
-              value: _selectedRoom,
+              value: _selectedPlace,
               hint: "선택",
               items: _places,
               onChanged: (value) {
-                _selectedRoom = value;
-                if (_selectedRoom != null && _selectedDate != null) {
+                _selectedPlace = value;
+                if (_selectedPlace != null && _selectedDate != null) {
                   setState(() {
                     _numberCtr.clear();
                     _purposeCtr.clear();
@@ -696,41 +644,53 @@ class _ReservePageState extends State<ReservePage> {
           break;
       }
       _selectedEnd = _selectedEnter!.add(const Duration(days: 4));
-      debugPrint(
-          '${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
+      debugPrint('${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
       _selectedDate = stdFormat3.format(_selectedEnter!);
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
-              ratio.width * 16, 0, ratio.width * 16, ratio.height * 12),
-          padding:
-          EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: 16),
+              ratio.width * 16,
+              0,
+              ratio.width * 16,
+              ratio.height * 12
+          ),
+          padding: EdgeInsets.symmetric(
+              horizontal: ratio.width * 16,
+              vertical: 16
+          ),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12)),
           child: CustomWeekCalender(
             first: _selectedEnter!,
             last: _selectedEnd!,
             rowHeight: 32,
             rowWidth: 38 * ratio.width,
             cellStyle: CellStyle(
-              fieldTextStyle: EN.label1.copyWith(color: MGColor.base3),
-              normalDateTextStyle: EN.parag1.copyWith(color: MGColor.base1),
+              fieldTextStyle:
+              EN.label1.copyWith(color: MGColor.base3),
+              normalDateTextStyle:
+              EN.parag1.copyWith(color: MGColor.base1),
               normalDateBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
-              selectedDateTextStyle: EN.parag1.copyWith(color: Colors.white),
+              selectedDateTextStyle:
+              EN.parag1.copyWith(color: Colors.white),
               selelctedDateBoxDecoration: BoxDecoration(
                   color: MGColor.brandPrimary,
                   borderRadius: BorderRadius.circular(4)),
-              todayTextStyle: EN.parag1.copyWith(color: MGColor.brandPrimary),
+              todayTextStyle:
+              EN.parag1.copyWith(color: MGColor.brandPrimary),
               todayBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
-              rangeOutDateTextStyle: EN.parag1.copyWith(color: MGColor.base6),
+              rangeOutDateTextStyle:
+              EN.parag1.copyWith(color: MGColor.base6),
               rangeOutDateBoxDecoration: BoxDecoration(
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
             ),
-          )));
+          )
+      ));
     } else {
       _firstWidgets.add(Container(
           margin: EdgeInsets.fromLTRB(
@@ -766,14 +726,12 @@ class _ReservePageState extends State<ReservePage> {
             ),
             onSelected: (value) {
               _selectedDate = stdFormat3.format(value);
-              if ((_selectedRoom != null ||
-                  widget.service == ServiceType.lectureRoom) &&
-                  _selectedDate != null) {
+              if ((_selectedPlace != null || widget.service == ServiceType.lectureRoom) && _selectedDate != null) {
                 setState(() {
                   _numberCtr.clear();
                   _purposeCtr.clear();
                   if (widget.reserve != null &&
-                      _selectedRoom == widget.reserve!.place &&
+                      _selectedPlace == widget.reserve!.place &&
                       _selectedDate == widget.reserve!.startToDate2()) {
                     _selectedEnter = widget.reserve!.startTime;
                     _selectedEnd = widget.reserve!.endTime;
@@ -793,7 +751,7 @@ class _ReservePageState extends State<ReservePage> {
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
   bool _isSame() {
-    if (widget.reserve!.place == _selectedRoom) return true;
+    if (widget.reserve!.place == _selectedPlace) return true;
 
     if (widget.reserve!.startToDate2() == _selectedDate) return true;
 
@@ -827,7 +785,10 @@ class _ReservePageState extends State<ReservePage> {
       width: 133 * ratio.width,
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
-      padding: EdgeInsets.only(left: ratio.width * 10, right: ratio.width * 5),
+      padding: EdgeInsets.only(
+        left: ratio.width * 10,
+        right: ratio.width * 5
+      ),
       decoration: ShapeDecoration(
         color: MGColor.brandSecondary,
         shape: RoundedRectangleBorder(
@@ -846,11 +807,12 @@ class _ReservePageState extends State<ReservePage> {
                 style: KR.label2.copyWith(color: Colors.white)),
           ),
           GestureDetector(
-              onTap: () {
-                setState(() => _usersWidgets
-                    .removeWhere((widget) => widget.key == Key(memberInfo)));
-              },
-              child: const Icon(MGIcon.cross, size: 20, color: Colors.white)),
+            onTap: () {
+              setState(() => _usersWidgets
+                  .removeWhere((widget) => widget.key == Key(memberInfo)));
+            },
+            child: const Icon(MGIcon.cross, size: 20, color: Colors.white)
+          ),
         ],
       ),
     );
@@ -900,7 +862,7 @@ class _ReservePageState extends State<ReservePage> {
       end = stdFormat2.format(_selectedEnd!);
       debugPrint("""
       [reservation Info]
-        . room: $_selectedRoom
+        . room: $_selectedPlace
         . startTime: $start
         . endTime: $end
         . leader: $_leaderNumber $_leaderName
@@ -913,7 +875,7 @@ class _ReservePageState extends State<ReservePage> {
             ? await RestAPI.patchReservation(
             reservationId: widget.reserve!.reservationId,
             service: widget.service,
-            place: _selectedRoom,
+            place: _selectedPlace,
             startTime: start,
             endTime: end,
             leader: widget.reserve!.leaderInfo,
@@ -923,7 +885,7 @@ class _ReservePageState extends State<ReservePage> {
             professor: _professerCtr.text)
             : await RestAPI.addReservation(
             service: widget.service,
-            place: _selectedRoom,
+            place: _selectedPlace,
             startTime: start,
             endTime: end,
             number: number,
@@ -950,7 +912,7 @@ class _ReservePageState extends State<ReservePage> {
       } on TimeoutException {
         title = '통신 속도가 너무 느립니다!';
         onPressed = () => Navigator.pop(context);
-      } catch (_) {
+      } catch(_) {
         title = '예약할 수 없는 상태입니다.';
         onPressed = () => Navigator.pop(context);
       }
@@ -961,8 +923,9 @@ class _ReservePageState extends State<ReservePage> {
       showDialog(
           context: context,
           barrierColor: MGColor.barrier,
-          builder: (context) =>
-              CommentPopup(title: title, onPressed: onPressed)).then((_) {
+          builder: (context) => CommentPopup(
+              title: title, onPressed: onPressed)
+      ).then((_) {
         if (allClear) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
