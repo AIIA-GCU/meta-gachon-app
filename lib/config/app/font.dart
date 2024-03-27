@@ -15,6 +15,7 @@
 ///
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/app/_export.dart';
 
 import 'interface.dart';
 
@@ -39,6 +40,14 @@ class KR {
   static TextStyle chattitle = TextStyle(fontSize: ratio.height * 16, fontWeight: FontWeight.w600, fontFamily: 'Ko', color: Colors.white);
   static TextStyle chat = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.white);
   static TextStyle chattime = TextStyle(fontSize: ratio.height * 12, fontFamily: 'Ko', color: Colors.grey);
+  static TextStyle grade1 = TextStyle(fontSize: ratio.height * 14,fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.grey);
+  static TextStyle grade2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.red);
+  static TextStyle grade3 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'Ko', color: Colors.red);
+  static TextStyle grade4 = TextStyle(fontSize: ratio.height * 14,fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGColor.base3);
+  static TextStyle grade5 = TextStyle(fontSize: ratio.height * 12,fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGColor.base3);
+  static TextStyle grade6 = TextStyle(fontSize: ratio.height * 14,fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGColor.brandPrimary);
+  static TextStyle grade7 = TextStyle(fontSize: ratio.height * 12,fontWeight: FontWeight.w400, fontFamily: 'Ko', color: MGColor.brandPrimary);
+  static TextStyle grade8 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w500, fontFamily: 'Ko', color: Colors.white);
 }
 
 /// 영문 & 숫자 폰트
@@ -55,5 +64,6 @@ class EN {
   static TextStyle parag2 = TextStyle(fontSize: ratio.height * 14, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle label1 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w400, fontFamily: 'En');
   static TextStyle label2 = TextStyle(fontSize: ratio.height * 11, fontWeight: FontWeight.w400, fontFamily: 'En');
+  static TextStyle grade7 = TextStyle(fontSize: ratio.height * 12,fontWeight: FontWeight.w400, fontFamily: 'En', color: MGColor.brandPrimary);
   static TextStyle label3 = TextStyle(fontSize: ratio.height * 12, fontWeight: FontWeight.w300, fontFamily: 'En');
 }

@@ -58,7 +58,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: ratio.height * 12),
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -67,8 +66,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
             const SizedBox(height: 12)
           ]
         ),
-        expandedHeight: 232,
-        collapsedHeight: 232,
+        expandedHeight: 204,
+        collapsedHeight: 204,
       ),
 
       SliverAppBar(
@@ -157,7 +156,36 @@ class _ReservationListPageState extends State<ReservationListPage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () => doReservation(service),
+        onTap: () => showDialog(context: context, builder: (context){
+          switch (myInfo.rating) {
+            case 1 :
+              return CommentPopup(title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context));
+            case 2 :
+              return CommentPopup(title: "STONE 등급입니다. \n 2주간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context));
+            case 4 :
+              return CommentPopup(title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  });
+            case 5 :
+              return CommentPopup(title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  });
+            case 3 :
+            default :
+              return CommentPopup(title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
+                  onPressed: () {
+                    Navigator.pop(context);
+                    doReservation(service);
+                  });
+          }
+        }
+        ),
         child: Container(
           height: 56,
           decoration: BoxDecoration(
