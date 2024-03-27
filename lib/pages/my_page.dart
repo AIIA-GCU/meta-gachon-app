@@ -174,25 +174,25 @@ class _MyPageState extends State<MyPage> {
             ])),
 
         /// 설정
-        TileButton(
-            onTap: () => _floatSettingPage(context),
-            padding: EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Icon(
-                  My_page.setting,
-                  color: MGColor.base3,
-                ),
-                SizedBox(width: ratio.width * 16),
-                Text('설정', style: KR.subtitle3.copyWith(color: MGColor.base3)),
-                Spacer(),
-                Transform.rotate(
-                    angle: pi,
-                    child: Icon(MGIcon.back,
-                        size: ratio.width * 24, color: MGColor.base4))
-              ],
-            )),
+        // TileButton(
+        //     onTap: () => _floatSettingPage(context),
+        //     padding: EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
+        //     child: Row(
+        //       mainAxisSize: MainAxisSize.max,
+        //       children: [
+        //         Icon(
+        //           My_page.setting,
+        //           color: MGColor.base3,
+        //         ),
+        //         SizedBox(width: ratio.width * 16),
+        //         Text('설정', style: KR.subtitle3.copyWith(color: MGColor.base3)),
+        //         Spacer(),
+        //         Transform.rotate(
+        //             angle: pi,
+        //             child: Icon(MGIcon.back,
+        //                 size: ratio.width * 24, color: MGColor.base4))
+        //       ],
+        //     )),
         TileButton(
             onTap: () => _trySignOut(context),
             padding: EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
@@ -244,7 +244,7 @@ class _MyPageState extends State<MyPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('버전', style: KR.parag2.copyWith(color: MGColor.base3)),
-              Text('1.1.0', style: EN.parag2.copyWith(color: MGColor.base3)),
+              Text('1.0.0', style: EN.parag2.copyWith(color: MGColor.base3)),
             ],
           ),
         ),
