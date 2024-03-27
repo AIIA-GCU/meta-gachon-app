@@ -137,6 +137,7 @@ class _ReservePageState extends State<ReservePage> {
         children: [
           Scaffold(
             appBar: AppBar(
+                centerTitle: false,
                 titleSpacing: 0,
                 leadingWidth: 48,
                 leading: IconButton(
@@ -493,10 +494,21 @@ class _ReservePageState extends State<ReservePage> {
                         ),
 
                       /// 사용 목적
-                      LargeTextField(
-                          title: '사용 목적',
-                          hint: '이용 목적을 간단하게 기술해주세요',
-                          controller: _purposeCtr)
+                      if (widget.service == ServiceType.aiSpace)
+                        LargeTextField(
+                            title: '사용 목적',
+                            hint: '회의실을 예약하는 목적을 입력해 주세요',
+                            controller: _purposeCtr)
+                      else if (widget.service == ServiceType.computer)
+                        LargeTextField(
+                            title: '사용 목적',
+                            hint: 'GPU를 예약하는 목적을 입력해 주세요',
+                            controller: _purposeCtr)
+                      else if (widget.service == ServiceType.lectureRoom)
+                          LargeTextField(
+                              title: '사용 목적',
+                              hint: '강의실을 예약하는 목적을 입력해 주세요',
+                              controller: _purposeCtr)
                     ]);
 
                     return SizeTransition(
@@ -537,8 +549,9 @@ class _ReservePageState extends State<ReservePage> {
     if (widget.service == ServiceType.lectureRoom) {
       _firstWidgets.add(Padding(
         padding: EdgeInsets.only(
+            top: ratio.height * 8,
             left: ratio.width * 20,
-            bottom: ratio.height * 20
+            bottom: ratio.height * 12
         ),
         child: Text(
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
