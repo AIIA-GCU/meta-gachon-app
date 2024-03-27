@@ -832,6 +832,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
+                    height: ratio. height * 70,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -878,6 +879,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
+                    height: ratio. height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -924,6 +926,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
+                    height: ratio. height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -970,6 +973,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
+                    height: ratio. height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
