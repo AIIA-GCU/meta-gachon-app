@@ -215,6 +215,7 @@ const String personalInformationCollectionTerm = """이용자 식별 및 본인�
 
 /// Stream
 final StreamController<StreamType> listListener = StreamController<StreamType>.broadcast();
+late StreamController<List<String>> comReserveStreamListener;
 
 /// date format
 final stdFormat1 = DateFormat('yyyy-MM-dd-HH:mm');

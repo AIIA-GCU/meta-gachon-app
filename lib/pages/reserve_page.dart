@@ -8,6 +8,7 @@ import 'package:mata_gachon/widgets/text_field.dart';
 
 import '../widgets/button.dart';
 import '../widgets/layout.dart';
+import '../widgets/calender_widget.dart';
 import '../widgets/select_time_widgets.dart';
 import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
@@ -547,6 +548,21 @@ class _ReservePageState extends State<ReservePage> {
           ),
         ),
       ));
+    } else if (widget.service == ServiceType.computer) {
+      _firstWidgets.add(SelectingComputerWidget(
+        _selectedEnter == null ? null : widget.availableRoom,
+        onSelected: (com) {
+          _selectedRoom = com;
+          if (_selectedRoom != null && _selectedEnter != null) {
+            setState(() {
+              if (!_canTime) {
+                _canTime = true;
+                _listKey.currentState!.insertAllItems(0, 4);
+              }
+            });
+          }
+        },
+      ));
     } else {
       _firstWidgets.add(CustomContainer(
           title: widget.service == ServiceType.aiSpace ? '회의실' : '컴퓨터',
@@ -580,29 +596,7 @@ class _ReservePageState extends State<ReservePage> {
 
     /// 날짜 선택란
     if (widget.service == ServiceType.computer) {
-      _selectedEnter = DateTime.now();
-      switch (DateTime.now().weekday) {
-        case 1:
-          break;
-        case 2:
-          _selectedEnter!.subtract(const Duration(days: 1));
-        case 3:
-          _selectedEnter!.subtract(const Duration(days: 1));
-        case 4:
-          _selectedEnter!.subtract(const Duration(days: 1));
-        case 5:
-          _selectedEnter!.subtract(const Duration(days: 1));
-          break;
-        case 6:
-          _selectedEnter!.add(const Duration(days: 1));
-        case 7:
-          _selectedEnter!.add(const Duration(days: 1));
-          break;
-      }
-      _selectedEnd = _selectedEnter!.add(const Duration(days: 4));
-      debugPrint('${stdFormat3.format(_selectedEnter!)} ~ ${stdFormat3.format(_selectedEnd!)}');
-      _selectedDate = stdFormat3.format(_selectedEnter!);
-      _firstWidgets.add(Container(
+      _firstWidgets.insert(0, Container(
           margin: EdgeInsets.fromLTRB(
               ratio.width * 16,
               0,
@@ -617,8 +611,6 @@ class _ReservePageState extends State<ReservePage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12)),
           child: CustomWeekCalender(
-            first: _selectedEnter!,
-            last: _selectedEnd!,
             rowHeight: 32,
             rowWidth: 38 * ratio.width,
             cellStyle: CellStyle(
@@ -645,6 +637,25 @@ class _ReservePageState extends State<ReservePage> {
                   color: MGColor.base10,
                   borderRadius: BorderRadius.circular(4)),
             ),
+            onSelected: (s, e) {
+              _selectedEnter = s;
+              _selectedEnd = e;
+              comReserveStreamListener.add(widget.availableRoom);
+              if (_selectedRoom != null && _selectedEnter != null) {
+                setState(() {
+                  if (widget.reserve != null
+                      && _selectedRoom == widget.reserve!.place
+                      && _selectedDate == widget.reserve!.startToDate2()) {
+                    _selectedEnter = widget.reserve!.startTime;
+                    _selectedEnd = widget.reserve!.endTime;
+                  }
+                  if (!_canTime) {
+                    _canTime = true;
+                    _listKey.currentState!.insertAllItems(0, 4);
+                  }
+                });
+              }
+            }
           )
       ));
     } else {
