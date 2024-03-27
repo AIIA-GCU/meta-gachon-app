@@ -35,10 +35,8 @@ class _ReservePageState extends State<ReservePage> {
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
   ///textfield controllor
-  final TextEditingController _stuNumCtr = TextEditingController();
-  final TextEditingController _nameCtr = TextEditingController();
   final TextEditingController _purposeCtr = TextEditingController();
-  final TextEditingController _professerCtr = TextEditingController();
+  final TextEditingController _professorCtr = TextEditingController();
   final TextEditingController _numberCtr = TextEditingController();
   final TextEditingController _userNumCtr = TextEditingController();
 
@@ -49,7 +47,7 @@ class _ReservePageState extends State<ReservePage> {
   final List<Widget> _firstWidgets = []; // 화면에 표시되는 위젯 목록
 
   /// 기타
-  late bool _isSolo, _loading, _canTime; // for utility
+  late bool _isSolo, _loading, _canTime, _existError; // for utility
   late Color _addUserGuideline; // for widget
 
   /// 예약 정보
@@ -58,7 +56,6 @@ class _ReservePageState extends State<ReservePage> {
   DateTime? _selectedEnter, _selectedEnd; // 이용 시작, 끝
   late List<String> _numberList; // 이용자 수 리스트
   late List<String> _userNumList; // 이용자 학번 리스트
-  late List<Widget> _usersWidgets; // └> 를 위한 위젯
 
   ///이용자 컨데이너 안내메세지
   String alertMessege = "대표자를 제외한 이용자의 인원 수를 입력해 주세요!";
@@ -68,14 +65,12 @@ class _ReservePageState extends State<ReservePage> {
   void initState() {
     // init
     _places = widget.availableRoom;
-    _loading = false;
-    _isSolo = _canTime = false;
+    _loading = _isSolo = _canTime = _existError = false;
     _addUserGuideline = MGColor.brandPrimary;
     _leaderNumber = myInfo.stuNum;
     _leaderName = myInfo.name;
     _numberList = [];
     _userNumList = [];
-    _usersWidgets = [];
 
     // if modifing
     if (widget.reserve != null) {
@@ -89,7 +84,6 @@ class _ReservePageState extends State<ReservePage> {
         for (int i = 0; i < temp.length; i += 2) {
           _numberList.add('${temp[i]} ${temp[i + 1]}');
         }
-        _usersWidgets = _userNumList.map((e) => _myUserBox(e)).toList();
       } else {
         _isSolo = true;
       }
@@ -104,12 +98,10 @@ class _ReservePageState extends State<ReservePage> {
 
   @override
   void dispose() {
-    _stuNumCtr.dispose();
-    _nameCtr.dispose();
     _purposeCtr.dispose();
     _numberCtr.dispose();
     _userNumCtr.dispose();
-    _professerCtr.dispose();
+    _professorCtr.dispose();
     super.dispose();
   }
 
@@ -180,7 +172,7 @@ class _ReservePageState extends State<ReservePage> {
                                   enabled: true,
                                   width: 100 * ratio.width,
                                   height: 32,
-                                  controller: _professerCtr,
+                                  controller: _professorCtr,
                                   hint: '김가천',
                                   format: [
                                     FilteringTextInputFormatter.allow(
@@ -356,38 +348,30 @@ class _ReservePageState extends State<ReservePage> {
                                       child: Row(children: [
                                         CustomTextField(
                                           enabled: !_isSolo,
-                                          width: ratio.width * 40,
+                                          width: ratio.width * 120,
                                           height: 32,
-                                          controller: _userNumCtr,
+                                          controller: _numberCtr,
                                           keyboard: TextInputType.number,
                                           hint: '학번',
                                           format: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
+                                            FilteringTextInputFormatter.digitsOnly,
                                             LengthLimitingTextInputFormatter(9),
                                           ],
                                           validator: (str) {
-                                            if (str!.isEmpty ||
-                                                str.length != 9) {
-                                              return elseMessage =
-                                              "정확한 학번을 입력해 주세요!";
-                                            } else if (_leaderNumber
-                                                .toString() ==
-                                                str) {
-                                              return elseMessage =
-                                              "대표자를 제외한 이용자의 학번을 입력해 주세요!";
-                                            } else if (_usersWidgets.any((e) =>
-                                                (e.key! as ValueKey<String>)
-                                                    .value
-                                                    .contains(str))) {
-                                              return elseMessage =
-                                              "이미 등록된 이용자입니다.";
+                                            _existError = true;
+                                            if (str!.isEmpty || str.length != 9) {
+                                              return elseMessage = "정확한 학번을 입력해 주세요!";
+                                            } else if (_leaderNumber.toString() == str) {
+                                              return elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
+                                            } else if (_numberList.any((e) => e.contains(str))) {
+                                              return elseMessage = "이미 등록된 이용자입니다.";
                                             } else {
+                                              _existError = false;
                                               return null;
                                             }
                                           },
                                         ),
-                                        SizedBox(width: ratio.width * 100),
+                                        SizedBox(width: ratio.width * 110),
                                         Material(
                                           child: InkWell(
                                             onTap: _isSolo
@@ -424,12 +408,11 @@ class _ReservePageState extends State<ReservePage> {
                                   Positioned(
                                       left: 80 * ratio.width,
                                       top: 32 + ratio.height * 14,
-                                      child: Text(elseMessage,
-                                          style: KR.label2.copyWith(
-                                              color: _isSolo
-                                                  ? _addUserGuideline =
-                                                  MGColor.systemError
-                                                  : _addUserGuideline))),
+                                      child: Text(
+                                          elseMessage,
+                                          style: KR.label2.copyWith(color: _addUserGuideline)
+                                      )
+                                  ),
                                 ]),
                               ),
 
@@ -437,7 +420,7 @@ class _ReservePageState extends State<ReservePage> {
                               Container(
                                 width: 274 * ratio.width,
                                 margin: EdgeInsets.only(
-                                    left: 68 * ratio.width,
+                                    left: 78 * ratio.width,
                                     bottom: 12 * ratio.height),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,43 +430,50 @@ class _ReservePageState extends State<ReservePage> {
                                       child: Wrap(
                                         spacing: 8,
                                         alignment: WrapAlignment.start,
-                                        children: _usersWidgets,
+                                        children: _userNumList
+                                            .map((e) => _myUserBox(e))
+                                            .toList(),
                                       ),
                                     ),
                                     SizedBox(height: 8 * ratio.height),
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.only(left: 12 * ratio.width),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() => _isSolo = !_isSolo);
-                                        },
-                                        behavior: HitTestBehavior.translucent,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 12,
-                                              backgroundColor: Colors.transparent,
-                                              child: Checkbox(
-                                                  value: _isSolo,
-                                                  shape: const CircleBorder(),
-                                                  side: const BorderSide(
-                                                      color: MGColor.base3,
-                                                      width: 1.6),
-                                                  activeColor:
-                                                  MGColor.brandPrimary,
-                                                  onChanged: (bool? value) {
-                                                    setState(
-                                                            () => _isSolo = value!);
-                                                  }),
-                                            ),
-                                            SizedBox(width: 10 * ratio.width),
-                                            Text('추가 이용자가 없습니다.',
-                                                style: KR.label2.copyWith(
-                                                    color: MGColor.base3)),
-                                          ],
-                                        ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _isSolo = !_isSolo;
+                                          if (_isSolo) {
+                                            elseMessage = "추가 이용자가 없습니다.";
+                                            _addUserGuideline = MGColor.base4;
+                                          } else {
+                                            elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
+                                            _addUserGuideline = MGColor.brandPrimary;
+                                          }
+                                        });
+                                      },
+                                      behavior: HitTestBehavior.translucent,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 12,
+                                            backgroundColor: Colors.transparent,
+                                            child: Checkbox(
+                                                value: _isSolo,
+                                                shape: const CircleBorder(),
+                                                side: const BorderSide(
+                                                    color: MGColor.base3,
+                                                    width: 1.6),
+                                                activeColor:
+                                                MGColor.brandPrimary,
+                                                onChanged: (bool? value) {
+                                                  setState(
+                                                          () => _isSolo = value!);
+                                                }),
+                                          ),
+                                          SizedBox(width: 10 * ratio.width),
+                                          Text('추가 이용자가 없습니다.',
+                                              style: KR.label2.copyWith(
+                                                  color: MGColor.base3)),
+                                        ],
                                       ),
                                     )
                                   ],
@@ -528,8 +518,10 @@ class _ReservePageState extends State<ReservePage> {
                           child: CustomButtons.bottomButton(
                               '예약하기',
                               MGColor.brandPrimary,
-                                  () => _canTime ? _reserve() : null,
-                              disableBackground: MGColor.base6)),
+                              () => _canTime ? _reserve() : null,
+                              disableBackground: MGColor.base6
+                          )
+                      )
                     ]))
               ]),
             ),
@@ -749,10 +741,10 @@ class _ReservePageState extends State<ReservePage> {
         if (MediaQuery.of(context).viewInsets.bottom > 0) {
           FocusScope.of(context).unfocus();
         }
-        alertMessege = "정상적으로 추가됐습니다";
+        elseMessage = "정상적으로 추가됐습니다";
         _addUserGuideline = MGColor.brandPrimary;
-        _userNumList.add("${_numberCtr.text}");
-        // _usersWidgets.add(_myUserBox("${_numberCtr.text}"));
+        _userNumList.add(_numberCtr.text);
+        setState(() => _numberCtr.clear());
       } else {
         _addUserGuideline = MGColor.systemError;
       }
@@ -763,7 +755,7 @@ class _ReservePageState extends State<ReservePage> {
   Widget _myUserBox(String memberInfo) {
     return Container(
       key: ValueKey<String>(memberInfo),
-      width: 133 * ratio.width,
+      width: 103 * ratio.width,
       height: 26 * ratio.height,
       margin: EdgeInsets.only(top: 8 * ratio.height),
       padding: EdgeInsets.only(
@@ -771,10 +763,9 @@ class _ReservePageState extends State<ReservePage> {
         right: ratio.width * 5
       ),
       decoration: ShapeDecoration(
-        color: MGColor.brandSecondary,
+        color: _isSolo ? MGColor.base4 : MGColor.brandSecondary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+          borderRadius: BorderRadius.circular(20))
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -785,13 +776,12 @@ class _ReservePageState extends State<ReservePage> {
                 maxLines: 1,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
-                style: KR.label2.copyWith(color: Colors.white)),
+                style: KR.parag2.copyWith(color: Colors.white)),
           ),
           GestureDetector(
-            onTap: () {
-              setState(() => _usersWidgets
-                  .removeWhere((widget) => widget.key == Key(memberInfo)));
-            },
+            onTap: () => setState(() {
+              _userNumList.removeWhere((s) => s.contains(memberInfo));
+            }),
             child: const Icon(MGIcon.cross, size: 20, color: Colors.white)
           ),
         ],
@@ -819,11 +809,12 @@ class _ReservePageState extends State<ReservePage> {
         (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
-    } else if (_numberCtr.text.isEmpty) {
+    } else if (widget.service == ServiceType.lectureRoom
+        && _numberCtr.text.isEmpty) {
       title = '인원 수를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
-    } else if (widget.service != ServiceType.lectureRoom &&
-        !_isSolo && _userNumList.isEmpty) {
+    } else if (widget.service != ServiceType.lectureRoom
+        && !_isSolo && _userNumList.isEmpty) {
       title = '추가 이용자를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
@@ -864,7 +855,7 @@ class _ReservePageState extends State<ReservePage> {
             number: number,
             userNumber: userNumber,
             purpose: _purposeCtr.text,
-            professor: _professerCtr.text)
+            professor: _professorCtr.text)
             : await RestAPI.addReservation(
             service: widget.service,
             place: _selectedPlace,
@@ -873,7 +864,7 @@ class _ReservePageState extends State<ReservePage> {
             number: number,
             userNumber: userNumber,
             purpose: _purposeCtr.text,
-            professor: _professerCtr.text);
+            professor: _professorCtr.text);
         if (response == null) {
           title = 'Not found';
           onPressed = () => Navigator.pop(context);

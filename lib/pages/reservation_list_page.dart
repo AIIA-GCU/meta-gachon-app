@@ -153,6 +153,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
         path = "gpu2";
         break;
     }
+
+    bool notTouched = true;
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
@@ -160,42 +162,45 @@ class _ReservationListPageState extends State<ReservationListPage> {
         onTap: () => showDialog(
           context: context,
           builder: (context) {
-            if (service == ServiceType.lectureRoom) {
-              if (myInfo.rating == 1) {
-                return CommentPopup(
-                  title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
-                  onPressed: () => Navigator.pop(context),
-                );
-              } else if (myInfo.rating == 2) {
-                return CommentPopup(
-                  title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
-                  onPressed: () => Navigator.pop(context),
-                );
-              } else if (myInfo.rating == 4) {
-                return CommentPopup(
-                  title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
-                  onPressed: () {
-                    Navigator.pop(context);
-                    doReservation(service);
-                  },
-                );
-              } else if (myInfo.rating == 5) {
-                return CommentPopup(
-                  title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
-                  onPressed: () {
-                    Navigator.pop(context);
-                    doReservation(service);
-                  },
-                );
-              } else {
-                // For rating 3 or any other unknown ratings
-                return CommentPopup(
-                  title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
-                  onPressed: () {
-                    Navigator.pop(context);
-                    doReservation(service);
-                  },
-                );
+            if (service == ServiceType.aiSpace) {
+              switch (myInfo.rating) {
+                case 1:
+                  return CommentPopup(
+                    title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                    onPressed: () => Navigator.pop(context),
+                  );
+                case 2:
+                  return CommentPopup(
+                    title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
+                    onPressed: () => Navigator.pop(context),
+                  );
+                case 4:
+                  return CommentPopup(
+                    title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
+                case 5:
+                  return CommentPopup(
+                    title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
+                default:
+                  return CommentPopup(
+                    title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
               }
             } else {
               if (myInfo.rating == 1) {
@@ -211,11 +216,14 @@ class _ReservationListPageState extends State<ReservationListPage> {
               }
               return CommentPopup(title: "깨끗한 이용 부탁드려요!", onPressed: () {
                 Navigator.pop(context);
+                notTouched = false;
                 doReservation(service);
               });
             }
           }
-        ),
+        ).then((value) {
+          if (notTouched && myInfo.rating > 2) doReservation(service);
+        }),
 
         child: Container(
           height: 56,

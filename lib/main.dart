@@ -84,7 +84,7 @@ Future<void> main() async {
 /// - start(Widget):
 ///   The displayed screen when running app.
 ///   If app is installed for the first time, then display [OnBoardingPage]
-///   If remaining the session, then display [SelectingServicePage]
+///   If remaining the session, then display [MainFrame]
 ///   If not both, display [SignInPage]
 ///
 class MataGachonApp extends StatefulWidget {
