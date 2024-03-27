@@ -41,7 +41,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
+      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: ratio.height * 12),
       child: NestedScrollView(
         controller: _scrollCtr,
         floatHeaderSlivers: true,
@@ -58,7 +58,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: ratio.height * 12),
+
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -216,6 +216,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
             }
           }
         ),
+
         child: Container(
           height: 56,
           decoration: BoxDecoration(
