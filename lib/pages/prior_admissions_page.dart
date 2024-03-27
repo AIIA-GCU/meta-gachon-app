@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '../config/app/_export.dart';
 
+import '../config/app/_export.dart';
 import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
-import 'admit_page.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
   const PriorAdmissionsPage(this.items, {super.key});
@@ -29,7 +28,7 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 icon: const Icon(MGIcon.back, size: 24),
-                onPressed: _onPressed
+                onPressed: _back
             ),
             title: Text('인증하기', style: KR.subtitle1.copyWith(color: MGColor.base1))
         ),
@@ -55,12 +54,7 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
 
   Widget _listItem(Reserve reserve) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        PageRouteBuilder(
-          transitionsBuilder: slideRigth2Left,
-          pageBuilder: (_, __, ___) => AdmitPage(reserve: reserve)
-        )
-      ),
+      onTap: () => _moveToAdmitPage(reserve),
       child: Container(
         margin: EdgeInsets.all(8.0),
         padding: EdgeInsets.all(8.0),
@@ -79,7 +73,7 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(reserve.place!, style: EN.subtitle2),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(reserve.startToDate2(), style: EN.subtitle3)
               ],
             ),
@@ -103,13 +97,23 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
     );
   }
 
-  void _onPressed() {
+  void _back() {
     Navigator.of(context, rootNavigator: true).pop(
       PageRouteBuilder(
         fullscreenDialog: false,
         transitionsBuilder: slideRigth2Left,
-        pageBuilder: (context, animation, secondaryAnimation) => const AdmissionListPage(),
+        pageBuilder: (_, __, ___) => const AdmissionListPage(),
       ),
+    );
+  }
+
+  void _moveToAdmitPage(Reserve reserve) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        fullscreenDialog: false,
+        transitionsBuilder: slideRigth2Left,
+        pageBuilder: (_, __, ___) => AdmitPage(reserve: reserve)
+      )
     );
   }
 

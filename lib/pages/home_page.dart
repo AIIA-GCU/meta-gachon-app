@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       '공간과 컴퓨터를 빌려\n편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
-                      () => doReservation(ServiceType.aiSpace)
+                      widget.movetoReserList,
                   ),
 
                   /// <인증하기>
@@ -289,10 +289,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> doAdmission() async {
-    List<Reserve>? result = await RestAPI.getPriorAdmittedReservation();
-    if (result != null && result.isNotEmpty) {
+    List<Reserve>? items = await RestAPI.getPreAdmittedReservation();
+    if (items != null && items.isNotEmpty) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => PriorAdmissionsPage(result)));
+        MaterialPageRoute(builder: (_) => PriorAdmissionsPage(items)));
     } else {
       if (!_isShownToast) {
         _isShownToast = true;

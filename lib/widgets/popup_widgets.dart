@@ -175,7 +175,7 @@ class ReservationPopup extends StatelessWidget {
     }
 
     switch (status) {
-      case 0:
+      case 1:
         statusMsg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
         break;
       case 3:
@@ -194,8 +194,16 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
-        /// 사용 전 (예약 변경 X, QR X)
+        /// 사용 전 (예약 변경 X, QR O)
         case 0:
+          button = Text(
+              "사용 전날은 수정 및 취소가 불가합니다.",
+              style: KR.label2.copyWith(color: MGColor.systemError)
+          );
+          break;
+
+        /// 사용 전 (예약 변경 X, QR X)
+        case 1:
           button = ElevatedButton(
               onPressed: () => _qr(context),
               style: ElevatedButton.styleFrom(
@@ -207,14 +215,6 @@ class ReservationPopup extends StatelessWidget {
               ),
               child: Text("QR 코드 인증하기",
                   style: KR.parag1.copyWith(color: Colors.white))
-          );
-          break;
-
-        /// 사용 전 (예약 변경 O, QR O)
-        case 1:
-          button = Text(
-            "사용 전날은 수정 및 취소가 불가합니다.",
-            style: KR.label2.copyWith(color: MGColor.systemError)
           );
           break;
 
@@ -305,8 +305,8 @@ class ReservationPopup extends StatelessWidget {
       button = const SizedBox.shrink();
     }
 
-    return Dialog(
 
+    return Dialog(
       insetPadding: EdgeInsets.zero,
       child: Container(
         width: ratio.width * 326,
@@ -325,7 +325,6 @@ class ReservationPopup extends StatelessWidget {
               decoration: ShapeDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fitWidth,
-
                   image: AssetImage('assets/images/$path.png')),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))

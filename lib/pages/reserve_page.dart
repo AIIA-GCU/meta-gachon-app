@@ -26,6 +26,7 @@ class ReservePage extends StatefulWidget {
   @override
   State<ReservePage> createState() => _ReservePageState();
 }
+
 class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
@@ -350,29 +351,6 @@ class _ReservePageState extends State<ReservePage> {
                                     child: Form(
                                       key: _formKey,
                                       child: Row(children: [
-                                        // CustomTextField(
-                                        //   enabled: !_isSolo,
-                                        //   width: 122 * ratio.width,
-                                        //   height: 32,
-                                        //   controller: _stuNumCtr,
-                                        //   hint: '학번',
-                                        //   keyboard: TextInputType.number,
-                                        //   format: [
-                                        //     FilteringTextInputFormatter.digitsOnly, //숫자만 허용
-                                        //     LengthLimitingTextInputFormatter(9), //9글자만 허용
-                                        //   ],
-                                        //   validator: (str) {
-                                        //     if (str!.isEmpty || str.length != 9) {
-                                        //       return alertMessege = "정확한 학번과 이름을 입력해 주세요";
-                                        //     } else if(_leaderNumber.toString() == str) {
-                                        //       return alertMessege = '대표자를 제외한 이용자의 학번과 이름을 입력해주세요!';
-                                        //     } else if (_usersWidgets.any((e) => (e.key! as ValueKey<String>).value.contains(str))) {
-                                        //       return alertMessege = "이미 등록된 이용자입니다!";
-                                        //     } else {
-                                        //       return null;
-                                        //     }
-                                        //   },
-                                        // ),
                                         CustomTextField(
                                           enabled: !_isSolo,
                                           width: ratio.width * 40,
@@ -389,7 +367,7 @@ class _ReservePageState extends State<ReservePage> {
                                             if (str!.isEmpty ||
                                                 str.length != 9) {
                                               return elseMessage =
-                                              "정확한 학번과 이름을 입력해 주세요!";
+                                              "정확한 학번을 입력해 주세요!";
                                             } else if (_leaderNumber
                                                 .toString() ==
                                                 str) {
@@ -414,9 +392,7 @@ class _ReservePageState extends State<ReservePage> {
                                                 : _validateAddingUser,
                                             customBorder:
                                             RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    12)),
+                                                borderRadius: BorderRadius.circular(12)),
                                             child: Ink(
                                               width: 32 * ratio.width,
                                               height: 32 * ratio.width,
@@ -439,25 +415,6 @@ class _ReservePageState extends State<ReservePage> {
                                             ),
                                           ),
                                         ),
-
-                                        // CustomTextField(
-                                        //   enabled: !_isSolo,
-                                        //   width: 92 * ratio.width,
-                                        //   height: 32,
-                                        //   controller: _nameCtr,
-                                        //   hint: '이름',
-                                        //   format: [
-                                        //     FilteringTextInputFormatter.allow(
-                                        //         RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]')),
-                                        //   ],
-                                        //   validator: (str) {
-                                        //     if (str!.isEmpty) {
-                                        //       return alertMessege = "정확한 학번과 이름을 입력해 주세요";
-                                        //     } else {
-                                        //       return null;
-                                        //     }
-                                        //   },
-                                        // ),
                                       ]),
                                     ),
                                   ),
@@ -565,8 +522,7 @@ class _ReservePageState extends State<ReservePage> {
           ),
 
           /// 로딩 중
-          if (_loading)
-            const ProgressScreen()
+          if (_loading) const ProgressScreen()
         ],
       ),
     );
@@ -842,7 +798,7 @@ class _ReservePageState extends State<ReservePage> {
       title = '인원 수를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (!_isSolo && _userNumList.isEmpty) {
-      title = '학번을 입력해주세요!';
+      title = '추가 이용자를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';

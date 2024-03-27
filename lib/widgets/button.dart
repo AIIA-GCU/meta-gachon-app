@@ -257,6 +257,19 @@ class CustomButtons {
   }
 }
 
+///
+/// CustomDropdown
+///
+/// Parameter:
+/// - [value] ([String]?):
+///   The current selected item of dropdown
+/// - [hint] ([String]):
+///   The text displayed when dropdown is closed or [value] is empty
+/// - [items] ([List]<[String]>):
+///   Data enable to select
+/// - [onChanged] (void Function(String?)):
+///   Callback when item is selected
+///
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown({
     Key? key,
@@ -326,12 +339,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
         ///메뉴창 디자인
         dropdownStyleData: DropdownStyleData(
             offset: const Offset(0, -4),
-            //위치조정
             padding: EdgeInsets.zero,
-            maxHeight: 120,
-            //최대크기
+            maxHeight: 110,
             elevation: 0,
-            //그림자 없앰
             decoration: BoxDecoration(
                 boxShadow: const [
                   BoxShadow(
@@ -341,7 +351,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                     spreadRadius: 0,
                   )
                 ],
-                color: Colors.white.withOpacity(0.9) //배경투명도
+                color: Colors.white.withOpacity(0.9)
             )
         ),
 
@@ -354,8 +364,17 @@ class _CustomDropdownState extends State<CustomDropdown> {
     );
   }
 
-  /// 드롭다운메뉴창에 아이템(선택지)을 넣어주는 메소드입니다.
-  /// 리턴값은 아이템이 각각 위젯형태로 들어간 리스트입니다.
+  ///
+  /// [List]<[DropdownMenuItem]<[String]>> _addDividersAfterItems
+  ///
+  /// Convert raw data to exclusive widget
+  /// 
+  /// Parameter:
+  /// - [inItems] ([List]<[String]>)
+  ///
+  /// Return:
+  /// - [List] converted [DropdownMenuItem]
+  /// 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
     final List<DropdownMenuItem<String>> menuItems = [];
 
@@ -370,7 +389,6 @@ class _CustomDropdownState extends State<CustomDropdown> {
         textColor = MGColor.base3;
       }
       menuItems.addAll([
-        ///위젯형태의 아이템(선택지) 넣기
         DropdownMenuItem<String>(
             value: inItems[i],
             child: Center(
@@ -381,32 +399,54 @@ class _CustomDropdownState extends State<CustomDropdown> {
               ),
             )
         ),
-        //If it's last item, we will not add Divider after it.
-        ///아이템 하나마다 끝에 divider 넣기
-        if (i < inItems.length-1)
-          const DropdownMenuItem<String>(
-            enabled: false,
-            child: Divider(color: MGColor.base5),
-          ),
+        const DropdownMenuItem<String>(
+          enabled: false,
+          child: Divider(color: MGColor.base5),
+        ),
       ]);
     }
+    menuItems.removeLast();
     return menuItems;
   }
 
-  ///드롭다운메뉴창에 item(선택지)의 크기를 지정해주는 메소드입니다.
+  ///
+  /// List<double> _getCustomItemsHeights
+  ///
+  /// Get sizes of dropdown items
+  ///
+  /// Paramete:
+  /// - [items] ([List]<[String]>)
+  ///
+  /// Return:
+  /// - [List] about size
+  ///
   List<double> _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(32);
-      } else {
-        itemsHeights.add(1);
-      }
+    for (int i = 0; i < items.length; i++) {
+      itemsHeights.addAll([32, 1]);
     }
+    itemsHeights.removeLast();
     return itemsHeights;
   }
 }
 
+///
+/// TitleButton
+///
+/// Customized button of tile style
+///
+/// Parameter:
+/// - [onTap] (void Function()):
+///   Callback when tapping this widget
+/// - [alignment] ([Alignment]?):
+///   Align contents in this widget
+/// - [padding] ([EdgeInsetsGeometry]):
+///   Padding in this widget
+/// - [BorderRadius] ([borderRadius]):
+///   Set edge round
+/// - [child] ([Widget]):
+///   Content of widget
+///
 class TileButton extends StatelessWidget {
   const TileButton({
     super.key,

@@ -87,137 +87,146 @@ class _CustomDayCalenderState extends State<CustomDayCalender> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: EN.parag1.copyWith(color: MGColor.base1)),
-            SizedBox(height: 10 * ratio.height),
-            Table(
-              children: <TableRow>[
-                TableRow(
-                    children: ['일', '월', '화', '수', '목', '금', '토']
-                        .map((e) => Padding(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: KR.parag1.copyWith(color: MGColor.base1)),
+          SizedBox(height: 10 * ratio.height),
+          Table(
+            children: <TableRow>[
+              TableRow(
+                children: ['일', '월', '화', '수', '목', '금', '토']
+                    .map((e) {
+                      late TextStyle style;
+                      if (e == '일') {
+                        style = widget.cellStyle
+                            .fieldTextStyle.copyWith(color: MGColor.systemError);
+                      } else {
+                        style = widget.cellStyle.fieldTextStyle;
+                      }
+                      return Padding(
                         padding: EdgeInsets.only(bottom: 6 * ratio.height),
-                        child: Text(e, style: widget.cellStyle.fieldTextStyle, textAlign: TextAlign.center)
-                    ))
-                        .toList()
-                ),
-                TableRow(
-                    children: List.generate(7, (index) {
-                      late TextStyle textStyle;
-                      late BoxDecoration boxDecoration;
-                      DateTime day = rangeFirst.add(Duration(days: index));
-
-                      if (selectedDay != null && isSameDate(selectedDay!, day)) {
-                        textStyle = widget.cellStyle.selectedDateTextStyle;
-                        boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                      }
-                      else if (isSameDate(widget.first, day)) {
-                        textStyle = widget.cellStyle.todayTextStyle;
-                        boxDecoration = widget.cellStyle.todayBoxDecoration;
-                      }
-                      else if (day.isBefore(widget.first)) {
-                        textStyle = widget.cellStyle.rangeOutDateTextStyle;
-                        boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
-                      }
-                      else {
-                        textStyle = widget.cellStyle.normalDateTextStyle;
-                        boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                      }
-
-                      return GestureDetector(
-                        onTap: () => toSelect(day),
-                        child: Container(
-                          height: widget.rowHeight,
-                          width: widget.rowWidth,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.fromLTRB(
-                              5 * ratio.width,
-                              0,
-                              5 * ratio.width,
-                              10 * ratio.height
-                          ),
-                          decoration: boxDecoration,
-                          child: Text(day.day.toString(), style: textStyle),
-                        ),
+                        child: Text(e, style: style, textAlign: TextAlign.center)
                       );
-                    }).toList()
-                ),
+                    })
+                    .toList()
+              ),
+              TableRow(
+                children: List.generate(7, (index) {
+                  late TextStyle textStyle;
+                  late BoxDecoration boxDecoration;
+                  DateTime day = rangeFirst.add(Duration(days: index));
+
+                  if (selectedDay != null && isSameDate(selectedDay!, day)) {
+                    textStyle = widget.cellStyle.selectedDateTextStyle;
+                    boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                  }
+                  else if (isSameDate(widget.first, day)) {
+                    textStyle = widget.cellStyle.todayTextStyle;
+                    boxDecoration = widget.cellStyle.todayBoxDecoration;
+                  }
+                  else if (day.isBefore(widget.first)) {
+                    textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                    boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+                  }
+                  else {
+                    textStyle = widget.cellStyle.normalDateTextStyle;
+                    boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                  }
+
+                  return GestureDetector(
+                    onTap: () => toSelect(day),
+                    child: Container(
+                      height: widget.rowHeight,
+                      width: widget.rowWidth,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.fromLTRB(
+                        5 * ratio.width,
+                        0,
+                        5 * ratio.width,
+                        10 * ratio.height
+                      ),
+                      decoration: boxDecoration,
+                      child: Text(day.day.toString(), style: textStyle),
+                    ),
+                  );
+                }).toList()
+              ),
+              TableRow(
+                children: List.generate(7, (index) {
+                  late TextStyle textStyle;
+                  late BoxDecoration boxDecoration;
+                  DateTime day = rangeFirst.add(Duration(days: 7+index));
+
+                  if (selectedDay != null && selectedDay!.day == day.day) {
+                    textStyle = widget.cellStyle.selectedDateTextStyle;
+                    boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                  }
+                  else {
+                    textStyle = widget.cellStyle.normalDateTextStyle;
+                    boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                  }
+
+                  return GestureDetector(
+                    onTap: () => toSelect(day),
+                    child: Container(
+                      height: widget.rowHeight,
+                      width: widget.rowWidth,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.fromLTRB(
+                          5 * ratio.width,
+                          0,
+                          5 * ratio.width,
+                          10 * ratio.height
+                      ),
+                      decoration: boxDecoration,
+                      child: Text(day.day.toString(), style: textStyle),
+                    ),
+                  );
+                }).toList()
+              ),
+              if (rangeLast.day - rangeFirst.day != 13)
                 TableRow(
-                    children: List.generate(7, (index) {
-                      late TextStyle textStyle;
-                      late BoxDecoration boxDecoration;
-                      DateTime day = rangeFirst.add(Duration(days: 7+index));
+                  children: List.generate(7, (index) {
+                    late TextStyle textStyle;
+                    late BoxDecoration boxDecoration;
+                    DateTime day = rangeFirst.add(Duration(days: 14+index));
 
-                      if (selectedDay != null && selectedDay!.day == day.day) {
-                        textStyle = widget.cellStyle.selectedDateTextStyle;
-                        boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                      }
-                      else {
-                        textStyle = widget.cellStyle.normalDateTextStyle;
-                        boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                      }
+                    if (selectedDay != null && selectedDay! == day) {
+                      textStyle = widget.cellStyle.selectedDateTextStyle;
+                      boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
+                    }
+                    else if (day.isAfter(widget.last)) {
+                      textStyle = widget.cellStyle.rangeOutDateTextStyle;
+                      boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
+                    }
+                    else {
+                      textStyle = widget.cellStyle.normalDateTextStyle;
+                      boxDecoration = widget.cellStyle.normalDateBoxDecoration;
+                    }
 
-                      return GestureDetector(
-                        onTap: () => toSelect(day),
-                        child: Container(
-                          height: widget.rowHeight,
-                          width: widget.rowWidth,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.fromLTRB(
-                              5 * ratio.width,
-                              0,
-                              5 * ratio.width,
-                              10 * ratio.height
-                          ),
-                          decoration: boxDecoration,
-                          child: Text(day.day.toString(), style: textStyle),
+                    return GestureDetector(
+                      onTap: () => toSelect(day),
+                      child: Container(
+                        height: widget.rowHeight,
+                        width: widget.rowWidth,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(
+                            5 * ratio.width,
+                            0,
+                            5 * ratio.width,
+                            10 * ratio.height
                         ),
-                      );
-                    }).toList()
+                        decoration: boxDecoration,
+                        child: Text(day.day.toString(), style: textStyle),
+                      ),
+                    );
+                  }).toList()
                 ),
-                if (rangeLast.day - rangeFirst.day != 13)
-                  TableRow(
-                      children: List.generate(7, (index) {
-                        late TextStyle textStyle;
-                        late BoxDecoration boxDecoration;
-                        DateTime day = rangeFirst.add(Duration(days: 14+index));
-
-                        if (selectedDay != null && selectedDay! == day) {
-                          textStyle = widget.cellStyle.selectedDateTextStyle;
-                          boxDecoration = widget.cellStyle.selelctedDateBoxDecoration;
-                        }
-                        else if (day.isAfter(widget.last)) {
-                          textStyle = widget.cellStyle.rangeOutDateTextStyle;
-                          boxDecoration = widget.cellStyle.rangeOutDateBoxDecoration;
-                        }
-                        else {
-                          textStyle = widget.cellStyle.normalDateTextStyle;
-                          boxDecoration = widget.cellStyle.normalDateBoxDecoration;
-                        }
-
-                        return GestureDetector(
-                          onTap: () => toSelect(day),
-                          child: Container(
-                            height: widget.rowHeight,
-                            width: widget.rowWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.fromLTRB(
-                                5 * ratio.width,
-                                0,
-                                5 * ratio.width,
-                                10 * ratio.height
-                            ),
-                            decoration: boxDecoration,
-                            child: Text(day.day.toString(), style: textStyle),
-                          ),
-                        );
-                      }).toList()
-                  ),
-              ],
-            ),
-          ],
-        )
+            ],
+          ),
+        ],
+      )
     );
   }
 }
@@ -395,9 +404,8 @@ class CellStyle {
 }
 
 class CustomTimePicker extends StatefulWidget {
-  const CustomTimePicker({
+  const CustomTimePicker(this.service, {
     super.key,
-    required this.service,
     required this.place,
     required this.date,
     required this.begin,
@@ -482,153 +490,153 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
-        future: _reset ? _availableTime() : null,
-        builder: (context, snapshot) {
-          return SizedBox(
-              width: ratio.width * 336,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+      future: _reset ? _availableTime() : null,
+      builder: (context, snapshot) {
+        return SizedBox(
+          width: ratio.width * 336,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("예약 시간", style: KR.parag1),
+                  const SizedBox(width: 12),
+                  Text(
+                    '예약은 최대 3시간까지 가능합니다',
+                    style: KR.label2.copyWith(color: MGColor.brandPrimary)
+                  )
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 10),
+
+              if (_reset)
+                ...[
+                  SizedBox(height: 68 + ratio.height*22)
+                ]
+              else
+                ...[
+                  /// 마이쮸 시간표
+                  SingleChildScrollView(
+                    controller: _scrollCtr,
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
                       children: [
-                        Text("예약 시간", style: KR.parag1),
-                        const SizedBox(width: 12),
-                        Text(
-                            '예약은 최대 3시간까지 가능합니다',
-                            style: KR.label2.copyWith(color: MGColor.brandPrimary)
-                        )
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                          decoration: BoxDecoration(
+                              color: MGColor.base9,
+                              borderRadius: BorderRadius.circular(4)
+                          ),
+                          child: Row(children: List.generate(24, (index) {
+                            Color? color;
+                            if (!_availables[index]) {
+                              color = MGColor.base6;
+                              if (_areaActive) _areaActive = false;
+                            }
+                            else if (_begin != null && _end != null) {
+                              if (_begin! <= index && index <= _end!) {
+                                color = MGColor.brandPrimary;
+                                _areaActive = true;
+                              } else {
+                                if (widget.service == ServiceType.aiSpace) {
+                                  if (index == _begin!+1) {
+                                    color = MGColor.brandPrimary.withOpacity(0.2);
+                                  } else if (index == _begin!+2 && _availables[index-1]) {
+                                    color = MGColor.brandPrimary.withOpacity(0.2);
+                                  }
+                                } else if (_areaActive) {
+                                  color = MGColor.brandPrimary.withOpacity(0.2);
+                                }
+                              }
+                            }
+                            color ??= Colors.white;
+
+                            return GestureDetector(
+                              onTap: color == MGColor.base6
+                                  ? null : () => _onChangedTime(index),
+                              child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                                  decoration: BoxDecoration(
+                                      color: color,
+                                      borderRadius: BorderRadius.circular(3)
+                                  )
+                              ),
+                            );
+                          })),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: ratio.width * 2
+                          ),
+                          child: Row(children: List.generate(8, (index) {
+                            if (index == 7) {
+                              return SizedBox(
+                                  width: (24 + 3 * 2) * 3,
+                                  child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('21', style: EN.label3),
+                                        Text('24', style: EN.label3),
+                                      ]
+                                  )
+                              );
+                            } else {
+                              return SizedBox(
+                                  width: (24 + 3 * 2) * 3,
+                                  child: Text('${index * 3}', style: EN.label2)
+                              );
+                            }
+                          })),
+                        ),
                       ],
                     ),
+                  ),
 
-                    SizedBox(height: ratio.height * 10),
+                  SizedBox(height: ratio.height * 8),
 
-                    if (_reset)
-                      ...[
-                        SizedBox(height: 68 + ratio.height*22)
-                      ]
-                    else
-                      ...[
-                        /// 마이쮸 시간표
-                        SingleChildScrollView(
-                          controller: _scrollCtr,
-                          scrollDirection: Axis.horizontal,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                                decoration: BoxDecoration(
-                                    color: MGColor.base9,
-                                    borderRadius: BorderRadius.circular(4)
-                                ),
-                                child: Row(children: List.generate(24, (index) {
-                                  Color? color;
-                                  if (!_availables[index]) {
-                                    color = MGColor.base6;
-                                    if (_areaActive) _areaActive = false;
-                                  }
-                                  else if (_begin != null && _end != null) {
-                                    if (_begin! <= index && index <= _end!) {
-                                      color = MGColor.brandPrimary;
-                                      _areaActive = true;
-                                    } else {
-                                      if (widget.service == ServiceType.aiSpace) {
-                                        if (index == _begin!+1) {
-                                          color = MGColor.brandPrimary.withOpacity(0.2);
-                                        } else if (index == _begin!+2 && _availables[index-1]) {
-                                          color = MGColor.brandPrimary.withOpacity(0.2);
-                                        }
-                                      } else if (_areaActive) {
-                                        color = MGColor.brandPrimary.withOpacity(0.2);
-                                      }
-                                    }
-                                  }
-                                  color ??= Colors.white;
-
-                                  return GestureDetector(
-                                    onTap: color == MGColor.base6
-                                        ? null : () => _onChangedTime(index),
-                                    child: Container(
-                                        width: 24,
-                                        height: 28,
-                                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                                        decoration: BoxDecoration(
-                                            color: color,
-                                            borderRadius: BorderRadius.circular(3)
-                                        )
-                                    ),
-                                  );
-                                })),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: ratio.width * 2
-                                ),
-                                child: Row(children: List.generate(8, (index) {
-                                  if (index == 7) {
-                                    return SizedBox(
-                                        width: (24 + 3 * 2) * 3,
-                                        child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('21', style: EN.label2),
-                                              Text('24', style: EN.label2),
-                                            ]
-                                        )
-                                    );
-                                  } else {
-                                    return SizedBox(
-                                        width: (24 + 3 * 2) * 3,
-                                        child: Text('${index * 3}', style: EN.label2)
-                                    );
-                                  }
-                                })),
-                              ),
-                            ],
-                          ),
+                  /// 드롭다운
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomDropdown(
+                          value: _begin == null ? null
+                              : _begin! < 10 ? '0$_begin:00' : '$_begin:00',
+                          hint: '00:00',
+                          items: times
+                              .map((i) => i < 10 ? '0$i:00' : '$i:00')
+                              .toList(),
+                          availables: _availables,
+                          onChanged: (value) {
+                            var temp = value!.substring(0, 2);
+                            _onChangedTime(int.parse(temp), isBegin: true);
+                          },
                         ),
-
-                        SizedBox(height: ratio.height * 8),
-
-                        /// 드롭다운
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomDropdown(
-                                value: _begin == null ? null
-                                    : _begin! < 10 ? '0$_begin:00' : '$_begin:00',
-                                hint: '00:00',
-                                items: times
-                                    .map((i) => i < 10 ? '0$i:00' : '$i:00')
-                                    .toList(),
-                                availables: _availables,
-                                onChanged: (value) {
-                                  var temp = value!.substring(0, 2);
-                                  _onChangedTime(int.parse(temp), isBegin: true);
-                                },
-                              ),
-                              SizedBox(
-                                  width: 22 * ratio.width,
-                                  child: const Center(child: Text("~"))
-                              ),
-                              CustomDropdown(
-                                value: _end == null ? null
-                                    : _end! < 9 ? '0${_end!+1}:00' : '${_end!+1}:00',
-                                hint: '00:00',
-                                items: times
-                                    .map((i) => i < 9 ? '0${i+1}:00' : '${i+1}:00')
-                                    .toList(),
-                                availables: _availables,
-                                onChanged: (value) {
-                                  var temp = value!.substring(0, 2);
-                                  _onChangedTime(int.parse(temp)-1, isBegin: false);
-                                },
-                              )
-                            ]
+                        SizedBox(
+                            width: 22 * ratio.width,
+                            child: const Center(child: Text("~"))
+                        ),
+                        CustomDropdown(
+                          value: _end == null ? null
+                              : _end! < 9 ? '0${_end!+1}:00' : '${_end!+1}:00',
+                          hint: '00:00',
+                          items: times
+                              .map((i) => i < 9 ? '0${i+1}:00' : '${i+1}:00')
+                              .toList(),
+                          availables: _availables,
+                          onChanged: (value) {
+                            var temp = value!.substring(0, 2);
+                            _onChangedTime(int.parse(temp)-1, isBegin: false);
+                          },
                         )
                       ]
+                    )
                   ]
+                ]
               )
           );
         }
