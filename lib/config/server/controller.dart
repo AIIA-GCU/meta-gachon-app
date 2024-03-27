@@ -294,12 +294,15 @@ class RestAPI {
   }
 
   /// QR 인증
-  static Future<bool> qrCheck(String uri) async {
+  static Future<bool> qrCheck(String? qrStr, int reservationId) async {
     try {
-      final api = APIRequest('book/qrcheck');
+      final api = APIRequest('/book/qrcheck?QR=$qrStr&reservationID=$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.post);
-      if (response.isEmpty) return false;
-      return true;
+      if (response.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
     } catch(e) {
       throw Exception(e);
     }
