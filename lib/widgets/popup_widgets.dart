@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/app/load_assets.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import '../pages/admit_page.dart';
@@ -767,302 +768,263 @@ class GradeExplainPopup extends StatelessWidget {
         onTap: () => Navigator.pop(context),
         child: Container(
           width: ratio.width * 326,
-          height: ratio.height * 614,
           decoration: BoxDecoration(
               color: Colors.white,
-              //image: DecorationImage(
-              //  fit: BoxFit.fitHeight,
-              // image: myInfo.ratingImg
-              //),
               borderRadius: BorderRadius.circular(12)),
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                ratio.width * 16, ratio.height * 26, ratio.width * 32, 0),
-            child: Column(
-              children: [
-                Container(
-                  width: ratio.width * 278,
-                  height: ratio.height * 70,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ratio.width * 70,
-                        height: ratio. height * 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                             image: AssetImage("assets/images/warning.png"),
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
+          padding: EdgeInsets.fromLTRB(
+              ratio.width * 16,
+              ratio.height * 26,
+              ratio.width * 32,
+              0
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                         image: AssetImage(ImgPath.grayLv),
+                        alignment: Alignment.topCenter,
                       ),
-                      SizedBox(width: ratio.width * 12,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text("GRAY",style: EN.subtitle2,),
-                              SizedBox(
-                                width: ratio.width * 1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: ratio.height * 1),
-                                child: Text("경고",style: KR.grade3,),
-                              )
-                            ],
-                          ),
+                          Text("GRAY",style: EN.subtitle2,),
                           SizedBox(
-                            height: ratio.height * 6.6,
+                            width: ratio.width * 1,
                           ),
-                          Text("한달에 10번 이상의 경고를 받음",style: KR.grade4,),
-                          Text("2주간 예약 금지",style: KR.grade2,),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("경고",style: KR.grade3,),
+                          )
                         ],
                       ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한달에 10번 이상의 경고를 받음",style: KR.grade4,),
+                      Text("2주간 예약 금지",style: KR.grade2,),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: ratio.height * 16,
-                ),
-                Container(
-                  width: ratio.width * 294,
-                  height: ratio.height * 1,
-                  color: MGColor.base6,
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 278,
-                  height: ratio.height * 70,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ratio.width * 70,
-                        height: ratio. height * 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/caution.png"),
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage("assets/images/caution.png"),
+                        alignment: Alignment.topCenter,
                       ),
-                      SizedBox(width: ratio.width * 12,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text("STONE",style: EN.subtitle2,),
-                              SizedBox(
-                                width: ratio.width * 1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: ratio.height * 1),
-                                child: Text("주의",style: KR.grade3,),
-                              )
-                            ],
-                          ),
+                          Text("STONE",style: EN.subtitle2,),
                           SizedBox(
-                            height: ratio.height * 6.6,
+                            width: ratio.width * 1,
                           ),
-                          Text("한달에 5번 이상의 경고를 받음",style: KR.grade4,),
-                          Text("7일간 예약 금지",style: KR.grade2,),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("주의",style: KR.grade3),
+                          )
                         ],
                       ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한달에 5번 이상의 경고를 받음",style: KR.grade4,),
+                      Text("7일간 예약 금지",style: KR.grade2,),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 294,
-                  height: ratio.height * 1,
-                  color: MGColor.base6,
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 278,
-                  height: ratio.height * 70,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ratio.width * 70,
-                        height: ratio. height * 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/default.png"),
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.cobaltLv),
+                        alignment: Alignment.topCenter,
                       ),
-                      SizedBox(width: ratio.width * 12,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text("COBALT",style: EN.subtitle2,),
-                              SizedBox(
-                                width: ratio.width * 1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: ratio.height * 1),
-                                child: Text("기본",style: KR.grade5,),
-                              )
-                            ],
-                          ),
+                          Text("COBALT",style: EN.subtitle2,),
                           SizedBox(
-                            height: ratio.height * 6.6,
+                            width: ratio.width * 1,
                           ),
-                          Text("기본 등급입니다",style: KR.grade4,),
-                          Text("정말 깔끔하네요!",style: KR.grade6,),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("기본",style: KR.grade5,),
+                          )
                         ],
                       ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("기본 등급입니다",style: KR.grade4,),
+                      Text("정말 깔끔하네요!",style: KR.grade6,),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 294,
-                  height: ratio.height * 1,
-                  color: MGColor.base6,
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 278,
-                  height: ratio.height * 70,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ratio.width * 70,
-                        height: ratio. height * 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/good.png"),
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.skyLv),
+                        alignment: Alignment.topCenter,
                       ),
-                      SizedBox(width: ratio.width * 12,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text("SKY",style: EN.subtitle2,),
-                              SizedBox(
-                                width: ratio.width * 1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: ratio.height * 1),
-                                child: Text("우수",style: KR.grade7,),
-                              )
-                            ],
-                          ),
+                          Text("SKY",style: EN.subtitle2,),
                           SizedBox(
-                            height: ratio.height * 6.6,
+                            width: ratio.width * 1,
                           ),
-                          Text("한 달에 7번 이상 우수한 사용을 함",style: KR.grade4,),
-                          Text("예약 가능 시간 4시간으로 증가",style: KR.grade6,),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("우수",style: KR.grade7,),
+                          )
                         ],
                       ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한 달에 7번 이상 우수한 사용을 함",style: KR.grade4,),
+                      Text("예약 가능 시간 4시간으로 증가",style: KR.grade6,),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 294,
-                  height: ratio.height * 1,
-                  color: MGColor.base6,
-                ),
-                SizedBox(
-                  height: ratio.height * 14,
-                ),
-                Container(
-                  width: ratio.width * 278,
-                  height: ratio.height * 70,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ratio.width * 70,
-                        height: ratio. height * 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/vip.png"),
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.aquaLv),
+                        alignment: Alignment.topCenter,
                       ),
-                      SizedBox(width: ratio.width * 12,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text("AQUA",style: EN.subtitle2,),
-                              SizedBox(
-                                width: ratio.width * 1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: ratio.height * 1),
-                                child: Text("VIP",style: EN.grade7,),
-                              )
-                            ],
-                          ),
+                          Text("AQUA",style: EN.subtitle2,),
                           SizedBox(
-                            height: ratio.height * 6.6,
+                            width: ratio.width * 1,
                           ),
-                          Text("한 달에 14번 이상 우수한 사용을 함",style: KR.grade4,),
-                          Text("예약 가능 시간 5시간으로 증가",style: KR.grade6,),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("VIP",style: EN.grade7,),
+                          )
                         ],
                       ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한 달에 14번 이상 우수한 사용을 함",style: KR.grade4,),
+                      Text("예약 가능 시간 5시간으로 증가",style: KR.grade6,),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: ratio.height * 26,
-                ),
-                GradeButton(),
-                TextButton(child: Text("하루 동안 보지 않기",style: KR.grade1), onPressed: () => Navigator.pop(context),)
-              ],
-            ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 26),
+
+              _gradeButton(context),
+              TextButton(child: Text("하루 동안 보지 않기",style: KR.grade1), onPressed: () => Navigator.pop(context),)
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-class GradeButton extends StatelessWidget {
-  const GradeButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _gradeButton(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
-        _showGradePopup(context);
+        showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            builder: (context) => const GradePopup()
+        );
       },
       child: Container(
         width: 301,
@@ -1071,20 +1033,13 @@ class GradeButton extends StatelessWidget {
           color: MGColor.brandPrimary,
           borderRadius: BorderRadius.circular(10),
         ),
-          child: Center(
-            child: Text(
+        child: Center(
+          child: Text(
               "내 등급 확인하기",
               style: KR.grade8
-              ),
           ),
         ),
+      ),
     );
   }
-}
-
-void _showGradePopup(BuildContext context) {
-  showDialog(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.25),
-      builder: (context) => const GradePopup());
 }

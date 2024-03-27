@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
           ratio.width * 16,
           ratio.height * 12,
           ratio.width * 16,
-          ratio.height * 16
+          ratio.height * 30
         ),
         child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -114,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                           ImgPath.home1,
                           checkMyAdmission
                       ),
-                      SizedBox(height: ratio.height * 30)
                     ]
                 ),
               )

@@ -253,66 +253,63 @@ class _ReservePageState extends State<ReservePage> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// Input
-                              SizedBox(
-                                width: 358 * ratio.width,
-                                height: 32 + 31 * ratio.height,
-                                child: Stack(children: [
-                                  Positioned(
-                                    left: 16 * ratio.width,
-                                    top: 16 * ratio.height,
-                                    child: Text('이용자',
-                                        style: KR.parag1
-                                            .copyWith(color: MGColor.base1)),
+                          child: Container(
+                            width: 358 * ratio.width,
+                            height: 32 + 41 * ratio.height,
+                            padding: EdgeInsets.symmetric(
+                              vertical: ratio.height * 10
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 16 * ratio.width,
+                                  top: 6 * ratio.height,
+                                  child: Text('이용자',
+                                      style: KR.parag1
+                                          .copyWith(color: MGColor.base1)),
+                                ),
+                                Positioned(
+                                  left: 80 * ratio.width,
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Row(children: [
+                                      CustomTextField(
+                                        enabled: !_isSolo,
+                                        width: ratio.width * 122,
+                                        height: 32,
+                                        controller: _numberCtr,
+                                        keyboard: TextInputType.number,
+                                        hint: '인원 수',
+                                        format: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                          LengthLimitingTextInputFormatter(2),
+                                        ],
+                                        validator: (str) {
+                                          if (str!.isEmpty ||
+                                              str == "0" ||
+                                              str == "00") {
+                                            return alertMessege =
+                                            "인원 수를 정확히 입력해 주세요";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                      ),
+                                    ]),
                                   ),
-                                  Positioned(
+                                ),
+                                Positioned(
                                     left: 80 * ratio.width,
-                                    top: 10 * ratio.height,
-                                    child: Form(
-                                      key: _formKey,
-                                      child: Row(children: [
-                                        CustomTextField(
-                                          enabled: !_isSolo,
-                                          width: ratio.width * 122,
-                                          height: 32,
-                                          controller: _numberCtr,
-                                          keyboard: TextInputType.number,
-                                          hint: '인원 수',
-                                          format: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(2),
-                                          ],
-                                          validator: (str) {
-                                            if (str!.isEmpty ||
-                                                str == "0" ||
-                                                str == "00") {
-                                              return alertMessege =
-                                              "인원 수를 정확히 입력해 주세요";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                        ),
-                                      ]),
-                                    ),
-                                  ),
-                                  Positioned(
-                                      left: 80 * ratio.width,
-                                      top: 32 + ratio.height * 14,
-                                      child: Text(alertMessege,
-                                          style: KR.label2.copyWith(
-                                              color: _isSolo
-                                                  ? _addUserGuideline =
-                                                  MGColor.systemError
-                                                  : _addUserGuideline))),
-                                ]),
-                              )
-                            ],
+                                    bottom: 0,
+                                    child: Text(alertMessege,
+                                        style: KR.label2.copyWith(
+                                            color: _isSolo
+                                                ? _addUserGuideline =
+                                                MGColor.systemError
+                                                : _addUserGuideline))),
+                              ]
+                            ),
                           ),
                         )
                       else
