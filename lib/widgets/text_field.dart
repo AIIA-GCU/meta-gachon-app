@@ -236,57 +236,57 @@ class CustomTextField extends StatelessWidget {
 
 /// 여기 밑으로 있는 코드는
 /// 아직 완벽하게 이해하지 못했음
-class ProfesserFormat extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final _TextEditingValueAccumulator formatState = _TextEditingValueAccumulator(newValue);
-    assert(!formatState.debugFinalized);
-
-    final pattern = RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]');
-    final Iterable<Match> matches = pattern.allMatches(newValue.text);
-    Match? previousMatch;
-    for (final Match match in matches) {
-      assert(match.end >= match.start);
-      _processRegion(true, previousMatch?.end ?? 0, match.start, formatState);
-      assert(!formatState.debugFinalized);
-      _processRegion(false, match.start, match.end, formatState);
-      assert(!formatState.debugFinalized);
-
-      previousMatch = match;
-    }
-
-    _processRegion(true, previousMatch?.end ?? 0, newValue.text.length, formatState);
-    assert(!formatState.debugFinalized);
-    var temp1 = formatState.finalize();
-
-    if (temp1.selection.baseOffset == 0) return const TextEditingValue();
-
-    var temp2 = newValue.text.split(' ')[0];
-    return newValue.copyWith(
-        text: '$temp2 교수님',
-        selection: TextSelection.collapsed(offset: temp2.length)
-    );
-  }
-
-  void _processRegion(bool isBannedRegion, int regionStart, int regionEnd, _TextEditingValueAccumulator state) {
-    final String replacementString = isBannedRegion ? '' : state.inputValue.text.substring(regionStart, regionEnd);
-
-    state.stringBuffer.write(replacementString);
-
-    if (replacementString.length == regionEnd - regionStart) return;
-
-    int adjustIndex(int originalIndex) {
-      final int replacedLength = originalIndex <= regionStart && originalIndex < regionEnd ? 0 : replacementString.length;
-      final int removedLength = originalIndex.clamp(regionStart, regionEnd) - regionStart;
-      return replacedLength - removedLength;
-    }
-
-    state.selection?.base += adjustIndex(state.inputValue.selection.baseOffset);
-    state.selection?.extent += adjustIndex(state.inputValue.selection.extentOffset);
-    state.composingRegion?.base += adjustIndex(state.inputValue.composing.start);
-    state.composingRegion?.extent += adjustIndex(state.inputValue.composing.end);
-  }
-}
+// class ProfesserFormat extends TextInputFormatter {
+//   @override
+//   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+//     final _TextEditingValueAccumulator formatState = _TextEditingValueAccumulator(newValue);
+//     assert(!formatState.debugFinalized);
+//
+//     final pattern = RegExp('[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]');
+//     final Iterable<Match> matches = pattern.allMatches(newValue.text);
+//     Match? previousMatch;
+//     for (final Match match in matches) {
+//       assert(match.end >= match.start);
+//       _processRegion(true, previousMatch?.end ?? 0, match.start, formatState);
+//       assert(!formatState.debugFinalized);
+//       _processRegion(false, match.start, match.end, formatState);
+//       assert(!formatState.debugFinalized);
+//
+//       previousMatch = match;
+//     }
+//
+//     _processRegion(true, previousMatch?.end ?? 0, newValue.text.length, formatState);
+//     assert(!formatState.debugFinalized);
+//     var temp1 = formatState.finalize();
+//
+//     if (temp1.selection.baseOffset == 0) return const TextEditingValue();
+//
+//     var temp2 = newValue.text.split(' ')[0];
+//     return newValue.copyWith(
+//         text: '$temp2',
+//         selection: TextSelection.collapsed(offset: temp2.length)
+//     );
+//   }
+//
+//   void _processRegion(bool isBannedRegion, int regionStart, int regionEnd, _TextEditingValueAccumulator state) {
+//     final String replacementString = isBannedRegion ? '' : state.inputValue.text.substring(regionStart, regionEnd);
+//
+//     state.stringBuffer.write(replacementString);
+//
+//     if (replacementString.length == regionEnd - regionStart) return;
+//
+//     int adjustIndex(int originalIndex) {
+//       final int replacedLength = originalIndex <= regionStart && originalIndex < regionEnd ? 0 : replacementString.length;
+//       final int removedLength = originalIndex.clamp(regionStart, regionEnd) - regionStart;
+//       return replacedLength - removedLength;
+//     }
+//
+//     state.selection?.base += adjustIndex(state.inputValue.selection.baseOffset);
+//     state.selection?.extent += adjustIndex(state.inputValue.selection.extentOffset);
+//     state.composingRegion?.base += adjustIndex(state.inputValue.composing.start);
+//     state.composingRegion?.extent += adjustIndex(state.inputValue.composing.end);
+//   }
+// }
 
 class _MutableTextRange {
   _MutableTextRange(this.base, this.extent);

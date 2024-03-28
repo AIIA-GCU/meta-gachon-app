@@ -41,7 +41,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
+      padding: EdgeInsets.symmetric(horizontal: ratio.width * 16, vertical: ratio.height * 12),
       child: NestedScrollView(
         controller: _scrollCtr,
         floatHeaderSlivers: true,
@@ -58,6 +58,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -96,42 +97,44 @@ class _ReservationListPageState extends State<ReservationListPage> {
     return FutureBuilder<List<Reserve>?>(
       future: reserves.isEmpty ? RestAPI.getRemainReservation() : null,
       builder: (context, snapshot) {
+        Widget child;
         if (snapshot.hasError) {
-          return Container(
+          child = Container(
               height: 218,
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.center,
               child: Text(
                   '통신 속도가 너무 느립니다!',
                   style: KR.subtitle4.copyWith(
                       color: MGColor.base3)
               )
           );
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-        if (snapshot.hasData) reserves = snapshot.data!;
-        if (reserves.isNotEmpty) {
-          return RefreshIndicator(
-            displacement: 0,
-            color: MGColor.brandPrimary,
-            onRefresh: _onRefreshed,
-            child: ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics()
-                  .applyTo(const BouncingScrollPhysics()),
-              itemCount: reserves.length,
-              itemBuilder: (_, index) => _listItem(reserves[index])
-            ),
-          );
         } else {
-          return Container(
-              height: ratio.height * 594,
-              alignment: Alignment.center,
-              child: Text(
-                  '아직 예약 내역이 없어요!',
-                  style: KR.subtitle4.copyWith(
-                      color: MGColor.base3)
-              )
-          );
+          if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+          if (snapshot.hasData) reserves = snapshot.data!;
+          if (reserves.isNotEmpty) {
+            child = ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics()
+                    .applyTo(const BouncingScrollPhysics()),
+                itemCount: reserves.length,
+                itemBuilder: (_, index) => _listItem(reserves[index])
+            );
+          } else {
+            child = Container(
+                height: ratio.height * 594,
+                alignment: Alignment.center,
+                child: Text(
+                    '아직 예약 내역이 없어요!',
+                    style: KR.subtitle4.copyWith(color: MGColor.base3)
+                )
+            );
+          }
         }
+        return RefreshIndicator(
+          displacement: 0,
+          color: MGColor.brandPrimary,
+          onRefresh: _onRefreshed,
+          child: child
+        );
       }
     );
   }
@@ -140,11 +143,91 @@ class _ReservationListPageState extends State<ReservationListPage> {
     final String place = service == ServiceType.aiSpace
         ? "AI 인큐베이터" : service == ServiceType.lectureRoom
         ? "강의실" : "GPU 컴퓨터";
+    late String path;
+    switch (service) {
+      case ServiceType.aiSpace:
+        path = "meta2";
+        break;
+      case ServiceType.lectureRoom:
+        path = "class2";
+        break;
+      case ServiceType.computer:
+        path = "gpu2";
+        break;
+    }
+
+    bool notTouched = true;
     return Material(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () => doReservation(service),
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) {
+            if (service == ServiceType.aiSpace) {
+              switch (myInfo.rating) {
+                case 1:
+                  return CommentPopup(
+                    title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                    onPressed: () => Navigator.pop(context),
+                  );
+                case 2:
+                  return CommentPopup(
+                    title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
+                    onPressed: () => Navigator.pop(context),
+                  );
+                case 5:
+                  return CommentPopup(
+                    title: "AQUA 등급입니다. \n 예약 가능 시간은 5시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
+                case 4:
+                  return CommentPopup(
+                    title: "SKY 등급입니다. \n 예약 가능 시간은 4시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
+                case 3 :
+                default:
+                  return CommentPopup(
+                    title: "COBALT 등급입니다. \n 예약 가능 시간은 3시간입니다.",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      notTouched = false;
+                      doReservation(service);
+                    },
+                  );
+              }
+            } else {
+              if (myInfo.rating == 1) {
+                return CommentPopup(
+                  title: "GRAY 등급입니다. \n 2주간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              } else if (myInfo.rating == 2) {
+                return CommentPopup(
+                  title: "STONE 등급입니다. \n 7일간 예약이 불가능합니다.",
+                  onPressed: () => Navigator.pop(context),
+                );
+              }
+              return CommentPopup(title: "깨끗한 이용 부탁드려요!", onPressed: () {
+                Navigator.pop(context);
+                notTouched = false;
+                doReservation(service);
+              });
+            }
+          }
+        ).then((value) {
+          if (notTouched && myInfo.rating > 2) doReservation(service);
+        }),
+
         child: Container(
           height: 56,
           decoration: BoxDecoration(
@@ -158,7 +241,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
-                  ImgPath.home4,
+                  'assets/images/$path.png',
                   height: ratio.height * 36,
                 ),
               ),
@@ -180,47 +263,47 @@ class _ReservationListPageState extends State<ReservationListPage> {
     );
   }
 
-  Widget _listItem(Reserve reserve) {
-    late final Text firstText, secondText, thirdText;
+  Widget? _listItem(Reserve reserve) {
+    late final Text firstText, secondText;
+    late final Text? thirdText;
+    var place = reserve.place;
 
-    if (reserve.service == ServiceType.computer) {
-      secondText = Text(
-        '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
-        style: KR.parag2.copyWith(color: MGColor.base3),
-      );
-      thirdText = Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-                text: '전담 교수님 ',
-                style: KR.parag2.copyWith(color: MGColor.base3)
-            ),
-            TextSpan(
-                text: reserve.professor,
-                style: KR.parag2.copyWith(color: MGColor.brandSecondary)
-            ),
-          ],
-        ),
-      );
-    } else {
+    if (reserve.service == ServiceType.lectureRoom) {
+      if (reserve.place == '-1') {
+        firstText = Text('배정중...', style: KR.subtitle3.copyWith(color: MGColor.base3));
+      } else if(reserve.place == '0') {
+        firstText = Text('배정 불가', style: KR.subtitle3.copyWith(color: Colors.red));
+      } else {
+        firstText = Text("$place호", style: KR.subtitle3);
+      }
       secondText = Text(reserve.startToDate1(),
           style: KR.parag2.copyWith(color: MGColor.base3));
       thirdText = Text(reserve.toDuration(),
           style: KR.parag2.copyWith(color: MGColor.base3));
-    }
-
-    if (reserve.service == ServiceType.lectureRoom && reserve.place == '-1') {
-      firstText = Text('배정 중', style: KR.subtitle3.copyWith(color: Colors.red));
+    } else if (reserve.service == ServiceType.aiSpace) {
+      firstText = Text("$place 회의실", style: KR.subtitle3);
+      secondText = Text(reserve.startToDate1(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
+      thirdText = Text(reserve.toDuration(),
+          style: KR.parag2.copyWith(color: MGColor.base3));
     } else {
-      firstText = Text(reserve.place!, style: KR.subtitle3);
+      firstText = Text(
+          "${place!.split('-')[1]}번 컴퓨터",
+          style: KR.subtitle3
+      );
+      secondText = Text(
+        '${reserve.startToDate2()} ~ ${reserve.endToDate2()}',
+        style: KR.parag2.copyWith(color: MGColor.base3),
+      );
+      thirdText = null;
     }
 
     return GestureDetector(
       onTap: () async {
         int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
         showDialog(
-          context: context,
-          builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
+            context: context,
+            builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
         );
       },
       child: Container(
@@ -244,18 +327,15 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 SizedBox(height: ratio.height * 8),
                 secondText,
                 SizedBox(height: ratio.height * 4),
-                thirdText
+                thirdText ?? const SizedBox.shrink()
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, -(ratio.height * 21)),
-              child: Transform.rotate(
-                angle: pi,
-                child: const Icon(
-                  MGIcon.back,
-                  size: 24,
-                  color: MGColor.base3,
-                ),
+            Transform.rotate(
+              angle: pi,
+              child: const Icon(
+                MGIcon.back,
+                size: 24,
+                color: MGColor.base3,
               ),
             )
           ],
@@ -276,8 +356,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
     widget.setLoading(false);
     if (temp != null || temp!.isNotEmpty) {
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ReservePage(service, availableRoom: temp))
+          MaterialPageRoute(
+              builder: (context) => ReservePage(service, availableRoom: temp))
       );
     } else {
       late String str;

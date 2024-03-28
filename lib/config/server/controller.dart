@@ -52,7 +52,7 @@ class RestAPI {
     }
   }
 
-  /// 이용 시간이 끝나지 않은 예약 불러옴
+  /// 현재 이용이 끝나지 않은 예약들
   static Future<List<Reserve>?> getRemainReservation() async {
     try {
       final api = APIRequest('books/remain');
@@ -72,7 +72,7 @@ class RestAPI {
     }
   }
 
-  /// 이용 시간이 끝났지만, 아직 인증하지 않은 예약 불러옴
+  /// 이용이 끝났지만, 인증되지 않은 예약들
   static Future<List<Reserve>?> getPreAdmittedReservation() async {
     try {
       final api = APIRequest('books');
@@ -99,7 +99,8 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String? professor,
-    required String member,
+    required String? number,
+    required String? userNumber,
     required String purpose
   }) async {
     try {
@@ -112,7 +113,7 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'member': member,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
@@ -123,7 +124,7 @@ class RestAPI {
             'startTime': startTime,
             'endTime': endTime,
             'professor': professor,
-            'member': member,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
@@ -132,7 +133,7 @@ class RestAPI {
           params = {
             'startTime': startTime,
             'endTime': endTime,
-            'member': member,
+            'number': number,
             'purpose': purpose,
           };
           break;
@@ -157,7 +158,8 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String leader,
-    required String member,
+    required String? number,
+    required String? userNumber,
     required String purpose,
     required String? professor
   }) async {
@@ -172,7 +174,7 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'member': member,
+            'userNumber': userNumber,
             'purpose': purpose
           };
           break;
@@ -182,7 +184,7 @@ class RestAPI {
             'reservationId': reservationId,
             'startTime': startTime,
             'endTime': endTime,
-            'member': member,
+            'number': number,
             'purpose': purpose,
           };
           break;
@@ -292,12 +294,15 @@ class RestAPI {
   }
 
   /// QR 인증
-  static Future<bool> qrCheck(String uri) async {
+  static Future<bool> qrCheck(String? qrStr, int reservationId) async {
     try {
-      final api = APIRequest('book/qrcheck');
+      final api = APIRequest('/book/qrcheck?QR=$qrStr&reservationID=$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.post);
-      if (response.isEmpty) return false;
-      return true;
+      if (response.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
     } catch(e) {
       throw Exception(e);
     }

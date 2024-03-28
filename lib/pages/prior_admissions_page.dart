@@ -8,6 +8,7 @@ import '../config/app/_export.dart';
 import '../config/server/_export.dart';
 import '../widgets/small_widgets.dart';
 import 'admission_list_page.dart';
+import 'admit_page.dart';
 
 class PriorAdmissionsPage extends StatefulWidget {
   const PriorAdmissionsPage(this.items, {super.key});
@@ -57,16 +58,13 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
     return GestureDetector(
       onTap: () => _moveToAdmitPage(reserve),
       child: Container(
-        color: Colors.white,
-        margin: EdgeInsets.fromLTRB(
-          ratio.width * 16,
-          0,
-          ratio.width * 16,
-          12
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: ratio.width * 16,
-          vertical: 16
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.white,
+            border: stdFormat3.format(reserve.startTime) == today
+                ? Border.all(color: MGColor.brandPrimary) : null
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,17 +79,14 @@ class _PriorAdmissionsPageState extends State<PriorAdmissionsPage> {
                 Text(reserve.startToDate2(), style: EN.subtitle3)
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, -(ratio.height * 21)),
-              child: Transform.rotate(
-                angle: pi,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    MGIcon.back,
-                    size: 24,
-                    color: Colors.black,
-                  ),
+            Transform.rotate(
+              angle: pi,
+              child: Container(
+                alignment: Alignment.center,
+                child: const Icon(
+                  MGIcon.back,
+                  size: 24,
+                  color: Colors.black,
                 ),
               ),
             )

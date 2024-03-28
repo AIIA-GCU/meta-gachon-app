@@ -276,17 +276,20 @@ class CustomDropdown extends StatefulWidget {
     this.value,
     required this.hint,
     required this.items,
+    this.availables,
     required this.onChanged,
   }) : super(key: key);
 
   final String? value;
   final String hint;
   final List<String> items;
+  final List<bool>? availables;
   final void Function(String?) onChanged;
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
+
 class _CustomDropdownState extends State<CustomDropdown> {
   late String? _selectedItem;
 
@@ -312,15 +315,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
         items: _addDividersAfterItems(widget.items),
         value: _selectedItem,
         onChanged: (val) {
-          widget.onChanged(val);
-          setState(() => _selectedItem = val);
+          int idx = widget.items.indexOf(val!);
+          if (widget.availables == null || widget.availables![idx]) {
+            widget.onChanged(val);
+            setState(() => _selectedItem = val);
+          }
         },
 
-        // style of the displayed value selected item
+        ///드롭버튼(선택된 항목) 디자인
         buttonStyleData: ButtonStyleData(
           padding: const EdgeInsets.all(0),
           height: 32,
-          width: 120,
+          width: 120 * ratio.width,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(4),
@@ -328,31 +334,27 @@ class _CustomDropdownState extends State<CustomDropdown> {
           ),
         ),
 
-        // dropdown's icon style
+        ///드롭아이콘 디자인
         iconStyleData: const IconStyleData(iconSize: 0),
 
-        // dropdown layer style
+        ///메뉴창 디자인
         dropdownStyleData: DropdownStyleData(
             offset: const Offset(0, -4),
             padding: EdgeInsets.zero,
-            maxHeight: 120,
+            maxHeight: 110,
             elevation: 0,
-            decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x19000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                    spreadRadius: 0,
-                  )
-                ],
-                color: Colors.white.withOpacity(0.9)
-            )
-        ),
+            decoration: BoxDecoration(boxShadow: const [
+              BoxShadow(
+                color: Color(0x19000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+                spreadRadius: 0,
+              )
+            ], color: Colors.white.withOpacity(0.9))),
 
-        // dropdown's item
+        ///메뉴들(선택지들) 디자인
         menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.symmetric(horizontal: 4),
+          padding: EdgeInsets.symmetric(horizontal: 4 * ratio.width),
           customHeights: _getCustomItemsHeights(widget.items),
         ),
       ),
@@ -372,19 +374,27 @@ class _CustomDropdownState extends State<CustomDropdown> {
   /// 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> inItems) {
     final List<DropdownMenuItem<String>> menuItems = [];
-    for (final String item in inItems) {
+
+    ///아이템 개수만큼 반복합니다.
+    for (int i=0 ; i < inItems.length ; i++) {
+      late Color textColor;
+      if (inItems[i] == _selectedItem) {
+        textColor = Colors.black;
+      } else if (widget.availables != null && !widget.availables![i]) {
+        textColor = MGColor.base6;
+      } else {
+        textColor = MGColor.base3;
+      }
       menuItems.addAll([
         DropdownMenuItem<String>(
-          value: item,
-          child: Container(
-            width: 120,
+            value: inItems[i],
             child: Center(
-              child: Text(item,
-                style: EN.subtitle3.copyWith(
-                    color: (item == _selectedItem) ? Colors.black : const Color(0xFF7C7C7C))
+              child: Text(
+                  inItems[i],
+                  textAlign: TextAlign.center,
+                  style: EN.subtitle2.copyWith(color: textColor)
               ),
-            ),
-          )
+            )
         ),
         const DropdownMenuItem<String>(
           enabled: false,
@@ -407,7 +417,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   /// Return:
   /// - [List] about size
   ///
-  List<double> _getCustomItemsHeights(List<String> items) {
+  List<double>? _getCustomItemsHeights(List<String> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < items.length; i++) {
       itemsHeights.addAll([32, 1]);

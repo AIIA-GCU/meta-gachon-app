@@ -44,9 +44,9 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           ratio.width * 16,
-          0,
+          ratio.height * 12,
           ratio.width * 16,
-          ratio.height * 16
+          ratio.height * 30
         ),
         child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       '공간과 컴퓨터를 빌려\n편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
-                      () => doReservation(ServiceType.aiSpace)
+                      widget.movetoReserList,
                   ),
 
                   /// <인증하기>
@@ -113,12 +113,12 @@ class _HomePageState extends State<HomePage> {
                           "내 인증 확인하기",
                           ImgPath.home1,
                           checkMyAdmission
-                      )
+                      ),
                     ]
                 ),
               )
             ]
-        )
+        ),
       ),
     );
   }
@@ -340,6 +340,5 @@ class _HomePageState extends State<HomePage> {
   void checkMyAdmission() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
-    widget.movetoAdmisList();
   }
 }

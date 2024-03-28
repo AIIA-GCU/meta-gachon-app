@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'package:mata_gachon/config/app/_export.dart';
@@ -9,9 +10,15 @@ import '../widgets/popup_widgets.dart';
 import '../widgets/small_widgets.dart';
 
 class QrScannerPage extends StatefulWidget {
-  const QrScannerPage({super.key, required this.onMatchedCode});
+  const QrScannerPage(
+      {super.key,
+      required this.onMatchedCode,
+      required this.reservationId,
+      required this.room});
 
   final VoidCallback onMatchedCode;
+  final int reservationId;
+  final String? room;
 
   @override
   State<QrScannerPage> createState() => _QrScannerPageState();
@@ -22,6 +29,20 @@ class _QrScannerPageState extends State<QrScannerPage> {
 
   late QRViewController _qrCtr;
   late bool loading;
+
+  /// 인큐베이터 QR Code
+  final qrRoom _room_1 = qrRoom(
+      name: "405-4",
+      code:
+          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS00");
+  final qrRoom _room_2 = qrRoom(
+      name: "405-5",
+      code:
+          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS01");
+  final qrRoom _room_3 = qrRoom(
+      name: "405-6",
+      code:
+          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS02");
 
   @override
   void initState() {
@@ -109,7 +130,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
     /// QR 검증
     late String title;
     late bool valid;
-    if (data.code == barcode) {
+    if ([_room_1, _room_2, _room_3].any((room) => data.code == room.code && widget.room == room.name)) { /// 방 이름과 코드 둘 다 일치하면 인증 성공
       title = "인증되었습니다!";
       valid = true;
     } else {
@@ -126,6 +147,8 @@ class _QrScannerPageState extends State<QrScannerPage> {
             onPressed: () => Navigator.pop(context))).then((_) async {
       debugPrint('called');
       if (valid) {
+        await RestAPI.qrCheck(
+            data.code, widget.reservationId); // 인증되었을 때 서버로 code와 예약 번호 전달
         Navigator.pop(context);
         widget.onMatchedCode();
       } else {

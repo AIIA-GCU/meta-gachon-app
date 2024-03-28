@@ -21,6 +21,7 @@ import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:mata_gachon/pages/reserve_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -83,7 +84,7 @@ Future<void> main() async {
 /// - start(Widget):
 ///   The displayed screen when running app.
 ///   If app is installed for the first time, then display [OnBoardingPage]
-///   If remaining the session, then display [SelectingServicePage]
+///   If remaining the session, then display [MainFrame]
 ///   If not both, display [SignInPage]
 ///
 class MataGachonApp extends StatefulWidget {

@@ -40,6 +40,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         /// <내 인증 확인하기> & <인증하러 가기>
+        SizedBox(height: ratio.height * 11),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
@@ -58,7 +59,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      ImgPath.home5,
+                      ImgPath.small1,
                       height: ratio.width * 48,
                     ),
                   ),
@@ -113,42 +114,44 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
           child: FutureBuilder<List<Admit>?>(
               future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
               builder: (context, snapshot) {
+                Widget child;
                 if (snapshot.hasError) {
-                  return Container(
-                      height: ratio.height * 594,
+                  child = Container(
+                      height: 218,
                       alignment: Alignment.center,
                       child: Text(
                           '통신 속도가 너무 느립니다!',
-                          style: KR.subtitle4.copyWith(color: MGColor.base3)
+                          style: KR.subtitle4.copyWith(
+                              color: MGColor.base3)
                       )
                   );
+                } else {
+                  if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+                  if (snapshot.hasData) admits = snapshot.data!;
+                  if (reserves.isNotEmpty) {
+                    child = ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics()
+                            .applyTo(const BouncingScrollPhysics()),
+                        itemCount: admits.length,
+                        itemBuilder: (_, index) => _listItem(admits[index])
+                    );
+                  } else {
+                    child = Container(
+                        height: ratio.height * 594,
+                        alignment: Alignment.center,
+                        child: Text(
+                            '아직 인증 내역이 없어요!',
+                            style: KR.subtitle4.copyWith(color: MGColor.base3)
+                        )
+                    );
+                  }
                 }
-                if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-          
-                if (snapshot.hasData) admits = snapshot.data!;
-          
-                if (admits.isNotEmpty) {
-                  return RefreshIndicator(
+                return RefreshIndicator(
                     displacement: 0,
                     color: MGColor.brandPrimary,
                     onRefresh: _onRefreshed,
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics()
-                          .applyTo(const BouncingScrollPhysics()),
-                      itemCount: admits.length,
-                      itemBuilder: (_, index) => _listItem(admits[index])
-                    )
-                  );
-                } else {
-                  return Container(
-                      height: ratio.height * 218,
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                          '아직 인증이 없어요!',
-                          style: KR.subtitle4.copyWith(color: MGColor.base3)
-                      )
-                  );
-                }
+                    child: child
+                );
               }
           ),
         )
@@ -200,16 +203,18 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
       ),
     );
   }
+
   void setLoading(bool value) {
     setState(() {
       _isLoading = value;
     });
   }
+
   Future<void> _doAdmission() async {
-    List<Reserve>? items = await RestAPI.getPreAdmittedReservation();
-    if (items != null && items.isNotEmpty) {
+    List<Reserve>? result = await RestAPI.getPreAdmittedReservation();
+    if (result != null && result.isNotEmpty) {
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => PriorAdmissionsPage(items)));
+          MaterialPageRoute(builder: (_) => PriorAdmissionsPage(result)));
     } else {
       if (!_isShownToast) {
         /// show toast during 2s

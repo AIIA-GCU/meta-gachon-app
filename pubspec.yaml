@@ -49,6 +49,7 @@ dependencies:
   firebase_messaging: ^14.7.14
   fluttertoast: ^8.2.4
   image_picker: ^1.0.7
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -115,6 +116,9 @@ flutter:
     - family: MGIcon
       fonts:
         - asset: assets/fonts/MGIcon.ttf
+    - family: My_page
+      fonts:
+        - asset: assets/fonts/my_page/My_page.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -246,6 +246,8 @@ class Admit {
   final String _memberInfo;
   final String _review;
   final Uint8List _photo;
+  final String _me;
+  final bool? _evaluation;
 
   Admit(
       this._admisstionId,
@@ -255,7 +257,9 @@ class Admit {
       this._time,
       this._memberInfo,
       this._review,
-      this._photo
+      this._photo,
+      this._me,
+      this._evaluation
       );
 
   int get admissionId => _admisstionId;
@@ -274,6 +278,10 @@ class Admit {
 
   Uint8List get photo => _photo;
 
+  String get me => _me;
+
+  bool? get evaluation => _evaluation;
+
   ///
   /// EX) Admit 객체의 response
   /// - "admissionId": 66
@@ -283,6 +291,7 @@ class Admit {
   /// - "time": "06:00 ~ 15:00"
   /// - "review": "잘 썼습니다!"
   /// - "photo": "9 9JdiONJDJIOFofjdijf...." (base64 포멧)
+  /// - "evaluation": 0 / 1 / null
   ///
   factory Admit.fromJson(Map<String, dynamic> json) {
     return Admit(
@@ -293,7 +302,9 @@ class Admit {
       json['time'],
       json['memberInfo'] ?? '',
       json['review'],
-      base64Decode(json['photo'])
+      base64Decode(json['photo']),
+      json['me'] ?? '',
+      json['evaluation']
     );
   }
 }

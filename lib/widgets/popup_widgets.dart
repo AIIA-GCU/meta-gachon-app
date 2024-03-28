@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/app/load_assets.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
 import '../pages/admit_page.dart';
 import '../pages/reserve_page.dart';
 import '../pages/qr_page.dart';
+import 'button.dart';
 
 class AlertPopup extends StatelessWidget {
   const AlertPopup({
@@ -148,7 +150,19 @@ class ReservationPopup extends StatelessWidget {
     late Text place, time1, time2;
     late String statusMsg;
     late Widget button;
-    
+    late String path;
+      switch (item.service) {
+        case ServiceType.aiSpace:
+          path = "graphic_meta";
+          break;
+        case ServiceType.lectureRoom:
+          path = "graphic_class";
+          break;
+        case ServiceType.computer:
+          path = "graphic_gpu";
+          break;
+      }
+
     if (item.service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
     } else {
@@ -183,6 +197,7 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
+        /// 사용 전 (예약 변경 X, QR O)
         case 0:
           button = Text(
               "사용 전날은 수정 및 취소가 불가합니다.",
@@ -193,7 +208,7 @@ class ReservationPopup extends StatelessWidget {
         /// 사용 전 (예약 변경 X, QR X)
         case 1:
           button = ElevatedButton(
-              onPressed: () => _qr,
+              onPressed: () => _qr(context),
               style: ElevatedButton.styleFrom(
                   backgroundColor: MGColor.brandPrimary,
                   fixedSize: Size(
@@ -206,7 +221,7 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
-        /// 사용 전 (예약 변경 O, QR X)
+        /// 사용 전 (수정 O)
         case 2:
           if (item.service case ServiceType.computer) {
             button = ElevatedButton(
@@ -253,7 +268,7 @@ class ReservationPopup extends StatelessWidget {
         /// 사용 중 (연장 O)
         case 4:
           button = ElevatedButton(
-              onPressed: () => _prolong,
+              onPressed: () => _prolong(context),
               style: ElevatedButton.styleFrom(
                   backgroundColor: MGColor.brandPrimary,
                   fixedSize: Size(
@@ -311,9 +326,9 @@ class ReservationPopup extends StatelessWidget {
               width: ratio.height * 120,
               height: ratio.height * 120,
               decoration: ShapeDecoration(
-                image: const DecorationImage(
+                image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage(ImgPath.home4)),
+                  image: AssetImage('assets/images/$path.png')),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),
@@ -465,7 +480,7 @@ class ReservationPopup extends StatelessWidget {
   void _qr(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context)
-      => QrScannerPage(onMatchedCode: () => Navigator.pop(context)))
+      => QrScannerPage(reservationId: item.reservationId, room: item.place, onMatchedCode: () => Navigator.pop(context)))
     );
   }
 
@@ -597,7 +612,56 @@ class AdmissionPopup extends StatelessWidget {
                   softWrap: true,
                   maxLines: 3,
                 )
-              )
+              ),
+
+              SizedBox(height: ratio.height * 24),
+
+              // 관리자 이용내역 평가
+              if (item.me == '0')
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '확인된 인증입니다.',
+                      style: KR.subtitle4.copyWith(color: MGColor.brandPrimary),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
+              else if (item.me == '1')
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '경고를 받았습니다!',
+                      style: KR.subtitle4.copyWith(color: MGColor.systemError),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
+              else
+                Container(
+                    constraints: BoxConstraints(
+                        minWidth: ratio.width * 294,
+                        minHeight: 60
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '아직 확인되지 않은 인증입니다.',
+                      style: KR.subtitle4.copyWith(color: MGColor.base3),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 3,
+                    )
+                )
             ]
         ),
       ),
@@ -647,23 +711,336 @@ class GradePopup extends StatelessWidget {
             borderRadius: BorderRadius.circular(12)
           ),
           alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(myInfo.ratingName, style: EN.subtitle1),
-              SizedBox(height: ratio.height * 40),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(myInfo.ratingName, style: EN.subtitle1),
+            SizedBox(height: ratio.height * 40),
+            if (myInfo.rating == 1)
               Text(
-                '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔하네요!',
+                '당신은 ${myInfo.ratingName} 등급입니다.\n2주간 예약을 할 수 없습니다.',
                 style: KR.parag2.copyWith(color: MGColor.base2),
                 textAlign: TextAlign.center,
               ),
+            if (myInfo.rating == 2)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n7일 예약을 할 수 없습니다.',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 3)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n잘 하고 있어요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 4)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n깨끗하게 사용중이네요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            if (myInfo.rating == 5)
+              Text(
+                '당신은 ${myInfo.ratingName} 등급입니다.\n정말 깔끔해요!',
+                style: KR.parag2.copyWith(color: MGColor.base2),
+                textAlign: TextAlign.center,
+              ),
+            SizedBox(height: ratio.height * 16),
+            if (showDuration)
+              Text(
+                '등급 지속 시간: ${123}일',
+                style: KR.parag2.copyWith(color: MGColor.brandPrimary),
+              )
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+class GradeExplainPopup extends StatelessWidget {
+  const GradeExplainPopup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: EdgeInsets.zero,
+      child: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          width: ratio.width * 326,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12)),
+          padding: EdgeInsets.fromLTRB(
+              ratio.width * 16,
+              ratio.height * 26,
+              ratio.width * 32,
+              0
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                         image: AssetImage(ImgPath.grayLv),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text("GRAY",style: EN.subtitle2,),
+                          SizedBox(
+                            width: ratio.width * 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("경고",style: KR.grade3,),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한달에 10번 이상의 경고를 받음",style: KR.grade4,),
+                      Text("2주간 예약 금지",style: KR.grade2,),
+                    ],
+                  ),
+                ],
+              ),
+
               SizedBox(height: ratio.height * 16),
-              if (showDuration)
-                Text(
-                  '등급 지속 시간: ${123}일',
-                  style: KR.parag2.copyWith(color: MGColor.brandPrimary),
-                )
-            ]
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage("assets/images/caution.png"),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text("STONE",style: EN.subtitle2,),
+                          SizedBox(
+                            width: ratio.width * 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("주의",style: KR.grade3),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한달에 5번 이상의 경고를 받음",style: KR.grade4,),
+                      Text("7일간 예약 금지",style: KR.grade2,),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.cobaltLv),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text("COBALT",style: EN.subtitle2,),
+                          SizedBox(
+                            width: ratio.width * 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("기본",style: KR.grade5,),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("기본 등급입니다",style: KR.grade4,),
+                      Text("정말 깔끔하네요!",style: KR.grade6,),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.skyLv),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text("SKY",style: EN.subtitle2,),
+                          SizedBox(
+                            width: ratio.width * 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("우수",style: KR.grade7,),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한 달에 7번 이상 우수한 사용을 함",style: KR.grade4,),
+                      Text("예약 가능 시간 4시간으로 증가",style: KR.grade6,),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 16),
+              Divider(
+                height: ratio.height * 1,
+                color: MGColor.base6,
+              ),
+              SizedBox(height: ratio.height * 14),
+
+              Row(
+                children: [
+                  Container(
+                    width: ratio.width * 70,
+                    height: ratio. height * 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.aquaLv),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ratio.width * 12,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text("AQUA",style: EN.subtitle2,),
+                          SizedBox(
+                            width: ratio.width * 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: ratio.height * 1),
+                            child: Text("VIP",style: EN.grade7,),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: ratio.height * 6.6,
+                      ),
+                      Text("한 달에 14번 이상 우수한 사용을 함",style: KR.grade4,),
+                      Text("예약 가능 시간 5시간으로 증가",style: KR.grade6,),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: ratio.height * 26),
+
+              _gradeButton(context),
+              TextButton(child: Text("하루 동안 보지 않기",style: KR.grade1), onPressed: () => Navigator.pop(context),)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _gradeButton(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            builder: (context) => const GradePopup()
+        );
+      },
+      child: Container(
+        width: 301,
+        height: 40,
+        decoration: BoxDecoration(
+          color: MGColor.brandPrimary,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Text(
+              "내 등급 확인하기",
+              style: KR.grade8
           ),
         ),
       ),
