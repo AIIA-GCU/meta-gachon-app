@@ -6,6 +6,7 @@ import 'package:mata_gachon/config/app/my_page_icons.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'term_page.dart';
 import 'setting_page.dart';
@@ -14,9 +15,6 @@ import 'my_admission_list_page.dart';
 import '../widgets/button.dart';
 import '../widgets/layout.dart';
 import '../widgets/popup_widgets.dart';
-
-
-
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key, required this.moveToReserList});
@@ -28,7 +26,35 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  late final SharedPreferences preferences;
+  late bool sameDate, seeGradeExplanation;
   bool _loading = false;
+
+  @override
+  void initState() {
+    getSavedDate();
+    super.initState();
+  }
+
+  Future<void> getSavedDate() async {
+    preferences = await SharedPreferences.getInstance();
+    var str = preferences.getString("today") ?? "";
+    debugPrint("saved data = $str");
+    if (str.isEmpty) {
+      sameDate = false;
+      seeGradeExplanation = true;
+    } else {
+      var list = str.split(',');
+      seeGradeExplanation = list[0] == '1';
+      sameDate = list[1] == today;
+      if (!sameDate) {
+        seeGradeExplanation = true;
+        preferences.setString("today", "1,$today");
+      }
+    }
+    debugPrint("sameDate = $sameDate");
+    debugPrint("seeGradeExplanation = $seeGradeExplanation");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +69,17 @@ class _MyPageState extends State<MyPage> {
           child: Row(
               children: [
             /// 이미지
-            Image.asset('assets/images/mypage.png', width: ratio.width * 120, height: ratio.height * 120,),
+            Container(
+              width: ratio.width * 120,
+              height: ratio.width * 120,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+                image: const DecorationImage(
+                  fit: BoxFit.fitWidth,
+                  image: AssetImage(ImgPath.profile)
+                )
+              )
+            ),
 
             SizedBox(width: ratio.width * 10),
 
@@ -79,9 +115,10 @@ class _MyPageState extends State<MyPage> {
                       Icon(MGIcon.res,
                         color: MGColor.brandPrimary,
                           size: ratio.width * 26),
-
-                      SizedBox(width: ratio.width * 40),
-                      SizedBox(height: ratio.height * 10),
+                      SizedBox(
+                        width: ratio.width * 40,
+                        height: ratio.height * 10,
+                      ),
                       Text('내 예약',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
                     ],
@@ -102,8 +139,10 @@ class _MyPageState extends State<MyPage> {
                       Icon(My_page.mycertification,
                         color: MGColor.brandPrimary,
                         size: ratio.width * 26,),
-                      SizedBox(width: ratio.width * 40),
-                      SizedBox(height: ratio.height * 10),
+                      SizedBox(
+                        width: ratio.width * 40,
+                        height: ratio.height * 10,
+                      ),
                       Text('내 인증',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
                     ],
@@ -126,8 +165,10 @@ class _MyPageState extends State<MyPage> {
                         color: MGColor.brandPrimary,
                         size: ratio.width * 26,
                       ),
-                      SizedBox(width: ratio.width * 40),
-                      SizedBox(height: ratio.height * 10),
+                      SizedBox(
+                        width: ratio.width * 40,
+                        height: ratio.height * 10,
+                      ),
                       Text('내 등급',
                           style: KR.subtitle4.copyWith(color: MGColor.base2))
                     ],
@@ -142,14 +183,14 @@ class _MyPageState extends State<MyPage> {
             padding:
             EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
             child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Icon(
+              const Icon(
                My_page.homepage,
                 color: MGColor.base3,
               ),
               SizedBox(width: ratio.width * 16),
               Text('학교 홈페이지 바로가기',
                   style: KR.subtitle3.copyWith(color: MGColor.base3)),
-              Spacer(),
+              const Spacer(),
               Transform.rotate(
                   angle: pi,
                   child: Icon(MGIcon.back,
@@ -161,12 +202,12 @@ class _MyPageState extends State<MyPage> {
             padding:
             EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
             child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Icon(My_page.cybercampus, color: MGColor.base3),
+              const Icon(My_page.cybercampus, color: MGColor.base3),
 
               SizedBox(width: ratio.width * 16),
               Text('사이버 캠퍼스 바로가기',
                   style: KR.subtitle3.copyWith(color: MGColor.base3)),
-              Spacer(),
+              const Spacer(),
               Transform.rotate(
                   angle: pi,
                   child: Icon(MGIcon.back,
@@ -199,13 +240,13 @@ class _MyPageState extends State<MyPage> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Icon(
+                const Icon(
                   My_page.logout,
                   color: MGColor.base3,
                 ),
                 SizedBox(width: ratio.width * 16),
                 Text('로그아웃', style: KR.subtitle3.copyWith(color: MGColor.base3)),
-                Spacer(),
+                const Spacer(),
                 Transform.rotate(
                     angle: pi,
                     child: Icon(MGIcon.back,
@@ -213,7 +254,7 @@ class _MyPageState extends State<MyPage> {
               ],
             )),
         SizedBox(height: ratio.height * 16),
-        Divider(
+        const Divider(
           thickness: 0.3,
           color: MGColor.base3,
         ),
@@ -253,71 +294,89 @@ class _MyPageState extends State<MyPage> {
       ]),
     );
   }
+
   void _showGradeExplainPopup(BuildContext context) {
-    showDialog(
-        context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => const GradeExplainPopup());
+    if (seeGradeExplanation) {
+      showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.25),
+          builder: (context) => GradeExplainPopup(
+            preferences: preferences,
+            hideForDay: () {
+              seeGradeExplanation = false;
+              debugPrint("seeGradeExplanation = $seeGradeExplanation");
+            },
+          )
+      );
+    } else {
+      showDialog(
+          context: context,
+          barrierColor: MGColor.barrier,
+          builder: (_) => const GradePopup()
+      );
+    }
   }
+
   void _floatMyAdmissionPage(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()));
   }
 
-  void _floatSettingPage(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const SettingPage()));
-  }
+  // void _floatSettingPage(BuildContext context) {
+  //   Navigator.of(context)
+  //       .push(MaterialPageRoute(builder: (context) => const SettingPage()));
+  // }
 
   void _floatTermPage(BuildContext context, Term term) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => TermPage(term: term)));
   }
 
-  void _trySignOut(BuildContext context) {
+  void _trySignOut(BuildContext context1) {
     showDialog(
-        context: context,
+        context: context1,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => AlertPopup(
+        builder: (context2) => AlertPopup(
             title: '로그아웃 하시겠습니까?',
             agreeMsg: '로그아웃',
             onAgreed: () async {
               setState(() {
                 _loading = true;
-                Navigator.pop(context);
+                Navigator.pop(context2);
               });
 
               late Future func;
               try {
                 if (!await Session().clear()) {
+                  setState(() => _loading = false);
                   throw Exception('\n[Error] about Session');
                 }
-                func = showDialog(
-                    context: context,
+                setState(() => _loading = false);
+
+                showDialog(
+                    context: context1,
                     barrierColor: Colors.black.withOpacity(0.25),
-                    builder: (ctx) => CommentPopup(
+                    builder: (context3) => CommentPopup(
                         title: "로그아웃 되었습니다!",
-                        onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (_) => SignInPage()),
-                                (route) => false
-                        )
+                        onPressed: () => Navigator.pop(context3)
                     )
-                );
+                ).then((_) => Navigator.of(context1).pushAndRemoveUntil(
+                    PageRouteBuilder(
+                        fullscreenDialog: false,
+                        transitionsBuilder: slideRigth2Left,
+                        pageBuilder: (_, __, ___) => const SignInPage()
+                    ), (route) => false
+                ));
               } catch(_) {
-                func = showDialog(
-                    context: context,
+                showDialog(
+                    context: context1,
                     barrierColor: Colors.black.withOpacity(0.25),
-                    builder: (context) => CommentPopup(
+                    builder: (context3) => CommentPopup(
                         title: "[400] 서버 통신에 문제가 있습니다",
-                        onPressed: () => Navigator.pop(context)
+                        onPressed: () => Navigator.pop(context3)
                     )
                 );
               }
-
-              setState(() {
-                _loading = false;
-                func;
-              });
             }
         )
     );

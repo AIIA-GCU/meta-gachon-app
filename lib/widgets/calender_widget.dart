@@ -288,18 +288,21 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
       rangeLast = rangeLast
           .subtract(Duration(days: 7 - rangeLast.weekday));
     }
+    debugPrint("normal range : ${stdFormat3.format(rangeFirst)} ~ ${stdFormat3.format(rangeLast)}");
 
     availableFirst = day;
     if (availableFirst.weekday != DateTime.monday) {
       availableFirst = availableFirst
           .add(Duration(days: 7 - availableFirst.weekday));
     }
+    debugPrint("available : ${stdFormat3.format(availableFirst)}");
     if (availableFirst.isAfter(rangeLast)) {
       rangeFirst = rangeFirst.add(const Duration(days: 35));
       rangeLast = rangeLast.add(const Duration(days: 35));
+      debugPrint("changed range : ${stdFormat3.format(rangeFirst)} ~ ${stdFormat3.format(rangeLast)}");
     }
-
-    title = "${availableFirst.month}월";
+    day = day.add(const Duration(days: 10));
+    title = "${rangeFirst.add(const Duration(days: 10)).month}월";
 
     super.initState();
   }
@@ -319,12 +322,18 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (availableFirst.isAfter(DateTime(day.year, day.month))) {
+                        if (availableFirst.isAfter(DateTime(day.year, day.month-1))) {
                           return;
                         }
                         setState(() => _setCalender(day = DateTime(day.year, day.month-1)));
                       },
-                      child: Icon(MGIcon.back, size: ratio.height * 24)
+                      child: Icon(
+                        MGIcon.back,
+                        size: ratio.height * 24,
+                        color: availableFirst.isAfter(DateTime(day.year, day.month-1))
+                            ? MGColor.base6
+                            : MGColor.base1,
+                      )
                     ),
                     SizedBox(width: ratio.width * 16),
                     GestureDetector(
@@ -453,7 +462,8 @@ class _CustomWeekCalenderState extends State<CustomWeekCalender> {
       rangeLast = rangeLast
           .subtract(Duration(days: 7 - rangeLast.weekday));
     }
-
+    debugPrint("day = ${stdFormat3.format(day)}");
+    debugPrint("range : ${stdFormat3.format(rangeFirst)} ~ ${stdFormat3.format(rangeLast)}");
     title = "${d.month}월";
   }
 
