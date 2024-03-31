@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/app/load_assets.dart';
 import 'package:mata_gachon/config/server/_export.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/admit_page.dart';
 import '../pages/reserve_page.dart';
@@ -151,17 +153,17 @@ class ReservationPopup extends StatelessWidget {
     late String statusMsg;
     late Widget button;
     late String path;
-      switch (item.service) {
-        case ServiceType.aiSpace:
-          path = "graphic_meta";
-          break;
-        case ServiceType.lectureRoom:
-          path = "graphic_class";
-          break;
-        case ServiceType.computer:
-          path = "graphic_gpu";
-          break;
-      }
+    switch (item.service) {
+      case ServiceType.aiSpace:
+        path = ImgPath.graphicMeta;
+        break;
+      case ServiceType.lectureRoom:
+        path = ImgPath.graphicClass;
+        break;
+      case ServiceType.computer:
+        path = ImgPath.graphicGPU;
+        break;
+    }
 
     if (item.service == ServiceType.lectureRoom && item.place == '-1') {
       place = Text('배정 중', style: KR.subtitle1.copyWith(color: Colors.red));
@@ -328,7 +330,7 @@ class ReservationPopup extends StatelessWidget {
               decoration: ShapeDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: AssetImage('assets/images/$path.png')),
+                  image: AssetImage(path)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))
               ),
@@ -758,7 +760,14 @@ class GradePopup extends StatelessWidget {
 }
 
 class GradeExplainPopup extends StatelessWidget {
-  const GradeExplainPopup({super.key});
+  const GradeExplainPopup({
+    super.key,
+    required this.preferences,
+    required this.hideForDay
+  });
+
+  final SharedPreferences preferences;
+  final VoidCallback hideForDay;
 
   @override
   Widget build(BuildContext context) {
@@ -774,7 +783,7 @@ class GradeExplainPopup extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(
               ratio.width * 16,
               ratio.height * 26,
-              ratio.width * 32,
+              ratio.width * 16,
               0
           ),
           child: Column(
@@ -822,10 +831,7 @@ class GradeExplainPopup extends StatelessWidget {
               ),
 
               SizedBox(height: ratio.height * 16),
-              Divider(
-                height: ratio.height * 1,
-                color: MGColor.base6,
-              ),
+              const Divider(color: MGColor.base6),
               SizedBox(height: ratio.height * 14),
 
               Row(
@@ -833,7 +839,7 @@ class GradeExplainPopup extends StatelessWidget {
                   Container(
                     width: ratio.width * 70,
                     height: ratio. height * 70,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         fit: BoxFit.cover,
@@ -869,10 +875,7 @@ class GradeExplainPopup extends StatelessWidget {
               ),
 
               SizedBox(height: ratio.height * 16),
-              Divider(
-                height: ratio.height * 1,
-                color: MGColor.base6,
-              ),
+              const Divider(color: MGColor.base6),
               SizedBox(height: ratio.height * 14),
 
               Row(
@@ -916,10 +919,7 @@ class GradeExplainPopup extends StatelessWidget {
               ),
 
               SizedBox(height: ratio.height * 16),
-              Divider(
-                height: ratio.height * 1,
-                color: MGColor.base6,
-              ),
+              const Divider(color: MGColor.base6),
               SizedBox(height: ratio.height * 14),
 
               Row(
@@ -963,10 +963,7 @@ class GradeExplainPopup extends StatelessWidget {
               ),
 
               SizedBox(height: ratio.height * 16),
-              Divider(
-                height: ratio.height * 1,
-                color: MGColor.base6,
-              ),
+              const Divider(color: MGColor.base6),
               SizedBox(height: ratio.height * 14),
 
               Row(
@@ -1011,8 +1008,28 @@ class GradeExplainPopup extends StatelessWidget {
 
               SizedBox(height: ratio.height * 26),
 
-              _gradeButton(context),
-              TextButton(child: Text("하루 동안 보지 않기",style: KR.grade1), onPressed: () => Navigator.pop(context),)
+              _button(
+                text: Text("내 등급 확인하기",
+                    style: KR.parag2.copyWith(color: Colors.white)),
+                background: MGColor.brandPrimary,
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (_) => const GradePopup()
+                  );
+                }
+              ),
+              _button(
+                text: Text("하루 동안 보지 않기",style: KR.grade1),
+                background: Colors.transparent,
+                onTap: () {
+                  hideForDay();
+                  preferences
+                      .setString("today", '0,$today')
+                      .then((_) => Navigator.pop(context));
+                }
+              )
             ],
           ),
         ),
@@ -1020,29 +1037,20 @@ class GradeExplainPopup extends StatelessWidget {
     );
   }
 
-  Widget _gradeButton(BuildContext context) {
+  Widget _button({
+    required Text text,
+    required Color background,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        showDialog(
-            context: context,
-            barrierColor: Colors.black.withOpacity(0.25),
-            builder: (context) => const GradePopup()
-        );
-      },
+      onTap: onTap,
       child: Container(
-        width: 301,
         height: 40,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: MGColor.brandPrimary,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: Text(
-              "내 등급 확인하기",
-              style: KR.grade8
-          ),
-        ),
+          color: background,
+          borderRadius: BorderRadius.circular(10)),
+        child: text
       ),
     );
   }

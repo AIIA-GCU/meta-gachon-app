@@ -92,14 +92,6 @@ class ImgPath {
   // AIIA 심볼 (색상)
   static const String aiiaColor = "assets/images/aiia_color.png";
 
-  // 학교 심볼
-  static const String schoolSymbol = "assets/images/school_symbol.png";
-
-  // 서비스 선택 버튼 이미지
-  static const String lecture = "assets/images/lecture.png";
-  static const String aiSpace = "assets/images/aispace.png";
-  static const String computer = "assets/images/computer.png";
-
   // 회원 등급
   static const String grayLv = "assets/images/warning.png";
   static const String stoneLv = "assets/images/caution.png";
@@ -115,11 +107,14 @@ class ImgPath {
   static const String home5 = "assets/images/home_img5.png";
 
   // 예약 페이지 팝업 이미지
-  static const String reserve1 = "assets/images/graphic_class.png";
-  static const String reserve2 = "assets/images/graphic_gpu.png";
-  static const String reserve3 = "assets/images/graphic_meta.png";
+  static const String graphicClass = "assets/images/graphic_class.png";
+  static const String graphicGPU = "assets/images/graphic_gpu.png";
+  static const String graphicMeta = "assets/images/graphic_meta.png";
 
   // 인증 페이지 사용 이미지
   static const String small1 = "assets/images/small_admit.png";
+
+  // 마이페이지 이미지
+  static const String profile = "assets/images/profile.png";
 }
 

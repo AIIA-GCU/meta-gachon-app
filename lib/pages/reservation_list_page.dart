@@ -140,19 +140,19 @@ class _ReservationListPageState extends State<ReservationListPage> {
   }
 
   Widget _moveToPageCard(ServiceType service) {
-    final String place = service == ServiceType.aiSpace
-        ? "AI 인큐베이터" : service == ServiceType.lectureRoom
-        ? "강의실" : "GPU 컴퓨터";
-    late String path;
+    late final String place, path;
     switch (service) {
       case ServiceType.aiSpace:
-        path = "meta2";
+        place = "AI 인큐베이터";
+        path = ImgPath.graphicMeta;
         break;
       case ServiceType.lectureRoom:
-        path = "class2";
+        place = "강의실";
+        path = ImgPath.graphicClass;
         break;
       case ServiceType.computer:
-        path = "gpu2";
+        place = "GPU 컴퓨터";
+        path = ImgPath.graphicGPU;
         break;
     }
 
@@ -240,10 +240,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/$path.png',
-                  height: ratio.height * 36,
-                ),
+                child: Image.asset(path, height: ratio.height * 36),
               ),
               SizedBox(width: ratio.width * 8),
               Text('$place 예약하기', style: KR.subtitle3),
