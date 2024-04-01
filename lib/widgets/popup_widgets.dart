@@ -436,10 +436,10 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// 예약 삭제
-  void _del(BuildContext context) {
-    Navigator.pop(context);
+  void _del(BuildContext context1) {
+    Navigator.pop(context1);
     showDialog(
-      context: context,
+      context: context1,
       barrierColor: MGColor.barrier,
       builder: (context1) => AlertPopup(
           title: "예약을 취소하시겠습니까?",
@@ -451,14 +451,14 @@ class ReservationPopup extends StatelessWidget {
                     reservationId: item.reservationId);
                 if (uid == null) {
                   showDialog(
-                      context: context,
+                      context: context1,
                       barrierColor: MGColor.barrier,
                       builder: (context2) => CommentPopup(
                           title: "[Error] deleting reservation",
                           onPressed: () => Navigator.pop(context2)));
                 } else {
                   showDialog(
-                          context: context,
+                          context: context1,
                           builder: (context2) => CommentPopup(
                               title: "예약이 취소되었습니다!",
                               onPressed: () => Navigator.pop(context2)))
@@ -466,7 +466,7 @@ class ReservationPopup extends StatelessWidget {
                 }
             } on TimeoutException {
               showDialog(
-                  context: context,
+                  context: context1,
                   barrierColor: MGColor.barrier,
                   builder: (context2) => CommentPopup(
                       title: "통신 속도가 너무 느립니다!",

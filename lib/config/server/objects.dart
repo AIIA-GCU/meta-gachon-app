@@ -197,6 +197,8 @@ class Reserve {
 
   String startToDate2() => dateFormat2.format(_startTime);
 
+  String startToStd3() => stdFormat3.format(_startTime);
+
   String endToDate1() => dateFormat1.format(_endTime);
 
   String endToDate2() => dateFormat2.format(_endTime);
