@@ -87,8 +87,7 @@ class _ReservePageState extends State<ReservePage> {
       } else {
         _isSolo = true;
       }
-      // Todo: 나중에 바꾸기
-      _purposeCtr.text = 'late change!';
+      _purposeCtr.text = widget.reserve!.purpose;
       _canTime = true;
     }
 

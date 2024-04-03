@@ -378,7 +378,7 @@ class ReservationPopup extends StatelessWidget {
             SizedBox(
               width: ratio.width * 220,
               child: Text(
-                '나중에 바꾸기',
+                item.purpose,
                 textAlign: TextAlign.center,
                 style: KR.label2.copyWith(color: MGColor.base3.withOpacity(0.6))
               )
@@ -478,7 +478,6 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// QR 확인
-  /// Todo: QR을 했다는 사실을 서버에 전송할 필요가 있지 않을까?
   void _qr(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context)
