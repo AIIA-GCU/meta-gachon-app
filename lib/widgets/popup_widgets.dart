@@ -464,16 +464,6 @@ class ReservationPopup extends StatelessWidget {
                               onPressed: () => Navigator.pop(context2)))
                       .then((_) => listListener.add(StreamType.reserve));
                 }
-            } on TimeoutException {
-              showDialog(
-                  context: context,
-                  barrierColor: MGColor.barrier,
-                  builder: (context2) => CommentPopup(
-                      title: "통신 속도가 너무 느립니다!",
-                      onPressed: () => Navigator.pop(context2)));
-            }
-          }
-      )
     );
   }
 
@@ -672,20 +662,6 @@ class AdmissionPopup extends StatelessWidget {
 
   void enlargePhoto(BuildContext context) {
     showDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.55),
-      builder: (context) {
-        return GestureDetector(
-          child: Center(
-            child: Image.memory(
-              item.photo,
-              height: ratio.height * 594,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        );
-      }
     );
   }
 }

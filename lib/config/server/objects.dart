@@ -147,6 +147,7 @@ class Reserve {
   final DateTime _endTime;
   final String _memberInfo;
   final String? _professor;
+  final String _purpose;
 
   Reserve(
       this._uid,
@@ -156,7 +157,8 @@ class Reserve {
       this._startTime,
       this._endTime,
       this._memberInfo,
-      this._professor
+      this._professor,
+      this._purpose
       ) {
     switch (serviceType) {
       case 'MI':
@@ -172,8 +174,8 @@ class Reserve {
         assert(true, "category is excluded from range!");
     }
     assert(
-      !(_type == ServiceType.computer && _professor == null),
-      'Professor must enter in reservation of GPU computer'
+    !(_type == ServiceType.computer && _professor == null),
+    'Professor must enter in reservation of GPU computer'
     );
   }
 
@@ -192,6 +194,8 @@ class Reserve {
   String get memberInfo => _memberInfo;
 
   String? get professor => _professor;
+
+  String get purpose => _purpose;
 
   String startToDate1() => dateFormat1.format(_startTime);
 
@@ -224,13 +228,14 @@ class Reserve {
   factory Reserve.fromJson(Map<String, dynamic> json) {
     late DateTime start, end;
     if (json['category'] == "COMPUTER") {
-      List<String> dates = (json["date"] as String).split('/');
+      List<String> dates = (json["date"] as String).split(' ~ ');
       start = stdFormat3.parse(dates[0]);
-      end = stdFormat2.parse(dates[2]);
+      end = stdFormat3.parse(dates[1]);
     } else {
+      String date = (json["date"] as String).split(' ')[0];
       List<String> duration = (json['time'] as String).split(' ~ ');
-      start = stdFormat2.parse("${json["date"]} ${duration[0]}");
-      end = stdFormat2.parse("${json["date"]} ${duration[1]}");
+      start = stdFormat2.parse("$date ${duration[0]}");
+      end = stdFormat2.parse("$date ${duration[1]}");
     }
     return Reserve(
         json['reservationId'],
@@ -240,7 +245,8 @@ class Reserve {
         start,
         end,
         json['memberInfo'] ?? '',
-        json['professor']
+        json['professor'],
+        json['purpose']
     );
   }
 }
