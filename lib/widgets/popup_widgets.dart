@@ -447,9 +447,9 @@ class ReservationPopup extends StatelessWidget {
           onAgreed: () async {
             Navigator.pop(context1);
             try {
-                int? uid = await RestAPI.delReservation(
+                int? status = await RestAPI.delReservation(
                     reservationId: item.reservationId);
-                if (uid == null) {
+                if (status != 200) {
                   showDialog(
                       context: context1,
                       barrierColor: MGColor.barrier,
@@ -500,7 +500,7 @@ class ReservationPopup extends StatelessWidget {
           try {
             int? uid = await RestAPI.prolongReservation(
                 reservationId: item.reservationId);
-            if (uid == null) {
+            if (uid != 200) {
               showDialog(
                   context: context,
                   barrierColor: MGColor.barrier,

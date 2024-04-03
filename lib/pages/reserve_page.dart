@@ -858,7 +858,7 @@ class _ReservePageState extends State<ReservePage> {
                   professor: _professorCtr.text
               );
         if (response == null) {
-          title = 'Not found';
+          title = '예약이 정상적으로 처리되지 않았습니다.';
           onPressed = () => Navigator.pop(context);
         } else if (response['reservationID'] == -1) {
           title = '[!] ${response['statusMsg']}';

@@ -58,7 +58,6 @@ class _ReservationListPageState extends State<ReservationListPage> {
         flexibleSpace: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             _moveToPageCard(ServiceType.lectureRoom),
             const SizedBox(height: 12),
             _moveToPageCard(ServiceType.aiSpace),
@@ -298,10 +297,21 @@ class _ReservationListPageState extends State<ReservationListPage> {
     return GestureDetector(
       onTap: () async {
         int? status = await RestAPI.currentReservationStatus(reservationId: reserve.reservationId);
-        showDialog(
-            context: context,
-            builder: (_) => ReservationPopup(reserve, status!, widget.setLoading)
-        );
+        if (status == null) {
+         showDialog(
+             context: context,
+             builder: (_) => CommentPopup(
+                 title: "[Error] 비정상적인 예약",
+                 onPressed: () => Navigator.pop(context)
+             )
+         );
+        } else {
+          showDialog(
+              context: context,
+              builder: (_) =>
+                  ReservationPopup(reserve, status, widget.setLoading)
+          );
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
