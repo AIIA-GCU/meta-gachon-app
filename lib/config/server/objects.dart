@@ -222,17 +222,25 @@ class Reserve {
   /// - "time": "06:00 ~ 15:00"
   ///
   factory Reserve.fromJson(Map<String, dynamic> json) {
-    String date = (json['date'] as String).split(' ')[0];
-    List<String> time = (json['time'] as String).split(' ~ ');
+    late DateTime start, end;
+    if (json['category'] == "COMPUTER") {
+      List<String> dates = (json["date"] as String).split('/');
+      start = stdFormat3.parse(dates[0]);
+      end = stdFormat2.parse(dates[2]);
+    } else {
+      List<String> duration = (json['time'] as String).split(' ~ ');
+      start = stdFormat2.parse("${json["date"]} ${duration[0]}");
+      end = stdFormat2.parse("${json["date"]} ${duration[1]}");
+    }
     return Reserve(
         json['reservationId'],
         json['category'],
         json['leaderInfo'],
         json['room'],
-        stdFormat2.parse('$date ${time[0]}'),
-        stdFormat2.parse('$date ${time[1]}'),
+        start,
+        end,
         json['memberInfo'] ?? '',
-        json['professor'] ?? ''
+        json['professor']
     );
   }
 }
