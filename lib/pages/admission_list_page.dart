@@ -128,7 +128,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                 } else {
                   if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
                   if (snapshot.hasData) admits = snapshot.data!;
-                  if (reserves.isNotEmpty) {
+                  if (admits.isNotEmpty) {
                     child = ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics()
                             .applyTo(const BouncingScrollPhysics()),
