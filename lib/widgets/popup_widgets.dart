@@ -183,13 +183,13 @@ class ReservationPopup extends StatelessWidget {
       case 1:
         statusMsg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
         break;
-      case 3:
+      case 4:
         statusMsg = '현재 회의실을 사용 중이에요!';
         break;
-      case 4:
+      case 5:
         statusMsg = '곧 있음 이용 시간이 끝납니다.';
         break;
-      case 5:
+      case 6:
         statusMsg = '공간 이용 시간이 끝났습니다!\n인증 사진을 올려주세요.';
         break;
       default:
@@ -309,7 +309,6 @@ class ReservationPopup extends StatelessWidget {
     } else {
       button = const SizedBox.shrink();
     }
-
 
     return Dialog(
       insetPadding: EdgeInsets.zero,
