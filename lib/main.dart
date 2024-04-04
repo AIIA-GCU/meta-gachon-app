@@ -64,7 +64,6 @@ Future<void> main() async {
       start = const SignInPage();
     }
   }
-
   debugPrint("complete camera setting");
   camera = await availableCameras().then((value) {
     debugPrint(value.length.toString());
