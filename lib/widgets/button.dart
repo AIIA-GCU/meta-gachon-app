@@ -462,13 +462,16 @@ class TileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: borderRadius,
-      child: Container(
-        padding: padding,
-        alignment: alignment,
-        child: child,
+    // 물결 효과 추가
+    return Ink(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius,
+        child: Ink(
+          padding: padding,
+          // alignment: alignment,
+          child: child,
+        ),
       ),
     );
   }

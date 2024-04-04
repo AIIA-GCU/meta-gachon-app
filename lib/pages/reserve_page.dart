@@ -542,7 +542,7 @@ class _ReservePageState extends State<ReservePage> {
             left: ratio.width * 20,
             bottom: ratio.height * 12
         ),
-        child: Text(
+        child: const Text(
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
           style: TextStyle(
             fontSize: 11,
@@ -817,16 +817,19 @@ class _ReservePageState extends State<ReservePage> {
     } else if (_purposeCtr.text.isEmpty) {
       title = '사용 목적을 입력해주세요!';
       onPressed = () => Navigator.pop(context);
+    } else if (_purposeCtr.text.length < 15) {
+      title = '15자 이상 입력해주세요!';
+      onPressed = () => Navigator.pop(context);
     } else if (widget.reserve != null && _isSame()) {
       title = '이전 내용과 같습니다.';
       onPressed = () => Navigator.pop(context);
     } else {
       onPressed = () => Navigator.pop(context);
 
-      late String number, userNumber, start, end;
-      number = _numberList.toString();
+      late String memberInfo, userNumber, start, end;
+      memberInfo = _numberList.toString();
       userNumber = _userNumList.toString();
-      number = number.substring(1, number.length - 1);
+      memberInfo = memberInfo.substring(1, memberInfo.length - 1);
       userNumber = userNumber.substring(1, userNumber.length - 1);
       start = stdFormat2.format(_selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
@@ -836,7 +839,7 @@ class _ReservePageState extends State<ReservePage> {
         . startTime: $start
         . endTime: $end
         . leader: $_leaderNumber $_leaderName
-        . number: $number
+        . memberInfo: $memberInfo
         . userNumber: $userNumber
         . purpose: ${_purposeCtr.text}""");
 
@@ -849,7 +852,7 @@ class _ReservePageState extends State<ReservePage> {
             startTime: start,
             endTime: end,
             leader: widget.reserve!.leaderInfo,
-            number: number,
+            memberInfo: memberInfo,
             userNumber: userNumber,
             purpose: _purposeCtr.text,
             professor: _professorCtr.text)
@@ -858,7 +861,7 @@ class _ReservePageState extends State<ReservePage> {
             place: _selectedPlace,
             startTime: start,
             endTime: end,
-            number: number,
+            memberInfo: memberInfo,
             userNumber: userNumber,
             purpose: _purposeCtr.text,
             professor: _professorCtr.text);

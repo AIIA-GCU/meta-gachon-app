@@ -121,7 +121,7 @@ class CommentPopup extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: KR.subtitle4),
+            Text(title, textAlign: TextAlign.center, style: KR.subtitle4),
             ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(

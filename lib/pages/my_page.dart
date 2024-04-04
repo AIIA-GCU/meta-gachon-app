@@ -203,7 +203,6 @@ class _MyPageState extends State<MyPage> {
             EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
             child: Row(mainAxisSize: MainAxisSize.max, children: [
               const Icon(My_page.cybercampus, color: MGColor.base3),
-
               SizedBox(width: ratio.width * 16),
               Text('사이버 캠퍼스 바로가기',
                   style: KR.subtitle3.copyWith(color: MGColor.base3)),
