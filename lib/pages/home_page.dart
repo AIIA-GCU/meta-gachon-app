@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
   final VoidCallback movetoReserList;
   final VoidCallback movetoAdmisList;
   final void Function(bool) setLoading;
-
+  double mediaHeight(BuildContext context, double scale) => MediaQuery.of(context).size.height * scale;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -58,19 +58,24 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   /// <예약하기>
-                  _smallCard(
+                  Expanded(
+                    child: _smallCard(
                       '공간과 컴퓨터를 빌려\n편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
                       widget.movetoReserList,
+                    ),
                   ),
+                  SizedBox(width: 12),
 
                   /// <인증하기>
-                  _smallCard(
-                      "시설 이용 후\n인증을 올려주세요!",
-                      "인증하기",
-                      ImgPath.home2,
-                      doAdmission
+                  Expanded(
+                    child: _smallCard(
+                        "시설 이용 후\n인증을 올려주세요!",
+                        "인증하기",
+                        ImgPath.home2,
+                        doAdmission
+                    ),
                   )
                 ]
               ),
@@ -122,10 +127,10 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _smallCard(String title, String buttonText, String imgPath, void Function() onTap) {
     return Container(
       width: ratio.width * 173,
+
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12)
@@ -145,7 +150,12 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: ratio.height * 8),
 
             /// Text
-            Text(title, style: KR.subtitle4.copyWith(color: MGColor.base1)),
+            Text(
+              title,
+              style: MediaQuery.of(context).size.width <= 340
+                  ? KR.subtitle5.copyWith(color: MGColor.base1)
+                  : KR.subtitle4.copyWith(color: MGColor.base1),
+            ),
             SizedBox(height: ratio.height * 12),
 
             /// Button
@@ -154,22 +164,24 @@ class _HomePageState extends State<HomePage> {
                 onTap: onTap,
                 customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
-                child: Ink(
-                  width: ratio.width * 77,
+                child:Ink(
                   decoration: BoxDecoration(
                     color: MGColor.brandPrimary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: EdgeInsets.symmetric(
                       horizontal: ratio.width * 16, vertical: 8),
-                  child: Center(child: Text(
-                    buttonText,
-                    style: KR.label1.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600
-                    ),
-                  )),
-                ),
+                  child: IntrinsicWidth(
+                    child: Center(child: Text(
+                      buttonText,
+                      style: KR.label1.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600
+                      ),
+                    )),
+                  ),
+                )
+
               ),
             )
           ]

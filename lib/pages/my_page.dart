@@ -103,77 +103,89 @@ class _MyPageState extends State<MyPage> {
         ),
         Row(
           children: [
-            TileButtonCard(items: [
-              ///내 예약
-              TileButton(
-                  onTap: widget.moveToReserList,
-                  padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 33),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(MGIcon.res,
-                        color: MGColor.brandPrimary,
-                          size: ratio.width * 26),
-                      SizedBox(
-                        width: ratio.width * 40,
-                        height: ratio.height * 10,
-                      ),
-                      Text('내 예약',
-                          style: KR.subtitle4.copyWith(color: MGColor.base2))
-                    ],
-                  )),
-            ]),
+            Expanded(
+              child: TileButtonCard(items: [
+                ///내 예약
+                TileButton(
+                    onTap: widget.moveToReserList,
+                    padding: EdgeInsets.symmetric(
+                        vertical: 2, horizontal: ratio.width * 32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(MGIcon.res,
+                          color: MGColor.brandPrimary,
+                            size: ratio.width * 26),
+                        SizedBox(
+                          width: ratio.width * 40,
+                          height: ratio.height * 10,
+                        ),
+                        Text('내 예약',
+                          style: MediaQuery.of(context).size.width <= 340
+                              ? KR.mypagetext.copyWith(color: MGColor.base1)
+                              : KR.subtitle4.copyWith(color: MGColor.base1),)
+                      ],
+                    )),
+              ]),
+            ),
 
             SizedBox(width: ratio.width * 13),
 
-            TileButtonCard(items: [
-              ///내 인증
-              TileButton(
-                  onTap: () => _floatMyAdmissionPage(context),
-                  padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(My_page.mycertification,
-                        color: MGColor.brandPrimary,
-                        size: ratio.width * 26,),
-                      SizedBox(
-                        width: ratio.width * 40,
-                        height: ratio.height * 10,
-                      ),
-                      Text('내 인증',
-                          style: KR.subtitle4.copyWith(color: MGColor.base2))
-                    ],
-                  ))
-            ]),
+            Expanded(
+              child: TileButtonCard(items: [
+                ///내 인증
+                TileButton(
+                    onTap: () => _floatMyAdmissionPage(context),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 2, horizontal: ratio.width * 32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(My_page.mycertification,
+                          color: MGColor.brandPrimary,
+                          size: ratio.width * 26,),
+                        SizedBox(
+                          width: ratio.width * 40,
+                          height: ratio.height * 10,
+                        ),
+                        Text('내 인증',
+                          style: MediaQuery.of(context).size.width <= 340
+                              ? KR.mypagetext.copyWith(color: MGColor.base1)
+                              : KR.subtitle4.copyWith(color: MGColor.base1),)
+                      ],
+                    ))
+              ]),
+            ),
 
             SizedBox(width: ratio.width * 13),
 
-            TileButtonCard(items: [
-              ///내 등급
-              TileButton(
-                  onTap: () => _showGradeExplainPopup(context),
-                  padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: ratio.width * 32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        My_page.mygrade,
-                        color: MGColor.brandPrimary,
-                        size: ratio.width * 26,
-                      ),
-                      SizedBox(
-                        width: ratio.width * 40,
-                        height: ratio.height * 10,
-                      ),
-                      Text('내 등급',
-                          style: KR.subtitle4.copyWith(color: MGColor.base2))
-                    ],
-                  ))
-            ]),
+            Expanded(
+              child: TileButtonCard(items: [
+                ///내 등급
+                TileButton(
+                    onTap: () => _showGradeExplainPopup(context),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 2, horizontal: ratio.width * 32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          My_page.mygrade,
+                          color: MGColor.brandPrimary,
+                          size: ratio.width * 26,
+                        ),
+                        SizedBox(
+                          width: ratio.width * 40,
+                          height: ratio.height * 10,
+                        ),
+                        Text('내 등급',
+                          style: MediaQuery.of(context).size.width <= 340
+                              ? KR.mypagetext.copyWith(color: MGColor.base1)
+                              : KR.subtitle4.copyWith(color: MGColor.base1),)
+                      ],
+                    ))
+              ]),
+            ),
           ],
         ),
         SizedBox(height: ratio.height * 22),
