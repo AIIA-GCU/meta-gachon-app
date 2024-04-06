@@ -541,7 +541,6 @@ class AdmissionPopup extends StatelessWidget {
   const AdmissionPopup(this.item, {super.key});
 
   final Admit item;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -607,7 +606,7 @@ class AdmissionPopup extends StatelessWidget {
               SizedBox(height: ratio.height * 24),
 
               // 관리자 이용내역 평가
-              if (item.me == '0')
+              if (item.evaluation == true)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,
@@ -622,7 +621,7 @@ class AdmissionPopup extends StatelessWidget {
                       maxLines: 3,
                     )
                 )
-              else if (item.me == '1')
+              else if (item.evaluation == false)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,
