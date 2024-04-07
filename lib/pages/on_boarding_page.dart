@@ -59,7 +59,7 @@ class OnBoarding extends StatelessWidget {
               width: screenSize.width,
               child: Center(
                   child: SizedBox(
-                    width: ratio.width >= 1
+                    width: ratio.width > 1
                         ? 358 : screenSize.width,
                     child: CustomButtons.bottomButton(
                         '시작하기',

@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                   /// <인증하기>
                   Expanded(
                     child: _smallCard(
-                        "시설 이용 후${ratio.width >= 1 ? '' : '\n'}인증을 올려주세요!",
+                        "시설 이용 후${ratio.width >= 1.5 ? '' : '\n'}인증을 올려주세요!",
                         "인증하기",
                         ImgPath.home2,
                         doAdmission
