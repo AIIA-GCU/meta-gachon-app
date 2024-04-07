@@ -18,6 +18,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
@@ -44,6 +45,12 @@ Future<void> main() async {
   late final Widget start;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final bool? first = preferences.getBool('firstTime');
+
+  // 화면 세로로 고정
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
 
   if (first == null) {
     preferences.setBool('firstTime', true);

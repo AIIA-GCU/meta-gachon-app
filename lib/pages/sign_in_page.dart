@@ -139,12 +139,21 @@ class _SignInPageState extends State<SignInPage> {
                                     Positioned(
                                       right: 0,
                                       child: GestureDetector(
-                                        onTapDown: (tapDetails) => setState(
-                                            () => isPasswordVisible = true),
-                                        onTapUp: (tapDetails) => setState(
-                                            () => isPasswordVisible = false),
-                                        onTapCancel: () => setState(
-                                            () => isPasswordVisible = false),
+                                        onTapDown: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onTapUp: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onTapCancel: () {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onLongPressStart: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onLongPressEnd: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
                                         behavior: HitTestBehavior.translucent,
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
