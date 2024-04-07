@@ -109,89 +109,22 @@ class _MyPageState extends State<MyPage> {
 
             /// <내 예약> & <내 인증> & <내 등급>
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: TileButtonCard(items: [
-                    ///내 예약
-                    TileButton(
-                        onTap: widget.moveToReserList,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2, horizontal: ratio.width * 32),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(MGIcon.res,
-                              color: MGColor.brandPrimary,
-                                size: ratio.width * 26),
-                            SizedBox(
-                              width: ratio.width * 40,
-                              height: ratio.height * 10,
-                            ),
-                            Text('내 예약',
-                              style: MediaQuery.of(context).size.width <= 340
-                                  ? KR.mypagetext.copyWith(color: MGColor.base1)
-                                  : KR.subtitle4.copyWith(color: MGColor.base1),)
-                          ],
-                        )),
-                  ]),
+                _button(
+                  label: "내 예약",
+                  iconSrc: MGIcon.res,
+                  onPressed: widget.moveToReserList
                 ),
-
-                SizedBox(width: ratio.width * 13),
-
-                Expanded(
-                  child: TileButtonCard(items: [
-                    ///내 인증
-                    TileButton(
-                        onTap: () => _floatMyAdmissionPage(context),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2, horizontal: ratio.width * 32),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(My_page.mycertification,
-                              color: MGColor.brandPrimary,
-                              size: ratio.width * 26,),
-                            SizedBox(
-                              width: ratio.width * 40,
-                              height: ratio.height * 10,
-                            ),
-                            Text('내 인증',
-                              style: MediaQuery.of(context).size.width <= 340
-                                  ? KR.mypagetext.copyWith(color: MGColor.base1)
-                                  : KR.subtitle4.copyWith(color: MGColor.base1),)
-                          ],
-                        ))
-                  ]),
+                _button(
+                  label: "내 인증",
+                  iconSrc: My_page.mycertification,
+                  onPressed: () => _floatMyAdmissionPage(context)
                 ),
-
-                SizedBox(width: ratio.width * 13),
-
-                Expanded(
-                  child: TileButtonCard(items: [
-                    ///내 등급
-                    TileButton(
-                        onTap: () => _showGradeExplainPopup(context),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2, horizontal: ratio.width * 32),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(
-                              My_page.mygrade,
-                              color: MGColor.brandPrimary,
-                              size: ratio.width * 26,
-                            ),
-                            SizedBox(
-                              width: ratio.width * 40,
-                              height: ratio.height * 10,
-                            ),
-                            Text('내 등급',
-                              style: MediaQuery.of(context).size.width <= 340
-                                  ? KR.mypagetext.copyWith(color: MGColor.base1)
-                                  : KR.subtitle4.copyWith(color: MGColor.base1),)
-                          ],
-                        ))
-                  ]),
+                _button(
+                  label: "내 등급",
+                  iconSrc: My_page.mygrade,
+                  onPressed: () => _showGradeExplainPopup(context)
                 ),
               ],
             ),
@@ -201,8 +134,8 @@ class _MyPageState extends State<MyPage> {
             /// <학교 홈페이지 바로가기> & <사이버 캠퍼스 바로가기>
             /// & <설정> & <로그아웃>
             TileButton(
-                onTap: () =>
-                    launchUrl(Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
+                onTap: () => launchUrl(
+                    Uri.parse('https://www.gachon.ac.kr/kor/index.do')),
                 padding:
                 EdgeInsets.fromLTRB(ratio.width * 13, 12, ratio.width * 18, 12),
                 child: Row(mainAxisSize: MainAxisSize.max, children: [
@@ -323,6 +256,35 @@ class _MyPageState extends State<MyPage> {
       ],
     );
   }
+
+  Widget _button({
+    required String label,
+    required IconData iconSrc,
+    required VoidCallback onPressed
+  }) => InkWell(
+    onTap: onPressed,
+    child: Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 12,
+        horizontal: ratio.width * 35
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(iconSrc,
+              color: MGColor.brandPrimary,
+              size: ratio.width * 26),
+          const SizedBox(height: 10),
+          Text(label, style: KR.parag2)
+        ],
+      ),
+    ),
+  );
 
   void _showGradeExplainPopup(BuildContext context) {
     if (seeGradeExplanation) {

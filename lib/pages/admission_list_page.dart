@@ -102,9 +102,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   }
 
   List<Widget> _headerSliver(BuildContext context, bool innerBoxIsScrolled) {
-    double h = ratio.width >= 1
-        ? MediaQuery.of(context).size.width * (105 / 358)
-        : 159;
+    double h = ratio.height * 81 + 40 + ratio.width * 48;
     debugPrint(h.toString());
     return [
       /// <내 인증 확인하기> & <인증하기>
@@ -156,6 +154,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   )
                 ],
               ),
+
               SizedBox(height: ratio.height * 16),
 
               /// 버튼

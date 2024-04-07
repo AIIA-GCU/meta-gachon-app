@@ -42,7 +42,7 @@ class _SignInPageState extends State<SignInPage> {
             body: SafeArea(
               child: Center(
                 child: Container(
-                  width: ratio.width >= 1
+                  width: ratio.width > 1
                       ? 390 : MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                   alignment: Alignment.center,
