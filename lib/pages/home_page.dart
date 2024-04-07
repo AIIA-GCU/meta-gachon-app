@@ -60,13 +60,14 @@ class _HomePageState extends State<HomePage> {
                   /// <예약하기>
                   Expanded(
                     child: _smallCard(
-                      '공간과 컴퓨터를 빌려\n편하게 공부해요!',
+                      '공간과 컴퓨터를 빌려 편하게 공부해요!',
                       '예약하기',
                       ImgPath.home3,
                       widget.movetoReserList,
                     ),
                   ),
-                  SizedBox(width: 12),
+
+                  const SizedBox(width: 12),
 
                   /// <인증하기>
                   Expanded(
