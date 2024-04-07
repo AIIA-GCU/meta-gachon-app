@@ -42,11 +42,11 @@ Future<void> main() async {
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
-  // debugPrint("complete camera setting");
-  // camera = await availableCameras().then((value) {
-  //   debugPrint(value.length.toString());
-  //   return value.first;
-  // });
+  debugPrint("complete camera setting");
+  camera = await availableCameras().then((value) {
+    debugPrint(value.length.toString());
+    return value.first;
+  });
 
   debugPrint("complete setting app's details");
   // 화면 세로로 고정
