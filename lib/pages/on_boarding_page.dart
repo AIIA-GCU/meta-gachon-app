@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -19,15 +20,15 @@ class OnBoarding extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [MGColor.base8, MGColor.base9],
-                stops: [0.0, 0.5])
+                stops: [0.2, 0.5])
         ),
         child: Stack(
           children: [
-            Positioned(
-              bottom: ratio.height * 70,
-              width: screenSize.width,
+            Align(
+              alignment: Alignment.topCenter,
               child: Image.asset(
                 ImgPath.onBoarding,
+                fit: BoxFit.fitHeight,
               ),
             ),
             Positioned(
@@ -36,7 +37,8 @@ class OnBoarding extends StatelessWidget {
               child: Center(
                 child: Text(
                   '교내 공간을 간편하게 예약해요.',
-                  style: KR.subtitle1,
+                  style: KR.subtitle1.copyWith(
+                      color: MGColor.brandPrimary),
                 ),
               ),
             ),
@@ -56,10 +58,14 @@ class OnBoarding extends StatelessWidget {
               bottom: ratio.height * 30,
               width: screenSize.width,
               child: Center(
-                  child: CustomButtons.bottomButton(
-                      '시작하기',
-                      MGColor.brandPrimary,
-                          () => _onPressed(context)
+                  child: SizedBox(
+                    width: ratio.width >= 1
+                        ? 358 : screenSize.width,
+                    child: CustomButtons.bottomButton(
+                        '시작하기',
+                        MGColor.brandPrimary,
+                            () => _onPressed(context)
+                    ),
                   )
               ),
             ),

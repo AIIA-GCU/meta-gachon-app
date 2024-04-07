@@ -11,7 +11,29 @@ class Alarm extends StatefulWidget {
   @override
   State<Alarm> createState() => _AlarmState();
 }
-class _AlarmState extends State<Alarm> {
+class _AlarmState extends State<Alarm>
+    with WidgetsBindingObserver {
+  late final ScrollController _scrollCtr;
+  late bool firstRun;
+
+  @override
+  void initState() {
+    firstRun = true;
+    _scrollCtr = ScrollController();
+    WidgetsBinding.instance.addTimingsCallback((_) {
+      if (_scrollCtr.hasClients && firstRun) {
+        firstRun = false;
+        _scrollCtr.jumpTo(_scrollCtr.position.maxScrollExtent);
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollCtr.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +64,7 @@ class _AlarmState extends State<Alarm> {
                   );
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return SingleChildScrollView(
+                    controller: _scrollCtr,
                     padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -145,6 +145,7 @@ class _MataGachonAppState extends State<MataGachonApp>
       MediaQuery.of(context).size.width  / 390,
       MediaQuery.of(context).size.height / 895
     );
+    debugPrint("ratio: $ratio");
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(

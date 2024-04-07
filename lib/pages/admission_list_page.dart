@@ -102,12 +102,16 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
   }
 
   List<Widget> _headerSliver(BuildContext context, bool innerBoxIsScrolled) {
+    double h = ratio.width >= 1
+        ? MediaQuery.of(context).size.width * (105 / 358)
+        : 159;
+    debugPrint(h.toString());
     return [
       /// <내 인증 확인하기> & <인증하기>
       SliverAppBar(
         forceElevated: innerBoxIsScrolled,
-        expandedHeight: 159,
-        collapsedHeight: 159,
+        expandedHeight: h,
+        collapsedHeight: h,
         flexibleSpace: Container(
           margin: EdgeInsets.only(
             top: ratio.height * 11,
