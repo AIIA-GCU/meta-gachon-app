@@ -65,11 +65,11 @@ Future<void> main() async {
     }
   }
 
-  debugPrint("complete camera setting");
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
+  // debugPrint("complete camera setting");
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
@@ -95,7 +95,38 @@ class MataGachonApp extends StatefulWidget {
   @override
   State<MataGachonApp> createState() => _MataGachonAppState();
 }
-class _MataGachonAppState extends State<MataGachonApp> {
+class _MataGachonAppState extends State<MataGachonApp>
+    with WidgetsBindingObserver {
+
+  late Widget current;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    current = widget.start;
+    super.initState();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      debugPrint("App is resumed");
+      if (await RestAPI.signIn(
+          id: "app", pw: 'resume', token: 'fcmToken') == null) {
+        setState(() => current = const SignInPage());
+        debugPrint("Token is invalid. try to sign in again.");
+      } else {
+        debugPrint("Token is valid. show previous page.");
+      }
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +156,7 @@ class _MataGachonAppState extends State<MataGachonApp> {
           ),
       ),
       builder: FToastBuilder(),   // for <fluttertost> package
-      home: widget.start,
+      home: current,
     );
   }
 }

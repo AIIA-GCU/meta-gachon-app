@@ -54,7 +54,7 @@ class _NotificationIconState extends State<NotificationIcon> {
         const Icon(MGIcon.not, color: MGColor.base4, size: 24),
         // 읽지 않은 알림이 있을 때, 보이기
         FutureBuilder<bool?>(
-          future: RestAPI.hasUnopendNotice(),
+          future: RestAPI.hasUnopenedNotice(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!) {
               return const Positioned(
