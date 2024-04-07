@@ -174,8 +174,8 @@ class Reserve {
         assert(true, "category is excluded from range!");
     }
     assert(
-      !(_type == ServiceType.computer && _professor == null),
-      'Professor must enter in reservation of GPU computer'
+    !(_type == ServiceType.computer && _professor == null),
+    'Professor must enter in reservation of GPU computer'
     );
   }
 
@@ -200,6 +200,8 @@ class Reserve {
   String startToDate1() => dateFormat1.format(_startTime);
 
   String startToDate2() => dateFormat2.format(_startTime);
+
+  String startToStd3() => stdFormat3.format(_startTime);
 
   String endToDate1() => dateFormat1.format(_endTime);
 

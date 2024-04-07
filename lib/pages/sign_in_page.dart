@@ -139,12 +139,21 @@ class _SignInPageState extends State<SignInPage> {
                                     Positioned(
                                       right: 0,
                                       child: GestureDetector(
-                                        onTapDown: (tapDetails) => setState(
-                                            () => isPasswordVisible = true),
-                                        onTapUp: (tapDetails) => setState(
-                                            () => isPasswordVisible = false),
-                                        onTapCancel: () => setState(
-                                            () => isPasswordVisible = false),
+                                        onTapDown: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onTapUp: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onTapCancel: () {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onLongPressStart: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onLongPressEnd: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
                                         behavior: HitTestBehavior.translucent,
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
@@ -241,17 +250,18 @@ class _SignInPageState extends State<SignInPage> {
           isLoading = false;
         });
       }
-    } on TimeoutException {
-      setState(() {
-        isLoading = false;
-        showDialog(
-            context: context,
-            barrierColor: Colors.black.withOpacity(0.25),
-            builder: (context) => CommentPopup(
-                title: "통신 속도가 너무 느립니다!",
-                buttonColor: MGColor.brandPrimary,
-                onPressed: () => Navigator.pop(context)));
-      });
+    } catch (e) {
+      debugPrint(e.toString());
+      setState(() => isLoading = false);
+      showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.25),
+        builder: (context) => CommentPopup(
+          title: e.toString(),
+          buttonColor: MGColor.brandPrimary,
+          onPressed: () => Navigator.pop(context)
+        )
+      );
     }
   }
 }

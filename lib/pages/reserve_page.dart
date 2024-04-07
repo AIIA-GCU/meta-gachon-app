@@ -34,15 +34,12 @@ class _ReservePageState extends State<ReservePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
 
-  ///textfield controllor
+  /// TextEditingController
   final TextEditingController _purposeCtr = TextEditingController();
   final TextEditingController _professorCtr = TextEditingController();
   final TextEditingController _numberCtr = TextEditingController();
-  final TextEditingController _userNumCtr = TextEditingController();
 
   /// 고정 데이터
-  late final int _leaderNumber; //대표자 학번
-  late final String _leaderName; //대표자 이름
   late final List<String> _places; // 강의실 목록
   final List<Widget> _firstWidgets = []; // 화면에 표시되는 위젯 목록
 
@@ -54,8 +51,7 @@ class _ReservePageState extends State<ReservePage> {
   String? _selectedPlace; //강의실
   String? _selectedDate; //날짜
   DateTime? _selectedEnter, _selectedEnd; // 이용 시작, 끝
-  late List<String> _numberList; // 이용자 수 리스트
-  late List<String> _userNumList; // 이용자 학번 리스트
+  late List<String> _memberInfo; // 이용자 학번 리스트
 
   ///이용자 컨데이너 안내메세지
   String alertMessege = "대표자를 제외한 이용자의 인원 수를 입력해 주세요!";
@@ -67,10 +63,7 @@ class _ReservePageState extends State<ReservePage> {
     _places = widget.availableRoom;
     _loading = _isSolo = _canTime = _existError = false;
     _addUserGuideline = MGColor.brandPrimary;
-    _leaderNumber = myInfo.stuNum;
-    _leaderName = myInfo.name;
-    _numberList = [];
-    _userNumList = [];
+    _memberInfo = [];
 
     // if modifing
     if (widget.reserve != null) {
@@ -80,15 +73,22 @@ class _ReservePageState extends State<ReservePage> {
       _selectedEnd = widget.reserve!.endTime;
       if (widget.reserve!.memberInfo.isNotEmpty) {
         _isSolo = false;
-        List<String> temp = widget.reserve!.memberInfo.split(' ');
-        for (int i = 0; i < temp.length; i += 2) {
-          _numberList.add('${temp[i]} ${temp[i + 1]}');
-        }
+        _memberInfo = widget.reserve!.memberInfo.split(' ');
       } else {
         _isSolo = true;
+        _addUserGuideline = MGColor.base4;
       }
       _purposeCtr.text = widget.reserve!.purpose;
       _canTime = true;
+      debugPrint("""
+      [reservation Info]
+        . service: ${widget.service.toString()}
+        . room: $_selectedPlace
+        . startTime: ${stdFormat2.format(_selectedEnter!)}
+        . endTime: ${stdFormat2.format(_selectedEnd!)}
+        . leaderInfo: ${myInfo.stuNum} ${myInfo.name}
+        . memberInfo: $_memberInfo
+        . purpose: ${_purposeCtr.text}""");
     }
 
     _initPage();
@@ -99,7 +99,6 @@ class _ReservePageState extends State<ReservePage> {
   void dispose() {
     _purposeCtr.dispose();
     _numberCtr.dispose();
-    _userNumCtr.dispose();
     _professorCtr.dispose();
     super.dispose();
   }
@@ -210,292 +209,274 @@ class _ReservePageState extends State<ReservePage> {
                           )));
                     }
 
-                    /// 나머지 모두
-                    temp.addAll([
-                      ///대표자
-                      CustomContainer(
-                        title: "대표자",
-                        height: 52,
+                    /// 대표자
+                    temp.add(CustomContainer(
+                      title: "대표자",
+                      height: 52,
+                      margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                          ratio.width * 16, ratio.height * 12),
+                      content: const SizedBox.shrink(),
+                      additionalContent: [
+                        Positioned(
+                            left: 80 * ratio.width,
+                            top: 16,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  myInfo.stuNum.toString(),
+                                  style: KR.parag2
+                                      .copyWith(color: MGColor.base3),
+                                ),
+                                SizedBox(width: 4 * ratio.width),
+                                Text(
+                                  myInfo.name,
+                                  style: KR.parag2
+                                      .copyWith(color: MGColor.base3),
+                                ),
+                              ],
+                            ))
+                      ],
+                    ));
+
+                    /// 강의실 예약이면, 인원수로 이용자 추가
+                    if (widget.service == ServiceType.lectureRoom) {
+                      temp.add(Container(
+                            margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
+                                ratio.width * 16, ratio.height * 12),
+                            width: 358 * ratio.width,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Container(
+                              width: 358 * ratio.width,
+                              height: 32 + 41 * ratio.height,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: ratio.height * 10
+                              ),
+                              child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 16 * ratio.width,
+                                      top: 6 * ratio.height,
+                                      child: Text('이용자',
+                                          style: KR.parag1
+                                              .copyWith(color: MGColor.base1)),
+                                    ),
+                                    Positioned(
+                                      left: 80 * ratio.width,
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Row(children: [
+                                          CustomTextField(
+                                            enabled: !_isSolo,
+                                            width: ratio.width * 122,
+                                            height: 32,
+                                            controller: _numberCtr,
+                                            keyboard: TextInputType.number,
+                                            hint: '인원 수',
+                                            format: [
+                                              FilteringTextInputFormatter.digitsOnly,
+                                              LengthLimitingTextInputFormatter(2),
+                                            ],
+                                            // validator: (str) {
+                                            //   if (str!.isEmpty || str == "0" || str == "00") {
+                                            //     return alertMessege = "인원 수를 정확히 입력해 주세요";
+                                            //   } else {
+                                            //     return null;
+                                            //   }
+                                            // },
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        left: 80 * ratio.width,
+                                        bottom: 0,
+                                        child: Text(alertMessege,
+                                            style: KR.label2.copyWith(
+                                                color: _isSolo
+                                                    ? _addUserGuideline =
+                                                    MGColor.systemError
+                                                    : _addUserGuideline))),
+                                  ]
+                              ),
+                            ),
+                          ));
+                    }
+                    /// 아니면, 학번으로 이용자 추가
+                    else {
+                      temp.add(Container(
                         margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
                             ratio.width * 16, ratio.height * 12),
-                        content: const SizedBox.shrink(),
-                        additionalContent: [
-                          Positioned(
-                              left: 80 * ratio.width,
-                              top: 16,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "$_leaderNumber",
-                                    style: KR.parag2
-                                        .copyWith(color: MGColor.base3),
-                                  ),
-                                  SizedBox(width: 4 * ratio.width),
-                                  Text(
-                                    _leaderName,
-                                    style: KR.parag2
-                                        .copyWith(color: MGColor.base3),
-                                  ),
-                                ],
-                              ))
-                        ],
-                      ),
-
-                      ///이용자
-                      if (widget.service == ServiceType.lectureRoom)
-                        Container(
-                          margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
-                              ratio.width * 16, ratio.height * 12),
-                          width: 358 * ratio.width,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Container(
-                            width: 358 * ratio.width,
-                            height: 32 + 41 * ratio.height,
-                            padding: EdgeInsets.symmetric(
-                              vertical: ratio.height * 10
-                            ),
-                            child: Stack(
-                              children: [
+                        width: 358 * ratio.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// Input
+                            SizedBox(
+                              width: 358 * ratio.width,
+                              height: 32 + 31 * ratio.height,
+                              child: Stack(children: [
                                 Positioned(
                                   left: 16 * ratio.width,
-                                  top: 6 * ratio.height,
+                                  top: 16 * ratio.height,
                                   child: Text('이용자',
                                       style: KR.parag1
                                           .copyWith(color: MGColor.base1)),
                                 ),
                                 Positioned(
                                   left: 80 * ratio.width,
+                                  top: 10 * ratio.height,
                                   child: Form(
                                     key: _formKey,
                                     child: Row(children: [
                                       CustomTextField(
                                         enabled: !_isSolo,
-                                        width: ratio.width * 122,
+                                        width: ratio.width * 120,
                                         height: 32,
                                         controller: _numberCtr,
                                         keyboard: TextInputType.number,
-                                        hint: '인원 수',
-                                        format: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                          LengthLimitingTextInputFormatter(2),
-                                        ],
+                                        hint: '학번',
+                                        format: [LengthLimitingTextInputFormatter(9)],
                                         validator: (str) {
-                                          if (str!.isEmpty ||
-                                              str == "0" ||
-                                              str == "00") {
-                                            return alertMessege =
-                                            "인원 수를 정확히 입력해 주세요";
+                                          debugPrint(_memberInfo.toString());
+                                          _existError = true;
+                                          if (str!.isEmpty || str.length != 9) {
+                                            return elseMessage = "정확한 학번을 입력해 주세요!";
+                                          } else if (int.parse(str) == myInfo.stuNum) {
+                                            return elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
+                                          } else if (_memberInfo.contains(str)) {
+                                            return elseMessage = "이미 등록된 이용자입니다.";
                                           } else {
+                                            _existError = false;
                                             return null;
                                           }
                                         },
+                                      ),
+                                      SizedBox(width: ratio.width * 110),
+                                      Material(
+                                        child: InkWell(
+                                          onTap: _isSolo ? null : _validateAddingUser,
+                                          customBorder:
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12)),
+                                          child: Ink(
+                                            width: 32 * ratio.width,
+                                            height: 32 * ratio.width,
+                                            decoration: BoxDecoration(
+                                              color: _isSolo
+                                                  ? MGColor.base6
+                                                  : MGColor.brandPrimary,
+                                              borderRadius:
+                                              BorderRadius.circular(12),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                MGIcon.plus,
+                                                size: 16,
+                                                color: _isSolo || _memberInfo.length == 5
+                                                    ? MGColor.base4 : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ]),
                                   ),
                                 ),
                                 Positioned(
                                     left: 80 * ratio.width,
-                                    bottom: 0,
-                                    child: Text(alertMessege,
-                                        style: KR.label2.copyWith(
-                                            color: _isSolo
-                                                ? _addUserGuideline =
-                                                MGColor.systemError
-                                                : _addUserGuideline))),
-                              ]
-                            ),
-                          ),
-                        )
-                      else
-                        Container(
-                          margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
-                              ratio.width * 16, ratio.height * 12),
-                          width: 358 * ratio.width,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// Input
-                              SizedBox(
-                                width: 358 * ratio.width,
-                                height: 32 + 31 * ratio.height,
-                                child: Stack(children: [
-                                  Positioned(
-                                    left: 16 * ratio.width,
-                                    top: 16 * ratio.height,
-                                    child: Text('이용자',
-                                        style: KR.parag1
-                                            .copyWith(color: MGColor.base1)),
-                                  ),
-                                  Positioned(
-                                    left: 80 * ratio.width,
-                                    top: 10 * ratio.height,
-                                    child: Form(
-                                      key: _formKey,
-                                      child: Row(children: [
-                                        CustomTextField(
-                                          enabled: !_isSolo,
-                                          width: ratio.width * 120,
-                                          height: 32,
-                                          controller: _numberCtr,
-                                          keyboard: TextInputType.number,
-                                          hint: '학번',
-                                          format: [
-                                            FilteringTextInputFormatter.digitsOnly,
-                                            LengthLimitingTextInputFormatter(9),
-                                          ],
-                                          validator: (str) {
-                                            _existError = true;
-                                            if (str!.isEmpty || str.length != 9) {
-                                              return elseMessage = "정확한 학번을 입력해 주세요!";
-                                            } else if (_leaderNumber.toString() == str) {
-                                              return elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
-                                            } else if (_numberList.any((e) => e.contains(str))) {
-                                              return elseMessage = "이미 등록된 이용자입니다.";
-                                            } else {
-                                              _existError = false;
-                                              return null;
-                                            }
-                                          },
-                                        ),
-                                        SizedBox(width: ratio.width * 110),
-                                        Material(
-                                          child: InkWell(
-                                            onTap: _isSolo
-                                                ? null
-                                                : _validateAddingUser,
-                                            customBorder:
-                                            RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12)),
-                                            child: Ink(
-                                              width: 32 * ratio.width,
-                                              height: 32 * ratio.width,
-                                              decoration: BoxDecoration(
-                                                color: _isSolo
-                                                    ? MGColor.base6
-                                                    : MGColor.brandPrimary,
-                                                borderRadius:
-                                                BorderRadius.circular(12),
-                                              ),
-                                              child: Center(
-                                                child: Icon(
-                                                  MGIcon.plus,
-                                                  size: 16,
-                                                  color: _isSolo
-                                                      ? MGColor.base4
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ]),
-                                    ),
-                                  ),
-                                  Positioned(
-                                      left: 80 * ratio.width,
-                                      top: 32 + ratio.height * 14,
-                                      child: Text(
-                                          elseMessage,
-                                          style: KR.label2.copyWith(color: _addUserGuideline)
-                                      )
-                                  ),
-                                ]),
-                              ),
-
-                              /// registers
-                              Container(
-                                width: 274 * ratio.width,
-                                margin: EdgeInsets.only(
-                                    left: 78 * ratio.width,
-                                    bottom: 12 * ratio.height),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: ratio.width * 274,
-                                      child: Wrap(
-                                        spacing: 8,
-                                        alignment: WrapAlignment.start,
-                                        children: _userNumList
-                                            .map((e) => _myUserBox(e))
-                                            .toList(),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8 * ratio.height),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _isSolo = !_isSolo;
-                                          if (_isSolo) {
-                                            elseMessage = "추가 이용자가 없습니다.";
-                                            _addUserGuideline = MGColor.base4;
-                                          } else {
-                                            elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
-                                            _addUserGuideline = MGColor.brandPrimary;
-                                          }
-                                        });
-                                      },
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 12,
-                                            backgroundColor: Colors.transparent,
-                                            child: Checkbox(
-                                                value: _isSolo,
-                                                shape: const CircleBorder(),
-                                                side: const BorderSide(
-                                                    color: MGColor.base3,
-                                                    width: 1.6),
-                                                activeColor:
-                                                MGColor.brandPrimary,
-                                                onChanged: (bool? value) {
-                                                  setState(
-                                                          () => _isSolo = value!);
-                                                }),
-                                          ),
-                                          SizedBox(width: 10 * ratio.width),
-                                          Text('추가 이용자가 없습니다.',
-                                              style: KR.label2.copyWith(
-                                                  color: MGColor.base3)),
-                                        ],
-                                      ),
+                                    top: 32 + ratio.height * 14,
+                                    child: Text(
+                                        elseMessage,
+                                        style: KR.label2.copyWith(color: _addUserGuideline)
                                     )
-                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
+                              ]),
+                            ),
 
-                      /// 사용 목적
-                      if (widget.service == ServiceType.aiSpace)
-                        LargeTextField(
-                            title: '사용 목적',
-                            hint: '회의실을 예약하는 목적을 입력해 주세요',
-                            controller: _purposeCtr)
-                      else if (widget.service == ServiceType.computer)
-                        LargeTextField(
-                            title: '사용 목적',
-                            hint: 'GPU를 예약하는 목적을 입력해 주세요',
-                            controller: _purposeCtr)
-                      else if (widget.service == ServiceType.lectureRoom)
-                          LargeTextField(
-                              title: '사용 목적',
-                              hint: '강의실을 예약하는 목적을 입력해 주세요',
-                              controller: _purposeCtr)
-                    ]);
+                            /// registers
+                            Container(
+                              width: 274 * ratio.width,
+                              margin: EdgeInsets.only(
+                                  left: 78 * ratio.width,
+                                  bottom: 12 * ratio.height),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: ratio.width * 274,
+                                    child: Wrap(
+                                      spacing: 8,
+                                      alignment: WrapAlignment.start,
+                                      children: _memberInfo.map((e) => _myUserBox(e)).toList(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8 * ratio.height),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isSolo = !_isSolo;
+                                        if (_isSolo) {
+                                          elseMessage = "추가 이용자가 없습니다.";
+                                          _addUserGuideline = MGColor.base4;
+                                        } else {
+                                          elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
+                                          _addUserGuideline = MGColor.brandPrimary;
+                                        }
+                                      });
+                                    },
+                                    behavior: HitTestBehavior.translucent,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: Colors.transparent,
+                                          child: Checkbox(
+                                              value: _isSolo,
+                                              shape: const CircleBorder(),
+                                              side: const BorderSide(
+                                                  color: MGColor.base3,
+                                                  width: 1.6),
+                                              activeColor:
+                                              MGColor.brandPrimary,
+                                              onChanged: (bool? value) {
+                                                setState(
+                                                        () => _isSolo = value!);
+                                              }),
+                                        ),
+                                        SizedBox(width: 10 * ratio.width),
+                                        Text('추가 이용자가 없습니다.',
+                                            style: KR.label2.copyWith(
+                                                color: MGColor.base3)),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ));
+                    }
+
+                    /// 사용 목적
+                    String tempStr = widget.service == ServiceType.aiSpace
+                        ? "회의실을" : widget.service == ServiceType.lectureRoom
+                        ? "강의실을" : "컴퓨터를";
+                    temp.add(LargeTextField(
+                        title: '사용 목적',
+                        hint: '$tempStr 예약하는 목적을 입력해 주세요',
+                        controller: _purposeCtr
+                      ));
 
                     return SizeTransition(
                       sizeFactor: animation,
@@ -543,11 +524,7 @@ class _ReservePageState extends State<ReservePage> {
         ),
         child: Text(
           '강의실 위치는 예약 시 조교 확인 후 배정해드립니다.',
-          style: TextStyle(
-            fontSize: 11,
-            color: MGColor.brandPrimary,
-            fontFamily: 'Ko'
-          ),
+          style: KR.label3.copyWith(color: MGColor.brandPrimary)
         ),
       ));
     } else if (widget.service == ServiceType.computer) {
@@ -720,14 +697,30 @@ class _ReservePageState extends State<ReservePage> {
 
   /// 만약 예약을 수정하는 경우, 이전 정보와 같은지 확인하기
   bool _isSame() {
-    if (widget.reserve!.place == _selectedPlace) return true;
+    debugPrint("1");
+    if (widget.reserve!.place != _selectedPlace) return false;
 
-    if (widget.reserve!.startToDate2() == _selectedDate) return true;
+    debugPrint("2");
+    if (widget.reserve!.startToStd3() != _selectedDate) return false;
 
-    if (widget.reserve!.startTime.compareTo(_selectedEnd!) == 0) return true;
-    if (widget.reserve!.endTime.compareTo(_selectedEnter!) == 0) return true;
+    debugPrint("3");
+    if (widget.reserve!.startTime.compareTo(_selectedEnter!) != 0) return false;
+    debugPrint("4");
+    if (widget.reserve!.endTime.compareTo(_selectedEnd!) != 0) return false;
 
-    return false;
+    debugPrint("5");
+    if (widget.reserve!.memberInfo.isNotEmpty && _isSolo) return false;
+    debugPrint("6");
+    if (!_isSolo) {
+      for (var e in _memberInfo) {
+        if (widget.reserve!.memberInfo.contains(e)) {
+          return false;
+        }
+      }
+    }
+
+    debugPrint("7");
+    return true;
   }
 
   /// 추가하는 유저에 대한 유효성 검사
@@ -739,7 +732,7 @@ class _ReservePageState extends State<ReservePage> {
         }
         elseMessage = "정상적으로 추가됐습니다";
         _addUserGuideline = MGColor.brandPrimary;
-        _userNumList.add(_numberCtr.text);
+        _memberInfo.add(_numberCtr.text);
         setState(() => _numberCtr.clear());
       } else {
         _addUserGuideline = MGColor.systemError;
@@ -776,7 +769,7 @@ class _ReservePageState extends State<ReservePage> {
           ),
           GestureDetector(
             onTap: () => setState(() {
-              _userNumList.removeWhere((s) => s.contains(memberInfo));
+              _memberInfo.removeWhere((s) => s.contains(memberInfo));
             }),
             child: const Icon(MGIcon.cross, size: 20, color: Colors.white)
           ),
@@ -791,16 +784,15 @@ class _ReservePageState extends State<ReservePage> {
     late String title;
     late Function() onPressed;
 
+    // 로딩 시작
     setState(() {
       _loading = true;
       if (MediaQuery.of(context).viewInsets.bottom > 0) {
         FocusScope.of(context).unfocus();
       }
-      if (_numberCtr.text.isNotEmpty) {
-        _numberList.add(_numberCtr.text);
-      }
     });
 
+    // 에약 유효성 검사
     if (widget.service != ServiceType.computer &&
         (_selectedEnter == null || _selectedEnd == null)) {
       title = '예약 시간을 입력해주세요!';
@@ -810,7 +802,7 @@ class _ReservePageState extends State<ReservePage> {
       title = '인원 수를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (widget.service != ServiceType.lectureRoom
-        && !_isSolo && _userNumList.isEmpty) {
+        && !_isSolo && _memberInfo.isEmpty) {
       title = '추가 이용자를 입력해주세요!';
       onPressed = () => Navigator.pop(context);
     } else if (_purposeCtr.text.isEmpty) {
@@ -822,47 +814,50 @@ class _ReservePageState extends State<ReservePage> {
     } else {
       onPressed = () => Navigator.pop(context);
 
-      late String number, userNumber, start, end;
-      number = _numberList.toString();
-      userNumber = _userNumList.toString();
-      number = number.substring(1, number.length - 1);
-      userNumber = userNumber.substring(1, userNumber.length - 1);
+      // 데이터 변환
+      String start = '', end = '', members = '';
       start = stdFormat2.format(_selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
+      if (widget.service == ServiceType.lectureRoom) {
+        members = _numberCtr.text;
+      } else if (!_isSolo){
+        _memberInfo.forEach((e) => members += "$e ");
+      }
       debugPrint("""
       [reservation Info]
+        . service: ${widget.service.toString()}
         . room: $_selectedPlace
         . startTime: $start
         . endTime: $end
-        . leader: $_leaderNumber $_leaderName
-        . number: $number
-        . userNumber: $userNumber
+        . leaderInfo: ${myInfo.stuNum} ${myInfo.name}
+        . memberInfo: $members
         . purpose: ${_purposeCtr.text}""");
 
+      // 예약 추가/수정 API 요청
       try {
         Map<String, dynamic>? response = widget.reserve != null
             ? await RestAPI.patchReservation(
-            reservationId: widget.reserve!.reservationId,
-            service: widget.service,
-            place: _selectedPlace,
-            startTime: start,
-            endTime: end,
-            leader: widget.reserve!.leaderInfo,
-            number: number,
-            userNumber: userNumber,
-            purpose: _purposeCtr.text,
-            professor: _professorCtr.text)
+                  reservationId: widget.reserve!.reservationId,
+                  service: widget.service,
+                  place: _selectedPlace,
+                  startTime: start,
+                  endTime: end,
+                  leader: widget.reserve!.leaderInfo,
+                  memberInfo: members,
+                  purpose: _purposeCtr.text,
+                  professor: _professorCtr.text
+              )
             : await RestAPI.addReservation(
-            service: widget.service,
-            place: _selectedPlace,
-            startTime: start,
-            endTime: end,
-            number: number,
-            userNumber: userNumber,
-            purpose: _purposeCtr.text,
-            professor: _professorCtr.text);
+                  service: widget.service,
+                  place: _selectedPlace,
+                  startTime: start,
+                  endTime: end,
+                  memberInfo: members,
+                  purpose: _purposeCtr.text,
+                  professor: _professorCtr.text
+              );
         if (response == null) {
-          title = 'Not found';
+          title = '예약이 정상적으로 처리되지 않았습니다.';
           onPressed = () => Navigator.pop(context);
         } else if (response['reservationID'] == -1) {
           title = '[!] ${response['statusMsg']}';
@@ -887,18 +882,16 @@ class _ReservePageState extends State<ReservePage> {
       }
     }
 
-    setState(() {
-      _loading = false;
-      showDialog(
-          context: context,
-          barrierColor: MGColor.barrier,
-          builder: (context) => CommentPopup(
-              title: title, onPressed: onPressed)
-      ).then((_) {
-        if (allClear) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
-      });
+    setState(() => _loading = false);
+    showDialog(
+        context: context,
+        barrierColor: MGColor.barrier,
+        builder: (context) => CommentPopup(
+            title: title, onPressed: onPressed)
+    ).then((_) {
+      if (allClear) {
+        Navigator.popUntil(context, (route) => route.isFirst);
+      }
     });
   }
 }

@@ -19,11 +19,11 @@ class AdmissionListPage extends StatefulWidget {
 }
 
 class _AdmissionListPageState extends State<AdmissionListPage> {
+  late final ScrollController _scrollCtr;
   final Stream<StreamType> _stream = listListener.stream;
 
   late final FToast _fToast;
   late bool _isShownToast;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -32,25 +32,97 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
     _fToast = FToast();
     _fToast.init(context);
     _isShownToast = false;
+    _scrollCtr = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollCtr.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        /// <내 인증 확인하기> & <인증하러 가기>
-        SizedBox(height: ratio.height * 11),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Colors.white,
+      child: NestedScrollView(
+        controller: _scrollCtr,
+        floatHeaderSlivers: true,
+        headerSliverBuilder: _headerSliver,
+        body: _list(),
+      ),
+    );
+  }
+
+  /// 리스트 생성 함수
+  Widget _list() {
+    return FutureBuilder<List<Admit>?>(
+        future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
+        builder: (context, snapshot) {
+          Widget child;
+          if (snapshot.hasError) {
+            child = Container(
+                height: 218,
+                alignment: Alignment.center,
+                child: Text(
+                    '통신 속도가 너무 느립니다!',
+                    style: KR.subtitle4.copyWith(
+                        color: MGColor.base3)
+                )
+            );
+          } else {
+            if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
+            if (snapshot.hasData) admits = snapshot.data!;
+            if (admits.isNotEmpty) {
+              child = ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics()
+                      .applyTo(const BouncingScrollPhysics()),
+                  itemCount: admits.length,
+                  itemBuilder: (_, index) => _listItem(admits[index])
+              );
+            } else {
+              child = Container(
+                  height: ratio.height * 594,
+                  alignment: Alignment.center,
+                  child: Text(
+                      '아직 인증 내역이 없어요!',
+                      style: KR.subtitle4.copyWith(color: MGColor.base3)
+                  )
+              );
+            }
+          }
+          return RefreshIndicator(
+              displacement: 0,
+              color: MGColor.brandPrimary,
+              onRefresh: _onRefreshed,
+              child: child
+          );
+        }
+    );
+  }
+
+  List<Widget> _headerSliver(BuildContext context, bool innerBoxIsScrolled) {
+    return [
+      /// <내 인증 확인하기> & <인증하기>
+      SliverAppBar(
+        forceElevated: innerBoxIsScrolled,
+        expandedHeight: 159,
+        collapsedHeight: 159,
+        flexibleSpace: Container(
+          margin: EdgeInsets.only(
+            top: ratio.height * 11,
+            bottom: ratio.height * 12
           ),
           padding: EdgeInsets.symmetric(
               horizontal: ratio.width * 16,
               vertical: ratio.height * 16
           ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+          ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               /// 인트로
@@ -103,60 +175,30 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
               ),
             ],
           ),
-        ),
-
-        /// 리스트
-        Padding(
-            padding: EdgeInsets.only(top: ratio.height * 30),
-            child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
-        ),
-        Expanded(
-          child: FutureBuilder<List<Admit>?>(
-              future: admits.isEmpty ? RestAPI.getAllAdmission() : null,
-              builder: (context, snapshot) {
-                Widget child;
-                if (snapshot.hasError) {
-                  child = Container(
-                      height: 218,
-                      alignment: Alignment.center,
-                      child: Text(
-                          '통신 속도가 너무 느립니다!',
-                          style: KR.subtitle4.copyWith(
-                              color: MGColor.base3)
-                      )
-                  );
-                } else {
-                  if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
-                  if (snapshot.hasData) admits = snapshot.data!;
-                  if (reserves.isNotEmpty) {
-                    child = ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics()
-                            .applyTo(const BouncingScrollPhysics()),
-                        itemCount: admits.length,
-                        itemBuilder: (_, index) => _listItem(admits[index])
-                    );
-                  } else {
-                    child = Container(
-                        height: ratio.height * 594,
-                        alignment: Alignment.center,
-                        child: Text(
-                            '아직 인증 내역이 없어요!',
-                            style: KR.subtitle4.copyWith(color: MGColor.base3)
-                        )
-                    );
-                  }
-                }
-                return RefreshIndicator(
-                    displacement: 0,
-                    color: MGColor.brandPrimary,
-                    onRefresh: _onRefreshed,
-                    child: child
-                );
-              }
-          ),
         )
-      ]),
-    );
+      ),
+
+      /// 리스트 타이틀
+      SliverAppBar(
+        snap: true,
+        pinned: true,
+        floating: true,
+        forceElevated: innerBoxIsScrolled,
+        toolbarHeight: 52,
+        flexibleSpace: GestureDetector(
+          onTap: () {
+            _scrollCtr.animateTo(0,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.ease
+            );
+          },
+          child: Padding(
+              padding: EdgeInsets.only(top: ratio.height * 18),
+              child: Text('다른 친구들 인증 보기', style: KR.subtitle1)
+          ),
+        ),
+      )
+    ];
   }
   
   Widget _listItem(Admit admit) {
@@ -202,12 +244,6 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
         ),
       ),
     );
-  }
-
-  void setLoading(bool value) {
-    setState(() {
-      _isLoading = value;
-    });
   }
 
   Future<void> _doAdmission() async {
