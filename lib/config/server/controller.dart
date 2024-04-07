@@ -88,7 +88,7 @@ class RestAPI {
       if (response['status'] != 200) {
         return null;
       } else {
-        List<Reserve> result = response['body'].map((e) {
+        final result = response['body'].map((e) {
           final temp = e as Map<String, dynamic>;
           return Reserve.fromJson(temp);
         }).toList();

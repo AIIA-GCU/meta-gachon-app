@@ -245,68 +245,61 @@ class _ReservePageState extends State<ReservePage> {
                             margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
                                 ratio.width * 16, ratio.height * 12),
                             width: 358 * ratio.width,
+                            height: 32 + 41 * ratio.height,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Container(
-                              width: 358 * ratio.width,
-                              height: 32 + 41 * ratio.height,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: ratio.height * 10
-                              ),
-                              child: Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 16 * ratio.width,
-                                      top: 6 * ratio.height,
-                                      child: Text('이용자',
-                                          style: KR.parag1
-                                              .copyWith(color: MGColor.base1)),
+                            padding: EdgeInsets.symmetric(
+                                vertical: ratio.height * 10
+                            ),
+                            child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 16 * ratio.width,
+                                    top: 6 * ratio.height,
+                                    child: Text('이용자',
+                                        style: KR.parag1
+                                            .copyWith(color: MGColor.base1)),
+                                  ),
+                                  Positioned(
+                                    left: 80 * ratio.width,
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Row(children: [
+                                        CustomTextField(
+                                          enabled: !_isSolo,
+                                          width: ratio.width * 122,
+                                          height: 32,
+                                          controller: _numberCtr,
+                                          keyboard: TextInputType.number,
+                                          hint: '인원 수',
+                                          format: [
+                                            FilteringTextInputFormatter.digitsOnly,
+                                            LengthLimitingTextInputFormatter(2),
+                                          ],
+                                        ),
+                                      ]),
                                     ),
-                                    Positioned(
+                                  ),
+                                  Positioned(
                                       left: 80 * ratio.width,
-                                      child: Form(
-                                        key: _formKey,
-                                        child: Row(children: [
-                                          CustomTextField(
-                                            enabled: !_isSolo,
-                                            width: ratio.width * 122,
-                                            height: 32,
-                                            controller: _numberCtr,
-                                            keyboard: TextInputType.number,
-                                            hint: '인원 수',
-                                            format: [
-                                              FilteringTextInputFormatter.digitsOnly,
-                                              LengthLimitingTextInputFormatter(2),
-                                            ],
-                                            // validator: (str) {
-                                            //   if (str!.isEmpty || str == "0" || str == "00") {
-                                            //     return alertMessege = "인원 수를 정확히 입력해 주세요";
-                                            //   } else {
-                                            //     return null;
-                                            //   }
-                                            // },
-                                          ),
-                                        ]),
-                                      ),
-                                    ),
-                                    Positioned(
-                                        left: 80 * ratio.width,
-                                        bottom: 0,
-                                        child: Text(alertMessege,
-                                            style: KR.label2.copyWith(
-                                                color: _isSolo
-                                                    ? _addUserGuideline =
-                                                    MGColor.systemError
-                                                    : _addUserGuideline))),
-                                  ]
-                              ),
+                                      bottom: 0,
+                                      child: Text(alertMessege,
+                                          style: KR.label2.copyWith(
+                                              color: _isSolo
+                                                  ? _addUserGuideline =
+                                                  MGColor.systemError
+                                                  : _addUserGuideline))),
+                                ]
                             ),
                           ));
                     }
                     /// 아니면, 학번으로 이용자 추가
                     else {
+                      double buttonSide = ratio.width >= 1
+                          ? 32
+                          : 32 * ratio.width;
                       temp.add(Container(
                         margin: EdgeInsets.fromLTRB(ratio.width * 16, 0,
                             ratio.width * 16, ratio.height * 12),
@@ -334,61 +327,65 @@ class _ReservePageState extends State<ReservePage> {
                                 Positioned(
                                   left: 80 * ratio.width,
                                   top: 10 * ratio.height,
+                                  width: 268 * ratio.width,
                                   child: Form(
                                     key: _formKey,
-                                    child: Row(children: [
-                                      CustomTextField(
-                                        enabled: !_isSolo,
-                                        width: ratio.width * 120,
-                                        height: 32,
-                                        controller: _numberCtr,
-                                        keyboard: TextInputType.number,
-                                        hint: '학번',
-                                        format: [LengthLimitingTextInputFormatter(9)],
-                                        validator: (str) {
-                                          debugPrint(_memberInfo.toString());
-                                          _existError = true;
-                                          if (str!.isEmpty || str.length != 9) {
-                                            return elseMessage = "정확한 학번을 입력해 주세요!";
-                                          } else if (int.parse(str) == myInfo.stuNum) {
-                                            return elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
-                                          } else if (_memberInfo.contains(str)) {
-                                            return elseMessage = "이미 등록된 이용자입니다.";
-                                          } else {
-                                            _existError = false;
-                                            return null;
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(width: ratio.width * 110),
-                                      Material(
-                                        child: InkWell(
-                                          onTap: _isSolo ? null : _validateAddingUser,
-                                          customBorder:
-                                          RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12)),
-                                          child: Ink(
-                                            width: 32 * ratio.width,
-                                            height: 32 * ratio.width,
-                                            decoration: BoxDecoration(
-                                              color: _isSolo
-                                                  ? MGColor.base6
-                                                  : MGColor.brandPrimary,
-                                              borderRadius:
-                                              BorderRadius.circular(12),
-                                            ),
-                                            child: Center(
-                                              child: Icon(
-                                                MGIcon.plus,
-                                                size: 16,
-                                                color: _isSolo || _memberInfo.length == 5
-                                                    ? MGColor.base4 : Colors.white,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                          CustomTextField(
+                                            enabled: !_isSolo,
+                                            width: ratio.width * 120,
+                                            height: 32,
+                                            controller: _numberCtr,
+                                            keyboard: TextInputType.number,
+                                            hint: '학번',
+                                            format: [LengthLimitingTextInputFormatter(9)],
+                                            validator: (str) {
+                                              debugPrint(_memberInfo.toString());
+                                              _existError = true;
+                                              if (str!.isEmpty || str.length != 9) {
+                                                return elseMessage = "정확한 학번을 입력해 주세요!";
+                                              } else if (int.parse(str) == myInfo.stuNum) {
+                                                return elseMessage = "대표자를 제외한 이용자의 학번을 입력해 주세요!";
+                                              } else if (_memberInfo.contains(str)) {
+                                                return elseMessage = "이미 등록된 이용자입니다.";
+                                              } else {
+                                                _existError = false;
+                                                return null;
+                                              }
+                                            },
+                                          ),
+                                          Material(
+                                            child: InkWell(
+                                              onTap: _isSolo ? null : _validateAddingUser,
+                                              customBorder:
+                                              RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(12)),
+                                              child: Ink(
+                                                width: buttonSide,
+                                                height: buttonSide,
+                                                decoration: BoxDecoration(
+                                                  color: _isSolo
+                                                      ? MGColor.base6
+                                                      : MGColor.brandPrimary,
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    MGIcon.plus,
+                                                    size: 16,
+                                                    color: _isSolo || _memberInfo.length == 5
+                                                        ? MGColor.base4 : Colors.white,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ]),
+                                        ]
+                                    ),
                                   ),
                                 ),
                                 Positioned(

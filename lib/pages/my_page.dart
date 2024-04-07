@@ -284,10 +284,11 @@ class _MyPageState extends State<MyPage> {
             /// 앱 정보
             TileButton(
               onTap: () => _floatTermPage(context, Term.usingService),
-              alignment: Alignment.centerLeft,
-              padding:
-              EdgeInsets.symmetric(vertical: 7, horizontal: ratio.width * 3),
-              child: Text('이용약관', style: KR.parag2.copyWith(color: MGColor.base3)),
+              // alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(vertical: 7, horizontal: ratio.width * 3),
+              child: SizedBox(
+                  width: double.infinity,
+                  child: Text('이용약관', style: KR.parag2.copyWith(color: MGColor.base3))),
             ),
             TileButton(
                 onTap: () =>
@@ -295,8 +296,11 @@ class _MyPageState extends State<MyPage> {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(
                     vertical: 11, horizontal: ratio.width * 3),
-                child: Text('개인정보 수집 및 이용',
-                    style: KR.parag2.copyWith(color: MGColor.base3))),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text('개인정보 수집 및 이용',
+                      style: KR.parag2.copyWith(color: MGColor.base3)),
+                )),
             TileButton(
               padding:
               EdgeInsets.symmetric(vertical: 11, horizontal: ratio.width * 3),

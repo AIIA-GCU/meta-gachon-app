@@ -156,7 +156,7 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
       if (frontRoom) {
         result.addAll([
           _computerBox(1, top: 4, left: 111),
-          _computerBox(2, top: 4, left: 168),
+          _computerBox(2, top: 4, left: 165),
           _computerBox(3, top: 4, left: 219),
           _computerBox(4, top: 4, left: 272),
           _computerBox(5, top: 45, left: 272),
@@ -164,7 +164,7 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
           _computerBox(7, top: 127, left: 272),
           _computerBox(8, top: 168, left: 272),
           _computerBox(9, top: 168, left: 219),
-          _computerBox(10, top: 168, left: 168),
+          _computerBox(10, top: 168, left: 165),
           _computerBox(11, top: 168, left: 111),
           _computerBox(12, top: 168, left: 58),
           _computerBox(13, top: 168, left: 4)
@@ -172,7 +172,7 @@ class _SelectingComputerWidgetState extends State<SelectingComputerWidget> {
       } else {
         result.addAll([
           _computerBox(14, top: 168, left: 111),
-          _computerBox(15, top: 168, left: 168),
+          _computerBox(15, top: 168, left: 165),
           _computerBox(16, top: 168, left: 219),
           _computerBox(17, top: 168, left: 272),
           _computerBox(18, top: 127, left: 272),
