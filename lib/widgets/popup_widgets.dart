@@ -540,7 +540,6 @@ class AdmissionPopup extends StatelessWidget {
   const AdmissionPopup(this.item, {super.key});
 
   final Admit item;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -586,18 +585,6 @@ class AdmissionPopup extends StatelessWidget {
                   Text(item.time, style: EN.parag2.copyWith(color: MGColor.base3)),
                 ],
               ),
-
-              SizedBox(height: ratio.height * 24),
-
-              /// 대표자
-              Column(
-                children: [
-                  Text("대표자", style: KR.parag2),
-                  SizedBox(height: ratio.height * 8),
-                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
-                ],
-              ),
-
               SizedBox(height: ratio.height * 24),
 
               /// 사용 후기
@@ -618,7 +605,7 @@ class AdmissionPopup extends StatelessWidget {
               SizedBox(height: ratio.height * 24),
 
               // 관리자 이용내역 평가
-              if (item.me == '0')
+              if (item.evaluation == true)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,
@@ -633,7 +620,7 @@ class AdmissionPopup extends StatelessWidget {
                       maxLines: 3,
                     )
                 )
-              else if (item.me == '1')
+              else if (item.evaluation == false)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,

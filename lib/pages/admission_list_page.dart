@@ -73,7 +73,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
           } else {
             if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
             if (snapshot.hasData) admits = snapshot.data!;
-            if (reserves.isNotEmpty) {
+            if (admits.isNotEmpty) {
               child = ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics()
                       .applyTo(const BouncingScrollPhysics()),
@@ -152,7 +152,6 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   )
                 ],
               ),
-
               SizedBox(height: ratio.height * 16),
 
               /// 버튼
@@ -163,7 +162,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                       '내 인증 확인하기',
                       MGColor.brandTertiary,
                       MGColor.brandPrimary,
-                          () => Navigator.of(context)
+                      () => Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) => const MyAdmissionPage()))
                   ),
                   CustomButtons.bigButton(
@@ -245,6 +244,12 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
         ),
       ),
     );
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
   }
 
   Future<void> _doAdmission() async {
