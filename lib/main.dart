@@ -23,6 +23,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/reserve_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -41,16 +42,25 @@ Future<void> main() async {
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
-  debugPrint("determining initial page");
-  late final Widget start;
-  final SharedPreferences preferences = await SharedPreferences.getInstance();
-  final bool? first = preferences.getBool('firstTime');
+  // debugPrint("complete camera setting");
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
+  debugPrint("complete setting app's details");
   // 화면 세로로 고정
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
   ]);
+  // 패키지 정보 불러오기
+  packageInfo = await PackageInfo.fromPlatform();
+
+  debugPrint("determining initial page");
+  late final Widget start;
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  final bool? first = preferences.getBool('firstTime');
 
   if (first == null) {
     preferences.setBool('firstTime', true);
@@ -71,12 +81,6 @@ Future<void> main() async {
       start = const SignInPage();
     }
   }
-
-  // debugPrint("complete camera setting");
-  // camera = await availableCameras().then((value) {
-  //   debugPrint(value.length.toString());
-  //   return value.first;
-  // });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));

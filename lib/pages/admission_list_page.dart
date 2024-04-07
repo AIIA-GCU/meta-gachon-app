@@ -246,12 +246,6 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
     );
   }
 
-  void setLoading(bool value) {
-    setState(() {
-      _isLoading = value;
-    });
-  }
-
   Future<void> _doAdmission() async {
     List<Reserve>? result = await RestAPI.getPreAdmittedReservation();
     if (result != null && result.isNotEmpty) {
