@@ -815,8 +815,9 @@ class _ReservePageState extends State<ReservePage> {
       String start = '', end = '', members = '';
 
       var time = DateTime.now();
-      start = stdFormat2.format(
-          time.isAfter(_selectedEnter!) ? time : _selectedEnter!);
+      bool? instant = (widget.service == ServiceType.aiSpace)
+          ? time.isAfter(_selectedEnter!) : null;
+      start = stdFormat2.format(instant ?? false ? time : _selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
 
       if (widget.service == ServiceType.lectureRoom) {
@@ -829,7 +830,7 @@ class _ReservePageState extends State<ReservePage> {
       [reservation Info]
         . service: ${widget.service.toString()}
         . room: $_selectedPlace
-        . startTime: $start
+        . startTime: $start (${instant ?? false ? "instant" : ''})
         . endTime: $end
         . leaderInfo: ${myInfo.stuNum} ${myInfo.name}
         . memberInfo: $members
@@ -847,7 +848,8 @@ class _ReservePageState extends State<ReservePage> {
                   leader: widget.reserve!.leaderInfo,
                   memberInfo: members,
                   purpose: _purposeCtr.text,
-                  professor: _professorCtr.text
+                  professor: _professorCtr.text,
+                  instant: instant
               )
             : await RestAPI.addReservation(
                   service: widget.service,
@@ -856,7 +858,8 @@ class _ReservePageState extends State<ReservePage> {
                   endTime: end,
                   memberInfo: members,
                   purpose: _purposeCtr.text,
-                  professor: _professorCtr.text
+                  professor: _professorCtr.text,
+                  instant: instant
               );
         if (response == null) {
           title = '예약이 정상적으로 처리되지 않았습니다.';

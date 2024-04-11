@@ -30,20 +30,6 @@ class _QrScannerPageState extends State<QrScannerPage> {
   late QRViewController _qrCtr;
   late bool loading;
 
-  /// 인큐베이터 QR Code
-  final qrRoom _room_1 = qrRoom(
-      name: "405-4",
-      code:
-          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS00");
-  final qrRoom _room_2 = qrRoom(
-      name: "405-5",
-      code:
-          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS01");
-  final qrRoom _room_3 = qrRoom(
-      name: "405-6",
-      code:
-          "7J20IOusuOyekOyXtOydgCDslYTrrLQg7J2Y66+4IOyXhuydjeuLiOuLpC4g7JmcIO2VtOuPhe2VmOyFqOyjoD8g64u57IugIOygleunkCDrs4Dtg5zrhKTsmpQhIDQwNS02");
-
   @override
   void initState() {
     super.initState();
@@ -130,7 +116,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
     /// QR 검증
     late String title;
     late bool valid;
-    if ([_room_1, _room_2, _room_3].any((room) => data.code == room.code && widget.room == room.name)) { /// 방 이름과 코드 둘 다 일치하면 인증 성공
+    if (await RestAPI.qrCheck(data.code, widget.reservationId)) {
       title = "인증되었습니다!";
       valid = true;
     } else {
@@ -145,10 +131,8 @@ class _QrScannerPageState extends State<QrScannerPage> {
         builder: (context) => CommentPopup(
             title: title,
             onPressed: () => Navigator.pop(context))).then((_) async {
-      debugPrint('called');
       if (valid) {
-        await RestAPI.qrCheck(
-            data.code, widget.reservationId); // 인증되었을 때 서버로 code와 예약 번호 전달
+        // 인증되었을 때 서버로 code와 예약 번호 전달
         Navigator.pop(context);
         widget.onMatchedCode();
       } else {

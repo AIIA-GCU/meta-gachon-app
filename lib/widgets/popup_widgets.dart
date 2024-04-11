@@ -477,11 +477,13 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// QR 확인
-  /// Todo: QR을 했다는 사실을 서버에 전송할 필요가 있지 않을까?
   void _qr(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context)
-      => QrScannerPage(reservationId: item.reservationId, room: item.place, onMatchedCode: () => Navigator.pop(context)))
+      MaterialPageRoute(builder: (context) => QrScannerPage(
+        reservationId: item.reservationId,
+        room: item.place,
+        onMatchedCode: () => Navigator.pop(context))
+      )
     );
   }
 
