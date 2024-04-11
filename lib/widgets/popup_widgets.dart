@@ -199,7 +199,7 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
-        /// 사용 전 (예약 변경 X, QR O)
+        /// 사용 전 (예약 변경 X, QR X)
         case 0:
           button = Text(
               "사용 전날은 수정 및 취소가 불가합니다.",
@@ -207,7 +207,7 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
-        /// 사용 전 (예약 변경 X, QR X)
+        /// 사용 전 (예약 변경 X, QR O)
         case 1:
           button = ElevatedButton(
               onPressed: () => _qr(context),
@@ -479,8 +479,11 @@ class ReservationPopup extends StatelessWidget {
   /// QR 확인
   void _qr(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context)
-      => QrScannerPage(reservationId: item.reservationId, room: item.place, onMatchedCode: () => Navigator.pop(context)))
+      MaterialPageRoute(builder: (context) => QrScannerPage(
+        reservationId: item.reservationId,
+        room: item.place,
+        onMatchedCode: () => Navigator.pop(context))
+      )
     );
   }
 

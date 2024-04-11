@@ -109,7 +109,8 @@ class RestAPI {
     required String endTime,
     required String? professor,
     required String memberInfo,
-    required String purpose
+    required String purpose,
+    required bool? instant
   }) async {
     try {
       late String path;
@@ -122,7 +123,8 @@ class RestAPI {
             'startTime': startTime,
             'endTime': endTime,
             'memberInfo': memberInfo,
-            'purpose': purpose
+            'purpose': purpose,
+            'instant': instant
           };
           break;
         case ServiceType.computer:
@@ -168,7 +170,8 @@ class RestAPI {
     required String leader,
     required String memberInfo,
     required String purpose,
-    required String? professor
+    required String? professor,
+    required bool? instant
   }) async {
     try {
       late String path;
@@ -182,7 +185,8 @@ class RestAPI {
             'startTime': startTime,
             'endTime': endTime,
             'memberInfo': memberInfo,
-            'purpose': purpose
+            'purpose': purpose,
+            'instant': instant
           };
           break;
         case ServiceType.lectureRoom:
@@ -305,7 +309,7 @@ class RestAPI {
   /// QR 인증
   static Future<bool> qrCheck(String? qrStr, int reservationId) async {
     try {
-      final api = APIRequest('/book/qrcheck?QR=$qrStr&reservationID=$reservationId');
+      final api = APIRequest('book/qrcheck?QR=$qrStr&reservationId=$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.post);
       return response['status'] == 200;
     } catch(e) {
