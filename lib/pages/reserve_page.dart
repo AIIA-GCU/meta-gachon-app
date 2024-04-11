@@ -813,13 +813,18 @@ class _ReservePageState extends State<ReservePage> {
 
       // 데이터 변환
       String start = '', end = '', members = '';
-      start = stdFormat2.format(_selectedEnter!);
+
+      var time = DateTime.now();
+      start = stdFormat2.format(
+          time.isAfter(_selectedEnter!) ? time : _selectedEnter!);
       end = stdFormat2.format(_selectedEnd!);
+
       if (widget.service == ServiceType.lectureRoom) {
         members = _numberCtr.text;
       } else if (!_isSolo){
         _memberInfo.forEach((e) => members += "$e ");
       }
+
       debugPrint("""
       [reservation Info]
         . service: ${widget.service.toString()}
