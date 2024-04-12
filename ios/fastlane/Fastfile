@@ -1,0 +1,53 @@
+# desc "increase version number"
+# lane :increase_version_code do
+#     # load
+# 	yaml_file_path = "../../pubspec.yaml"
+# 	data = YAML.load_file(yaml_file_path)
+# 	version = data['version'].split("+")
+#
+# 	# save
+# 	version_name = version[0]
+# 	new_version_code = Integer(version[1]) + 1
+# 	new_version = "#{version_name}+#{new_version_code}"
+# 	data["version"] = new_version
+# 	File.open(yaml_file_path, "w") { |f| YAML.dump(data, f) }
+# end
+
+desc "Do signing for deploy iOS app"
+lane :do_signing do |options|:
+	api_key = app_sotre_connect_api_key(
+		key_id: options[:key_id],
+		issuer_id: options[:issuer_id],
+		key_conent: options[:key_conent],
+		is_key_content_base64: true
+	}
+	match(
+		type: "appstore",
+		app_identifier: options[:app_identifier],
+		api_key: api_key,
+		readonly: true
+	}
+end
+
+desc "Deploy a product version to Apple App Store"
+lan :build_deploy_prod do |options|:
+	do_signing(
+		app_identifier: options[:app_identifier],
+		key_id: options[:key_id],
+		issuer_id: options[:issuer_id],
+		key_contnet: options[:key_content]
+	)
+	sh('flutter pub get')
+	cocoapods(
+		repo_update: true,
+		use_bundle_exec: false,
+	)
+	build_app(
+		scheme: "product",
+		clean: true,
+		workspace: "Runner.xcworkspace"
+	)
+	upload_to_testflight(
+		skip_waiting_for_build_processing: true
+	)
+end

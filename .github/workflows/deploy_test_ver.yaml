@@ -1,0 +1,77 @@
+# release 브랜치에 push 했을 때
+# iOS, Android 테스트 버전 자동 배포
+name: Deploy a Beta-Product to TestFlight and Playstore Interanl Test
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+#  # fastlane에서 increment_version_code 파일 실행
+#  # 이때 실행
+#  version_up:
+#    # 실행 환경: my_macbook
+#    runs-on: protaku-macOS
+#    steps:
+#      # 체크아웃 발생
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#
+#      # {프로젝트} 위치에서 fastlane을 써서
+#      # increment_version_code 실행
+#      - name: increase version code
+#        run: fastlane increment_version_code
+#        working-directory: ios
+
+  # iOS 배포
+  deploy_ios:
+    # 실행 환경: my_macbook
+    runs-on: protaku-macOS
+    steps:
+      # 채크아웃 발생
+      - uses: actions/chckout@v3
+        with:
+          fetch-depth: 0
+
+      # fastlane에서 build_deploy_prod 파일 실행
+      # 이때, 실행 위치는 {프로젝트/ios}
+      # secrets는 Github Actions에서 추가하면 됨
+      - name: Deploy product to store
+        run: fastlane build_deploy_prod app_identifier:H2N8RSQ6ZZ key_id:${{secrets.ASCAPT_KEY_ID}} issuer_id:${{secrets.ASCAPI_ISSUER_ID}} key_content:${{secrets.ASCAPT_KEY_CONTENT}}
+        working-directory: ios
+
+  # Android 배포
+  deploy_android:
+    # 실행 환경:
+    runs-on: protaku-macOS
+    # 앞선 {deploy_ios}가 끝나고 실행할 것
+    needs: [deploy_ios]
+    steps:
+      # 체크아웃 발생
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # secrets에 저장한 keystore를 base64-to-file를 써서
+      # upload_keystore.jks로 복호화 진행
+      - name: generate android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: upload_keystore.jks
+          encodedString: ${{secrets.ANDROID_KEYSTORE_BASE64}}
+
+      # 위에서 생성한 keystore와 secrets에 있는 정보를 바탕으로
+      # key.properties 생성
+      - name: Create key.properties
+        run:
+          echo "storeFile=${{steps.android_keystore.ouputs.filePath}} > android key.properties
+          echo "storePasswrod=${{secrets.ANDROID_KEYSTORE_PASSWORD}} >> android key.properties
+          echo "keyPassword=${{secrets.ANDROID_KEY_PASSWORD}} >> android key.properties
+          echo "keyAlias=${{secrets.ANDROID_KEY_ALIAS}} >> android key.properties
+
+      # fastlane에서 build_deploy_prod 실행
+      # 이때, 실행 위치는 {프로젝트/android}
+      - name: Deploy product to store
+        run: fastlane build_deploy_prod
+        working-directory: android
