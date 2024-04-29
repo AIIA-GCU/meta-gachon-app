@@ -28,7 +28,7 @@ const int _successCode = 200;
 const int _failureCode = 400;
 
 class APIRequest {
-  static const String _baseUrl = "http://210.102.178.161:8080/";
+  static const String _baseUrl = "https://meta.aiia-gcu.com/";
   static const String _sessionCookieName = "JSESSIONID";
 
   late String _path;
