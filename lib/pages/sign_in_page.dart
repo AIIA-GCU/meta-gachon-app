@@ -88,79 +88,83 @@ class _SignInPageState extends State<SignInPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: TextFormField(
-                                  controller: idController,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 12),
-                                    hintText: '아이디 입력',
-                                    hintStyle: KR.subtitle3.copyWith(
-                                      color: MGColor.base4,
-                                    ),
-                                    border: InputBorder.none,
+                              Center(
+                                child: Container(
+                                  width: ratio.width * 230,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
                                   ),
-                                  validator: (val) {
-                                    return val == null ? '' : null;
-                                  },
+                                  child: TextFormField(
+                                    controller: idController,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: ratio.width * 12,
+                                          vertical: ratio.height * 12),
+                                      hintText: '아이디 입력',
+                                      hintStyle: KR.subtitle3.copyWith(
+                                        color: MGColor.base4,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    validator: (val) {
+                                      return val == null ? '' : null;
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(height: ratio.height * 10),
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    TextField(
-                                      controller: pwController,
-                                      obscureText: !isPasswordVisible,
-                                      decoration: InputDecoration(
-                                        hintText: '비밀번호 입력',
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: ratio.width * 12,
-                                            vertical: ratio.height * 12),
-                                        hintStyle: KR.subtitle3.copyWith(
-                                          color: MGColor.base4,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      child: GestureDetector(
-                                        onTapDown: (tapDetails) => setState(
-                                            () => isPasswordVisible = true),
-                                        onTapUp: (tapDetails) => setState(
-                                            () => isPasswordVisible = false),
-                                        onTapCancel: () => setState(
-                                            () => isPasswordVisible = false),
-                                        behavior: HitTestBehavior.translucent,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
+                              Center(
+                                child: Container(
+                                  width: ratio.width * 230,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      TextField(
+                                        controller: pwController,
+                                        obscureText: !isPasswordVisible,
+                                        decoration: InputDecoration(
+                                          hintText: '비밀번호 입력',
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
                                               horizontal: ratio.width * 12,
-                                              vertical: 14),
-                                          child: Icon(
-                                            isPasswordVisible
-                                                ? MGIcon.eyeOn
-                                                : MGIcon.eyeOff,
+                                              vertical: ratio.height * 12),
+                                          hintStyle: KR.subtitle3.copyWith(
                                             color: MGColor.base4,
-                                            size: ratio.width * 20,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      Positioned(
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTapDown: (tapDetails) => setState(
+                                              () => isPasswordVisible = true),
+                                          onTapUp: (tapDetails) => setState(
+                                              () => isPasswordVisible = false),
+                                          onTapCancel: () => setState(
+                                              () => isPasswordVisible = false),
+                                          behavior: HitTestBehavior.translucent,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: ratio.width * 12,
+                                                vertical: 14),
+                                            child: Icon(
+                                              isPasswordVisible
+                                                  ? MGIcon.eyeOn
+                                                  : MGIcon.eyeOff,
+                                              color: MGColor.base4,
+                                              size: ratio.width * 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: ratio.height * 4),
@@ -180,7 +184,7 @@ class _SignInPageState extends State<SignInPage> {
                                   (MediaQuery.of(context).viewInsets.bottom > 0
                                       ? 10
                                       : errorMessage.isEmpty
-                                          ? 42
+                                          ? 30
                                           : 75)),
                         ),
 
