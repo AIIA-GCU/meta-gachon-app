@@ -308,25 +308,33 @@ class _MyPageState extends State<MyPage> {
   }
 
   void _showGradeExplainPopup(BuildContext context) {
-    if (seeGradeExplanation) {
-      showDialog(
-          context: context,
-          barrierColor: Colors.black.withOpacity(0.25),
-          builder: (context) => GradeExplainPopup(
-            preferences: preferences,
-            hideForDay: () {
-              seeGradeExplanation = false;
-              debugPrint("seeGradeExplanation = $seeGradeExplanation");
-            },
-          )
-      );
-    } else {
-      showDialog(
-          context: context,
-          barrierColor: MGColor.barrier,
-          builder: (_) => const GradePopup()
-      );
-    }
+    showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.25),
+        builder: (context) => GradeExplainPopup(
+          preferences: preferences,
+          hideForDay: () {},
+        )
+    );
+    // if (seeGradeExplanation) {
+    //   showDialog(
+    //       context: context,
+    //       barrierColor: Colors.black.withOpacity(0.25),
+    //       builder: (context) => GradeExplainPopup(
+    //         preferences: preferences,
+    //         hideForDay: () {
+    //           seeGradeExplanation = false;
+    //           debugPrint("seeGradeExplanation = $seeGradeExplanation");
+    //         },
+    //       )
+    //   );
+    // } else {
+    //   showDialog(
+    //       context: context,
+    //       barrierColor: MGColor.barrier,
+    //       builder: (_) => const GradePopup()
+    //   );
+    // }
   }
 
   void _floatMyAdmissionPage(BuildContext context) {
