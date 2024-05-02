@@ -239,17 +239,23 @@ class _SignInPageState extends State<SignInPage> {
           isLoading = false;
         });
       }
+    } on TimeoutException {
+      setState(() => isLoading = false);
+      showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.25),
+          builder: (context) => CommentPopup(
+            title: '통신 속도가 너무 느립니다!',
+            onPressed: () => Navigator.pop(context)
+          )
+      );
     } catch (e) {
       debugPrint(e.toString());
       setState(() => isLoading = false);
       showDialog(
         context: context,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => CommentPopup(
-          title: e.toString(),
-          buttonColor: MGColor.brandPrimary,
-          onPressed: () => Navigator.pop(context)
-        )
+        builder: (context) => ErrorPopup(error: e.toString())
       );
     }
   }

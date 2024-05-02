@@ -83,6 +83,71 @@ class AlertPopup extends StatelessWidget {
   }
 }
 
+class ErrorPopup extends StatelessWidget {
+  const ErrorPopup({super.key, required this.error});
+
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        insetPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+              ratio.width * 12,
+              40,
+              ratio.width * 12,
+              12
+          ),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12)
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("처리되지 않은 예외 상황이 발생했습니다!", style: KR.subtitle4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.base7,
+                        fixedSize: Size(ratio.width * 147, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))
+                    ),
+                    child: Text("닫기", style: KR.parag2.copyWith(color: MGColor.base3)),
+                  ),
+                  SizedBox(width: ratio.width * 8),
+                  ElevatedButton(
+                    onPressed: () => _sendReport(context),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.brandPrimary,
+                        fixedSize: Size(ratio.width * 147, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))
+                    ),
+                    child: Text("리포트 작성", style: KR.parag2.copyWith(color: Colors.white)),
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  _sendReport(BuildContext context) {
+    Navigator.pop(context);
+  }
+}
+
 class CommentPopup extends StatelessWidget {
   CommentPopup({
     super.key,

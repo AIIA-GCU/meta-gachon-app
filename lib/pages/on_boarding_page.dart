@@ -75,22 +75,32 @@ class OnBoarding extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    if (await FCM.initialize()) {
-      Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-              fullscreenDialog: false,
-              transitionsBuilder: slideRigth2Left,
-              pageBuilder: (context, anime, secondAnime) => SignInPage()
-          )
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              duration: Duration(milliseconds: 1200),
-              content: Text('권한을 허용해 주세요!')
-          )
-      );
-    }
+  _onPressed(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+            fullscreenDialog: false,
+            transitionsBuilder: slideRigth2Left,
+            pageBuilder: (context, anime, secondAnime) => const SignInPage()
+        )
+    );
   }
+
+  // Future<void> _onPressed(BuildContext context) async {
+  //   if (await FCM.initialize()) {
+  //     Navigator.of(context).pushReplacement(
+  //         PageRouteBuilder(
+  //             fullscreenDialog: false,
+  //             transitionsBuilder: slideRigth2Left,
+  //             pageBuilder: (context, anime, secondAnime) => SignInPage()
+  //         )
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             duration: Duration(milliseconds: 1200),
+  //             content: Text('권한을 허용해 주세요!')
+  //         )
+  //     );
+  //   }
+  // }
 }
