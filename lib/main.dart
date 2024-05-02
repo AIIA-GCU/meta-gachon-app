@@ -16,9 +16,11 @@
 ///
 ///
 
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
@@ -31,7 +33,6 @@ import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
 
 Future<void> main() async {
-
   debugPrint("called main()");
 
   debugPrint("initializing flutter binding");
@@ -61,12 +62,13 @@ Future<void> main() async {
     try {
       // await FCM.initialize();
       // final fcmToken = await FCM.getToken();
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
+      myInfo = (await RestAPI.signIn(
+          id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
       reserves = await RestAPI.getRemainReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
       start = const MainFrame();
-    } catch(_) {
+    } catch (_) {
       debugPrint('No token');
       start = const SignInPage();
     }
@@ -102,37 +104,47 @@ class MataGachonApp extends StatefulWidget {
   @override
   State<MataGachonApp> createState() => _MataGachonAppState();
 }
-class _MataGachonAppState extends State<MataGachonApp> {
 
+class _MataGachonAppState extends State<MataGachonApp> {
   @override
   Widget build(BuildContext context) {
-    ratio = Size(
-      MediaQuery.of(context).size.width  / 390,
-      MediaQuery.of(context).size.height / 895
-    );
-    return MaterialApp(
-      title: "메타가천",
-      theme: ThemeData(
-          scaffoldBackgroundColor: MGColor.base9,
-          appBarTheme: const AppBarTheme(
-              backgroundColor: MGColor.base9,
-              elevation: 0,
-              foregroundColor: MGColor.base4,
-              toolbarHeight: 56,
-              scrolledUnderElevation: 0.0
+    ratio = Size(MediaQuery.of(context).size.width / 390,
+        MediaQuery.of(context).size.height / 895);
+    return BetterFeedback(
+        theme: FeedbackThemeData(
+          background: Colors.grey,
+          feedbackSheetColor: Colors.grey[50]!,
+          drawColors: [
+            Colors.red,
+            Colors.green,
+            Colors.blue,
+            Colors.yellow,
+          ],
+        ),
+        localeOverride: const Locale('ko', 'KR'),
+        child: MaterialApp(
+          title: "메타가천",
+          theme: ThemeData(
+            scaffoldBackgroundColor: MGColor.base9,
+            appBarTheme: const AppBarTheme(
+                backgroundColor: MGColor.base9,
+                elevation: 0,
+                foregroundColor: MGColor.base4,
+                toolbarHeight: 56,
+                scrolledUnderElevation: 0.0),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedLabelStyle: KR.label3.copyWith(color: MGColor.base3),
+              unselectedLabelStyle: KR.label3.copyWith(color: MGColor.base1),
+              unselectedIconTheme:
+                  const IconThemeData(size: 24, color: MGColor.base4),
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+            ),
           ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            selectedLabelStyle: KR.label3.copyWith(color: MGColor.base3),
-            unselectedLabelStyle: KR.label3.copyWith(color: MGColor.base1),
-            unselectedIconTheme: const IconThemeData(size: 24, color: MGColor.base4),
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-          ),
-      ),
-      builder: FToastBuilder(),   // for <fluttertost> package
-      home: widget.start,
-    );
+          builder: FToastBuilder(), // for <fluttertost> package
+          home: widget.start,
+        ));
   }
 }
