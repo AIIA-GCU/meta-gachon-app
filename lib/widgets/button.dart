@@ -56,8 +56,8 @@ class CustomButtons {
         shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
-        minimumSize: Size(ratio.width * 358, 48),
+            borderRadius: BorderRadius.circular(30)),
+        minimumSize: Size(ratio.width * 240, 48),
       ),
       child: Text(
         text,
