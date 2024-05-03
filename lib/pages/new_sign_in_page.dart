@@ -80,11 +80,13 @@ class _NewSignState extends State<NewSign> {
                                 onChanged: (bool? value) {
                                   setState(() {
                                     _isChecked3 = value!;
+                                    _isChecked = _isChecked2 = _isChecked3;
+
                                   });
                                 },
                                 activeColor: Color(0xff1762DB),
                               ),
-                              Text('개인정보 수집 및 이용 동의 (필수)',
+                              Text('전체 동의',
                                   style: KR.subtitle4 ),
                             ],
                           ),
@@ -93,7 +95,7 @@ class _NewSignState extends State<NewSign> {
                           ),
                           ElevatedButton(
 
-                            onPressed: _isChecked && _isChecked2 && _isChecked3
+                            onPressed: _isChecked && _isChecked2
                                 ? () {
                               Navigator.push(
                                 context,
