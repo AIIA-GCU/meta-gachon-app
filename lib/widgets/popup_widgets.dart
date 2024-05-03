@@ -83,6 +83,71 @@ class AlertPopup extends StatelessWidget {
   }
 }
 
+class ErrorPopup extends StatelessWidget {
+  const ErrorPopup({super.key, required this.error});
+
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        insetPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+              ratio.width * 12,
+              40,
+              ratio.width * 12,
+              12
+          ),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12)
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("처리되지 않은 예외 상황이 발생했습니다!", style: KR.subtitle4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.base7,
+                        fixedSize: Size(ratio.width * 147, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))
+                    ),
+                    child: Text("닫기", style: KR.parag2.copyWith(color: MGColor.base3)),
+                  ),
+                  SizedBox(width: ratio.width * 8),
+                  ElevatedButton(
+                    onPressed: () => _sendReport(context),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: MGColor.brandPrimary,
+                        fixedSize: Size(ratio.width * 147, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))
+                    ),
+                    child: Text("리포트 작성", style: KR.parag2.copyWith(color: Colors.white)),
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  _sendReport(BuildContext context) {
+    Navigator.pop(context);
+  }
+}
+
 class CommentPopup extends StatelessWidget {
   CommentPopup({
     super.key,
@@ -183,13 +248,13 @@ class ReservationPopup extends StatelessWidget {
       case 1:
         statusMsg = '곧 있음 예약한 시간이에요.\n회의실에서 QR코드 인증을 해주세요!';
         break;
-      case 3:
+      case 4:
         statusMsg = '현재 회의실을 사용 중이에요!';
         break;
-      case 4:
+      case 5:
         statusMsg = '곧 있음 이용 시간이 끝납니다.';
         break;
-      case 5:
+      case 6:
         statusMsg = '공간 이용 시간이 끝났습니다!\n인증 사진을 올려주세요.';
         break;
       default:
@@ -199,7 +264,7 @@ class ReservationPopup extends StatelessWidget {
 
     if (myInfo.match(item.leaderInfo)) {
       switch (status) {
-        /// 사용 전 (예약 변경 X, QR O)
+        /// 사용 전 (예약 변경 X, QR X)
         case 0:
           button = Text(
               "사용 전날은 수정 및 취소가 불가합니다.",
@@ -207,7 +272,7 @@ class ReservationPopup extends StatelessWidget {
           );
           break;
 
-        /// 사용 전 (예약 변경 X, QR X)
+        /// 사용 전 (예약 변경 X, QR O)
         case 1:
           button = ElevatedButton(
               onPressed: () => _qr(context),
@@ -310,7 +375,6 @@ class ReservationPopup extends StatelessWidget {
       button = const SizedBox.shrink();
     }
 
-
     return Dialog(
       insetPadding: EdgeInsets.zero,
       child: Container(
@@ -378,7 +442,7 @@ class ReservationPopup extends StatelessWidget {
             SizedBox(
               width: ratio.width * 220,
               child: Text(
-                '나중에 바꾸기',
+                item.purpose,
                 textAlign: TextAlign.center,
                 style: KR.label2.copyWith(color: MGColor.base3.withOpacity(0.6))
               )
@@ -436,10 +500,10 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// 예약 삭제
-  void _del(BuildContext context) {
-    Navigator.pop(context);
+  void _del(BuildContext context1) {
+    Navigator.pop(context1);
     showDialog(
-      context: context,
+      context: context1,
       barrierColor: MGColor.barrier,
       builder: (context1) => AlertPopup(
           title: "예약을 취소하시겠습니까?",
@@ -447,18 +511,18 @@ class ReservationPopup extends StatelessWidget {
           onAgreed: () async {
             Navigator.pop(context1);
             try {
-                int? uid = await RestAPI.delReservation(
+                int? status = await RestAPI.delReservation(
                     reservationId: item.reservationId);
-                if (uid == null) {
+                if (status != 200) {
                   showDialog(
-                      context: context,
+                      context: context1,
                       barrierColor: MGColor.barrier,
                       builder: (context2) => CommentPopup(
                           title: "[Error] deleting reservation",
                           onPressed: () => Navigator.pop(context2)));
                 } else {
                   showDialog(
-                          context: context,
+                          context: context1,
                           builder: (context2) => CommentPopup(
                               title: "예약이 취소되었습니다!",
                               onPressed: () => Navigator.pop(context2)))
@@ -466,7 +530,7 @@ class ReservationPopup extends StatelessWidget {
                 }
             } on TimeoutException {
               showDialog(
-                  context: context,
+                  context: context1,
                   barrierColor: MGColor.barrier,
                   builder: (context2) => CommentPopup(
                       title: "통신 속도가 너무 느립니다!",
@@ -478,11 +542,13 @@ class ReservationPopup extends StatelessWidget {
   }
 
   /// QR 확인
-  /// Todo: QR을 했다는 사실을 서버에 전송할 필요가 있지 않을까?
   void _qr(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context)
-      => QrScannerPage(reservationId: item.reservationId, room: item.place, onMatchedCode: () => Navigator.pop(context)))
+      MaterialPageRoute(builder: (context) => QrScannerPage(
+        reservationId: item.reservationId,
+        room: item.place,
+        onMatchedCode: () => Navigator.pop(context))
+      )
     );
   }
 
@@ -500,7 +566,7 @@ class ReservationPopup extends StatelessWidget {
           try {
             int? uid = await RestAPI.prolongReservation(
                 reservationId: item.reservationId);
-            if (uid == null) {
+            if (uid != 200) {
               showDialog(
                   context: context,
                   barrierColor: MGColor.barrier,
@@ -541,7 +607,6 @@ class AdmissionPopup extends StatelessWidget {
   const AdmissionPopup(this.item, {super.key});
 
   final Admit item;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -587,18 +652,6 @@ class AdmissionPopup extends StatelessWidget {
                   Text(item.time, style: EN.parag2.copyWith(color: MGColor.base3)),
                 ],
               ),
-
-              SizedBox(height: ratio.height * 24),
-
-              /// 대표자
-              Column(
-                children: [
-                  Text("대표자", style: KR.parag2),
-                  SizedBox(height: ratio.height * 8),
-                  Text(item.leaderInfo, style: EN.parag2.copyWith(color: MGColor.base3)),
-                ],
-              ),
-
               SizedBox(height: ratio.height * 24),
 
               /// 사용 후기
@@ -619,7 +672,7 @@ class AdmissionPopup extends StatelessWidget {
               SizedBox(height: ratio.height * 24),
 
               // 관리자 이용내역 평가
-              if (item.me == '0')
+              if (item.evaluation == true)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,
@@ -634,7 +687,7 @@ class AdmissionPopup extends StatelessWidget {
                       maxLines: 3,
                     )
                 )
-              else if (item.me == '1')
+              else if (item.evaluation == false)
                 Container(
                     constraints: BoxConstraints(
                         minWidth: ratio.width * 294,

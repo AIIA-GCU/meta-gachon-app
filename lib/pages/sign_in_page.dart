@@ -42,6 +42,8 @@ class _SignInPageState extends State<SignInPage> {
             body: SafeArea(
               child: Center(
                 child: Container(
+                  width: ratio.width > 1
+                      ? 390 : MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                   alignment: Alignment.center,
                   child: SingleChildScrollView(
@@ -120,56 +122,43 @@ class _SignInPageState extends State<SignInPage> {
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: MGColor.base6),
                                 ),
-                                child: Stack(
-                                  children: [
-                                    TextField(
-                                      controller: pwController,
-                                      obscureText: !isPasswordVisible,
-                                      decoration: InputDecoration(
-                                        hintText: '비밀번호 입력',
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: ratio.width * 12,
-                                            vertical: ratio.height * 12),
-                                        hintStyle: KR.subtitle3.copyWith(
-                                          color: MGColor.base4,
-                                        ),
-                                      ),
+                                child: TextField(
+                                  controller: pwController,
+                                  obscureText: !isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    hintText: '비밀번호 입력',
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: ratio.width * 12,
+                                        vertical: ratio.height * 12),
+                                    hintStyle: KR.subtitle3.copyWith(
+                                      color: MGColor.base4,
                                     ),
-                                    Positioned(
-                                      right: 0,
-                                      child: GestureDetector(
-                                        onTapDown: (tapDetails) {
-                                          setState(() => isPasswordVisible = true);
-                                        },
-                                        onTapUp: (tapDetails) {
-                                          setState(() => isPasswordVisible = false);
-                                        },
-                                        onTapCancel: () {
-                                          setState(() => isPasswordVisible = false);
-                                        },
-                                        onLongPressStart: (tapDetails) {
-                                          setState(() => isPasswordVisible = true);
-                                        },
-                                        onLongPressEnd: (tapDetails) {
-                                          setState(() => isPasswordVisible = false);
-                                        },
-                                        behavior: HitTestBehavior.translucent,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: ratio.width * 12,
-                                              vertical: 14),
-                                          child: Icon(
-                                            isPasswordVisible
-                                                ? MGIcon.eyeOn
-                                                : MGIcon.eyeOff,
-                                            color: MGColor.base4,
-                                            size: ratio.width * 20,
-                                          ),
-                                        ),
+                                    suffixIcon: GestureDetector(
+                                      onTapDown: (tapDetails) {
+                                        setState(() => isPasswordVisible = true);
+                                      },
+                                      onTapUp: (tapDetails) {
+                                        setState(() => isPasswordVisible = false);
+                                      },
+                                      onTapCancel: () {
+                                        setState(() => isPasswordVisible = false);
+                                      },
+                                      onLongPressStart: (tapDetails) {
+                                        setState(() => isPasswordVisible = true);
+                                      },
+                                      onLongPressEnd: (tapDetails) {
+                                        setState(() => isPasswordVisible = false);
+                                      },
+                                      behavior: HitTestBehavior.translucent,
+                                      child: Icon(
+                                        isPasswordVisible
+                                            ? MGIcon.eyeOn
+                                            : MGIcon.eyeOff,
+                                        color: MGColor.base4,
                                       ),
-                                    ),
-                                  ],
+                                    )
+                                  ),
                                 ),
                               ),
                               SizedBox(height: ratio.height * 4),
@@ -251,16 +240,23 @@ class _SignInPageState extends State<SignInPage> {
         });
       }
     } on TimeoutException {
-      setState(() {
-        isLoading = false;
-        showDialog(
-            context: context,
-            barrierColor: Colors.black.withOpacity(0.25),
-            builder: (context) => CommentPopup(
-                title: "통신 속도가 너무 느립니다!",
-                buttonColor: MGColor.brandPrimary,
-                onPressed: () => Navigator.pop(context)));
-      });
+      setState(() => isLoading = false);
+      showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.25),
+          builder: (context) => CommentPopup(
+            title: '통신 속도가 너무 느립니다!',
+            onPressed: () => Navigator.pop(context)
+          )
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      setState(() => isLoading = false);
+      showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.25),
+        builder: (context) => ErrorPopup(error: e.toString())
+      );
     }
   }
 }

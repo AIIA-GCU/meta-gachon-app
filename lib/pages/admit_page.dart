@@ -380,14 +380,14 @@ class _AdmitPageState extends State<AdmitPage> {
         . photo: $bytes""");
 
     try {
-      int? uid = await RestAPI.addAdmission(
+      int? status = await RestAPI.addAdmission(
           reservationId: widget.reserve.reservationId,
           review: _textCtr.text,
           photo: base64Encode(bytes),
           photoExtension: expension
       );
-      if (uid == null) {
-        title = 'Not found';
+      if (status == null) {
+        title = '인증이 정상적으로 처리되지 않았습니다.';
         onPressed = () => Navigator.pop(context);
       } else {
         allClear = true;

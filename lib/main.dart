@@ -33,6 +33,7 @@ import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
 
 Future<void> main() async {
+
   debugPrint("called main()");
 
   debugPrint("initializing flutter binding");
@@ -42,16 +43,25 @@ Future<void> main() async {
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
-  debugPrint("determining initial page");
-  late final Widget start;
-  final SharedPreferences preferences = await SharedPreferences.getInstance();
-  final bool? first = preferences.getBool('firstTime');
+  // debugPrint("complete camera setting");
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
+  debugPrint("complete setting app's details");
   // 화면 세로로 고정
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
   ]);
+  // 패키지 정보 불러오기
+  packageInfo = await PackageInfo.fromPlatform();
+
+  debugPrint("determining initial page");
+  late final Widget start;
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  final bool? first = preferences.getBool('firstTime');
 
   if (first == null) {
     preferences.setBool('firstTime', true);
@@ -73,12 +83,6 @@ Future<void> main() async {
       start = const SignInPage();
     }
   }
-
-  debugPrint("complete camera setting");
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
@@ -105,7 +109,39 @@ class MataGachonApp extends StatefulWidget {
   State<MataGachonApp> createState() => _MataGachonAppState();
 }
 
-class _MataGachonAppState extends State<MataGachonApp> {
+class _MataGachonAppState extends State<MataGachonApp>
+    with WidgetsBindingObserver {
+
+  late Widget current;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    current = widget.start;
+    super.initState();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      debugPrint("App is resumed");
+      if (await RestAPI.signIn(
+          id: "app", pw: 'resume', token: 'fcmToken') == null) {
+        setState(() => current = const SignInPage());
+        debugPrint("Token is invalid. try to sign in again.");
+      } else {
+        debugPrint("Token is valid. show previous page.");
+      }
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     ratio = Size(MediaQuery.of(context).size.width / 390,

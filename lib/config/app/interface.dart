@@ -23,6 +23,7 @@ import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'enum.dart';
 
@@ -241,3 +242,6 @@ late final String today;
 
 /// 비율
 late Size ratio;
+
+/// Package Information
+late final PackageInfo packageInfo;

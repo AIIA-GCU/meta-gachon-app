@@ -23,10 +23,6 @@ import 'session.dart';
 /// http method
 enum HTTPMethod { get, post, patch, delete }
 
-/// status code of http request
-const int _successCode = 200;
-const int _failureCode = 400;
-
 class APIRequest {
   static const String _baseUrl = "https://meta.aiia-gcu.com/";
   static const String _sessionCookieName = "JSESSIONID";
@@ -86,24 +82,35 @@ class APIRequest {
       if (params != null) request.body = jsonEncode(params);
 
       final httpReturned = await http.Client()
-          .send(request).timeout(const Duration(seconds: 10));
+          .send(request).timeout(const Duration(seconds: 15));
       final response = await http.Response.fromStream(httpReturned);
-      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      debugPrint("[api] returned: ${jsonResponse.toString()}");
 
-      if (httpReturned.statusCode == 200) {
-        // 쿠키 파싱, 토큰 설정
-        final Map<String, String> serverCookies = _parseServerCookies(response);
-        if (serverCookies.containsKey(_sessionCookieName)) {
-          final newToken = serverCookies[_sessionCookieName]!;
-          if (session.get() != newToken) {
-            session.set(newToken);
+      if (httpReturned.statusCode != 500) {
+        dynamic jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        jsonResponse = {"body": jsonResponse};
+
+        if (httpReturned.statusCode == 200) {
+          jsonResponse['status'] = 200;
+          debugPrint("[api] success receiving data (200)");
+
+          // 쿠키 파싱, 토큰 설정
+          final Map<String, String> serverCookies = _parseServerCookies(response);
+          if (serverCookies.containsKey(_sessionCookieName)) {
+            final newToken = serverCookies[_sessionCookieName]!;
+            if (session.get() != newToken) {
+              session.set(newToken);
+            }
           }
+        } else {
+          jsonResponse['status'] = 400;
+          debugPrint("[api] client error (400)");
         }
+
+        debugPrint("[api] returned: ${jsonResponse.toString()}");
         return jsonResponse;
       } else {
-        debugPrint('[Error] related http response: ${httpReturned.statusCode}');
-        return jsonResponse;
+        debugPrint('[api] server error (500)');
+        return {'status': 500};
       }
     } on TimeoutException {
       throw TimeoutException('[Error] api send: timeout');

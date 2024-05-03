@@ -39,16 +39,23 @@ class RestAPI {
           HTTPMethod.post,
           params: {"ID": id, "PW": pw, "fcmToken": token}
       );
-      final preference = await SharedPreferences.getInstance();
-      if (preference.getBool('firstTime')! == true) {
-        preference.setBool('firstTime', false);
-        debugPrint("You logined at first!");
+      switch (response['status']) {
+        case 200:
+          final preference = await SharedPreferences.getInstance();
+          if (preference.getBool('firstTime')! == true) {
+            preference.setBool('firstTime', false);
+            debugPrint("You logined at first!");
+          }
+          return User.fromJson(response['body']);
+        case 400:
+          return null;
+        default:
+          throw Exception("[Error] 알 수 없는 이유로 로그인 할 수 없습니다!");
       }
-      return User.fromJson(response);
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
-    } catch(_) {
-      return null;
+    } catch(e) {
+      throw Exception(e);
     }
   }
 
@@ -56,16 +63,17 @@ class RestAPI {
   static Future<List<Reserve>?> getRemainReservation() async {
     try {
       final api = APIRequest('books/remain');
-      List<dynamic> response = await api.send(HTTPMethod.get);
-      if (response.isEmpty) {
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      if (response['status'] != 200) {
         return null;
       } else {
-        List<Reserve> result = response.map((e) {
+        final result = response['body'].map((e) {
           final temp = e as Map<String, dynamic>;
           return Reserve.fromJson(temp);
         }).toList();
-        result.sort((a, b) => a.startTime.compareTo(b.startTime));
-        return result;
+        final cvtResult = List<Reserve>.from(result);
+        cvtResult.sort((a, b) => a.startTime.compareTo(b.startTime));
+        return cvtResult;
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -76,16 +84,17 @@ class RestAPI {
   static Future<List<Reserve>?> getPreAdmittedReservation() async {
     try {
       final api = APIRequest('books');
-      List<dynamic> response = await api.send(HTTPMethod.get);
-      if (response.isEmpty) {
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      if (response['status'] != 200) {
         return null;
       } else {
-        List<Reserve> result = response.map((e) {
+        final result = response['body'].map((e) {
           final temp = e as Map<String, dynamic>;
           return Reserve.fromJson(temp);
         }).toList();
-        result.sort((a, b) => a.startTime.compareTo(b.startTime));
-        return result;
+        final cvtResult = List<Reserve>.from(result);
+        cvtResult.sort((a, b) => a.startTime.compareTo(b.startTime));
+        return cvtResult;
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -99,9 +108,9 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String? professor,
-    required String? memberInfo,
-    required String? userNumber,
-    required String purpose
+    required String memberInfo,
+    required String purpose,
+    required bool? instant
   }) async {
     try {
       late String path;
@@ -113,8 +122,9 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'userNumber': userNumber,
-            'purpose': purpose
+            'memberInfo': memberInfo,
+            'purpose': purpose,
+            'instant': instant
           };
           break;
         case ServiceType.computer:
@@ -124,7 +134,7 @@ class RestAPI {
             'startTime': startTime,
             'endTime': endTime,
             'professor': professor,
-            'userNumber': userNumber,
+            'memberInfo': memberInfo,
             'purpose': purpose
           };
           break;
@@ -143,14 +153,14 @@ class RestAPI {
       final api = APIRequest(path);
       Map<String, dynamic> response = await api
           .send(HTTPMethod.post, params: params);
-      return response;
+      if (response['status'] == 200) return response['body'];
+      return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 예약 수정
-  /// Todo: member에 빈 값을 넣으면 문제가 생기는 듯
   static Future<Map<String, dynamic>?> patchReservation({
     required int reservationId,
     required ServiceType service,
@@ -158,10 +168,10 @@ class RestAPI {
     required String startTime,
     required String endTime,
     required String leader,
-    required String? memberInfo,
-    required String? userNumber,
+    required String memberInfo,
     required String purpose,
-    required String? professor
+    required String? professor,
+    required bool? instant
   }) async {
     try {
       late String path;
@@ -174,8 +184,9 @@ class RestAPI {
             'room': place,
             'startTime': startTime,
             'endTime': endTime,
-            'userNumber': userNumber,
-            'purpose': purpose
+            'memberInfo': memberInfo,
+            'purpose': purpose,
+            'instant': instant
           };
           break;
         case ServiceType.lectureRoom:
@@ -193,34 +204,35 @@ class RestAPI {
       }
       final api = APIRequest(path);
       Map<String, dynamic> response = await api
-          .send(HTTPMethod.post, params: params);
-      return response;
+          .send(HTTPMethod.patch, params: params);
+      if (response['status'] == 200) return response['body'];
+      return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 예약 삭제
-  static Future<int?> delReservation({
+  static Future<int> delReservation({
     required int reservationId
   }) async {
     try {
       final api = APIRequest('book/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.delete);
-      return response['reservationID'];
+      return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 예약 연장
-  static Future<int?> prolongReservation({
+  static Future<int> prolongReservation({
     required int reservationId
   }) async {
     try {
       final api = APIRequest('book/prolong/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.patch);
-      return response['reservationId'];
+      return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -240,7 +252,8 @@ class RestAPI {
     try {
       final api = APIRequest('book/$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.get);
-      return response['status'];
+      if (response['status'] == 200) return response['body']['status'];
+      return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
@@ -254,10 +267,10 @@ class RestAPI {
     try {
       final api = APIRequest('books/available?room=${room}&date=${date}');
       Map<String, dynamic> response = await api.send(HTTPMethod.get);
-      if (response.isEmpty) {
+      if (response['status'] != 200) {
         return null;
       } else {
-        Map<String, dynamic> result = response['disableTime'];
+        Map<String, dynamic> result = response['body']['disableTime'];
         return result.map((key, value) => MapEntry(int.parse(key), value));
       }
     } on TimeoutException {
@@ -282,10 +295,10 @@ class RestAPI {
       }
       final api = APIRequest('book/items/$type');
       Map<String, dynamic> response = await api.send(HTTPMethod.get);
-      if (response.isEmpty) {
+      if (response['status'] != 200) {
         return null;
       } else {
-        List<dynamic> temp = response['availableRoom'];
+        List<dynamic> temp = response['body']['availableRoom'];
         return temp.map((e) => e as String).toList();
       }
     } on TimeoutException {
@@ -296,13 +309,9 @@ class RestAPI {
   /// QR 인증
   static Future<bool> qrCheck(String? qrStr, int reservationId) async {
     try {
-      final api = APIRequest('/book/qrcheck?QR=$qrStr&reservationID=$reservationId');
+      final api = APIRequest('book/qrcheck?QR=$qrStr&reservationId=$reservationId');
       Map<String, dynamic> response = await api.send(HTTPMethod.post);
-      if (response.isEmpty) {
-        return false;
-      } else {
-        return true;
-      }
+      return response['status'] == 200;
     } catch(e) {
       throw Exception(e);
     }
@@ -312,22 +321,25 @@ class RestAPI {
   static Future<List<Admit>?> getAllAdmission() async {
     try {
       final api = APIRequest('admits');
-      List<dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
 
-      if (response.isEmpty) {
+      if (response['status'] != 200) {
         return null;
       } else {
-        List<Admit> result = response.map((e) {
+        final result = response['body'].map((e) {
           final temp = e as Map<String, dynamic>;
           return Admit.fromJson(temp);
         }).toList();
-        result.sort((a, b) {
+        final cvtResult = List<Admit>.from(result);
+        cvtResult.sort((a, b) {
           late int temp;
           if ((temp = a.date.compareTo(b.date)) == 0) {
             return a.time.compareTo(b.time);
-          } else return temp;
+          } else {
+            return temp;
+          }
         });
-        return result;
+        return cvtResult;
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -338,22 +350,25 @@ class RestAPI {
   static Future<List<Admit>?> getMyAdmission() async {
     try {
       final api = APIRequest('admits/me');
-      List<dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
 
-      if (response.isEmpty) {
+      if (response['status'] != 200) {
         return null;
       } else {
-        List<Admit> result = response.map((e) {
+        final result = response['body'].map((e) {
           final temp = e as Map<String, dynamic>;
           return Admit.fromJson(temp);
         }).toList();
-        result.sort((a, b) {
+        final cvtResult = List<Admit>.from(result);
+        cvtResult.sort((a, b) {
           late int temp;
           if ((temp = a.date.compareTo(b.date)) == 0) {
             return a.time.compareTo(b.time);
-          } else return temp;
+          } else {
+            return temp;
+          }
         });
-        return result;
+        return cvtResult;
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -376,18 +391,20 @@ class RestAPI {
         'photo': photo,
         'photoExtension': photoExtension
       });
-      return response['admissionID'];
+      if (response['status'] == 200) return response['body']['admissionID'];
+      return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     }
   }
 
   /// 열람하지 않은 알림의 여부
-  static Future<bool?> hasUnopendNotice() async {
+  static Future<bool?> hasUnopenedNotice() async {
     try {
       final api = APIRequest('notice');
       Map<String, dynamic> response = await api.send(HTTPMethod.get);
-      return response['hasNotice'];
+      if (response['status'] == 200) return response['body']['hasNotice'];
+      return null;
     } on TimeoutException {
       return null;
     }
@@ -397,13 +414,14 @@ class RestAPI {
   static Future<List<Notice>?> getNotices() async {
     try {
       final api = APIRequest('notices');
-      List<dynamic> response = await api.send(HTTPMethod.get);
-      if (response.isEmpty) {
+      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      if (response['status'] != 200) {
         return null;
       } else {
-        return response
+        return List<Notice>.from(response['body']
             .map((e) => Notice.fromJson(e as Map<String, dynamic>))
-            .toList();
+            .toList()
+        );
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
