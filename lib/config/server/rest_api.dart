@@ -115,7 +115,7 @@ class APIRequest {
     } on TimeoutException {
       throw TimeoutException('[Error] api send: timeout');
     } catch (e) {
-      throw Exception('[Error] api send: $e');
+      throw '\n[Error] api send:$e';
     }
   }
 

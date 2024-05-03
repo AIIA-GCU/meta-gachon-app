@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:feedback/feedback.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'main_frame.dart';
 import '../widgets/popup_widgets.dart';
@@ -213,50 +218,75 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
     try {
+      // load data
       // // try sign in
       // final fcmToken = await FCM.getToken();
-      User? user = await RestAPI.signIn(
+      myInfo = await RestAPI.signIn(
           id: idController.text, pw: pwController.text, token: 'fcmToken');
+      reserves = await RestAPI.getRemainReservation() ?? [];
+      admits = await RestAPI.getAllAdmission() ?? [];
+      myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-      // if sign-in success
-      if (user != null) {
-        // save data
-        myInfo = user;
-        reserves = await RestAPI.getRemainReservation() ?? [];
-        admits = await RestAPI.getAllAdmission() ?? [];
-        myAdmits = await RestAPI.getMyAdmission() ?? [];
-
-        // appear main frame
-        setState(() => isLoading = false);
-        Navigator.of(context).pushReplacement(PageRouteBuilder(
-            fullscreenDialog: false,
-            transitionsBuilder: slideRigth2Left,
-            pageBuilder: (_, __, ___) => const MainFrame()));
-      } else {
-        // show error message
+      // appear main frame
+      setState(() => isLoading = false);
+      Navigator.of(context).pushReplacement(PageRouteBuilder(
+          fullscreenDialog: false,
+          transitionsBuilder: slideRigth2Left,
+          pageBuilder: (_, __, ___) => const MainFrame()));
+    } on TimeoutException {
+      setState(() {
+        isLoading = false;
+        showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            builder: (context) => CommentPopup(
+                title: "통신 속도가 너무 느립니다!",
+                buttonColor: MGColor.brandPrimary,
+                onPressed: () => Navigator.pop(context)));
+      });
+    } catch (e) {
+      if (e == 400) {
         setState(() {
           errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
           isLoading = false;
         });
-      }
-    } on TimeoutException {
-      setState(() => isLoading = false);
-      showDialog(
+      } else {
+        setState(() => isLoading = false);
+        showDialog(
           context: context,
           barrierColor: Colors.black.withOpacity(0.25),
-          builder: (context) => CommentPopup(
-            title: '통신 속도가 너무 느립니다!',
-            onPressed: () => Navigator.pop(context)
+          builder: (ctx) => AlertPopup(
+            title: "처리되지 않은 예외 상황이 발생했습니다!",
+            agreeMsg: "리포트 보내기",
+            onAgreed: () {
+              Navigator.pop(ctx);
+              _sendBugReport();
+            }
           )
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-      setState(() => isLoading = false);
-      showDialog(
-        context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => ErrorPopup(error: e.toString())
-      );
+        );
+      }
     }
+  }
+
+  void _sendBugReport() {
+    BetterFeedback.of(context).show((sendBugReport) async{
+      final screenshotFilePath = await _writeImageToStorage(sendBugReport.screenshot);
+      final Email email = Email(
+        body: sendBugReport.text,
+        subject: '[메타가천] 버그 리포트',
+        recipients: ['aiia.lab.dev@gmail.com'],
+        attachmentPaths: [screenshotFilePath],
+        isHTML: false,
+      );
+      await FlutterEmailSender.send(email);
+    });
+  }
+
+  Future<String> _writeImageToStorage(Uint8List feedbackScreenshot) async {
+    final Directory output = await getTemporaryDirectory();
+    final String screenshotPath = '${output.path}/feedback.png';
+    final File screenshotFile = File(screenshotPath);
+    await screenshotFile.writeAsBytes(feedbackScreenshot);
+    return screenshotPath;
   }
 }

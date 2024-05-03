@@ -28,7 +28,7 @@ class RestAPI {
 
   /// 로그인
   /// Todo: 추후 통합 로그인용으로 바꿔야 함
-  static Future<User?> signIn({
+  static Future<User> signIn({
     required String id,
     required String pw,
     required String token,
@@ -48,14 +48,14 @@ class RestAPI {
           }
           return User.fromJson(response['body']);
         case 400:
-          return null;
+          throw 400;
         default:
           throw Exception("[Error] 알 수 없는 이유로 로그인 할 수 없습니다!");
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
     } catch(e) {
-      throw Exception(e);
+      rethrow;
     }
   }
 
@@ -77,6 +77,8 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -98,6 +100,8 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -157,6 +161,8 @@ class RestAPI {
       return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -209,6 +215,8 @@ class RestAPI {
       return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -222,6 +230,8 @@ class RestAPI {
       return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -235,6 +245,8 @@ class RestAPI {
       return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -256,6 +268,8 @@ class RestAPI {
       return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -275,6 +289,8 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -298,11 +314,13 @@ class RestAPI {
       if (response['status'] != 200) {
         return null;
       } else {
-        List<dynamic> temp = response['body']['availableRoom'];
+        List<dynamic> temp = response['availableRoom'];
         return temp.map((e) => e as String).toList();
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -343,6 +361,8 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -372,6 +392,8 @@ class RestAPI {
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -395,6 +417,8 @@ class RestAPI {
       return null;
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -407,6 +431,8 @@ class RestAPI {
       return null;
     } on TimeoutException {
       return null;
+    } catch (e) {
+      rethrow;
     }
   }
 

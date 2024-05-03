@@ -20,15 +20,14 @@ import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:mata_gachon/pages/main_frame.dart';
-import 'package:mata_gachon/pages/reserve_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mata_gachon/config/app/_export.dart';
-import 'package:mata_gachon/config/server/_export.dart';
 
+import 'config/app/_export.dart';
+import 'config/server/_export.dart';
+import 'pages/main_frame.dart';
 import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
 
@@ -181,6 +180,7 @@ class _MataGachonAppState extends State<MataGachonApp>
           ),
           builder: FToastBuilder(), // for <fluttertost> package
           home: widget.start,
-        ));
+        )
+    );
   }
 }

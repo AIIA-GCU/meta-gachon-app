@@ -118,13 +118,17 @@ class _ReservationListPageState extends State<ReservationListPage> {
                 itemBuilder: (_, index) => _listItem(reserves[index])
             );
           } else {
-            child = Container(
-                height: ratio.height * 594,
-                alignment: Alignment.center,
-                child: Text(
-                    '아직 예약 내역이 없어요!',
-                    style: KR.subtitle4.copyWith(color: MGColor.base3)
-                )
+            child = SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics()
+                  .applyTo(const BouncingScrollPhysics()),
+              child: Container(
+                  height: ratio.height * 594,
+                  alignment: Alignment.center,
+                  child: Text(
+                      '아직 예약 내역이 없어요!',
+                      style: KR.subtitle4.copyWith(color: MGColor.base3)
+                  )
+              ),
             );
           }
         }
@@ -300,15 +304,15 @@ class _ReservationListPageState extends State<ReservationListPage> {
         if (status == null) {
          showDialog(
              context: context,
-             builder: (_) => CommentPopup(
+             builder: (ctx) => CommentPopup(
                  title: "[Error] 비정상적인 예약",
-                 onPressed: () => Navigator.pop(context)
+                 onPressed: () => Navigator.pop(ctx)
              )
          );
         } else {
           showDialog(
               context: context,
-              builder: (_) =>
+              builder: (ctx) =>
                   ReservationPopup(reserve, status, widget.setLoading)
           );
         }

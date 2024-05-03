@@ -45,16 +45,17 @@ class _MainFrameState extends State<MainFrame> {
   late final PageController _pageController;
 
   void _sendBugReport() {
-    BetterFeedback.of(context).show((_sendBugReport) async{
-      final _screenshotFilePath = await _writeImageToStorage(_sendBugReport.screenshot);
+    BetterFeedback.of(context).show((sendBugReport) async{
+      final screenshotFilePath = await _writeImageToStorage(sendBugReport.screenshot);
 
       final Email email = Email(
-        body: _sendBugReport.text,
-        subject: '버그 리포트',
-        recipients: ['byeongjun25@naver.com'],
-        attachmentPaths: [_screenshotFilePath],
+        body: sendBugReport.text,
+        subject: '[메타가천] 버그 리포트',
+        recipients: ['aiia.lab.dev@gmail.com'],
+        attachmentPaths: [screenshotFilePath],
         isHTML: false,
       );
+
       await FlutterEmailSender.send(email);
     });
   }
