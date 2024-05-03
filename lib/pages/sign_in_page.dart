@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'new_sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -191,7 +191,68 @@ class _SignInPageState extends State<SignInPage> {
                         /// button
                         CustomButtons.bottomButton('로그인', MGColor.brandPrimary,
                             () => _buttonEnabled ? trySignIn() : null,
-                            disableBackground: MGColor.base6)
+                            disableBackground: MGColor.base6),
+
+                        SizedBox(height: ratio.height * 13),
+
+                        Center(
+                          child: Container(
+                            width: ratio.width * 275,
+                            height: ratio.height * 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FindId()),
+                                    );
+                                  },
+                                  child: Text(
+                                    '아이디 찾기',
+                                    style: TextStyle(color: Color(0xff797979)),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text("|",
+                                      style:
+                                          TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FindPw()),
+                                    );
+                                  },
+                                  child: Text('비밀번호 찾기',
+                                      style:
+                                          TextStyle(color: Color(0xff797979))),
+                                ),
+                                Container(
+                                  child: Text("|",
+                                      style:
+                                      TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NewSign()),
+                                    );
+                                  },
+                                  child: Text('회원 가입',
+                                      style:
+                                          TextStyle(color: Color(0xff1762DB))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
