@@ -4,7 +4,22 @@ import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:mata_gachon/widgets/button.dart';
 
-class OnBoarding extends StatelessWidget {
+class CubePage extends StatelessWidget {
+  const CubePage({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.buttonText,
+    this.nextPage,
+    this.doPoppingPage = false
+  });
+
+  final String title;
+  final String content;
+  final String buttonText;
+  final Widget? nextPage;
+  final bool doPoppingPage;
+
   static late Size screenSize;
 
   @override
@@ -34,10 +49,7 @@ class OnBoarding extends StatelessWidget {
               top: ratio.height * 552,
               width: screenSize.width,
               child: Center(
-                child: Text(
-                  '교내 공간을 간편하게 예약해요.',
-                  style: KR.subtitle1,
-                ),
+                child: Text(title, style: KR.subtitle1),
               ),
             ),
             Positioned(
@@ -45,8 +57,7 @@ class OnBoarding extends StatelessWidget {
               width: screenSize.width,
               height: ratio.height * 70,
               child: Center(
-                child: Text(
-                  '언제 어디서든\n 비어있는 회의실 및 강의실,\n 컴퓨터를 예약하고 확인하세요.',
+                child: Text(content,
                   style: KR.subtitle4.copyWith(color: MGColor.base3),
                   textAlign: TextAlign.center,
                 ),
@@ -57,9 +68,15 @@ class OnBoarding extends StatelessWidget {
               width: screenSize.width,
               child: Center(
                   child: CustomButtons.bottomButton(
-                      '시작하기',
+                      buttonText,
                       MGColor.brandPrimary,
-                          () => _onPressed(context)
+                      () {
+                        if (doPoppingPage) {
+                          Navigator.pop(context);
+                        } else {
+                          _onPressed(context);
+                        }
+                      }
                   )
               ),
             ),
@@ -69,22 +86,13 @@ class OnBoarding extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    if (await FCM.initialize()) {
+  _onPressed(BuildContext context) {
       Navigator.of(context).pushReplacement(
           PageRouteBuilder(
               fullscreenDialog: false,
               transitionsBuilder: slideRigth2Left,
-              pageBuilder: (context, anime, secondAnime) => SignInPage()
+              pageBuilder: (context, anime, secondAnime) => nextPage!
           )
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              duration: Duration(milliseconds: 1200),
-              content: Text('권한을 허용해 주세요!')
-          )
-      );
-    }
   }
 }

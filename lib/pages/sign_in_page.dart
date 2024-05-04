@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'new_sign_in_page.dart';
+import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -189,9 +189,14 @@ class _SignInPageState extends State<SignInPage> {
                         ),
 
                         /// button
-                        CustomButtons.bottomButton('로그인', MGColor.brandPrimary,
+                        CustomButtons.bottomButton(
+                            '로그인',
+                            MGColor.brandPrimary,
                             () => _buttonEnabled ? trySignIn() : null,
-                            disableBackground: MGColor.base6),
+                            disableBackground: MGColor.base6,
+                            width: 240,
+                            borderRadius: 30
+                        ),
 
                         SizedBox(height: ratio.height * 13),
 
@@ -229,8 +234,7 @@ class _SignInPageState extends State<SignInPage> {
                                     );
                                   },
                                   child: Text('비밀번호 찾기',
-                                      style:
-                                          TextStyle(color: Color(0xff797979))),
+                                      style: TextStyle(color: Color(0xff797979))),
                                 ),
                                 Container(
                                   child: Text("|",
@@ -239,10 +243,8 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NewSign()),
+                                    Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => const SignUpFrame()),
                                     );
                                   },
                                   child: Text('회원 가입',

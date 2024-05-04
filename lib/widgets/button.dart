@@ -45,8 +45,12 @@ class CustomButtons {
   static Widget bottomButton(
       String text,
       Color background,
-      VoidCallback onPressed,
-      {Color? disableBackground}
+      VoidCallback? onPressed,
+      {
+        Color? disableBackground,
+        double width = 358,
+        double borderRadius = 12
+      }
       ) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -56,8 +60,8 @@ class CustomButtons {
         shadowColor: Colors.transparent,
         disabledBackgroundColor: disableBackground,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30)),
-        minimumSize: Size(ratio.width * 240, 48),
+            borderRadius: BorderRadius.circular(borderRadius)),
+        minimumSize: Size(ratio.width * width, 48),
       ),
       child: Text(
         text,
