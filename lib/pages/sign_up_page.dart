@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mata_gachon/pages/cube_page.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../config/app/_export.dart';
 
@@ -21,6 +22,8 @@ class SignUpFrame extends StatefulWidget {
 
 class _SignUpFrameState extends State<SignUpFrame> {
   final _pageCtr = PageController();
+  final picker = ImagePicker();
+  List<XFile?> images = [];
 
   String buttonText = "다음 단계";
   bool nextStep = false;
@@ -193,13 +196,14 @@ class _SignUpFrameState extends State<SignUpFrame> {
   }
 
   buttonActive(val) => setState(() => nextStep = val);
-
-  void openGallery() {
-    // Todo: image picker 패키지 사용
-    setState(() {
-      studentIdCardImage = "path";
-      buttonText = "다음 단계";
-    });
+  Future<void> openGallery() async {
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        studentIdCardImage = pickedFile.path;
+        buttonText = "다음 단계";
+      });
+    }
   }
 }
 
