@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:feedback/feedback.dart';
-import 'package:flutter/foundation.dart';
+import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:mata_gachon/config/app/_export.dart';
@@ -95,28 +92,30 @@ class _SignInPageState extends State<SignInPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: TextFormField(
-                                  controller: idController,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 12),
-                                    hintText: '아이디 입력',
-                                    hintStyle: KR.subtitle3.copyWith(
-                                      color: MGColor.base4,
-                                    ),
-                                    border: InputBorder.none,
+                              Center(
+                                child: Container(
+                                  width: ratio.width * 230,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
                                   ),
-                                  validator: (val) {
-                                    return val == null ? '' : null;
-                                  },
+                                  child: TextFormField(
+                                    controller: idController,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: ratio.width * 12,
+                                          vertical: ratio.height * 12),
+                                      hintText: '아이디 입력',
+                                      hintStyle: KR.subtitle3.copyWith(
+                                        color: MGColor.base4,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    validator: (val) {
+                                      return val == null ? '' : null;
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(height: ratio.height * 10),
@@ -183,14 +182,77 @@ class _SignInPageState extends State<SignInPage> {
                                   (MediaQuery.of(context).viewInsets.bottom > 0
                                       ? 10
                                       : errorMessage.isEmpty
-                                          ? 42
+                                          ? 30
                                           : 75)),
                         ),
 
                         /// button
-                        CustomButtons.bottomButton('로그인', MGColor.brandPrimary,
+                        CustomButtons.bottomButton(
+                            '로그인',
+                            MGColor.brandPrimary,
                             () => _buttonEnabled ? trySignIn() : null,
-                            disableBackground: MGColor.base6)
+                            disableBackground: MGColor.base6,
+                            width: 240,
+                            borderRadius: 30
+                        ),
+
+                        SizedBox(height: ratio.height * 13),
+
+                        Center(
+                          child: Container(
+                            width: ratio.width * 275,
+                            height: ratio.height * 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FindId()),
+                                    );
+                                  },
+                                  child: Text(
+                                    '아이디 찾기',
+                                    style: TextStyle(color: Color(0xff797979)),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text("|",
+                                      style:
+                                          TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FindPw()),
+                                    );
+                                  },
+                                  child: Text('비밀번호 찾기',
+                                      style: TextStyle(color: Color(0xff797979))),
+                                ),
+                                Container(
+                                  child: Text("|",
+                                      style:
+                                      TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => const SignUpFrame()),
+                                    );
+                                  },
+                                  child: Text('회원 가입',
+                                      style:
+                                          TextStyle(color: Color(0xff1762DB))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

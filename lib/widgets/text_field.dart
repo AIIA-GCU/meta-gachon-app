@@ -15,7 +15,7 @@ class LongTextField extends StatelessWidget {
     required this.validator
   }) {
     assert(
-    (password && shownPassword == null && onTapToShowPassword == null),
+    !(password && shownPassword == null && onTapToShowPassword == null),
     "If this widget type is password input field, parameter \"showPassword\" can't be null"
     );
   }
@@ -50,16 +50,16 @@ class LongTextField extends StatelessWidget {
             errorStyle: const TextStyle(fontSize: 0),
             border: InputBorder.none,
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: MGColor.base5)),
             focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: MGColor.base5, width: 2)),
             errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: MGColor.systemError)),
             focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: MGColor.systemError, width: 2)),
           ),
           onChanged: onChanged,

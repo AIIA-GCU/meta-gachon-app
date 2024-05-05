@@ -16,18 +16,16 @@
 ///
 ///
 
-import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:mata_gachon/pages/main_frame.dart';
+import 'package:mata_gachon/pages/reserve_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mata_gachon/config/app/_export.dart';
+import 'package:mata_gachon/config/server/_export.dart';
 
-import 'config/app/_export.dart';
-import 'config/server/_export.dart';
-import 'pages/main_frame.dart';
 import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
 
@@ -42,21 +40,6 @@ Future<void> main() async {
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
 
-  // debugPrint("complete camera setting");
-  // camera = await availableCameras().then((value) {
-  //   debugPrint(value.length.toString());
-  //   return value.first;
-  // });
-
-  debugPrint("complete setting app's details");
-  // 화면 세로로 고정
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
-  // 패키지 정보 불러오기
-  packageInfo = await PackageInfo.fromPlatform();
-
   debugPrint("determining initial page");
   late final Widget start;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -64,9 +47,19 @@ Future<void> main() async {
 
   if (first == null) {
     preferences.setBool('firstTime', true);
-    start = OnBoarding();
+    start = const CubePage(
+      title: "교내 공간을 간편하게 예약하세요",
+      content: "언제 어디서든\n비어있는 회의실 및 강의실,\n컴퓨터를 예약하고 확인하세요.",
+      buttonText: "시작하기",
+      nextPage: SignInPage(),
+    );
   } else if (first == true) {
-    start = OnBoarding();
+    start = const CubePage(
+      title: "교내 공간을 간편하게 예약하세요",
+      content: "언제 어디서든\n비어있는 회의실 및 강의실,\n컴퓨터를 예약하고 확인하세요.",
+      buttonText: "시작하기",
+      nextPage: SignInPage(),
+    );
   } else {
     try {
       // await FCM.initialize();
@@ -77,11 +70,16 @@ Future<void> main() async {
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
       start = const MainFrame();
-    } catch (_) {
+    } catch(_) {
       debugPrint('No token');
       start = const SignInPage();
     }
   }
+  debugPrint("complete camera setting");
+  camera = await availableCameras().then((value) {
+    debugPrint(value.length.toString());
+    return value.first;
+  });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
@@ -143,44 +141,33 @@ class _MataGachonAppState extends State<MataGachonApp>
 
   @override
   Widget build(BuildContext context) {
-    ratio = Size(MediaQuery.of(context).size.width / 390,
-        MediaQuery.of(context).size.height / 895);
-    return BetterFeedback(
-        theme: FeedbackThemeData(
-          background: Colors.grey,
-          feedbackSheetColor: Colors.grey[50]!,
-          drawColors: [
-            Colors.red,
-            Colors.green,
-            Colors.blue,
-            Colors.yellow,
-          ],
-        ),
-        localeOverride: const Locale('ko', 'KR'),
-        child: MaterialApp(
-          title: "메타가천",
-          theme: ThemeData(
-            scaffoldBackgroundColor: MGColor.base9,
-            appBarTheme: const AppBarTheme(
-                backgroundColor: MGColor.base9,
-                elevation: 0,
-                foregroundColor: MGColor.base4,
-                toolbarHeight: 56,
-                scrolledUnderElevation: 0.0),
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
-              selectedLabelStyle: KR.label3.copyWith(color: MGColor.base3),
-              unselectedLabelStyle: KR.label3.copyWith(color: MGColor.base1),
-              unselectedIconTheme:
-                  const IconThemeData(size: 24, color: MGColor.base4),
-              showSelectedLabels: true,
-              showUnselectedLabels: true,
-            ),
+    ratio = Size(
+      MediaQuery.of(context).size.width  / 390,
+      MediaQuery.of(context).size.height / 895
+    );
+    return MaterialApp(
+      title: "메타가천",
+      theme: ThemeData(
+          scaffoldBackgroundColor: MGColor.base9,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: MGColor.base9,
+              elevation: 0,
+              foregroundColor: MGColor.base4,
+              toolbarHeight: 56,
+              scrolledUnderElevation: 0.0
           ),
-          builder: FToastBuilder(), // for <fluttertost> package
-          home: widget.start,
-        )
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
+            selectedLabelStyle: KR.label3.copyWith(color: MGColor.base3),
+            unselectedLabelStyle: KR.label3.copyWith(color: MGColor.base1),
+            unselectedIconTheme: const IconThemeData(size: 24, color: MGColor.base4),
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+          ),
+      ),
+      builder: FToastBuilder(),   // for <fluttertost> package
+      home: widget.start,
     );
   }
 }
