@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../config/app/_export.dart';
 
+import '../config/server/controller.dart';
 import '../widgets/button.dart';
 import '../widgets/small_widgets.dart';
 
@@ -31,7 +34,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
   int index = 0;
 
   String studentIdCardImage = "";
-  String name = '김가천', stuNum = '202400001';
+  String name = '김가천', stuNum = '202400001', major = '소프트웨어학과', phoneNumber = '01012345678';
   final pwCtr = TextEditingController();
   final pwCheckCtr = TextEditingController();
   bool discordant = false;
@@ -85,7 +88,9 @@ class _SignUpFrameState extends State<SignUpFrame> {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         TermAgreementPage(buttonActive: buttonActive),
-                        PhoneCertifyPage(nextPage: onPressed),
+                        PhoneCertifyPage(nextPage: (val, phoneNum){
+                          onPressed(certificationNumber: val, phoneNumber: phoneNum);
+                        }),
                         StudentCertifyPage(
                           selected: studentIdCardImage.isNotEmpty,
                           changeImage: openGallery
@@ -136,7 +141,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
     );
   }
 
-  onPressed() async {
+  onPressed({String? certificationNumber, String? phoneNumber}) async {
     switch (index) {
       case 0:
         setState(() => index++);
@@ -149,11 +154,12 @@ class _SignUpFrameState extends State<SignUpFrame> {
         if (MediaQuery.of(context).viewInsets.bottom > 0) {
           FocusScope.of(context).unfocus();
         }
+        await RestAPI.cerifyCode(phoneNumber: phoneNumber!, certificationNumber: certificationNumber!);
         setState(() {
           index++;
           buttonText = "이미지 첨부하기";
+          this.phoneNumber = phoneNumber;
         });
-        // 인증번호 확인 api 사용
         await _pageCtr.animateToPage(2,
             duration: const Duration(milliseconds: 300),
             curve: Curves.ease
@@ -163,24 +169,32 @@ class _SignUpFrameState extends State<SignUpFrame> {
         if (studentIdCardImage.isEmpty) {
           openGallery();
         } else {
-          // 학생증 OCR API 사용
-          await _pageCtr.animateToPage(3,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.ease
-          );
-          setState(() {
-            index++;
-            name = "김가천";
-            stuNum = "202400001";
-            nextStep = false;
-          });
+          try {
+            final expension = studentIdCardImage.substring(studentIdCardImage.lastIndexOf('.'));
+            final bytes = await File(studentIdCardImage).readAsBytes();
+            Map<String, dynamic> response = await RestAPI.verifyStudent(imageFormat: expension, encodedImage: base64Encode(bytes));
+            await _pageCtr.animateToPage(3,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease
+            );
+            setState(() {
+              index++;
+              name = response['name'];
+              stuNum = response['studentNum'];
+              major = response['major'];
+              nextStep = false;
+            });
+          }
+          catch(e) {
+            rethrow;
+          }
         }
         break;
       case 3:
         if (pwCtr.text.compareTo(pwCheckCtr.text) != 0) {
           setState(() => discordant = true);
         } else {
-          // 계정 생성 api 사용
+          await RestAPI.signUp(studentNum: stuNum, password: pwCtr.text, studentName: name, phoneNumber: this.phoneNumber, major: major);
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               pageBuilder: (_, __, ___) => const CubePage(
@@ -484,7 +498,7 @@ class FindPw extends StatelessWidget {
 class PhoneCertifyPage extends StatefulWidget {
   const PhoneCertifyPage({super.key, required this.nextPage});
 
-  final VoidCallback nextPage;
+  final void Function(String, String) nextPage;
 
   @override
   State<PhoneCertifyPage> createState() => _PhoneCertifyPageState();
@@ -607,7 +621,7 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
                 disableBackground: MGColor.base5,
                 !validCertificationNumber ? null : () {
                   if (timer != null) timer!.cancel();
-                  widget.nextPage();
+                  widget.nextPage(certificationNumber!, phoneNumber!);
                 }
             )
           ])
@@ -620,7 +634,7 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
       FocusScope.of(context).unfocus();
     }
     setState(() => requestable = 0);
-    // 인증번호 발급 api 사용
+    RestAPI.cerifyPhoneNumber(phoneNumber:phoneNumber!);
     leftTime = 300;
     buttonText1 = "인증번호 재전송 (${leftTime ~/ 60}분 ${leftTime % 60}초)";
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -899,5 +913,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         )
       ]
     );
+  }
+  Future<void> trySignUp() async {
+
   }
 }

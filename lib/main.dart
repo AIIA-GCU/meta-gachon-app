@@ -20,13 +20,13 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mata_gachon/pages/cube_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/reserve_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
-import 'pages/on_boarding_page.dart';
 import 'pages/sign_in_page.dart';
 
 Future<void> main() async {
@@ -65,7 +65,7 @@ Future<void> main() async {
       // await FCM.initialize();
       // final fcmToken = await FCM.getToken();
       myInfo = (await RestAPI.signIn(
-          id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
+          studentNum: 'already', password: 'signedIn', fcmToken: 'fcmToken'))!;
       reserves = await RestAPI.getRemainReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
@@ -123,7 +123,7 @@ class _MataGachonAppState extends State<MataGachonApp>
     if (state == AppLifecycleState.resumed) {
       debugPrint("App is resumed");
       if (await RestAPI.signIn(
-          id: "app", pw: 'resume', token: 'fcmToken') == null) {
+          studentNum: "app", password: 'resume', fcmToken: 'fcmToken') == null) {
         setState(() => current = const SignInPage());
         debugPrint("Token is invalid. try to sign in again.");
       } else {
