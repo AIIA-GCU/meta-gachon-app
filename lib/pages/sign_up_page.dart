@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mata_gachon/pages/cube_page.dart';
 import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mata_gachon/widgets/popup_widgets.dart';
 
 import '../config/app/_export.dart';
 
@@ -35,6 +36,15 @@ class _SignUpFrameState extends State<SignUpFrame> {
   final pwCtr = TextEditingController();
   final pwCheckCtr = TextEditingController();
   bool discordant = false;
+
+  void errorStudentCard() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CommentPopup(title: '학생 정보를 읽을 수 없습니다!\n다른 이미지를 선택해주세요.', onPressed: () => Navigator.pop(context));
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -129,7 +139,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
             ),
           ),
         ),
-    
+
         if (loading)
           const ProgressScreen()
       ],
@@ -203,8 +213,14 @@ class _SignUpFrameState extends State<SignUpFrame> {
         studentIdCardImage = pickedFile.path;
         buttonText = "다음 단계";
       });
+      //
+      // bool isReadable = checkImage(pickedFile);  // 학생증 이미지 api 연동 필요한 부분
+      // if (!isReadable) {
+      //   errorStudentCard();
+      // }
     }
   }
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -501,6 +517,15 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
   int leftTime = -1;
   Timer? timer;
 
+  void errorCertification() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CommentPopup(title: '인증 번호가 잘못 되었습니다!', onPressed: () => Navigator.pop(context));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -607,12 +632,18 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
                 disableBackground: MGColor.base5,
                 !validCertificationNumber ? null : () {
                   if (timer != null) timer!.cancel();
-                  widget.nextPage();
+                //  if (certificationNumber == '올바른 인증 번호') { // 올바른 인증 번호 확인 api 연동 필요
+                    widget.nextPage();
+                // } else {
+                //     errorCertification();
+                //   }
                 }
+
             )
           ])
       ]),
     );
+
   }
 
   requestCertificationNumber() {
