@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
@@ -20,6 +22,9 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final FToast fToast = FToast();
+
+  bool _isShownToast = false;
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -30,6 +35,7 @@ class _SignInPageState extends State<SignInPage> {
     super.initState();
     idController.addListener(_updateLoginButtonState);
     pwController.addListener(_updateLoginButtonState);
+    fToast.init(context);
   }
 
   @override
@@ -83,15 +89,15 @@ class _SignInPageState extends State<SignInPage> {
                         ),
 
                         /// input
-                        Form(
-                          key: key,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: ratio.width * 230,
-                                  decoration: BoxDecoration(
+                        SizedBox(
+                          width: ratio.width * 230,
+                          child: Form(
+                            key: key,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: MGColor.base6),
@@ -113,12 +119,9 @@ class _SignInPageState extends State<SignInPage> {
                                     },
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: ratio.height * 10),
-                              Center(
-                                child: Container(
-                                  width: ratio.width * 230,
-                                  decoration: BoxDecoration(
+                                SizedBox(height: ratio.height * 10),
+                                Container(
+                                    decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: MGColor.base6),
@@ -166,12 +169,15 @@ class _SignInPageState extends State<SignInPage> {
                                     ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: ratio.height * 4),
-                              Text(errorMessage,
-                                  style: KR.label2
-                                      .copyWith(color: MGColor.systemError)),
-                            ],
+                                SizedBox(height: ratio.height * 4),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Text(errorMessage,
+                                      style: KR.label2
+                                          .copyWith(color: MGColor.systemError)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -208,36 +214,24 @@ class _SignInPageState extends State<SignInPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => FindId()),
-                                    );
-                                  },
-                                  child: Text(
+                                  onTap: showToast,
+                                  child: const Text(
                                     '아이디 찾기',
                                     style: TextStyle(color: Color(0xff797979)),
                                   ),
                                 ),
                                 Container(
-                                  child: Text("|",
+                                  child: const Text("|",
                                       style:
                                           TextStyle(color: Color(0xff797979))),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => FindPw()),
-                                    );
-                                  },
-                                  child: Text('비밀번호 찾기',
+                                  onTap: showToast,
+                                  child: const Text('비밀번호 찾기',
                                       style: TextStyle(color: Color(0xff797979))),
                                 ),
                                 Container(
-                                  child: Text("|",
+                                  child: const Text("|",
                                       style:
                                       TextStyle(color: Color(0xff797979))),
                                 ),
@@ -247,7 +241,7 @@ class _SignInPageState extends State<SignInPage> {
                                       MaterialPageRoute(builder: (context) => const SignUpFrame()),
                                     );
                                   },
-                                  child: Text('회원 가입',
+                                  child: const Text('회원 가입',
                                       style:
                                           TextStyle(color: Color(0xff1762DB))),
                                 ),
@@ -320,5 +314,42 @@ class _SignInPageState extends State<SignInPage> {
                 onPressed: () => Navigator.pop(context)));
       });
     }
+  }
+
+  showToast() {
+    if (_isShownToast) return;
+    _isShownToast = true;
+    Future.delayed(const Duration(seconds: 2)).then((_) => _isShownToast = false);
+
+    double bottom = MediaQuery.of(context).viewInsets.bottom;
+    if (bottom == 0) bottom = 60;
+    else bottom += 20;
+    fToast.showToast(
+      positionedToastBuilder: (context, widget) {
+        return Positioned(
+          bottom: bottom,
+          width: MediaQuery.of(context).size.width,
+          child: widget,
+        );
+      },
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              vertical: 6, horizontal: ratio.width * 16
+          ),
+          decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(100)
+          ),
+          child: const Text(
+              '아직 이용할 수 없는 서비스 입니다.',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white
+              )
+          ),
+        ),
+      )
+    );
   }
 }

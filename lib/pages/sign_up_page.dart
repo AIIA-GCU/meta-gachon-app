@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mata_gachon/pages/cube_page.dart';
-import 'package:mata_gachon/pages/sign_in_page.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mata_gachon/widgets/popup_widgets.dart';
 
 import '../config/app/_export.dart';
-
 import '../widgets/button.dart';
 import '../widgets/small_widgets.dart';
+import '../widgets/popup_widgets.dart';
+import 'cube_page.dart';
+import 'sign_in_page.dart';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -206,6 +205,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
   }
 
   buttonActive(val) => setState(() => nextStep = val);
+
   Future<void> openGallery() async {
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -220,7 +220,6 @@ class _SignUpFrameState extends State<SignUpFrame> {
       // }
     }
   }
-
 }
 
 /////////////////////////////////////////////////////////////////////////

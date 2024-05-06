@@ -5,7 +5,6 @@ import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/pages/prior_admissions_page.dart';
 
 import '../widgets/popup_widgets.dart';
-import 'admit_page.dart';
 import 'my_admission_list_page.dart';
 import 'reserve_page.dart';
 
@@ -313,7 +312,7 @@ class _HomePageState extends State<HomePage> {
         _fToast.showToast(
             positionedToastBuilder: (context, widget) {
               return Positioned(
-                bottom: kBottomNavigationBarHeight + 10,
+                bottom: 74,
                 width: MediaQuery.of(context).size.width,
                 child: widget,
               );
@@ -324,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                     vertical: 6, horizontal: ratio.width * 12
                 ),
                 decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
+                    color: Colors.black.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(100)
                 ),
                 child: const Text(

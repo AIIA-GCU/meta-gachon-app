@@ -223,7 +223,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
 
         _fToast.showToast(
           positionedToastBuilder: (context, widget) => Positioned(
-              bottom: kBottomNavigationBarHeight + 10,
+              bottom: 74,
               width: MediaQuery.of(context).size.width,
               child: widget,
             ),
@@ -232,7 +232,7 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
               padding: EdgeInsets.symmetric(
                 vertical: 6, horizontal: ratio.width * 12),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.6),
+                color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(100)),
               child: const Text(
                 '인증해야 하는 이용 내역이 없습니다',
