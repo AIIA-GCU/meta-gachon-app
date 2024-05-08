@@ -104,7 +104,7 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                   const SizedBox(width: 12),
                   if (widget.service == ServiceType.aiSpace)
                   Text(
-                    '예약은 최대 3시간까지 가능합니다',
+                    '예약은 최대 ${myInfo.rating}시간까지 가능합니다',
                     style: KR.label2.copyWith(color: MGColor.brandPrimary)
                   )
                 ],
@@ -142,10 +142,31 @@ class _CustomTimePickerState extends State<CustomTimePicker>
                                 _areaActive = true;
                               } else {
                                 if (widget.service == ServiceType.aiSpace) {
-                                  if (index == _begin!+1) {
-                                    color = MGColor.brandPrimary.withOpacity(0.2);
-                                  } else if (index == _begin!+2 && _availables[index-1]) {
-                                    color = MGColor.brandPrimary.withOpacity(0.2);
+                                  switch (myInfo.rating){
+                                    case 4 :
+                                      if (index == _begin!+1) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+2 && _availables[index-1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+3 && _availables[index-1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      }
+                                    case 5 :
+                                      if (index == _begin!+1) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+2 && _availables[index-1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+3 && _availables[index-1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+4 && _availables[index+1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      }
+                                    default :
+                                      if (index == _begin!+1) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      } else if (index == _begin!+2 && _availables[index-1]) {
+                                        color = MGColor.brandPrimary.withOpacity(0.2);
+                                      }
                                   }
                                 } else if (_areaActive) {
                                   color = MGColor.brandPrimary.withOpacity(0.2);
@@ -263,20 +284,53 @@ class _CustomTimePickerState extends State<CustomTimePicker>
   void _onChangedTime(int idx, {bool? isBegin}) {
     setState(() {
       if (widget.service == ServiceType.aiSpace) {
-        if (_begin == null
-            || idx < _begin! || _begin! + 2 < idx
-            || (_begin != 23 && !_availables[_begin! + 1])
-            || (isBegin != null && isBegin)) {
-          widget.setStart(_begin = idx);
-          widget.setEnd(_end = idx);
-        } else if (_end! <= _begin! + 2) {
-          if (idx == _end!) {
-            widget.setStart(_begin = idx);
-          } else {
-            widget.setEnd(_end = idx);
-          }
+        switch (myInfo.rating){
+          case 4 :
+            if (_begin == null
+                || idx < _begin! || _begin! + 3 < idx
+                || (_begin != 23 && !_availables[_begin! + 1])
+                || (isBegin != null && isBegin)) {
+              widget.setStart(_begin = idx);
+              widget.setEnd(_end = idx);
+            } else if (_end! <= _begin! + 3) {
+              if (idx == _end!) {
+                widget.setStart(_begin = idx);
+              } else {
+                widget.setEnd(_end = idx);
+              }
+            }
+            _actScrollController(_begin!);
+          case 5 :
+            if (_begin == null
+                || idx < _begin! || _begin! + 4 < idx
+                || (_begin != 23 && !_availables[_begin! + 1])
+                || (isBegin != null && isBegin)) {
+              widget.setStart(_begin = idx);
+              widget.setEnd(_end = idx);
+            } else if (_end! <= _begin! + 4) {
+              if (idx == _end!) {
+                widget.setStart(_begin = idx);
+              } else {
+                widget.setEnd(_end = idx);
+              }
+            }
+            _actScrollController(_begin!);
+          default :
+            if (_begin == null
+                || idx < _begin! || _begin! + 2 < idx
+                || (_begin != 23 && !_availables[_begin! + 1])
+                || (isBegin != null && isBegin)) {
+              widget.setStart(_begin = idx);
+              widget.setEnd(_end = idx);
+            } else if (_end! <= _begin! + 2) {
+              if (idx == _end!) {
+                widget.setStart(_begin = idx);
+              } else {
+                widget.setEnd(_end = idx);
+              }
+            }
+            _actScrollController(_begin!);
         }
-        _actScrollController(_begin!);
       } else if (widget.service == ServiceType.lectureRoom) {
         if (_begin == null
             || idx < _begin!

@@ -18,17 +18,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mata_gachon/pages/cube_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/reserve_page.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
-import 'pages/cube_page.dart';
 import 'pages/sign_in_page.dart';
 
 Future<void> main() async {
@@ -41,21 +39,6 @@ Future<void> main() async {
   debugPrint("initializing local date time");
   await initializeDateFormatting();
   today = stdFormat3.format(DateTime.now());
-
-  // debugPrint("complete camera setting");
-  // camera = await availableCameras().then((value) {
-  //   debugPrint(value.length.toString());
-  //   return value.first;
-  // });
-
-  debugPrint("complete setting app's details");
-  // 화면 세로로 고정
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
-  // 패키지 정보 불러오기
-  packageInfo = await PackageInfo.fromPlatform();
 
   debugPrint("determining initial page");
   late final Widget start;
@@ -81,7 +64,8 @@ Future<void> main() async {
     try {
       // await FCM.initialize();
       // final fcmToken = await FCM.getToken();
-      myInfo = (await RestAPI.signIn(id: 'already', pw: 'signedIn', token: 'fcmToken'))!;
+      myInfo = (await RestAPI.signIn(
+          studentNum: 'already', password: 'signedIn', fcmToken: 'fcmToken'))!;
       reserves = await RestAPI.getRemainReservation() ?? [];
       admits = await RestAPI.getAllAdmission() ?? [];
       myAdmits = await RestAPI.getMyAdmission() ?? [];
@@ -91,6 +75,11 @@ Future<void> main() async {
       start = const SignInPage();
     }
   }
+  debugPrint("complete camera setting");
+  camera = await availableCameras().then((value) {
+    debugPrint(value.length.toString());
+    return value.first;
+  });
 
   debugPrint("start to run app");
   runApp(MataGachonApp(start: start));
@@ -116,6 +105,7 @@ class MataGachonApp extends StatefulWidget {
   @override
   State<MataGachonApp> createState() => _MataGachonAppState();
 }
+
 class _MataGachonAppState extends State<MataGachonApp>
     with WidgetsBindingObserver {
 
@@ -133,7 +123,7 @@ class _MataGachonAppState extends State<MataGachonApp>
     if (state == AppLifecycleState.resumed) {
       debugPrint("App is resumed");
       if (await RestAPI.signIn(
-          id: "app", pw: 'resume', token: 'fcmToken') == null) {
+          studentNum: "app", password: 'resume', fcmToken: 'fcmToken') == null) {
         setState(() => current = const SignInPage());
         debugPrint("Token is invalid. try to sign in again.");
       } else {
@@ -155,7 +145,6 @@ class _MataGachonAppState extends State<MataGachonApp>
       MediaQuery.of(context).size.width  / 390,
       MediaQuery.of(context).size.height / 895
     );
-    debugPrint("ratio: $ratio");
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(
@@ -178,7 +167,7 @@ class _MataGachonAppState extends State<MataGachonApp>
           ),
       ),
       builder: FToastBuilder(),   // for <fluttertost> package
-      home: current,
+      home: widget.start,
     );
   }
 }

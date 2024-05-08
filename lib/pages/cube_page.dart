@@ -34,7 +34,7 @@ class CubePage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [MGColor.base8, MGColor.base9],
-                stops: [0.2, 0.5])
+                stops: [0.0, 0.5])
         ),
         child: Stack(
           children: [

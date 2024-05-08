@@ -86,7 +86,9 @@ class APIRequest {
       final response = await http.Response.fromStream(httpReturned);
 
       if (httpReturned.statusCode != 500) {
-        dynamic jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        dynamic jsonResponse = response.bodyBytes.isNotEmpty
+            ? json.decode(utf8.decode(response.bodyBytes))
+            : null;
         jsonResponse = {"body": jsonResponse};
 
         if (httpReturned.statusCode == 200) {
@@ -115,7 +117,7 @@ class APIRequest {
     } on TimeoutException {
       throw TimeoutException('[Error] api send: timeout');
     } catch (e) {
-      throw Exception('[Error] api send: $e');
+      throw '\n[Error] api send:$e';
     }
   }
 

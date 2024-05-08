@@ -1,11 +1,16 @@
 import 'dart:async';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:io';
+import 'package:feedback/feedback.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 import 'package:mata_gachon/widgets/button.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'main_frame.dart';
 import '../widgets/popup_widgets.dart';
@@ -22,9 +27,6 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
-  final FToast fToast = FToast();
-
-  bool _isShownToast = false;
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -35,7 +37,6 @@ class _SignInPageState extends State<SignInPage> {
     super.initState();
     idController.addListener(_updateLoginButtonState);
     pwController.addListener(_updateLoginButtonState);
-    fToast.init(context);
   }
 
   @override
@@ -48,6 +49,8 @@ class _SignInPageState extends State<SignInPage> {
             body: SafeArea(
               child: Center(
                 child: Container(
+                  width: ratio.width > 1
+                      ? 390 : MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                   alignment: Alignment.center,
                   child: SingleChildScrollView(
@@ -97,7 +100,7 @@ class _SignInPageState extends State<SignInPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                    decoration: BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: MGColor.base6),
@@ -121,61 +124,54 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 SizedBox(height: ratio.height * 10),
                                 Container(
-                                    decoration: BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: MGColor.base6),
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      TextField(
-                                        controller: pwController,
-                                        obscureText: !isPasswordVisible,
-                                        decoration: InputDecoration(
-                                          hintText: '비밀번호 입력',
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: ratio.width * 12,
-                                              vertical: ratio.height * 12),
-                                          hintStyle: KR.subtitle3.copyWith(
-                                            color: MGColor.base4,
-                                          ),
-                                        ),
+                                  child: TextField(
+                                    controller: pwController,
+                                    obscureText: !isPasswordVisible,
+                                    decoration: InputDecoration(
+                                      hintText: '비밀번호 입력',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: ratio.width * 12,
+                                          vertical: ratio.height * 12),
+                                      hintStyle: KR.subtitle3.copyWith(
+                                        color: MGColor.base4,
                                       ),
-                                      Positioned(
-                                        right: 0,
-                                        child: GestureDetector(
-                                          onTapDown: (tapDetails) => setState(
-                                              () => isPasswordVisible = true),
-                                          onTapUp: (tapDetails) => setState(
-                                              () => isPasswordVisible = false),
-                                          onTapCancel: () => setState(
-                                              () => isPasswordVisible = false),
-                                          behavior: HitTestBehavior.translucent,
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: ratio.width * 12,
-                                                vertical: 14),
-                                            child: Icon(
-                                              isPasswordVisible
-                                                  ? MGIcon.eyeOn
-                                                  : MGIcon.eyeOff,
-                                              color: MGColor.base4,
-                                              size: ratio.width * 20,
-                                            ),
-                                          ),
+                                      suffixIcon: GestureDetector(
+                                        onTapDown: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onTapUp: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onTapCancel: () {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onLongPressStart: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onLongPressEnd: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        behavior: HitTestBehavior.translucent,
+                                        child: Icon(
+                                          isPasswordVisible
+                                              ? MGIcon.eyeOn
+                                              : MGIcon.eyeOff,
+                                          color: MGColor.base4,
                                         ),
-                                      ),
-                                    ],
+                                      )
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: ratio.height * 4),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Text(errorMessage,
-                                      style: KR.label2
-                                          .copyWith(color: MGColor.systemError)),
-                                ),
+                                Text(errorMessage,
+                                    style: KR.label2
+                                        .copyWith(color: MGColor.systemError)),
                               ],
                             ),
                           ),
@@ -276,51 +272,76 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
     try {
+      // load data
       // // try sign in
       // final fcmToken = await FCM.getToken();
-      User? user = await RestAPI.signIn(
-          id: idController.text, pw: pwController.text, token: 'fcmToken');
+      myInfo = await RestAPI.signIn(
+          studentNum: idController.text, password: pwController.text, fcmToken: 'fcmToken');
+      reserves = await RestAPI.getRemainReservation() ?? [];
+      admits = await RestAPI.getAllAdmission() ?? [];
+      myAdmits = await RestAPI.getMyAdmission() ?? [];
 
-      // if sign-in success
-      if (user != null) {
-        // save data
-        myInfo = user;
-        reserves = await RestAPI.getRemainReservation() ?? [];
-        admits = await RestAPI.getAllAdmission() ?? [];
-        myAdmits = await RestAPI.getMyAdmission() ?? [];
-
-        // appear main frame
-        setState(() => isLoading = false);
-        Navigator.of(context).pushReplacement(PageRouteBuilder(
-            fullscreenDialog: false,
-            transitionsBuilder: slideRigth2Left,
-            pageBuilder: (_, __, ___) => const MainFrame()));
-      } else {
-        // show error message
+      // appear main frame
+      setState(() => isLoading = false);
+      Navigator.of(context).pushReplacement(PageRouteBuilder(
+          fullscreenDialog: false,
+          transitionsBuilder: slideRigth2Left,
+          pageBuilder: (_, __, ___) => const MainFrame()));
+    } on TimeoutException {
+      setState(() {
+        isLoading = false;
+        showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            builder: (context) => CommentPopup(
+                title: "통신 속도가 너무 느립니다!",
+                buttonColor: MGColor.brandPrimary,
+                onPressed: () => Navigator.pop(context)));
+      });
+    } catch (e) {
+      if (e == 400) {
         setState(() {
           errorMessage = "아이디 혹은 비밀번호가 맞지 않습니다.";
           isLoading = false;
         });
-      }
-    } on TimeoutException {
-      setState(() => isLoading = false);
-      showDialog(
+      } else {
+        setState(() => isLoading = false);
+        showDialog(
           context: context,
           barrierColor: Colors.black.withOpacity(0.25),
-          builder: (context) => CommentPopup(
-            title: '통신 속도가 너무 느립니다!',
-            onPressed: () => Navigator.pop(context)
+          builder: (ctx) => AlertPopup(
+            title: "처리되지 않은 예외 상황이 발생했습니다!",
+            agreeMsg: "리포트 보내기",
+            onAgreed: () {
+              Navigator.pop(ctx);
+              _sendBugReport();
+            }
           )
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-      setState(() => isLoading = false);
-      showDialog(
-        context: context,
-        barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => ErrorPopup(error: e.toString())
-      );
+        );
+      }
     }
+  }
+
+  void _sendBugReport() {
+    BetterFeedback.of(context).show((sendBugReport) async{
+      final screenshotFilePath = await _writeImageToStorage(sendBugReport.screenshot);
+      final Email email = Email(
+        body: sendBugReport.text,
+        subject: '[메타가천] 버그 리포트',
+        recipients: ['aiia.lab.dev@gmail.com'],
+        attachmentPaths: [screenshotFilePath],
+        isHTML: false,
+      );
+      await FlutterEmailSender.send(email);
+    });
+  }
+
+  Future<String> _writeImageToStorage(Uint8List feedbackScreenshot) async {
+    final Directory output = await getTemporaryDirectory();
+    final String screenshotPath = '${output.path}/feedback.png';
+    final File screenshotFile = File(screenshotPath);
+    await screenshotFile.writeAsBytes(feedbackScreenshot);
+    return screenshotPath;
   }
 
   showToast() {
