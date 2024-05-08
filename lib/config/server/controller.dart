@@ -27,7 +27,7 @@ class RestAPI {
   RestAPI._();
 
   /// 회원가입
-  static Future<User?> signUp({
+  static Future<User> signUp({
     required String studentNum,
     required String password,
     required String studentName,

@@ -48,7 +48,7 @@ class AlertPopup extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: KR.subtitle4),
+            Text(title, style: KR.subtitle4, textAlign: TextAlign.center),
             Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

@@ -2,12 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:feedback/feedback.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../config/app/_export.dart';
-import '../config/server/_export.dart'
+import '../config/server/_export.dart';
 import '../widgets/button.dart';
 import '../widgets/small_widgets.dart';
 import '../widgets/popup_widgets.dart';
@@ -39,15 +44,6 @@ class _SignUpFrameState extends State<SignUpFrame> {
   final pwCheckCtr = TextEditingController();
   bool discordant = false;
 
-  void errorStudentCard() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CommentPopup(title: '학생 정보를 읽을 수 없습니다!\n다른 이미지를 선택해주세요.', onPressed: () => Navigator.pop(context));
-      },
-    );
-  }
-
   @override
   void dispose() {
     _pageCtr.dispose();
@@ -66,79 +62,106 @@ class _SignUpFrameState extends State<SignUpFrame> {
               FocusScope.of(context).unfocus();
             }
           },
-          child: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size(double.infinity, kToolbarHeight),
-              child: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 16),
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        left: ratio.width * 8,
-                        right: ratio.width * 16
+          child: PopScope(
+            canPop: false,
+            onPopInvoked: (popped) {
+              if (popped) return;
+              showDialog(context: context, builder: (context) {
+                return AlertPopup(
+                  title: "지금 돌아가시면 처음부터\n회원가입을 해야 합니다",
+                  agreeMsg: "뒤로가기",
+                  onAgreed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                );
+              });
+            },
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: const Size(double.infinity, kToolbarHeight),
+                child: SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 16),
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(context: context, builder: (context) {
+                          return AlertPopup(
+                            title: "지금 돌아가시면 처음부터\n회원가입을 해야 합니다",
+                            agreeMsg: "뒤로가기",
+                            onAgreed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          );
+                        });
+                      },
+                      behavior: HitTestBehavior.translucent,
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          left: ratio.width * 8,
+                          right: ratio.width * 16
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Icon(MGIcon.back),
                       ),
-                      alignment: Alignment.centerLeft,
-                      child: Icon(MGIcon.back),
                     ),
                   ),
                 ),
               ),
-            ),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: PageView(
-                      controller: _pageCtr,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        TermAgreementPage(buttonActive: buttonActive),
-                        PhoneCertifyPage(nextPage: (val, phoneNum){
-                          onPressed(certificationNumber: val, phoneNumber: phoneNum);
-                        }),
-                        StudentCertifyPage(
-                          selected: studentIdCardImage.isNotEmpty,
-                          changeImage: openGallery
-                        ),
-                        CreateAccountPage(
-                          openKeyboard: MediaQuery.of(context).viewInsets.bottom > 0,
-                          discordant: discordant,
-                          name: name,
-                          id: stuNum,
-                          pwCtr: pwCtr,
-                          pwCheckCtr: pwCheckCtr,
-                          textFieldChanged: () {
-                            print(pwCtr.text);
-                            print(pwCheckCtr.text);
-                            if (pwCtr.text.isNotEmpty & pwCheckCtr.text.isNotEmpty) {
-                              setState(() => nextStep = true);
-                            }
-                          },
-                        ),
-                        CubePage(
-                            title: "회원가입이 완료되었습니다!",
-                            content: "메타가천에 오신것을\n환영합니다!",
-                            buttonText: buttonText,
-                            nextPage: const SignInPage()
-                        )
-                      ]
-                    )
-                  ),
-                  if (index != 1)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: CustomButtons.bottomButton(
-                        buttonText,
-                        MGColor.brandPrimary,
-                        nextStep ? onPressed : null,
-                        disableBackground: MGColor.base4
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        controller: _pageCtr,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          TermAgreementPage(buttonActive: buttonActive),
+                          PhoneCertifyPage(nextPage: (val, phoneNum){
+                            onPressed(certificationNumber: val, phoneNumber: phoneNum);
+                          }),
+                          StudentCertifyPage(
+                            selected: studentIdCardImage.isNotEmpty,
+                            changeImage: openGallery
+                          ),
+                          CreateAccountPage(
+                            openKeyboard: MediaQuery.of(context).viewInsets.bottom > 0,
+                            discordant: discordant,
+                            name: name,
+                            id: stuNum,
+                            pwCtr: pwCtr,
+                            pwCheckCtr: pwCheckCtr,
+                            textFieldChanged: () {
+                              print(pwCtr.text);
+                              print(pwCheckCtr.text);
+                              if (pwCtr.text.isNotEmpty & pwCheckCtr.text.isNotEmpty) {
+                                setState(() => nextStep = true);
+                              }
+                            },
+                          ),
+                          CubePage(
+                              title: "회원가입이 완료되었습니다!",
+                              content: "메타가천에 오신것을\n환영합니다!",
+                              buttonText: buttonText,
+                              nextPage: const SignInPage()
+                          )
+                        ]
                       )
-                    )
-                ]
+                    ),
+                    if (index != 1)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: CustomButtons.bottomButton(
+                          buttonText,
+                          MGColor.brandPrimary,
+                          nextStep ? onPressed : null,
+                          disableBackground: MGColor.base4
+                        )
+                      )
+                  ]
+                ),
               ),
             ),
           ),
@@ -151,96 +174,195 @@ class _SignUpFrameState extends State<SignUpFrame> {
   }
 
   onPressed({String? certificationNumber, String? phoneNumber}) async {
-    switch (index) {
-      case 0:
-        setState(() => index++);
-        await _pageCtr.animateToPage(1,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.ease
-        );
-        break;
-      case 1:
-        if (MediaQuery.of(context).viewInsets.bottom > 0) {
-          FocusScope.of(context).unfocus();
-        }
-
-        int status = await RestAPI.certifyCode(
-            phoneNumber: phoneNumber!,
-            certificationNumber: certificationNumber!
-        );
-        if (status == 200) {
-          setState(() {
-            index++;
-            buttonText = "이미지 첨부하기";
-            this.phoneNumber = phoneNumber;
-          });
-          await _pageCtr.animateToPage(2,
+      switch (index) {
+        // 현재 인덱스 = 약관 동의 페이지
+        case 0:
+          setState(() => index++);
+          await _pageCtr.animateToPage(3,
               duration: const Duration(milliseconds: 300),
               curve: Curves.ease
           );
-        } else {
+          break;
 
-        }
-        break;
-      case 2:
-        if (studentIdCardImage.isEmpty) {
-          openGallery();
-        } else {
+        // 현재 인덱스 = 휴대폰 인증
+        case 1:
+          if (MediaQuery
+              .of(context)
+              .viewInsets
+              .bottom > 0) {
+            FocusScope.of(context).unfocus();
+          }
+
+          setState(() => loading = true);
           try {
-            final expension = studentIdCardImage.substring(studentIdCardImage.lastIndexOf('.'));
-            final bytes = await File(studentIdCardImage).readAsBytes();
-            Map<String, dynamic> response = await RestAPI.verifyStudent(imageFormat: expension, encodedImage: base64Encode(bytes));
-            await _pageCtr.animateToPage(3,
+            await RestAPI.certifyCode(
+                phoneNumber: phoneNumber!,
+                certificationNumber: certificationNumber!
+            );
+            setState(() {
+              loading = false;
+              index++;
+              buttonText = "이미지 첨부하기";
+              this.phoneNumber = phoneNumber;
+            });
+            await _pageCtr.animateToPage(2,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.ease
             );
-            setState(() {
-              index++;
-              name = response['name'];
-              stuNum = response['studentNum'];
-              major = response['major'];
-              nextStep = false;
-            });
+          } catch (e) {
+            setState(() => loading = false);
+            showDialog(
+                context: context,
+                builder: (ctx) {
+                  if (e == 400) {
+                    return CommentPopup(
+                        title: '인증번호가 잘못되었습니다!',
+                        onPressed: () => Navigator.pop(context)
+                    );
+                  } else {
+                    return AlertPopup(
+                        title: "처리되지 않은 예외 상황이 발생했습니다!",
+                        agreeMsg: "리포트 보내기",
+                        onAgreed: () {
+                          Navigator.pop(ctx);
+                          _sendBugReport();
+                        }
+                    );
+                  }
+                }
+            );
           }
-          catch(e) {
-            rethrow;
+          break;
+
+        // 현재 인덱스 = 재학생 인증
+        case 2:
+          if (studentIdCardImage.isEmpty) {
+            openGallery();
+          } else {
+            try {
+              setState(() => loading = true);
+              final expension = studentIdCardImage.substring(
+                  studentIdCardImage.lastIndexOf('.'));
+              final bytes = await File(studentIdCardImage).readAsBytes();
+
+              Map<String, dynamic> response = await RestAPI.verifyStudent(
+                  imageFormat: expension, encodedImage: base64Encode(bytes));
+              if (response.isEmpty) throw 400;
+
+              setState(() {
+                index++;
+                name = response['name'];
+                stuNum = response['studentNum'];
+                major = response['major'];
+                nextStep = false;
+                loading = false;
+              });
+              await _pageCtr.animateToPage(3,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease
+              );
+            }
+            catch (e) {
+              setState(() => loading = false);
+              showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    if (e == 400) {
+                      return CommentPopup(
+                        title: '학생 정보를 읽을 수 없습니다!\n다른 이미지를 선택해주세요.',
+                        onPressed: () => Navigator.pop(context)
+                      );
+                    } else {
+                      return AlertPopup(
+                          title: "처리되지 않은 예외 상황이 발생했습니다!",
+                          agreeMsg: "리포트 보내기",
+                          onAgreed: () {
+                            Navigator.pop(ctx);
+                            _sendBugReport();
+                          }
+                      );
+                    }
+                  }
+              );
+            }
           }
-        }
-        break;
-      case 3:
-        if (pwCtr.text.compareTo(pwCheckCtr.text) != 0) {
-          setState(() => discordant = true);
-        } else {
-          await RestAPI.signUp(studentNum: stuNum, password: pwCtr.text, studentName: name, phoneNumber: this.phoneNumber, major: major);
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const CubePage(
-                title: "회원가입이 완료되었습니다!",
-                content: "메타가천에 오신 것을\n환영합니다!",
-                buttonText: "로그인하기",
-                doPoppingPage: true,
-              )
-            )
-          );
-        }
-    }
+          break;
+
+        // 현재 인덱스 = 계정 생성
+        case 3:
+          if (pwCtr.text.compareTo(pwCheckCtr.text) != 0) {
+            setState(() => discordant = true);
+          } else {
+            try {
+              await RestAPI.signUp(studentNum: stuNum,
+                  password: pwCtr.text,
+                  studentName: name,
+                  phoneNumber: this.phoneNumber,
+                  major: major);
+              Navigator.of(context).pushReplacement(
+                  PageRouteBuilder(
+                      pageBuilder: (_, __, ___) =>
+                      const CubePage(
+                        title: "회원가입이 완료되었습니다!",
+                        content: "메타가천에 오신 것을\n환영합니다!",
+                        buttonText: "로그인하기",
+                        doPoppingPage: true,
+                      )
+                  )
+              );
+            } catch (e) {
+              setState(() => loading = false);
+              showDialog(
+                  context: context,
+                  builder: (ctx) => AlertPopup(
+                      title: "처리되지 않은 예외 상황이 발생했습니다!",
+                      agreeMsg: "리포트 보내기",
+                      onAgreed: () {
+                        Navigator.pop(ctx);
+                        _sendBugReport();
+                      }
+                  )
+              );
+            }
+          }
+          break;
+      }
   }
 
   buttonActive(val) => setState(() => nextStep = val);
 
   Future<void> openGallery() async {
+    setState(() => loading = true);
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
+    setState(() {
+      if (pickedFile != null) {
         studentIdCardImage = pickedFile.path;
         buttonText = "다음 단계";
-      });
-      //
-      // bool isReadable = checkImage(pickedFile);  // 학생증 이미지 api 연동 필요한 부분
-      // if (!isReadable) {
-      //   errorStudentCard();
-      // }
-    }
+      }
+      loading = false;
+    });
+  }
+
+  void _sendBugReport() {
+    BetterFeedback.of(context).show((sendBugReport) async{
+      final screenshotFilePath = await _writeImageToStorage(sendBugReport.screenshot);
+      final Email email = Email(
+        body: sendBugReport.text,
+        subject: '[메타가천] 버그 리포트',
+        recipients: ['aiia.lab.dev@gmail.com'],
+        attachmentPaths: [screenshotFilePath],
+        isHTML: false,
+      );
+      await FlutterEmailSender.send(email);
+    });
+  }
+
+  Future<String> _writeImageToStorage(Uint8List feedbackScreenshot) async {
+    final Directory output = await getTemporaryDirectory();
+    final String screenshotPath = '${output.path}/feedback.png';
+    final File screenshotFile = File(screenshotPath);
+    await screenshotFile.writeAsBytes(feedbackScreenshot);
+    return screenshotPath;
   }
 }
 
@@ -944,8 +1066,5 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         )
       ]
     );
-  }
-  Future<void> trySignUp() async {
-
   }
 }

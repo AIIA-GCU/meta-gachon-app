@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:feedback/feedback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,13 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final FToast fToast = FToast();
+
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
   bool isLoading = false;
+  bool isShownToast = false;
 
   @override
   void initState() {
@@ -345,9 +349,9 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   showToast() {
-    if (_isShownToast) return;
-    _isShownToast = true;
-    Future.delayed(const Duration(seconds: 2)).then((_) => _isShownToast = false);
+    if (isShownToast) return;
+    isShownToast = true;
+    Future.delayed(const Duration(seconds: 2)).then((_) => isShownToast = false);
 
     double bottom = MediaQuery.of(context).viewInsets.bottom;
     if (bottom == 0) bottom = 60;

@@ -43,14 +43,14 @@ class User {
   late final String _ratingName;
   late final AssetImage _ratingImg;
   final String _name;
-  // final String _major;
+  final String _major;
   final int _stuNum;
   final int _rating;
   final int _negative;
   final int _positive;
 
   User(this._name,
-      // this._depart,
+      this._major,
       this._stuNum,
       this._rating,
       this._negative,
@@ -85,7 +85,7 @@ class User {
   String get ratingName => _ratingName;
   AssetImage get ratingImg => _ratingImg;
   String get name => _name;
-  // String get major => _major;
+  String get major => _major;
   int get stuNum => _stuNum;
   int get rating => _rating;
   int get negative => _negative;
@@ -105,7 +105,7 @@ class User {
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
       json['name'],         // "김가천"
-      // json['major'],     // "소프트웨어학과(소프트웨어전공)"
+      json['major'],        // "소프트웨어학과(소프트웨어전공)"
       json['stuNum'],       // 202300001
       json['rating'],       // 2 (1 ~ 5)
       json['negative'],     // 5
