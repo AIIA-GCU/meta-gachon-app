@@ -154,16 +154,24 @@ class _SignUpFrameState extends State<SignUpFrame> {
         if (MediaQuery.of(context).viewInsets.bottom > 0) {
           FocusScope.of(context).unfocus();
         }
-        await RestAPI.cerifyCode(phoneNumber: phoneNumber!, certificationNumber: certificationNumber!);
-        setState(() {
-          index++;
-          buttonText = "이미지 첨부하기";
-          this.phoneNumber = phoneNumber;
-        });
-        await _pageCtr.animateToPage(2,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.ease
+
+        int status = await RestAPI.certifyCode(
+            phoneNumber: phoneNumber!,
+            certificationNumber: certificationNumber!
         );
+        if (status == 200) {
+          setState(() {
+            index++;
+            buttonText = "이미지 첨부하기";
+            this.phoneNumber = phoneNumber;
+          });
+          await _pageCtr.animateToPage(2,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.ease
+          );
+        } else {
+
+        }
         break;
       case 2:
         if (studentIdCardImage.isEmpty) {
@@ -596,7 +604,6 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
                 border: Border.all(color: MGColor.brandPrimary),
               ),
               child: TextField(
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(
                       horizontal: ratio.width * 16, vertical: 13),
@@ -634,7 +641,7 @@ class _PhoneCertifyPageState extends State<PhoneCertifyPage> {
       FocusScope.of(context).unfocus();
     }
     setState(() => requestable = 0);
-    RestAPI.cerifyPhoneNumber(phoneNumber:phoneNumber!);
+    RestAPI.certifyPhoneNumber(phoneNumber:phoneNumber!);
     leftTime = 300;
     buttonText1 = "인증번호 재전송 (${leftTime ~/ 60}분 ${leftTime % 60}초)";
     Timer.periodic(const Duration(seconds: 1), (timer) {

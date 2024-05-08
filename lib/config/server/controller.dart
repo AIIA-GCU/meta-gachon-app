@@ -42,7 +42,7 @@ class RestAPI {
         "name": studentName,
         "phone": phoneNumber,
         "major": major
-      });
+      }) ?? {};
       switch (response['status']) {
         case 200:
           return User.fromJson(response['body']);
@@ -65,8 +65,10 @@ class RestAPI {
   }) async {
     try {
       final api = APIRequest('user/ocr');
-      Map<String, dynamic> response = await api.send(HTTPMethod.post,
-          params: {"imageFormat": imageFormat, "encodedImage": encodedImage});
+      Map<String, dynamic> response = await api.send(HTTPMethod.post, params: {
+        "imageFormat": imageFormat,
+        "encodedImage": encodedImage
+      }) ?? {};
       switch (response['status']) {
         case 200:
           return response['body'];
@@ -83,7 +85,7 @@ class RestAPI {
   }
 
   /// 전화번호 인증
-  static Future<User> cerifyPhoneNumber({
+  static Future<int> certifyPhoneNumber({
     required String phoneNumber,
   }) async {
     try {
@@ -92,9 +94,9 @@ class RestAPI {
           await api.send(HTTPMethod.post, params: {"phoneNumber": phoneNumber});
       switch (response['status']) {
         case 200:
-          throw 200;
+          return 200;
         case 400:
-          throw 400;
+          return 400;
         default:
           throw Exception("[Error] 알 수 없는 이유로 인증 할 수 없습니다!");
       }
@@ -106,7 +108,7 @@ class RestAPI {
   }
 
   /// 인증번호 입력
-  static Future<User> cerifyCode({
+  static Future<int> certifyCode({
     required String phoneNumber,
     required String certificationNumber,
   }) async {
@@ -115,10 +117,10 @@ class RestAPI {
       Map<String, dynamic> response = await api.send(HTTPMethod.post, params: {
         "phoneNumber": phoneNumber,
         "certificationNumber": certificationNumber
-      });
+      }) ?? {};
       switch (response['status']) {
         case 200:
-          return User.fromJson(response['body']);
+          return 200;
         case 400:
           throw 400;
         default:
@@ -132,7 +134,6 @@ class RestAPI {
   }
 
   /// 로그인
-  /// Todo: 추후 통합 로그인용으로 바꿔야 함
   static Future<User> signIn({
     required String studentNum,
     required String password,
@@ -144,7 +145,7 @@ class RestAPI {
         "studentNum": studentNum,
         "password": password,
         "fcmToken": fcmToken
-      });
+      }) ?? {};
       switch (response['status']) {
         case 200:
           final preference = await SharedPreferences.getInstance();
@@ -169,7 +170,7 @@ class RestAPI {
   static Future<List<Reserve>?> getRemainReservation() async {
     try {
       final api = APIRequest('books/remain');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] != 200) {
         return null;
       } else {
@@ -192,7 +193,7 @@ class RestAPI {
   static Future<List<Reserve>?> getPreAdmittedReservation() async {
     try {
       final api = APIRequest('books');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] != 200) {
         return null;
       } else {
@@ -328,7 +329,7 @@ class RestAPI {
   static Future<int> delReservation({required int reservationId}) async {
     try {
       final api = APIRequest('book/$reservationId');
-      Map<String, dynamic> response = await api.send(HTTPMethod.delete);
+      Map<String, dynamic> response = await api.send(HTTPMethod.delete) ?? {};
       return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -341,7 +342,7 @@ class RestAPI {
   static Future<int> prolongReservation({required int reservationId}) async {
     try {
       final api = APIRequest('book/prolong/$reservationId');
-      Map<String, dynamic> response = await api.send(HTTPMethod.patch);
+      Map<String, dynamic> response = await api.send(HTTPMethod.patch) ?? {};
       return response['status'];
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');
@@ -362,7 +363,7 @@ class RestAPI {
       {required int reservationId}) async {
     try {
       final api = APIRequest('book/$reservationId');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] == 200) return response['body']['status'];
       return null;
     } on TimeoutException {
@@ -377,7 +378,7 @@ class RestAPI {
       {required String room, required String date}) async {
     try {
       final api = APIRequest('books/available?room=${room}&date=${date}');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] != 200) {
         return null;
       } else {
@@ -407,7 +408,7 @@ class RestAPI {
           break;
       }
       final api = APIRequest('book/items/$type');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] != 200) {
         return null;
       } else {
@@ -426,7 +427,7 @@ class RestAPI {
     try {
       final api =
           APIRequest('book/qrcheck?QR=$qrStr&reservationId=$reservationId');
-      Map<String, dynamic> response = await api.send(HTTPMethod.post);
+      Map<String, dynamic> response = await api.send(HTTPMethod.post) ?? {};
       return response['status'] == 200;
     } catch (e) {
       throw Exception(e);
@@ -437,7 +438,7 @@ class RestAPI {
   static Future<List<Admit>?> getAllAdmission() async {
     try {
       final api = APIRequest('admits');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
 
       if (response['status'] != 200) {
         return null;
@@ -468,7 +469,7 @@ class RestAPI {
   static Future<List<Admit>?> getMyAdmission() async {
     try {
       final api = APIRequest('admits/me');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
 
       if (response['status'] != 200) {
         return null;
@@ -509,7 +510,7 @@ class RestAPI {
         'review': review,
         'photo': photo,
         'photoExtension': photoExtension
-      });
+      }) ?? {};
       if (response['status'] == 200) return response['body']['admissionID'];
       return null;
     } on TimeoutException {
@@ -523,7 +524,7 @@ class RestAPI {
   static Future<bool?> hasUnopenedNotice() async {
     try {
       final api = APIRequest('notice');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] == 200) return response['body']['hasNotice'];
       return null;
     } on TimeoutException {
@@ -537,7 +538,7 @@ class RestAPI {
   static Future<List<Notice>?> getNotices() async {
     try {
       final api = APIRequest('notices');
-      Map<String, dynamic> response = await api.send(HTTPMethod.get);
+      Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
       if (response['status'] != 200) {
         return null;
       } else {

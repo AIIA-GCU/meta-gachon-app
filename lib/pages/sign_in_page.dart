@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:feedback/feedback.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import 'sign_up_page.dart';
@@ -91,14 +92,14 @@ class _SignInPageState extends State<SignInPage> {
                         ),
 
                         /// input
-                        Form(
-                          key: key,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: ratio.width * 230,
+                        SizedBox(
+                          width: ratio.width * 230,
+                          child: Form(
+                            key: key,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -121,59 +122,58 @@ class _SignInPageState extends State<SignInPage> {
                                     },
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: ratio.height * 10),
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: TextField(
-                                  controller: pwController,
-                                  obscureText: !isPasswordVisible,
-                                  decoration: InputDecoration(
-                                    hintText: '비밀번호 입력',
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 12),
-                                    hintStyle: KR.subtitle3.copyWith(
-                                      color: MGColor.base4,
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      onTapDown: (tapDetails) {
-                                        setState(() => isPasswordVisible = true);
-                                      },
-                                      onTapUp: (tapDetails) {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      onTapCancel: () {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      onLongPressStart: (tapDetails) {
-                                        setState(() => isPasswordVisible = true);
-                                      },
-                                      onLongPressEnd: (tapDetails) {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Icon(
-                                        isPasswordVisible
-                                            ? MGIcon.eyeOn
-                                            : MGIcon.eyeOff,
+                                SizedBox(height: ratio.height * 10),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
+                                  ),
+                                  child: TextField(
+                                    controller: pwController,
+                                    obscureText: !isPasswordVisible,
+                                    decoration: InputDecoration(
+                                      hintText: '비밀번호 입력',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: ratio.width * 12,
+                                          vertical: ratio.height * 12),
+                                      hintStyle: KR.subtitle3.copyWith(
                                         color: MGColor.base4,
                                       ),
-                                    )
+                                      suffixIcon: GestureDetector(
+                                        onTapDown: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onTapUp: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onTapCancel: () {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        onLongPressStart: (tapDetails) {
+                                          setState(() => isPasswordVisible = true);
+                                        },
+                                        onLongPressEnd: (tapDetails) {
+                                          setState(() => isPasswordVisible = false);
+                                        },
+                                        behavior: HitTestBehavior.translucent,
+                                        child: Icon(
+                                          isPasswordVisible
+                                              ? MGIcon.eyeOn
+                                              : MGIcon.eyeOff,
+                                          color: MGColor.base4,
+                                        ),
+                                      )
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: ratio.height * 4),
-                              Text(errorMessage,
-                                  style: KR.label2
-                                      .copyWith(color: MGColor.systemError)),
-                            ],
+                                SizedBox(height: ratio.height * 4),
+                                Text(errorMessage,
+                                    style: KR.label2
+                                        .copyWith(color: MGColor.systemError)),
+                              ],
+                            ),
                           ),
                         ),
 

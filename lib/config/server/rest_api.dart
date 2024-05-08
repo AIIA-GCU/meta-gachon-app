@@ -86,7 +86,9 @@ class APIRequest {
       final response = await http.Response.fromStream(httpReturned);
 
       if (httpReturned.statusCode != 500) {
-        dynamic jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        dynamic jsonResponse = response.bodyBytes.isNotEmpty
+            ? json.decode(utf8.decode(response.bodyBytes))
+            : null;
         jsonResponse = {"body": jsonResponse};
 
         if (httpReturned.statusCode == 200) {
