@@ -28,7 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
 
-import 'pages/on_boarding_page.dart';
+import 'pages/cube_page.dart';
 import 'pages/sign_in_page.dart';
 
 Future<void> main() async {
@@ -64,9 +64,19 @@ Future<void> main() async {
 
   if (first == null) {
     preferences.setBool('firstTime', true);
-    start = OnBoarding();
+    start = const CubePage(
+      title: "교내 공간을 간편하게 예약하세요",
+      content: "언제 어디서든\n비어있는 회의실 및 강의실,\n컴퓨터를 예약하고 확인하세요.",
+      buttonText: "시작하기",
+      nextPage: SignInPage(),
+    );
   } else if (first == true) {
-    start = OnBoarding();
+    start = const CubePage(
+      title: "교내 공간을 간편하게 예약하세요",
+      content: "언제 어디서든\n비어있는 회의실 및 강의실,\n컴퓨터를 예약하고 확인하세요.",
+      buttonText: "시작하기",
+      nextPage: SignInPage(),
+    );
   } else {
     try {
       // await FCM.initialize();

@@ -847,12 +847,12 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
-                    height: ratio. height * 70,
+                    height: ratio.height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          fit: BoxFit.cover,
-                         image: AssetImage(ImgPath.grayLv),
+                        fit: BoxFit.cover,
+                        image: AssetImage(ImgPath.grayLv),
                         alignment: Alignment.topCenter,
                       ),
                     ),
@@ -863,21 +863,21 @@ class GradeExplainPopup extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("GRAY",style: EN.subtitle2,),
+                          Text("GRAY", style: EN.subtitle2,),
                           SizedBox(
                             width: ratio.width * 1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: ratio.height * 1),
-                            child: Text("경고",style: KR.grade3,),
+                            child: Text("경고", style: KR.grade3,),
                           )
                         ],
                       ),
                       SizedBox(
                         height: ratio.height * 6.6,
                       ),
-                      Text("한달에 10번 이상의 경고를 받음",style: KR.grade4,),
-                      Text("2주간 예약 금지",style: KR.grade2,),
+                      Text("한달에 10번 이상의 경고를 받음", style: KR.grade4,),
+                      Text("2주간 예약 금지", style: KR.grade2,),
                     ],
                   ),
                 ],
@@ -891,7 +891,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
-                    height: ratio. height * 70,
+                    height: ratio.height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -907,21 +907,21 @@ class GradeExplainPopup extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("STONE",style: EN.subtitle2,),
+                          Text("STONE", style: EN.subtitle2,),
                           SizedBox(
                             width: ratio.width * 1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: ratio.height * 1),
-                            child: Text("주의",style: KR.grade3),
+                            child: Text("주의", style: KR.grade3),
                           )
                         ],
                       ),
                       SizedBox(
                         height: ratio.height * 6.6,
                       ),
-                      Text("한달에 5번 이상의 경고를 받음",style: KR.grade4,),
-                      Text("7일간 예약 금지",style: KR.grade2,),
+                      Text("한달에 5번 이상의 경고를 받음", style: KR.grade4,),
+                      Text("7일간 예약 금지", style: KR.grade2,),
                     ],
                   ),
                 ],
@@ -935,7 +935,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
-                    height: ratio. height * 70,
+                    height: ratio.height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -951,21 +951,21 @@ class GradeExplainPopup extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("COBALT",style: EN.subtitle2,),
+                          Text("COBALT", style: EN.subtitle2,),
                           SizedBox(
                             width: ratio.width * 1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: ratio.height * 1),
-                            child: Text("기본",style: KR.grade5,),
+                            child: Text("기본", style: KR.grade5,),
                           )
                         ],
                       ),
                       SizedBox(
                         height: ratio.height * 6.6,
                       ),
-                      Text("기본 등급입니다",style: KR.grade4,),
-                      Text("정말 깔끔하네요!",style: KR.grade6,),
+                      Text("기본 등급입니다", style: KR.grade4,),
+                      Text("정말 깔끔하네요!", style: KR.grade6,),
                     ],
                   ),
                 ],
@@ -979,7 +979,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
-                    height: ratio. height * 70,
+                    height: ratio.height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -995,21 +995,21 @@ class GradeExplainPopup extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("SKY",style: EN.subtitle2,),
+                          Text("SKY", style: EN.subtitle2,),
                           SizedBox(
                             width: ratio.width * 1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: ratio.height * 1),
-                            child: Text("우수",style: KR.grade7,),
+                            child: Text("우수", style: KR.grade7,),
                           )
                         ],
                       ),
                       SizedBox(
                         height: ratio.height * 6.6,
                       ),
-                      Text("한 달에 7번 이상 우수한 사용을 함",style: KR.grade4,),
-                      Text("예약 가능 시간 4시간으로 증가",style: KR.grade6,),
+                      Text("한 달에 7번 이상 우수한 사용을 함", style: KR.grade4,),
+                      Text("예약 가능 시간 4시간으로 증가", style: KR.grade6,),
                     ],
                   ),
                 ],
@@ -1023,7 +1023,7 @@ class GradeExplainPopup extends StatelessWidget {
                 children: [
                   Container(
                     width: ratio.width * 70,
-                    height: ratio. height * 70,
+                    height: ratio.height * 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -1039,21 +1039,21 @@ class GradeExplainPopup extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("AQUA",style: EN.subtitle2,),
+                          Text("AQUA", style: EN.subtitle2,),
                           SizedBox(
                             width: ratio.width * 1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: ratio.height * 1),
-                            child: Text("VIP",style: EN.grade7,),
+                            child: Text("VIP", style: EN.grade7,),
                           )
                         ],
                       ),
                       SizedBox(
                         height: ratio.height * 6.6,
                       ),
-                      Text("한 달에 14번 이상 우수한 사용을 함",style: KR.grade4,),
-                      Text("예약 가능 시간 5시간으로 증가",style: KR.grade6,),
+                      Text("한 달에 14번 이상 우수한 사용을 함", style: KR.grade4,),
+                      Text("예약 가능 시간 5시간으로 증가", style: KR.grade6,),
                     ],
                   ),
                 ],
@@ -1062,26 +1062,26 @@ class GradeExplainPopup extends StatelessWidget {
               SizedBox(height: ratio.height * 26),
 
               _button(
-                text: Text("내 등급 확인하기",
-                    style: KR.parag2.copyWith(color: Colors.white)),
-                background: MGColor.brandPrimary,
-                onTap: () {
-                  Navigator.pop(context);
-                  showDialog(
-                    context: context,
-                    builder: (_) => const GradePopup()
-                  );
-                }
+                  text: Text("내 등급 확인하기",
+                      style: KR.parag2.copyWith(color: Colors.white)),
+                  background: MGColor.brandPrimary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (_) => const GradePopup()
+                    );
+                  }
               ),
               _button(
-                text: Text("하루 동안 보지 않기",style: KR.grade1),
-                background: Colors.transparent,
-                onTap: () {
-                  hideForDay();
-                  preferences
-                      .setString("today", '0,$today')
-                      .then((_) => Navigator.pop(context));
-                }
+                  text: Text("하루 동안 보지 않기", style: KR.grade1),
+                  background: Colors.transparent,
+                  onTap: () {
+                    hideForDay();
+                    preferences
+                        .setString("today", '0,$today')
+                        .then((_) => Navigator.pop(context));
+                  }
               )
             ],
           ),
@@ -1095,15 +1095,18 @@ class GradeExplainPopup extends StatelessWidget {
     required Color background,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 40,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(10)),
-        child: text
+    return Material(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(10)),
+            child: text
+        ),
       ),
     );
   }

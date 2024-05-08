@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import 'sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -20,6 +22,9 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final FToast fToast = FToast();
+
+  bool _isShownToast = false;
   bool _buttonEnabled = false;
   bool isPasswordVisible = false;
   String errorMessage = '';
@@ -30,6 +35,7 @@ class _SignInPageState extends State<SignInPage> {
     super.initState();
     idController.addListener(_updateLoginButtonState);
     pwController.addListener(_updateLoginButtonState);
+    fToast.init(context);
   }
 
   @override
@@ -42,8 +48,6 @@ class _SignInPageState extends State<SignInPage> {
             body: SafeArea(
               child: Center(
                 child: Container(
-                  width: ratio.width > 1
-                      ? 390 : MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: ratio.width * 16),
                   alignment: Alignment.center,
                   child: SingleChildScrollView(
@@ -85,87 +89,95 @@ class _SignInPageState extends State<SignInPage> {
                         ),
 
                         /// input
-                        Form(
-                          key: key,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: TextFormField(
-                                  controller: idController,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 12),
-                                    hintText: '아이디 입력',
-                                    hintStyle: KR.subtitle3.copyWith(
-                                      color: MGColor.base4,
-                                    ),
-                                    border: InputBorder.none,
+                        SizedBox(
+                          width: ratio.width * 230,
+                          child: Form(
+                            key: key,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
                                   ),
-                                  validator: (val) {
-                                    return val == null ? '' : null;
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: ratio.height * 10),
-                              Container(
-                                width: ratio.width * 358,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: MGColor.base6),
-                                ),
-                                child: TextField(
-                                  controller: pwController,
-                                  obscureText: !isPasswordVisible,
-                                  decoration: InputDecoration(
-                                    hintText: '비밀번호 입력',
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: ratio.width * 12,
-                                        vertical: ratio.height * 12),
-                                    hintStyle: KR.subtitle3.copyWith(
-                                      color: MGColor.base4,
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      onTapDown: (tapDetails) {
-                                        setState(() => isPasswordVisible = true);
-                                      },
-                                      onTapUp: (tapDetails) {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      onTapCancel: () {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      onLongPressStart: (tapDetails) {
-                                        setState(() => isPasswordVisible = true);
-                                      },
-                                      onLongPressEnd: (tapDetails) {
-                                        setState(() => isPasswordVisible = false);
-                                      },
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Icon(
-                                        isPasswordVisible
-                                            ? MGIcon.eyeOn
-                                            : MGIcon.eyeOff,
+                                  child: TextFormField(
+                                    controller: idController,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: ratio.width * 12,
+                                          vertical: ratio.height * 12),
+                                      hintText: '아이디 입력',
+                                      hintStyle: KR.subtitle3.copyWith(
                                         color: MGColor.base4,
                                       ),
-                                    )
+                                      border: InputBorder.none,
+                                    ),
+                                    validator: (val) {
+                                      return val == null ? '' : null;
+                                    },
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: ratio.height * 4),
-                              Text(errorMessage,
-                                  style: KR.label2
-                                      .copyWith(color: MGColor.systemError)),
-                            ],
+                                SizedBox(height: ratio.height * 10),
+                                Container(
+                                    decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: MGColor.base6),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      TextField(
+                                        controller: pwController,
+                                        obscureText: !isPasswordVisible,
+                                        decoration: InputDecoration(
+                                          hintText: '비밀번호 입력',
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: ratio.width * 12,
+                                              vertical: ratio.height * 12),
+                                          hintStyle: KR.subtitle3.copyWith(
+                                            color: MGColor.base4,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTapDown: (tapDetails) => setState(
+                                              () => isPasswordVisible = true),
+                                          onTapUp: (tapDetails) => setState(
+                                              () => isPasswordVisible = false),
+                                          onTapCancel: () => setState(
+                                              () => isPasswordVisible = false),
+                                          behavior: HitTestBehavior.translucent,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: ratio.width * 12,
+                                                vertical: 14),
+                                            child: Icon(
+                                              isPasswordVisible
+                                                  ? MGIcon.eyeOn
+                                                  : MGIcon.eyeOff,
+                                              color: MGColor.base4,
+                                              size: ratio.width * 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: ratio.height * 4),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Text(errorMessage,
+                                      style: KR.label2
+                                          .copyWith(color: MGColor.systemError)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -178,14 +190,65 @@ class _SignInPageState extends State<SignInPage> {
                                   (MediaQuery.of(context).viewInsets.bottom > 0
                                       ? 10
                                       : errorMessage.isEmpty
-                                          ? 42
+                                          ? 30
                                           : 75)),
                         ),
 
                         /// button
-                        CustomButtons.bottomButton('로그인', MGColor.brandPrimary,
+                        CustomButtons.bottomButton(
+                            '로그인',
+                            MGColor.brandPrimary,
                             () => _buttonEnabled ? trySignIn() : null,
-                            disableBackground: MGColor.base6)
+                            disableBackground: MGColor.base6,
+                            width: 240,
+                            borderRadius: 30
+                        ),
+
+                        SizedBox(height: ratio.height * 13),
+
+                        Center(
+                          child: Container(
+                            width: ratio.width * 275,
+                            height: ratio.height * 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: showToast,
+                                  child: const Text(
+                                    '아이디 찾기',
+                                    style: TextStyle(color: Color(0xff797979)),
+                                  ),
+                                ),
+                                Container(
+                                  child: const Text("|",
+                                      style:
+                                          TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: showToast,
+                                  child: const Text('비밀번호 찾기',
+                                      style: TextStyle(color: Color(0xff797979))),
+                                ),
+                                Container(
+                                  child: const Text("|",
+                                      style:
+                                      TextStyle(color: Color(0xff797979))),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => const SignUpFrame()),
+                                    );
+                                  },
+                                  child: const Text('회원 가입',
+                                      style:
+                                          TextStyle(color: Color(0xff1762DB))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -258,5 +321,42 @@ class _SignInPageState extends State<SignInPage> {
         builder: (context) => ErrorPopup(error: e.toString())
       );
     }
+  }
+
+  showToast() {
+    if (_isShownToast) return;
+    _isShownToast = true;
+    Future.delayed(const Duration(seconds: 2)).then((_) => _isShownToast = false);
+
+    double bottom = MediaQuery.of(context).viewInsets.bottom;
+    if (bottom == 0) bottom = 60;
+    else bottom += 20;
+    fToast.showToast(
+      positionedToastBuilder: (context, widget) {
+        return Positioned(
+          bottom: bottom,
+          width: MediaQuery.of(context).size.width,
+          child: widget,
+        );
+      },
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              vertical: 6, horizontal: ratio.width * 16
+          ),
+          decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(100)
+          ),
+          child: const Text(
+              '아직 이용할 수 없는 서비스 입니다.',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white
+              )
+          ),
+        ),
+      )
+    );
   }
 }
