@@ -365,7 +365,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
     widget.setLoading(true);
     List<String>? temp = await RestAPI.placeForService(service);
     widget.setLoading(false);
-    if (temp != null || temp!.isNotEmpty) {
+    if (temp != null && temp.isNotEmpty) {
       Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) => ReservePage(service, availableRoom: temp))
