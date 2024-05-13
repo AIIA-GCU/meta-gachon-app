@@ -85,6 +85,8 @@ class APIRequest {
           .send(request).timeout(const Duration(seconds: 15));
       final response = await http.Response.fromStream(httpReturned);
 
+      debugPrint("[api] path : ~/$_path");
+
       if (httpReturned.statusCode != 500) {
         dynamic jsonResponse = response.bodyBytes.isNotEmpty
             ? json.decode(utf8.decode(response.bodyBytes))

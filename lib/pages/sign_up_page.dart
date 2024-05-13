@@ -178,7 +178,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
         // 현재 인덱스 = 약관 동의 페이지
         case 0:
           setState(() => index++);
-          await _pageCtr.animateToPage(3,
+          await _pageCtr.animateToPage(1,
               duration: const Duration(milliseconds: 300),
               curve: Curves.ease
           );
@@ -242,7 +242,7 @@ class _SignUpFrameState extends State<SignUpFrame> {
             try {
               setState(() => loading = true);
               final expension = studentIdCardImage.substring(
-                  studentIdCardImage.lastIndexOf('.'));
+                  studentIdCardImage.lastIndexOf('.') + 1);
               final bytes = await File(studentIdCardImage).readAsBytes();
 
               Map<String, dynamic> response = await RestAPI.verifyStudent(

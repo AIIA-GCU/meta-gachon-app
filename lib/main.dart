@@ -23,6 +23,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:mata_gachon/pages/cube_page.dart';
 import 'package:mata_gachon/pages/main_frame.dart';
 import 'package:mata_gachon/pages/reserve_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mata_gachon/config/app/_export.dart';
 import 'package:mata_gachon/config/server/_export.dart';
@@ -44,6 +45,9 @@ Future<void> main() async {
   late final Widget start;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final bool? first = preferences.getBool('firstTime');
+
+  debugPrint("read the package info");
+  packageInfo = await PackageInfo.fromPlatform();
 
   if (first == null) {
     preferences.setBool('firstTime', true);

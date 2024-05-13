@@ -39,8 +39,8 @@ class RestAPI {
       Map<String, dynamic> response = await api.send(HTTPMethod.post, params: {
         "studentNum": studentNum,
         "password": password,
-        "name": studentName,
-        "phone": phoneNumber,
+        "studentName": studentName,
+        "phoneNumber": phoneNumber,
         "major": major
       }) ?? {};
       switch (response['status']) {

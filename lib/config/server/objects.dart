@@ -105,7 +105,7 @@ class User {
   ///
   factory User.fromJson(Map<String, dynamic> json) => User(
       json['name'],         // "김가천"
-      json['major'],        // "소프트웨어학과(소프트웨어전공)"
+      json['major'] ?? "AI소프트웨어학부", // "소프트웨어학과(소프트웨어전공)"
       json['stuNum'],       // 202300001
       json['rating'],       // 2 (1 ~ 5)
       json['negative'],     // 5
