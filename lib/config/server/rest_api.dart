@@ -24,7 +24,7 @@ import 'session.dart';
 enum HTTPMethod { get, post, patch, delete }
 
 class APIRequest {
-  static const String _baseUrl = "http://210.102.178.161:8080/";
+  static const String _baseUrl = "https://meta.aiia-gcu.com/";
   static const String _sessionCookieName = "JSESSIONID";
 
   late String _path;
@@ -85,8 +85,12 @@ class APIRequest {
           .send(request).timeout(const Duration(seconds: 15));
       final response = await http.Response.fromStream(httpReturned);
 
+      debugPrint("[api] path : ~/$_path");
+
       if (httpReturned.statusCode != 500) {
-        dynamic jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        dynamic jsonResponse = response.bodyBytes.isNotEmpty
+            ? json.decode(utf8.decode(response.bodyBytes))
+            : null;
         jsonResponse = {"body": jsonResponse};
 
         if (httpReturned.statusCode == 200) {
@@ -115,7 +119,7 @@ class APIRequest {
     } on TimeoutException {
       throw TimeoutException('[Error] api send: timeout');
     } catch (e) {
-      throw Exception('[Error] api send: $e');
+      throw '\n[Error] api send:$e';
     }
   }
 
