@@ -15,7 +15,7 @@ import '../widgets/small_widgets.dart';
 class ReservationListPage extends StatefulWidget {
   const ReservationListPage({super.key, required this.setLoading});
 
-  final void Function(bool) setLoading;
+  final BuildContext Function(bool) setLoading;
 
   @override
   State<ReservationListPage> createState() => _ReservationListPageState();
@@ -35,6 +35,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
   void dispose() {
     debugPrint("dispose");
     _scrollCtr.dispose();
+    _stream.drain();
     super.dispose();
   }
 
@@ -122,8 +123,8 @@ class _ReservationListPageState extends State<ReservationListPage> {
               physics: const AlwaysScrollableScrollPhysics()
                   .applyTo(const BouncingScrollPhysics()),
               child: Container(
-                  height: ratio.height * 594,
-                  alignment: Alignment.center,
+                  height: ratio.height * 200,
+                  alignment: Alignment.bottomCenter,
                   child: Text(
                       '아직 예약 내역이 없어요!',
                       style: KR.subtitle4.copyWith(color: MGColor.base3)
@@ -363,9 +364,9 @@ class _ReservationListPageState extends State<ReservationListPage> {
 
   Future<void> doReservation(ServiceType service) async {
     widget.setLoading(true);
-    List<String>? temp = await RestAPI.placeForService(service);
+    List<String> temp = await RestAPI.placeForService(service);
     widget.setLoading(false);
-    if (temp != null && temp.isNotEmpty) {
+    if (temp.isNotEmpty) {
       Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) => ReservePage(service, availableRoom: temp))

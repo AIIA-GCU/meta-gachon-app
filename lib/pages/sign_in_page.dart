@@ -39,6 +39,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
     idController.addListener(_updateLoginButtonState);
     pwController.addListener(_updateLoginButtonState);
   }
@@ -115,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                                       contentPadding: EdgeInsets.symmetric(
                                           horizontal: ratio.width * 12,
                                           vertical: ratio.height * 12),
-                                      hintText: '아이디 입력',
+                                      hintText: '아이디(학번) 입력',
                                       hintStyle: KR.subtitle3.copyWith(
                                         color: MGColor.base4,
                                       ),

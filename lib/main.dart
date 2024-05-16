@@ -16,6 +16,7 @@
 ///
 ///
 
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
@@ -62,6 +63,9 @@ Future<void> main() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final bool? first = preferences.getBool('firstTime');
 
+  debugPrint("read the package info");
+  packageInfo = await PackageInfo.fromPlatform();
+
   if (first == null) {
     preferences.setBool('firstTime', true);
     start = const CubePage(
@@ -94,7 +98,11 @@ Future<void> main() async {
   }
 
   debugPrint("start to run app");
-  runApp(MataGachonApp(start: start));
+  runApp(
+    BetterFeedback(
+      child: MataGachonApp(start: start),
+    )
+  );
 }
 
 ///
@@ -156,7 +164,6 @@ class _MataGachonAppState extends State<MataGachonApp>
       MediaQuery.of(context).size.width  / 390,
       MediaQuery.of(context).size.height / 895
     );
-    debugPrint("ratio: $ratio");
     return MaterialApp(
       title: "메타가천",
       theme: ThemeData(

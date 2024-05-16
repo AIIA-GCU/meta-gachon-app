@@ -363,7 +363,7 @@ class _MyPageState extends State<MyPage> {
                     PageRouteBuilder(
                         fullscreenDialog: false,
                         transitionsBuilder: slideRigth2Left,
-                        pageBuilder: (_, __, ___) => const SignInPage()
+                        pageBuilder: (context1, __, ___) => const SignInPage()
                     ), (route) => false
                 ));
               } catch(_) {
