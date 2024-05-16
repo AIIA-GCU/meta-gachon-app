@@ -80,11 +80,11 @@ Future<void> main() async {
       start = const SignInPage();
     }
   }
-  debugPrint("complete camera setting");
-  camera = await availableCameras().then((value) {
-    debugPrint(value.length.toString());
-    return value.first;
-  });
+  // debugPrint("complete camera setting");
+  // camera = await availableCameras().then((value) {
+  //   debugPrint(value.length.toString());
+  //   return value.first;
+  // });
 
   debugPrint("start to run app");
   runApp(

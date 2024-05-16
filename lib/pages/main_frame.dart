@@ -140,9 +140,15 @@ class _MainFrameState extends State<MainFrame> {
   void _onTap(int index) => _pageController.animateToPage(index,
       duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
 
-  void _onPageChanged(int index) => setState(() => _currentPageIndex = index);
+  void _onPageChanged(int index) {
+    if (!mounted) return;
+    setState(() => _currentPageIndex = index);
+  }
 
-  void _setLoading(bool val) => setState(() => _loading = val);
+  BuildContext _setLoading(bool val) {
+    setState(() => _loading = val);
+    return context;
+  }
 
   void _movetoReserList() => _pageController.animateToPage(1,
       duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);

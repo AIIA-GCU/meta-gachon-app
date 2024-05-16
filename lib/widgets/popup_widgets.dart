@@ -145,7 +145,7 @@ class ReservationPopup extends StatelessWidget {
 
   final Reserve item;
   final int status;
-  final void Function(bool) setLoading;
+  final BuildContext Function(bool) setLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -398,10 +398,10 @@ class ReservationPopup extends StatelessWidget {
   Future<void> _edit(BuildContext context) async {
     setLoading(true);
     Navigator.pop(context);
-    List<String>? temp = await RestAPI.placeForService(item.service);
+    List<String> temp = await RestAPI.placeForService(item.service);
     debugPrint(temp.toString());
-    setLoading(false);
-    if (temp == null || temp.isEmpty) {
+    final ancestorContext = setLoading(false);
+    if (temp.isEmpty) {
       late String place;
       switch (item.service) {
         case ServiceType.aiSpace:
@@ -415,14 +415,14 @@ class ReservationPopup extends StatelessWidget {
           break;
       }
       showDialog(
-          context: context,
+          context: ancestorContext,
           builder: (ctx) => CommentPopup(
               title: '현재 예약 가능한 $place 없습니다.',
               onPressed: () => Navigator.pop(ctx)
           )
       );
     } else {
-      Navigator.of(context).push(
+      Navigator.of(ancestorContext).push(
         MaterialPageRoute(
           builder: (_) => ReservePage(
             item.service,

@@ -15,7 +15,7 @@ import '../widgets/small_widgets.dart';
 class ReservationListPage extends StatefulWidget {
   const ReservationListPage({super.key, required this.setLoading});
 
-  final void Function(bool) setLoading;
+  final BuildContext Function(bool) setLoading;
 
   @override
   State<ReservationListPage> createState() => _ReservationListPageState();
@@ -35,6 +35,7 @@ class _ReservationListPageState extends State<ReservationListPage> {
   void dispose() {
     debugPrint("dispose");
     _scrollCtr.dispose();
+    _stream.drain();
     super.dispose();
   }
 
