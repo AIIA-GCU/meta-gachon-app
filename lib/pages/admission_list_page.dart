@@ -6,7 +6,6 @@ import 'package:mata_gachon/pages/prior_admissions_page.dart';
 import 'package:mata_gachon/widgets/button.dart';
 import 'package:mata_gachon/widgets/popup_widgets.dart';
 
-import 'admit_page.dart';
 import 'my_admission_list_page.dart';
 import '../widgets/small_widgets.dart';
 
@@ -61,14 +60,18 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
         builder: (context, snapshot) {
           Widget child;
           if (snapshot.hasError) {
-            child = Container(
-                height: 218,
-                alignment: Alignment.center,
-                child: Text(
-                    '통신 속도가 너무 느립니다!',
-                    style: KR.subtitle4.copyWith(
-                        color: MGColor.base3)
-                )
+            child = SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics()
+                  .applyTo(const BouncingScrollPhysics()),
+              child: Container(
+                  height: 218,
+                  alignment: Alignment.center,
+                  child: Text(
+                      '통신 속도가 너무 느립니다!',
+                      style: KR.subtitle4.copyWith(
+                          color: MGColor.base3)
+                  )
+              ),
             );
           } else {
             if (snapshot.connectionState == ConnectionState.waiting) return const ProgressWidget();
@@ -81,13 +84,17 @@ class _AdmissionListPageState extends State<AdmissionListPage> {
                   itemBuilder: (_, index) => _listItem(admits[index])
               );
             } else {
-              child = Container(
-                  height: ratio.height * 594,
-                  alignment: Alignment.center,
-                  child: Text(
-                      '아직 인증 내역이 없어요!',
-                      style: KR.subtitle4.copyWith(color: MGColor.base3)
-                  )
+              child = SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics()
+                    .applyTo(const BouncingScrollPhysics()),
+                child: Container(
+                    height: ratio.height * 218,
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                        '아직 인증 내역이 없어요!',
+                        style: KR.subtitle4.copyWith(color: MGColor.base3)
+                    )
+                ),
               );
             }
           }

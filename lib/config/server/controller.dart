@@ -393,7 +393,7 @@ class RestAPI {
   }
 
   /// 서비스에 따른 예약 장소 반환
-  static Future<List<String>?> placeForService(ServiceType service) async {
+  static Future<List<String>> placeForService(ServiceType service) async {
     try {
       late int type;
       switch (service) {
@@ -409,11 +409,14 @@ class RestAPI {
       }
       final api = APIRequest('book/items/$type');
       Map<String, dynamic> response = await api.send(HTTPMethod.get) ?? {};
-      if (response['status'] != 200) {
-        return null;
-      } else {
-        List<dynamic> temp = response['availableRoom'];
-        return temp.map((e) => e as String).toList();
+      switch (response['status']) {
+        case 200:
+          Map<String, dynamic> temp = response["body"];
+          return List<String>.from(temp['availableRoom']);
+        case 400:
+          throw 400;
+        default:
+          throw Exception("[Error] 알 수 없는 이유로 인증 할 수 없습니다!");
       }
     } on TimeoutException {
       throw TimeoutException('transmission rate is too slow!');

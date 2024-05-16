@@ -16,6 +16,7 @@
 ///
 ///
 
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -86,7 +87,11 @@ Future<void> main() async {
   });
 
   debugPrint("start to run app");
-  runApp(MataGachonApp(start: start));
+  runApp(
+    BetterFeedback(
+      child: MataGachonApp(start: start),
+    )
+  );
 }
 
 ///
