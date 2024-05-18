@@ -55,8 +55,6 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
   ]);
-  // 패키지 정보 불러오기
-  packageInfo = await PackageInfo.fromPlatform();
 
   debugPrint("determining initial page");
   late final Widget start;
