@@ -139,12 +139,17 @@ class _MataGachonAppState extends State<MataGachonApp>
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       debugPrint("App is resumed");
-      if (await RestAPI.signIn(
-          studentNum: "app", password: 'resume', fcmToken: 'fcmToken') == null) {
+      try {
+        myInfo = await RestAPI.signIn(
+            studentNum: 'app', password: 'resume', fcmToken: 'fcmToken');
+        debugPrint("Session is valid. show previous page.");
+      } catch (e) {
+        if (e == 400) {
+          debugPrint("Session is invalid. try to sign in again.");
+        } else {
+          debugPrint("Error: $e");
+        }
         setState(() => current = const SignInPage());
-        debugPrint("Token is invalid. try to sign in again.");
-      } else {
-        debugPrint("Token is valid. show previous page.");
       }
     }
     super.didChangeAppLifecycleState(state);

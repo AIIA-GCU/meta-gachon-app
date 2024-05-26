@@ -147,21 +147,9 @@ class _SignInPageState extends State<SignInPage> {
                                         color: MGColor.base4,
                                       ),
                                       suffixIcon: GestureDetector(
-                                        onTapDown: (tapDetails) {
-                                          setState(() => isPasswordVisible = true);
-                                        },
-                                        onTapUp: (tapDetails) {
-                                          setState(() => isPasswordVisible = false);
-                                        },
-                                        onTapCancel: () {
-                                          setState(() => isPasswordVisible = false);
-                                        },
-                                        onLongPressStart: (tapDetails) {
-                                          setState(() => isPasswordVisible = true);
-                                        },
-                                        onLongPressEnd: (tapDetails) {
-                                          setState(() => isPasswordVisible = false);
-                                        },
+                                        onTap: () => setState(() {
+                                          isPasswordVisible = !isPasswordVisible;
+                                        }),
                                         behavior: HitTestBehavior.translucent,
                                         child: Icon(
                                           isPasswordVisible

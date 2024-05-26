@@ -98,7 +98,7 @@ class _MyPageState extends State<MyPage> {
                       SizedBox(height: ratio.height * 11),
                       Text(myInfo.stuNum.toString(),
                           style: KR.subtitle4.copyWith(color: MGColor.base3)),
-                      Text('AI소프트웨어학부',
+                      Text(myInfo.major,
                           style: KR.subtitle4.copyWith(
                               color: MGColor.base3, letterSpacing: 0.32)),
                       SizedBox(height: ratio.height * 20),

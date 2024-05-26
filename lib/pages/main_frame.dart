@@ -85,11 +85,21 @@ class _MainFrameState extends State<MainFrame> {
         Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const SizedBox(
-                width: 200,
-                height: 30,
-                child:
-                    Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+              title: GestureDetector(
+                onTap: () {
+                  if (_currentPageIndex != 0) {
+                    _pageController.animateToPage(
+                        _currentPageIndex = 0,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut);
+                  }
+                },
+                child: const SizedBox(
+                  width: 200,
+                  height: 30,
+                  child:
+                      Icon(MGLogo.logoTypoHori, color: MGColor.base4, size: 24),
+                ),
               ),
               actions: [
                 if (defaultTargetPlatform == TargetPlatform.android)

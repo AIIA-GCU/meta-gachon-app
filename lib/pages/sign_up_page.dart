@@ -63,9 +63,23 @@ class _SignUpFrameState extends State<SignUpFrame> {
             }
           },
           child: PopScope(
-            canPop: false,
+            canPop: index == 0,
             onPopInvoked: (popped) {
               if (popped) return;
+
+              if (index == 3) {
+                _pageCtr.animateToPage(
+                  index = 2,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease
+                ).then((_) => setState(() {
+                  buttonText = "이미지 첨부하기";
+                  studentIdCardImage = "";
+                  nextStep = true;
+                }));
+                return;
+              }
+
               showDialog(context: context, builder: (context) {
                 return AlertPopup(
                   title: "지금 돌아가시면 처음부터\n회원가입을 해야 합니다",
@@ -86,6 +100,24 @@ class _SignUpFrameState extends State<SignUpFrame> {
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
                       onTap: () {
+                        if (index == 0) {
+                          Navigator.pop(context);
+                          return;
+                        }
+
+                        if (index == 3) {
+                          _pageCtr.animateToPage(
+                              index = 2,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease
+                          ).then((_) => setState(() {
+                            buttonText = "이미지 첨부하기";
+                            studentIdCardImage = "";
+                            nextStep = true;
+                          }));
+                          return;
+                        }
+
                         showDialog(context: context, builder: (context) {
                           return AlertPopup(
                             title: "지금 돌아가시면 처음부터\n회원가입을 해야 합니다",
@@ -134,11 +166,10 @@ class _SignUpFrameState extends State<SignUpFrame> {
                             pwCtr: pwCtr,
                             pwCheckCtr: pwCheckCtr,
                             textFieldChanged: () {
-                              print(pwCtr.text);
-                              print(pwCheckCtr.text);
-                              if (pwCtr.text.isNotEmpty & pwCheckCtr.text.isNotEmpty) {
-                                setState(() => nextStep = true);
-                              }
+                              setState(() {
+                                if (discordant) discordant = false;
+                                nextStep = pwCtr.text.isNotEmpty && pwCheckCtr.text.isNotEmpty;
+                              });
                             },
                           ),
                           CubePage(
@@ -177,6 +208,11 @@ class _SignUpFrameState extends State<SignUpFrame> {
       switch (index) {
         // 현재 인덱스 = 약관 동의 페이지
         case 0:
+          name = "김가천";
+          stuNum = "202400001";
+          major = "소프트웨어학과";
+          nextStep = false;
+
           setState(() => index++);
           await _pageCtr.animateToPage(1,
               duration: const Duration(milliseconds: 300),
@@ -290,15 +326,17 @@ class _SignUpFrameState extends State<SignUpFrame> {
 
         // 현재 인덱스 = 계정 생성
         case 3:
-          if (pwCtr.text.compareTo(pwCheckCtr.text) != 0) {
+          if (!validatePassword()) {
             setState(() => discordant = true);
           } else {
             try {
+              setState(() => loading = true);
               await RestAPI.signUp(studentNum: stuNum,
                   password: pwCtr.text,
                   studentName: name,
-                  phoneNumber: this.phoneNumber,
-                  major: major);
+                  phoneNumber: "01045861420",
+                  major: major
+              );
               Navigator.of(context).pushReplacement(
                   PageRouteBuilder(
                       pageBuilder: (_, __, ___) =>
@@ -312,21 +350,94 @@ class _SignUpFrameState extends State<SignUpFrame> {
               );
             } catch (e) {
               setState(() => loading = false);
-              showDialog(
-                  context: context,
-                  builder: (ctx) => AlertPopup(
-                      title: "처리되지 않은 예외 상황이 발생했습니다!",
-                      agreeMsg: "리포트 보내기",
-                      onAgreed: () {
-                        Navigator.pop(ctx);
-                        _sendBugReport();
-                      }
-                  )
-              );
+              if (e == 400) {
+                showDialog(
+                    context: context,
+                    builder: (ctx) =>
+                        CommentPopup(
+                            title: '이미 가입된 학생입니다!',
+                            onPressed: () => Navigator.pop(context)
+                        )
+                );
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (ctx) =>
+                        AlertPopup(
+                            title: "처리되지 않은 예외 상황이 발생했습니다!",
+                            agreeMsg: "리포트 보내기",
+                            onAgreed: () {
+                              Navigator.pop(ctx);
+                              _sendBugReport();
+                            }
+                        )
+                );
+              }
             }
           }
           break;
       }
+  }
+
+  bool validatePassword() {
+    debugPrint("start to validate password");
+    int checkVar;
+
+    debugPrint("1. pw length check");
+    checkVar = pwCtr.text.length;
+    if (checkVar < 6 || 20 < checkVar) {
+      debugPrint("pw length: $checkVar");
+      debugPrint("[!] Error: password length is not in range (6 <= len <= 20)");
+      return false;
+    }
+    debugPrint("pw length: $checkVar (passed)");
+
+    debugPrint("2. pw complexity check");
+    checkVar = passwordComplex(pwCtr.text);
+    if (checkVar < 2) {
+      debugPrint("pw complexity: $checkVar");
+      debugPrint("[!] Error: password complexity is not enough (2 <= complexity)");
+      return false;
+    }
+    debugPrint("pw complexity: $checkVar (passed)");
+
+    debugPrint("3. pw == pwCheck check");
+    debugPrint("pw: ${pwCtr.text}\npwCheck: ${pwCheckCtr.text}");
+    checkVar = pwCtr.text.compareTo(pwCheckCtr.text);
+    if (checkVar != 0) {
+      debugPrint("[!] Error: password and password check are not same");
+      return false;
+    }
+    debugPrint("(passed)");
+
+    debugPrint("[\$] All checks passed successfully!");
+    return true;
+  }
+
+  int passwordComplex(String password) {
+    int complexity = 0;
+
+    // Check for uppercase
+    if (RegExp(r'[A-Z]').hasMatch(password)) {
+      complexity++;
+    }
+
+    // Check for lowercase
+    if (RegExp(r'[a-z]').hasMatch(password)) {
+      complexity++;
+    }
+
+    // Check for digits
+    if (RegExp(r'[0-9]').hasMatch(password)) {
+      complexity++;
+    }
+
+    // Check for special characters
+    if (RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {
+      complexity++;
+    }
+
+    return complexity;
   }
 
   buttonActive(val) => setState(() => nextStep = val);
@@ -857,7 +968,7 @@ class _StudentCertifyPageState extends State<StudentCertifyPage> {
           const SizedBox(height: 12),
 
           GestureDetector(
-            onTap: widget.changeImage,
+            onTap: widget.selected ? widget.changeImage : null,
             child: Text("이미지 수정하기",
               style: KR.subtitle4.copyWith(
                 decoration: TextDecoration.underline,
@@ -909,18 +1020,20 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
-  var explain = "영문 대문자와 소문자, 숫자, 특수문자 중 2가지 이상을 조합하여\n6~20자로 입력해주세요.";
+  var explain1 = "혹시 입력된 정보가 잘못되었나요?\n뒤로가기를 누른 뒤 학생증을 다시 인식하여 진행해주세요.";
+  var explain2 = "영문 대문자와 소문자, 숫자, 특수문자 중 2가지 이상을 조합하여\n6~20자로 입력해주세요.";
 
   bool openKeyboard = false;
   bool discordant = false;
+  bool isPasswordVisible = false;
 
   @override
   void didUpdateWidget(covariant CreateAccountPage oldWidget) {
     openKeyboard = widget.openKeyboard;
     if (discordant = widget.discordant) {
-      explain = "비밀번호를 확인해주세요.";
+      explain2 = "비밀번호를 확인해주세요.";
     } else {
-      explain = "영문 대문자와 소문자, 숫자, 특수문자 중 2가지 이상을 조합하여\n6~20자로 입력해주세요.";
+      explain2 = "영문 대문자와 소문자, 숫자, 특수문자 중 2가지 이상을 조합하여\n6~20자로 입력해주세요.";
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -936,7 +1049,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           duration: const Duration(milliseconds: 150),
           padding: EdgeInsets.only(
               top: openKeyboard ? 0 : 50,
-              bottom: 12
+              bottom: openKeyboard ? 0 : 12
           ),
           child: Text(
             "비밀번호를 설정해주세요.",
@@ -951,19 +1064,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           padding: EdgeInsets.symmetric(
               horizontal: ratio.width * 16, vertical: 13),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: MGColor.base8,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: MGColor.brandPrimary)
+              border: Border.all(color: MGColor.base3)
           ),
           alignment: Alignment.centerLeft,
-          child: Text(widget.name, style: KR.subtitle4),
+          child: Text(widget.name,
+              style: KR.subtitle4.copyWith(color: MGColor.base3)),
         ),
 
         AnimatedSize(
             curve: Curves.ease,
             duration: const Duration(milliseconds: 150),
             child: SizedBox(
-                height: openKeyboard ? 4 : 12
+                height: openKeyboard ? 0 : 12
             )
         ),
 
@@ -974,19 +1088,30 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           padding: EdgeInsets.symmetric(
               horizontal: ratio.width * 16, vertical: 13),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: MGColor.base8,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: MGColor.brandPrimary)
+              border: Border.all(color: MGColor.base3)
           ),
           alignment: Alignment.centerLeft,
-          child: Text(widget.id, style: KR.subtitle4),
+          child: Text(widget.id,
+              style: KR.subtitle4.copyWith(color: MGColor.base3)),
+        ),
+
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: ratio.width * 16,
+              vertical: 4
+          ),
+          child: Text(explain1,
+            style: KR.label2.copyWith(color: MGColor.brandPrimary),
+          ),
         ),
 
         AnimatedSize(
           curve: Curves.ease,
           duration: const Duration(milliseconds: 300),
           child: SizedBox(
-            height: openKeyboard ? 20 : 45
+            height: openKeyboard ? 0 : 28
           )
         ),
 
@@ -1000,24 +1125,43 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           ),
           child: TextField(
             controller: widget.pwCtr,
-            obscureText: true,
+            obscureText: !isPasswordVisible,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                   horizontal: ratio.width * 16, vertical: 13),
               hintText: '비밀번호를 입력해주세요',
-              hintStyle: KR.subtitle4.copyWith(
-                color: MGColor.base4,
-              ),
+              hintStyle: KR.subtitle4.copyWith(color: MGColor.base4),
               border: InputBorder.none,
+              suffixIcon: GestureDetector(
+                onTap: () => setState(() {
+                  isPasswordVisible = !isPasswordVisible;
+                }),
+                behavior: HitTestBehavior.translucent,
+                child: Icon(
+                  isPasswordVisible
+                      ? MGIcon.eyeOn
+                      : MGIcon.eyeOff,
+                  color: MGColor.base4,
+                ),
+              )
             ),
             onTap: () {
               setState(() => openKeyboard = true);
             },
-            onChanged: (val) => widget.textFieldChanged(),
+            onChanged: (val) {
+              if (discordant) setState(() => discordant = false);
+              widget.textFieldChanged();
+            },
           ),
         ),
 
-        const SizedBox(height: 10),
+        AnimatedSize(
+          curve: Curves.ease,
+          duration: const Duration(milliseconds: 300),
+          child: SizedBox(
+            height: openKeyboard ? 4 : 10
+          )
+        ),
 
         /// PW 확인
         Container(
@@ -1056,7 +1200,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             horizontal: ratio.width * 16,
             vertical: 4
           ),
-          child: Text(explain,
+          child: Text(explain2,
             style: KR.label2.copyWith(
               color: discordant
                   ? MGColor.systemError
